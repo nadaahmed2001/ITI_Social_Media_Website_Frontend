@@ -1,7 +1,20 @@
-import React from 'react'
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import ChatSidebar from '../components/ChatSidebar/ChatSidebar';
+import MessagesList from '../components/MessagesList/MessagesList';
 
-export default function ChatPage() {
-  return (
-    <h1>ChatPage</h1>
-  )
-}
+const ChatPage = () => {
+    return (
+        <div className="flex h-screen">
+            <ChatSidebar />
+            <div className="flex-1 bg-gray-100">
+                <Routes>
+                    <Route path="/group/:id" element={<MessagesList isGroupChat={true} />} />
+                    <Route path="/private/:id" element={<MessagesList isGroupChat={false} />} />
+                </Routes>
+            </div>
+        </div>
+    );
+};
+
+export default ChatPage;

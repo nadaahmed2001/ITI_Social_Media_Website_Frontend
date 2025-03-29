@@ -40,14 +40,17 @@ const AppRouter = () => {
         {/* Profile, Search, and Chat */}
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/search" element={<SearchPage />} />
+        
         <Route path="/chat" element={<ChatPage />} />
         {/* Notifications */}
         <Route path="/notifications" element={<NotificationsPage />} />
         {/* Posts  */}
         <Route path="/posts/create" element={<CreatePost />} />
         {/* Chat Component Example */}
+
         <Route path="/chat/sidebar" element={<ChatSidebar />} />
         <Route path="/chat/messagesList" element={<MessagesList />} />
+
          {/* Profile Components */}
         <Route path="/profiles/followbutton" element={<FollowButton />} />
         <Route path="/profiles/userprofile" element={<UserProfile />} />
