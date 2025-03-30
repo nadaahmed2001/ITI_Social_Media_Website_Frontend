@@ -16,11 +16,15 @@ import GroupsPage from "../pages/StudentDashboard/GroupsPage";
 import SignUpForm from "../components/auth/SignUpForm";
 import LoginForm from "../components/auth/LoginForm";
 import CreatePost from "../components/posts/CreatePost";
+import ShowPost from "../components/posts/ShowPost";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import FollowButton from "../components/profiles/FollowButton";
 import UserProfile from "../components/profiles/UserProfile";
 import SearchFilters from "../components/search/SearchFilters";
+import DeletePost from "../components/posts/DeletePost";
+import EditPost from "../components/posts/EditPost";
+import Sidebar from "../components/profiles/Sidebar";
 const AppRouter = () => {
   return (
     <Router>
@@ -41,10 +45,14 @@ const AppRouter = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/chat" element={<ChatPage />} />
+        <Route path="/Sidebar" element={<Sidebar />} />
         {/* Notifications */}
         <Route path="/notifications" element={<NotificationsPage />} />
         {/* Posts  */}
         <Route path="/posts/create" element={<CreatePost />} />
+        <Route path="/posts/show" element={<ShowPost />} />
+        <Route path="/posts/delete" element={<DeletePost />} />   
+        <Route path="/posts/edit" element={<EditPost />} />
         {/* Chat Component Example */}
         <Route path="/chat/sidebar" element={<ChatSidebar />} />
         <Route path="/chat/messagesList" element={<MessagesList />} />

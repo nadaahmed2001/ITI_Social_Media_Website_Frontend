@@ -1,0 +1,333 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  .post-container {
+    width: 500px;
+    background: #282828;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0;
+  }
+  
+  /* Updated Header Styles */
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    background: #282828;
+  }
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .user-info {
+    flex: 1;
+    background: #282828;
+  }
+  .user-info p:first-child {
+    color: white;
+    font-size: 14px;
+    margin: 0 0 2px 0;
+    background: #282828;
+  }
+  .user-info p:last-child {
+    font-size: 12px;
+    color: gray;
+    margin: 0;
+    background: #282828;
+  }
+  .post-options {
+    cursor: pointer;
+    position: relative;
+  }
+  .options-menu {
+    position: absolute;
+    top: 25px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+  }
+  .options-menu  
+  .option {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+    gap: 5px;
+  }
+  
+  .EditIcon {
+    color: #fffd02;
+    background: #1a1a1a;
+  }
+  
+  .DeleteIcon {
+    color: #fffd02;
+    background: #1a1a1a;
+  }
+  
+  .option:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .option:hover .DeleteIcon{
+    background: rgba(255, 255, 255, 0.1);
+
+  }
+  .option:hover .EditIcon{
+    background: rgba(255, 255, 255, 0.1);
+    
+  }
+  .MoreVertIcon{
+    background: #282828;
+  }
+  /* Post Content */
+  .post-content {
+    background: #282828;
+  }
+  .post-content p {
+    margin: 10px 0;
+    background: #282828;
+  }
+  .post-content.post-image {
+    background: #282828;
+  }
+  .post-actions {
+    background: #282828;
+  }
+  .post-actions .reactions-container{
+    background: #282828;
+  }
+  .post-image {
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  /* Reactions Styles */
+  .reactions-container {
+    position: relative;
+    display: flex;
+  }
+  
+  .reaction-trigger {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: background-color 0.2s;
+  }
+  
+  /* .reaction-trigger:hover {
+    background-color: rgba(255, 253, 2, 0.1);
+  } */
+  
+  .reactions-popover {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background: #333;
+    padding: 10px;
+    border-radius: 20px;
+    display: flex;
+    gap: 15px;
+    z-index: 1;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .reaction-item {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    color: #fff;
+    background: #282828;
+  }
+  
+  .reaction-item:hover {
+    transform: scale(1.5);
+    color: #fffd02;
+  }
+  .Reaction-Post{
+    background: #333
+  }
+  .reaction-name {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+  
+  .reaction-item:hover .reaction-name {
+    opacity: 1;
+  }
+  
+  /* Post Actions */
+  .post-actions {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    color: #fff;
+  }
+  
+  .savePost-btn {
+    color: #fffd02;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.5s ease;
+    background: #282828;
+    padding: 0;
+  }
+  
+  .savePost-btn:hover {
+    transform: scale(1.2);
+  }
+  
+  /* Comment Section */
+  .post-comment {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* background: #1a1a1a; */
+    padding: 5px 15px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+  
+  .post-comment input {
+    flex: 1;
+    /* background: transparent; */
+    border: none;
+    color: white;
+    outline: none;
+    padding: 8px 0;
+    font-size: 14px;
+    /* background: #1a1a1a; */
+  }
+  
+  .comment-submit {
+    background: #fffd02;
+    color: #000;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .comment-submit:hover {
+    background: #e6e400;
+    transform: scale(1.05);
+  }
+  .comment-submit:active {
+    transform: scale(0.95);
+  }
+  .Show-All-Reactions{
+    background: #282828;
+
+  }
+  .Show-All-Reactions a{
+    color: #fffd02;
+    cursor: pointer;
+    text-decoration: none;
+    background: #282828;
+  }
+
+  /**/
+  .create-post-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #333;
+    border-radius: 20px;
+    width: 50%;
+    height: 100px;
+  }
+  .create-post {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #1a1a1a;
+    padding: 5px 15px;
+    border-radius: 20px;
+    margin-top: 10px;
+    width: 80%;
+  }
+  
+  .create-post input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    padding: 8px 0;
+    font-size: 14px;
+  }
+  
+  .post-submit {
+    background: #fffd02;
+    color: #000;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .post-submit:hover {
+    background: #e6e400;
+    transform: scale(1.05);
+  }
+  .post-submit:active {
+    transform: scale(0.95);
+  }
+  .ImageSharpIcon{
+    color: #fffd02;
+    background: #282828;
+  }
+  /**/
+  .postShowPage{
+    display: flex;
+    justify-content: space-evenly;
+  }
+ /**/
+ .error-message {
+  color: #ff0000;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+}
+
+.create-post textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.create-post textarea:focus {
+  border-color: #1877f2;
+  outline: none;
+}
