@@ -7,7 +7,9 @@
     height: 100vh;
     background-color: #1e1e1e;
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; */
+    z-index: 1; 
+    
 }
 
 @keyframes float3D {
@@ -36,7 +38,6 @@
 .auth-container:hover::before {
     transform: perspective(1000px) rotateY(10deg) rotateX(5deg) scale(1.05);
 }
-
 
 
 .auth-box {
@@ -93,6 +94,7 @@
   .auth-form {
     display: flex;
     flex-direction: column;
+    align-items: flex-start; 
     gap: 10px;
     width: 200%;
     height: 100%;

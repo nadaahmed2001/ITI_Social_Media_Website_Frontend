@@ -6,8 +6,6 @@ import * as Yup from "yup";
 import "../../assets/styles/auth.css";
 
 
-
-
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -47,6 +45,8 @@ const LoginForm = () => {
       setLoading(false);
     },
   });
+
+  console.log("🔥 LoginForm is rendering at:", window.location.pathname);
 
   return (
     <div className="auth-container">
