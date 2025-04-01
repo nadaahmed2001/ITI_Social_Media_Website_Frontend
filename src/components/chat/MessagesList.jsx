@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../api/axiosInstance';
+import axiosInstance from "../../axios"; // Ensure this path is correct
 import { useParams } from 'react-router-dom';
 
 const MessagesList = ({ isGroupChat }) => {

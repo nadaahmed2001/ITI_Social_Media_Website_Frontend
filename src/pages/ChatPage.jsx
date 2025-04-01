@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import ChatSidebar from '../components/ChatSidebar/ChatSidebar';
-import MessagesList from '../components/MessagesList/MessagesList';
+import ChatSidebar from '../components/chat/ChatSidebar';
+import MessagesList from '../components/chat/MessagesList';
 
 const ChatPage = () => {
     return (
