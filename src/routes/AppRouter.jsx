@@ -17,6 +17,7 @@ import SignUpForm from "../components/auth/SignUpForm";
 import LoginForm from "../components/auth/LoginForm";
 import CreatePost from "../components/posts/CreatePost";
 import ShowPost from "../components/posts/ShowPost";
+import PostList from "../components/posts/PostList";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import FollowButton from "../components/profiles/FollowButton";
@@ -53,6 +54,7 @@ const AppRouter = () => {
         <Route path="/posts/show" element={<ShowPost />} />
         <Route path="/posts/delete" element={<DeletePost />} />   
         <Route path="/posts/edit" element={<EditPost />} />
+        <Route path="/posts/list" element={<PostList />} />
         {/* Chat Component Example */}
         <Route path="/chat/sidebar" element={<ChatSidebar />} />
         <Route path="/chat/messagesList" element={<MessagesList />} />

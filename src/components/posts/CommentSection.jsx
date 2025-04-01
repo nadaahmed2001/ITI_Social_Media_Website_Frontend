@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchComments, addComment } from "../services/api";
+import { fetchComments, addComment } from "../../services/api";
 
 const CommentSection = ({ postId }) => {
   const [comments, setComments] = useState([]);
