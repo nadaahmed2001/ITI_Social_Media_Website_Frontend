@@ -6,10 +6,6 @@ import "../assets/styles/auth.css";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
-  console.log("Current isLogin state:", isLogin);
-  console.log("AuthPage is rendering...");
-
-  console.log("🚀 AuthPage is loaded for path:", window.location.pathname);
 
   return (
     <div className="auth-container">
@@ -17,18 +13,16 @@ const AuthPage = () => {
         {isLogin ? "Sign In" : "Sign Up"}
       </Typography> */}
 
-        <div className="auth-box">
-          {isLogin ? <LoginForm /> : <SignUpForm />}
+      <div className="auth-box">
+        {isLogin ? <LoginForm /> : <SignUpForm />}
 
-
-          {/* <Button
+        {/* <Button
             className="auth-toggle-button"
             onClick={() => setIsLogin(!isLogin)}
           >
             {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
           </Button> */}
-        </div>
-        
+      </div>
     </div>
   );
 };

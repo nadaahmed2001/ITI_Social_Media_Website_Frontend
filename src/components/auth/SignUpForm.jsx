@@ -57,7 +57,7 @@ const SignUpForm = () => {
       setLoading(false);
     },
   });
-  console.log("🔥 SignUpForm is rendering at:", window.location.pathname);
+
   
   return (
     <div className="auth-container">

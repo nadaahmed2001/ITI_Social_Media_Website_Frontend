@@ -46,7 +46,6 @@ const LoginForm = () => {
     },
   });
 
-  console.log("🔥 LoginForm is rendering at:", window.location.pathname);
 
   return (
     <div className="auth-container">
