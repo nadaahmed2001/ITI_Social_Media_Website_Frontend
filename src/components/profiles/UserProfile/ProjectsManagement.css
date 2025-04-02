@@ -1,0 +1,283 @@
+/* src/components/UserProfile/ProjectsManagement.css */
+
+/* Container inherits styles from .form-section */
+.projects-management-container h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fffd02;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.15em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 12px;
+    background: none; /* Override global */
+  }
+  
+  /* Add Project Button */
+  .projects-management-container .add-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      font-size: 1em;
+  }
+  .projects-management-container .add-button:disabled {
+      background-color: #555;
+      color: #999;
+      cursor: not-allowed;
+  }
+  
+  
+  /* Project List Styling */
+  .projects-manage-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      background: none;
+  }
+  
+  .project-manage-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center; /* Align items vertically center */
+      padding: 15px 10px;
+      border-bottom: 1px solid #383838;
+      transition: background-color 0.2s ease;
+      gap: 15px;
+      background: none;
+  }
+  .project-manage-item:last-child {
+      border-bottom: none;
+  }
+  .project-manage-item.deleting {
+      opacity: 0.5;
+      pointer-events: none;
+  }
+  .project-manage-item:hover {
+      background-color: rgba(255, 255, 255, 0.03); /* Subtle hover */
+  }
+  
+  .project-manage-info {
+      flex-grow: 1;
+      background: none;
+  }
+  
+  .project-manage-title {
+      font-weight: 500;
+      color: #f0f0f0;
+      font-size: 1.05em;
+      display: block; /* Ensure title takes its line */
+      margin-bottom: 3px;
+      background: none;
+  }
+  
+  .project-manage-desc {
+      font-size: 0.9em;
+      color: #aaa;
+      margin: 0;
+      line-height: 1.4;
+       background: none;
+  }
+  
+  .project-manage-actions {
+      display: flex;
+      gap: 10px; /* Increased gap */
+      flex-shrink: 0;
+      background: none;
+  }
+  
+  /* Reuse action button styles from SkillsManagement or define here */
+  .project-manage-actions .action-button {
+      background: none;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      padding: 5px 8px; /* Slightly larger padding */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: color 0.2s ease, background-color 0.2s ease;
+  }
+  .project-manage-actions .action-button:hover:not(:disabled) {
+      color: #fff;
+  }
+  .project-manage-actions .action-button.edit-button:hover:not(:disabled) {
+       background-color: rgba(255, 253, 2, 0.2);
+       color: #fffd02;
+  }
+  .project-manage-actions .action-button.delete-button:hover:not(:disabled) {
+      background-color: rgba(255, 102, 102, 0.2);
+      color: #ff6666;
+  }
+  .project-manage-actions .action-button:disabled {
+      color: #666;
+      cursor: not-allowed;
+      opacity: 0.5;
+  }
+  
+  
+  /* Modal Styling */
+  .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000; /* Ensure modal is on top */
+      padding: 20px;
+  }
+  
+  .modal-content {
+      background-color: #282828; /* Modal background */
+      padding: 25px 30px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      width: 100%;
+      max-width: 600px; /* Max width */
+      max-height: 90vh; /* Max height */
+      overflow-y: auto; /* Allow scrolling if content overflows */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      position: relative;
+  }
+  
+  .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #444;
+       background: none;
+  }
+  
+  .modal-header h4 {
+      color: #fffd02;
+      margin: 0;
+      font-size: 1.3em;
+       background: none;
+  }
+  
+  .modal-close-button {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 1.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0 5px;
+      line-height: 1;
+  }
+  .modal-close-button:hover {
+      color: #fff;
+  }
+  .modal-close-button:disabled {
+      color: #666; cursor: not-allowed;
+  }
+  
+  
+  /* Modal Form Styling */
+  .modal-form {
+       background: none;
+  }
+  .modal-form .form-group {
+      margin-bottom: 18px;
+       background: none;
+  }
+  .modal-form label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #ccc;
+       background: none;
+  }
+  .modal-form input[type="text"],
+  .modal-form input[type="url"],
+  .modal-form textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: #1f1f1f;
+      border: 1px solid #444;
+      border-radius: 5px;
+      color: #e0e0e0;
+      font-size: 1em;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+  }
+  .modal-form input:focus,
+  .modal-form textarea:focus {
+      outline: none;
+      border-color: #fffd02;
+  }
+  .modal-form textarea {
+      resize: vertical;
+      min-height: 80px;
+  }
+  .modal-form input:disabled,
+  .modal-form textarea:disabled {
+      background-color: #333;
+      cursor: not-allowed;
+  }
+  
+  
+  .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #444;
+       background: none;
+  }
+  .modal-actions .cancel-button,
+  .modal-actions .save-button {
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+  }
+  .modal-actions .cancel-button {
+      background-color: #555;
+      color: #eee;
+  }
+  .modal-actions .cancel-button:hover:not(:disabled) {
+       background-color: #666;
+  }
+  .modal-actions .save-button { /* Reuses .submit-button */
+      background-color: #fffd02;
+      color: #191919;
+  }
+  .modal-actions .save-button:hover:not(:disabled) {
+       background-color: #e6e400;
+  }
+  .modal-actions button:disabled {
+      background-color: #444 !important;
+      color: #888 !important;
+      cursor: not-allowed;
+      opacity: 0.7;
+  }
+  
+  /* Modal Error */
+  .error-message.modal-error {
+      text-align: left;
+      margin-bottom: 15px;
+      font-size: 0.9em;
+  }
+  
+  /* Loading/No Data/Spinner Styles (reuse from other components or define globally) */
+  .loading-text, .no-data-text {
+      color: #aaa; padding: 15px 0; text-align: center; font-style: italic; background: none;
+  }
+  .error-message { /* General error display */
+    color: #ff6666; background-color: rgba(255, 102, 102, 0.1); border: 1px solid #ff6666; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.95em;
+  }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  .spinner.small { border: 2px solid #555; border-top: 2px solid #aaa; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; background: none;}
+  .spinner.small.red { border-color: rgba(255, 102, 102, 0.4); border-top-color: #ff6666; }

@@ -1,0 +1,287 @@
+/* src/components/UserProfile/SkillsManagement.css */
+
+/* Container inherits styles from .form-section in ChangeCredentials.css */
+/* Add specific styles if needed */
+.skills-management-container h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fffd02;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.15em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 12px;
+     background: none; /* Override global */
+  }
+  
+  .skills-management-container h4 {
+      color: #ccc;
+      margin-top: 20px;
+      margin-bottom: 15px;
+      font-size: 1.05em;
+       background: none; /* Override global */
+  }
+  
+  /* Add Skill Form */
+  .add-skill-form {
+      background-color: #303030; /* Slightly different background for forms within */
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 30px;
+      border: 1px solid #444;
+  }
+  
+  .add-skill-form h4 {
+      margin-top: 0;
+      color: #eee;
+       background: none; /* Override global */
+  }
+  
+  .add-form-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+      background: none; /* Override global */
+  }
+  
+  .add-skill-form input[type="text"],
+  .add-skill-form textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: #1f1f1f;
+      border: 1px solid #444;
+      border-radius: 5px;
+      color: #e0e0e0;
+      font-size: 1em;
+      box-sizing: border-box;
+  }
+  .add-skill-form input:focus,
+  .add-skill-form textarea:focus {
+       outline: none;
+       border-color: #fffd02;
+  }
+  
+  .add-skill-form textarea {
+      resize: vertical;
+      min-height: 50px;
+  }
+  
+  .add-button {
+      /* Inherits .submit-button styles */
+      display: inline-flex; /* Align icon and text */
+      align-items: center;
+      gap: 6px;
+      padding: 8px 15px; /* Slightly smaller padding */
+      min-width: 120px;
+      font-size: 0.95em;
+  }
+  
+  /* Skills List */
+  .skills-list-section {
+      margin-top: 20px;
+      background: none; /* Override global */
+  }
+  
+  .skills-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      background: none; /* Override global */
+  }
+  
+  .skill-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start; /* Align items top */
+      padding: 15px 10px;
+      border-bottom: 1px solid #383838;
+      transition: background-color 0.2s ease;
+      gap: 15px; /* Gap between details and actions */
+       background: none; /* Override global */
+  }
+  
+  .skill-item:last-child {
+      border-bottom: none;
+  }
+  
+  .skill-item.deleting {
+      opacity: 0.6;
+      pointer-events: none; /* Prevent interaction while deleting */
+  }
+  
+  .skill-details {
+      flex-grow: 1; /* Take available space */
+       background: none; /* Override global */
+  }
+  
+  .skill-name {
+      font-weight: 500;
+      color: #f0f0f0;
+      font-size: 1.05em;
+       background: none; /* Override global */
+  }
+  
+  .skill-description {
+      font-size: 0.9em;
+      color: #aaa;
+      margin-top: 5px;
+      white-space: pre-wrap; /* Preserve whitespace/newlines */
+       background: none; /* Override global */
+  }
+  
+  .skill-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0; /* Prevent actions from shrinking */
+      margin-top: 2px; /* Align slightly better with name */
+       background: none; /* Override global */
+  }
+  
+  .action-button {
+      background: none;
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: color 0.2s ease, background-color 0.2s ease;
+  }
+  .action-button:hover:not(:disabled) {
+      color: #fff;
+  }
+  .action-button.edit-button:hover:not(:disabled) {
+       background-color: rgba(255, 253, 2, 0.2); /* Yellow tint */
+       color: #fffd02;
+  }
+  .action-button.delete-button:hover:not(:disabled) {
+      background-color: rgba(255, 102, 102, 0.2); /* Red tint */
+      color: #ff6666;
+  }
+  .action-button:disabled {
+      color: #666;
+      cursor: not-allowed;
+  }
+  
+  /* Inline Edit Form Styles */
+  .skill-item.editing {
+      background-color: #303030; /* Highlight background when editing */
+      border-radius: 4px;
+      padding: 15px;
+      margin-bottom: 10px; /* Add margin when editing */
+  }
+  
+  .edit-skill-form {
+       width: 100%;
+       background: none; /* Override global */
+  }
+  
+  .edit-skill-form .edit-input,
+  .edit-skill-form .edit-textarea {
+      width: 100%;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      background-color: #1f1f1f;
+      border: 1px solid #555; /* Slightly more prominent border for edit */
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-size: 1em;
+      box-sizing: border-box;
+  }
+  .edit-skill-form .edit-input:focus,
+  .edit-skill-form .edit-textarea:focus {
+        outline: none;
+        border-color: #fffd02;
+  }
+  
+  .edit-skill-form .edit-textarea {
+      min-height: 50px;
+      resize: vertical;
+  }
+  
+  .edit-skill-form .inline-error {
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      padding: 5px;
+  }
+  
+  .edit-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+       background: none; /* Override global */
+  }
+  
+  .edit-actions .action-button {
+      padding: 6px 12px;
+      font-size: 0.9em;
+      color: #191919;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+  }
+  .edit-actions .save-button {
+      background-color: #fffd02;
+  }
+  .edit-actions .save-button:hover:not(:disabled) {
+      background-color: #e6e400;
+  }
+  .edit-actions .cancel-button {
+       background-color: #666;
+       color: #eee;
+  }
+  .edit-actions .cancel-button:hover:not(:disabled) {
+       background-color: #777;
+  }
+  .edit-actions .action-button:disabled {
+      background-color: #555 !important;
+      color: #999 !important;
+      cursor: not-allowed;
+  }
+  
+  
+  /* Loading/No Data Text */
+  .loading-text, .no-data-text {
+      color: #aaa;
+      padding: 15px 0;
+      text-align: center;
+      font-style: italic;
+       background: none; /* Override global */
+  }
+  
+  /* Simple Spinner for delete button */
+  @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+  }
+  .spinner.small {
+      border: 2px solid #555; /* Light grey */
+      border-top: 2px solid #aaa; /* Slightly darker */
+      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+       background: none; /* Override global */
+  }
+  
+  /* Error Message Styling (reuse from other CSS if defined globally) */
+  .error-message {
+    color: #ff6666;
+    background-color: rgba(255, 102, 102, 0.1);
+    border: 1px solid #ff6666;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+    /* background: none; */ /* Comment out if you want the background color */
+  }
+  /* Ensure error message within form doesn't get parent bg */
+  .add-skill-form .error-message, .edit-skill-form .error-message {
+       background: rgba(255, 102, 102, 0.1);
+  }

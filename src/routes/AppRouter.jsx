@@ -26,6 +26,8 @@ import SearchFilters from "../components/search/SearchFilters";
 import DeletePost from "../components/posts/DeletePost";
 import EditPost from "../components/posts/EditPost";
 import Sidebar from "../components/profiles/Sidebar/Sidebar";
+import UserProfilePage from "../pages/UserProfilePage";
+
 const AppRouter = () => {
   return (
     <Router>
@@ -43,7 +45,7 @@ const AppRouter = () => {
         <Route path="/student/feed" element={<FeedPage />} />
         <Route path="/student/groups" element={<GroupsPage />} />
         {/* Profile, Search, and Chat */}
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/Sidebar" element={<Sidebar />} />

@@ -1,0 +1,117 @@
+/* src/components/UserProfile/EditProfile.css */
+.edit-profile-container {
+    padding: 25px;
+    color: #e0e0e0; /* Light grey text */
+}
+
+.edit-profile-container h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 15px;
+}
+
+.form-section {
+    margin-bottom: 30px;
+    background-color: #282828; /* Slightly lighter background for section */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.form-section h3 {
+    color: #fffd02; /* Yellow accent for headings */
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+    background: none; /* Override global */
+}
+
+
+.form-group {
+    margin-bottom: 18px;
+    background: none; /* Override global */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #ccc;
+     background: none; /* Override global */
+}
+
+.form-group input[type="text"],
+.form-group input[type="url"], /* Assuming you might use type="url" */
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background-color: #1f1f1f; /* Darker input background */
+    border: 1px solid #444; /* Subtle border */
+    border-radius: 5px;
+    color: #e0e0e0;
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+     transition: border-color 0.3s ease;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #fffd02; /* Yellow border on focus */
+}
+
+
+.form-group textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px;
+}
+
+.submit-button {
+    background-color: #fffd02; /* Yellow button */
+    color: #191919; /* Dark text */
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Add some space above the button */
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #e6e400; /* Slightly darker yellow on hover */
+}
+
+.submit-button:disabled {
+    background-color: #555;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.error-message {
+  color: #ff4d4d; /* Red for errors */
+  background-color: #4d1a1a;
+  border: 1px solid #ff4d4d;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.success-message {
+  color: #4dff4d; /* Green for success */
+  background-color: #1a4d1a;
+  border: 1px solid #4dff4d;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+/* Make sure container itself doesn't inherit global background */
+.section-container {
+     background-color: #191919;
+}

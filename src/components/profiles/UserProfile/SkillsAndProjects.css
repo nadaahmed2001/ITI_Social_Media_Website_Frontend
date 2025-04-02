@@ -1,0 +1,32 @@
+/* src/components/UserProfile/SkillsAndProjects.css */
+
+.skills-projects-container {
+    padding: 25px;
+    color: #e0e0e0;
+    background-color: #191919; /* Base background */
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Space between the title and sections, and between sections */
+  }
+  
+  .skills-projects-container h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    margin: 0 0 10px 0; /* Adjusted margin */
+    border-bottom: 1px solid #444;
+    padding-bottom: 15px;
+    font-size: 1.4em;
+  }
+  
+  /* Ensure sub-components (.form-section) have the correct context */
+  .skills-projects-container .form-section {
+      /* Styles for SkillsManagement and ProjectsManagement containers */
+      background-color: #282828;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      /* Overwrite margins if needed, or rely on the gap from the container */
+      margin-bottom: 0; /* Remove bottom margin if gap is used */
+  }
