@@ -139,6 +139,7 @@ const handleDeletePost = (postId) => {
 
       <div className="post-content">
         <p>{post.body}</p>
+        <p>{post.id}</p>
         {post.image && <img src={post.image} alt="Post" className="post-image" />}
       </div>
 
@@ -371,6 +372,7 @@ const handleDeletePost = (postId) => {
 //           />
 //           <ImageSharpIcon className="ImageSharpIcon" />
 //           <button className="comment-submit" onClick={handleComment}>Post</button>
+//           //
 //         </div>
 //       </div>
 //       {/* Edit and Delete Pop-Up Modals */}

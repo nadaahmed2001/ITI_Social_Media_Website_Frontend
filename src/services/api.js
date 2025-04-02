@@ -26,7 +26,7 @@ api.interceptors.request.use(
 if (!localStorage.getItem("access_token")) {
   localStorage.setItem(
     "access_token",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzA4MTUxLCJpYXQiOjE3NDM2MjE3NTEsImp0aSI6ImEwNTI1YTExMWNiNjQ3OGZiZDQwNmY1Yzg3MTM1NDI3IiwidXNlcl9pZCI6MTV9.MwSbwuTsIXCsK6FwzccK5dqjNYiEclVFwjqLPqWYJ8Y"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzE5NDk0LCJpYXQiOjE3NDM2MzMwOTQsImp0aSI6ImJkOTg5MTY1MjBkOTRjYmNhM2ZlMmZlNjIxMTY5ZDcwIiwidXNlcl9pZCI6MTV9.TX5jcLuPyrJ2b02ZN9j3CMvWXdSuIv5UkRkVXHWWH7g"
   );
 }
 
@@ -36,10 +36,9 @@ export const createPost = (data) => api.post("/posts/", data);
 
 // export const likePost = (postId, reactionType) =>
 //   api.post(`/posts/${postId}/react/`, { reaction_type: reactionType });
-
-
 // export const fetchComments = (postId) => api.get(`/posts/${postId}/comment/`);
 // export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
+
 export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
 export const addComment = (postId, data) =>
   api.post(`/posts/${postId}/comment/`, data);
@@ -48,6 +47,7 @@ export const markNotificationAsRead = (notificationId) =>
   api.patch(`/notifications/${notificationId}/mark-as-read/`);
 export const markAllNotificationsAsRead = () =>
   api.patch("/notifications/mark-all-as-read/");
+
 // Function to edit a post
 export const editPost = (postId, updatedContent) => {
   return api.put(`${API_URL}/posts/${postId}/`, updatedContent);
@@ -57,12 +57,11 @@ export const editPost = (postId, updatedContent) => {
 export const deletePost = (postId) => {
   return api.delete(`${API_URL}/posts/${postId}/`);
 };
-
-export const likePost = async (postId, reactionType) => {
-  try {
-    const response = await api.post(`/posts/${postId}/react/`, { reaction_type: reactionType });
+ export const likePost = async (postId, reactionType) => {
+   try {
+    const response = await api.post(`/posts/${postId}/react/` + reactionType + "/");
     return response.data;
-  } catch (error) {
+   } catch (error) {
     handleError(error);
   }
 };
