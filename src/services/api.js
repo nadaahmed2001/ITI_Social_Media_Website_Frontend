@@ -1,7 +1,5 @@
 import axios from "axios";
-
 const API_URL = "http://127.0.0.1:8000/api";
-
 const api = axios.create({
   baseURL: API_URL,
   headers: {
@@ -28,7 +26,7 @@ api.interceptors.request.use(
 if (!localStorage.getItem("access_token")) {
   localStorage.setItem(
     "access_token",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNjkzODAyLCJpYXQiOjE3NDM2MDc0MDIsImp0aSI6ImZlMmRkYzYxZGQ4MjQzNzJiNzVhNTczNWNhMzg4NzhhIiwidXNlcl9pZCI6MTV9.06FWx8OmBKqp-KV0HiUYopZ9wXU7KB9wETeJJy7JKlY",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzA4MTUxLCJpYXQiOjE3NDM2MjE3NTEsImp0aSI6ImEwNTI1YTExMWNiNjQ3OGZiZDQwNmY1Yzg3MTM1NDI3IiwidXNlcl9pZCI6MTV9.MwSbwuTsIXCsK6FwzccK5dqjNYiEclVFwjqLPqWYJ8Y"
   );
 }
 
@@ -36,8 +34,8 @@ if (!localStorage.getItem("access_token")) {
 export const fetchPosts = () => api.get("/posts/");
 export const createPost = (data) => api.post("/posts/", data);
 
-export const likePost = (postId, reactionType) =>
-  api.post(`/posts/${postId}/react/`, { reaction_type: reactionType });
+// export const likePost = (postId, reactionType) =>
+//   api.post(`/posts/${postId}/react/`, { reaction_type: reactionType });
 
 
 // export const fetchComments = (postId) => api.get(`/posts/${postId}/comment/`);
@@ -60,4 +58,12 @@ export const deletePost = (postId) => {
   return api.delete(`${API_URL}/posts/${postId}/`);
 };
 
+export const likePost = async (postId, reactionType) => {
+  try {
+    const response = await api.post(`/posts/${postId}/react/`, { reaction_type: reactionType });
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
 export default api;

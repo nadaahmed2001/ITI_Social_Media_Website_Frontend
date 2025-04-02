@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { fetchPosts } from "../../services/api";
 import CreatePost from "./CreatePost";
 import ShowPost from "./ShowPost";
-// import CommentSection from "./CommentSection"; // Import CommentSection
 import Sidebar from "../profiles/Sidebar";
 export default function PostList() {
   const [posts, setPosts] = useState([]);
