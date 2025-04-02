@@ -3,7 +3,7 @@ import { fetchPosts } from "../../services/api";
 import CreatePost from "./CreatePost";
 import ShowPost from "./ShowPost";
 import CommentSection from "./CommentSection"; // Import CommentSection
-import Sidebar from "../profiles/Sidebar";
+import Sidebar from "../profiles/Sidebar/Sidebar";
 
 export default function PostList() {
   const [posts, setPosts] = useState([]);

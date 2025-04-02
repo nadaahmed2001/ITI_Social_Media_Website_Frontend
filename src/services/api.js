@@ -23,7 +23,7 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-localStorage.setItem("access_token",  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNjI2MzM3LCJpYXQiOjE3NDM1Mzk5MzcsImp0aSI6ImJjNmVhZjRkMTM1NDRlNTVhZWE5ODBiM2U4ZDNlMTE5IiwidXNlcl9pZCI6MTV9.r6NDnyCC6Vqv9LCxi1xVp78-W-FhWiy0dW4uyaAudIk");
+localStorage.setItem("access_token",  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNjM3MTA0LCJpYXQiOjE3NDM1NTA3MDQsImp0aSI6ImEyZjc5Mzk0MGIzZjRmNmFiNjdmYmIwMzMzZjgxNWNhIiwidXNlcl9pZCI6MTV9.iIKJ3G0MECkCZXOgsir2VCnqNiVQ6HyEBjwIsrj0K5c");
 
 // API functions
 export const fetchPosts = () => api.get("/posts/");

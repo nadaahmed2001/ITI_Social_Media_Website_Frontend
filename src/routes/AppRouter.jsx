@@ -25,7 +25,7 @@ import UserProfile from "../components/profiles/UserProfile";
 import SearchFilters from "../components/search/SearchFilters";
 import DeletePost from "../components/posts/DeletePost";
 import EditPost from "../components/posts/EditPost";
-import Sidebar from "../components/profiles/Sidebar";
+import Sidebar from "../components/profiles/Sidebar/Sidebar";
 const AppRouter = () => {
   return (
     <Router>

@@ -9,7 +9,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import SearchSharpIcon from '@mui/icons-material/SearchSharp';
 import BookmarkSharpIcon from '@mui/icons-material/BookmarkSharp';
 import FeedIcon from '@mui/icons-material/Feed';
-import "./Profile.css";
+import "./Sidebar.css";
+
 export default function Sidebar() {
   return (
     <div className="sidebar-container">
