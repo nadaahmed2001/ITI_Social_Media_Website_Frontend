@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import LoginForm from "../components/auth/LoginForm";
 import SignUpForm from "../components/auth/SignUpForm";
 import { Button, Typography } from "@mui/material";
-import "../assets/styles/auth.css";
+import "./../components/auth/auth.css";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);

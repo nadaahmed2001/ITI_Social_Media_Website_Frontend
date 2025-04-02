@@ -3,7 +3,7 @@ import { TextField, Button, Typography, FormControlLabel, Checkbox, CircularProg
 import { Link ,useNavigate} from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import "../../assets/styles/auth.css";
+import "../auth/auth.css";
 
 
 const LoginForm = () => {
