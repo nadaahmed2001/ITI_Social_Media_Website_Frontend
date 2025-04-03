@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { fetchGroupMessages, fetchPrivateMessages, fetchUser } from "../../services/api";
+import { fetchGroupMessages, fetchPrivateMessages, fetchUser , sendGroupMessage, sendPrivateMessage } from "../../services/api";
 import { useParams } from 'react-router-dom';
 import ChatSidebar from './ChatSidebar';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -15,7 +15,7 @@ const MessagesList = ({ isGroupChat }) => {
     const nodeRefs = useRef({}); // Store refs for each message
 
     // Temporary hardcoded token
-    const token = "eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzUyOTY5LCJpYXQiOjE3NDM2NjY1NjksImp0aSI6IjA0Y2Y2NGI4NjlkYjQyMDU4NmY3MTI5MzRhMTliMDNmIiwidXNlcl9pZCI6NH0eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzUyOTY5LCJpYXQiOjE3NDM2NjY1NjksImp0aSI6IjA0Y2Y2NGI4NjlkYjQyMDU4NmY3MTI5MzRhMTliMDNmIiwidXNlcl9pZCI6NH0.fDI59aVVz6nrkH8iHY0xNNiqU-d2uSc1X0UZPaBtf4s";
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzY3NzY2LCJpYXQiOjE3NDM2ODEzNjYsImp0aSI6ImM4OWM0ZDBkZGE3ZTQyNTJiMjdhN2ZkYWI0NmE5ZDkxIiwidXNlcl9pZCI6NH0.9OprrJiTDX8Niro6KpXfiQKrO0LQPiMrOluntJ0YJbQ";
 
     // Function to connect to the WebSocket
     const connect_to_group_chat = () => {
@@ -30,7 +30,28 @@ const MessagesList = ({ isGroupChat }) => {
         };
         
         socketRef.current.onmessage = (event) => {
-            console.log("Message received:", event.data);
+            try {
+                const data = JSON.parse(event.data);
+                if (data.type === "chat_message") {
+                    const normalizedMessage = {
+                        id: data.message.id,
+                        content: isGroupChat ? data.message.content : data.message.message, // Normalize content
+                        timestamp: data.message.timestamp,
+                        sender: data.message.sender,
+                        receiver: isGroupChat ? undefined : data.message.receiver, // Include receiver for private messages
+                    };
+
+                    // Add the new message and sort by timestamp
+                    setMessages((prevMessages) => {
+                        const updatedMessages = [...prevMessages, normalizedMessage];
+                        return updatedMessages.sort(
+                            (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+                        );
+                    });
+                }
+            } catch (error) {
+                console.error("Error parsing WebSocket message:", error);
+            }
         };
         
         socketRef.current.onerror = (error) => {
@@ -89,7 +110,35 @@ const MessagesList = ({ isGroupChat }) => {
                 const response = isGroupChat
                     ? await fetchGroupMessages(id) // Fetch group messages
                     : await fetchPrivateMessages(id); // Fetch private messages
-                setMessages(response.data);
+
+                // Normalize the response data
+                const normalizedMessages = response.data.map((message) => {
+                    if (isGroupChat) {
+                        // Normalize group chat message structure
+                        return {
+                            id: message.id,
+                            content: message.content, // Use `content` for group messages
+                            timestamp: message.timestamp,
+                            sender: message.sender,
+                        };
+                    } else {
+                        // Normalize private chat message structure
+                        return {
+                            id: message.id,
+                            content: message.message, // Use `message` for private messages
+                            timestamp: message.timestamp,
+                            sender: message.sender,
+                            receiver: message.receiver, // Include receiver for private messages
+                        };
+                    }
+                });
+
+                // Sort messages by timestamp
+                const sortedMessages = normalizedMessages.sort(
+                    (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+                );
+
+                setMessages(sortedMessages); // Set sorted messages in state
             } catch (error) {
                 console.error("Error fetching messages:", error);
             }
@@ -112,7 +161,7 @@ const MessagesList = ({ isGroupChat }) => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const handleSendMessage = (e) => {
+    const handleSendMessage = async (e) => {
         e.preventDefault();
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
             const messageData = {
@@ -128,8 +177,25 @@ const MessagesList = ({ isGroupChat }) => {
                 message: messageData,
             }));
 
-            // Optimistically update the UI
-            setMessages((prevMessages) => [...prevMessages, messageData]);
+            // Save the message to the database
+            try {
+                if (isGroupChat) {
+                    await sendGroupMessage(id, newMessage); // Save group message
+                } else {
+                    await sendPrivateMessage(id, newMessage); // Save private message
+                }
+            } catch (error) {
+                console.error("Error saving message:", error);
+            }
+
+            // Optimistically update the UI and sort messages
+            setMessages((prevMessages) => {
+                const updatedMessages = [...prevMessages, messageData];
+                return updatedMessages.sort(
+                    (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+                );
+            });
+
             setNewMessage("");
         } else {
             console.error("WebSocket is not connected");
@@ -157,12 +223,12 @@ const MessagesList = ({ isGroupChat }) => {
                                     <div
                                         ref={nodeRefs.current[index]}
                                         className={`mb-4 p-3 rounded-lg max-w-fit ${
-                                            message.sender.username === currentUser
+                                            message.sender === currentUser
                                                 ? "bg-gray-700 text-right"
                                                 : "bg-gray-800 text-left self-start"
                                         }`}
                                     >
-                                        <strong>{message.sender.username === currentUser ? "Me" : message.sender.username}:</strong> {message.content}
+                                        <strong>{message.sender === currentUser ? "Me" : message.sender}:</strong> {message.content}
                                         <div className="text-sm text-gray-500">
                                             {new Date(message.timestamp).toLocaleString()}
                                         </div>
