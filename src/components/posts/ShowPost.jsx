@@ -60,27 +60,55 @@ useEffect(() => {
   };
 //start
 // Function to handle adding a reaction
+// const handleAddReaction = async (reactionType) => {
+//   try {
+//     await likePost(post.id, reactionType); // Call API to add reaction
+//     setUserReactions((prevReactions) => [...prevReactions, reactionType]); // Update local state
+//   } catch (error) {
+//     console.error("Error adding reaction:", error);
+//   }
+// };
+// Replace these functions
 const handleAddReaction = async (reactionType) => {
   try {
-    await likePost(post.id, reactionType); // Call API to add reaction
-    setUserReactions((prevReactions) => [...prevReactions, reactionType]); // Update local state
+    await likePost(post.id, reactionType);
+    // Refresh reactions from server
+    const updated = await fetchReactionsForPost(post.id);
+    setUserReactions(updated.filter(r => r.user.id === currentUser.id));
   } catch (error) {
     console.error("Error adding reaction:", error);
   }
 };
+
+const hasReacted = (reactionType) => {
+  return userReactions.some(r => r.reaction_type === reactionType);
+};
 // Function to handle removing a reaction
+// Update handleRemoveReaction
 const handleRemoveReaction = async (reactionType) => {
   try {
-    // Call API to remove reaction
-    // Assuming `likePost` also handles removal if the reaction is already present
-    await likePost(post.id, reactionType); // Use the same API function for simplicity
-    setUserReactions((prevReactions) => prevReactions.filter(r => r !== reactionType)); // Update local state
+    await removePostReaction(post.id);
+    // Update local state
+    setUserReactions(prev => prev.filter(r => r !== reactionType));
+    // Refresh reactions
+    const updated = await fetchReactionsForPost(post.id);
+    setUserReactions(updated.filter(r => r.user?.id === currentUserId));
   } catch (error) {
-    console.error("Error removing reaction:", error);
+    console.error("Removal error:", error);
   }
 };
-// Check if the user already reacted with a certain reaction
-const hasReacted = (reactionType) => userReactions.includes(reactionType);
+// const handleRemoveReaction = async (reactionType) => {
+//   try {
+//     // Call API to remove reaction
+//     // Assuming `likePost` also handles removal if the reaction is already present
+//     await likePost(post.id, reactionType); // Use the same API function for simplicity
+//     setUserReactions((prevReactions) => prevReactions.filter(r => r !== reactionType)); // Update local state
+//   } catch (error) {
+//     console.error("Error removing reaction:", error);
+//   }
+// };
+// // Check if the user already reacted with a certain reaction
+// const hasReacted = (reactionType) => userReactions.includes(reactionType);
 
 
 // Handle editing the post

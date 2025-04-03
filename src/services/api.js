@@ -26,7 +26,7 @@ api.interceptors.request.use(
 if (!localStorage.getItem("access_token")) {
   localStorage.setItem(
     "access_token",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzQzNTYxLCJpYXQiOjE3NDM2NTcxNjEsImp0aSI6IjlkMmJkMzg1MWIzYzQxZjg5Zjg5YjBiYzgzYzkzMzQ3IiwidXNlcl9pZCI6MTV9.3IUj411TcV0KS170R1meKO8GtmA5gM0k1uiE_QMmsxM"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzU2NzM2LCJpYXQiOjE3NDM2NzAzMzYsImp0aSI6ImYyZmEzYjRlNzc4NjQ2OTg5MDFiODdmZWVkZDcxZTUyIiwidXNlcl9pZCI6MTV9.5bV_FJAAkLJ4VWv1gKhoExD_rz2rMX8suZPoKhwM008"
   );
 }
 
@@ -57,14 +57,25 @@ export const editPost = (postId, updatedContent) => {
 export const deletePost = (postId) => {
   return api.delete(`${API_URL}/posts/${postId}/`);
 };
- export const likePost = async (postId, reactionType) => {
-   try {
-    const response = await api.post(`${API_URL}/posts/${postId}/react/` + `${reactionType}` + "/");
+
+export const likePost = async (postId, reactionType) => {
+  try {
+    // Remove ${API_URL} from the request
+    const response = await api.post(`/posts/${postId}/react/${reactionType}/`);
     return response.data;
-   } catch (error) {
+  } catch (error) {
     handleError(error);
+    throw error;
   }
 };
+//  export const likePost = async (postId, reactionType) => {
+//    try {
+//     const response = await api.post(`${API_URL}/posts/${postId}/react/` + `${reactionType}` + "/");
+//     return response.data;
+//    } catch (error) {
+//     handleError(error);
+//   }
+// };
 
 // In api.js
 export const fetchReactionsForPost = async (postId) => {
@@ -77,13 +88,13 @@ export const fetchReactionsForPost = async (postId) => {
   }
 };
 //remove rections
-export const removeReactionsForPost = async (postId) => {
+export const removePostReaction = async (postId) => {
   try {
-    const response = await api.get(`/posts/${postId}/react/remove/`);
-    return response.data; // Ensure this returns an array of reactions
+    const response = await api.post(`/posts/${postId}/react/remove/`);
+    return response.data;
   } catch (error) {
-    console.error("API Error:", error);
-    return []; // Return empty array on error
+    console.error("Error removing reaction:", error);
+    throw error;
   }
 };
 // export const fetchReactionsForPost = async (postId) => {
