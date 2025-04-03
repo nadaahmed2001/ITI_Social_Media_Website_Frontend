@@ -13,7 +13,7 @@ import TurnedInNotSharpIcon from '@mui/icons-material/TurnedInNotSharp';
 import ImageSharpIcon from '@mui/icons-material/ImageSharp';
 import EditPost from "./EditPost";
 import DeletePost from "./DeletePost";
-import { Link } from "react-router-dom";
+import ReactionsModal from "./ReactionsModal"; // Import the ReactionsModal component
 import { likePost } from "../../services/api";  // API function to handle reactions
 import "./Posts.css";
 
@@ -29,6 +29,7 @@ export default function ShowPost({ post, onDelete }) {
    // Pop-Up Modal States
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+   const [showReactionsModal, setShowReactionsModal] = useState(false)
 
    const [posts, setPosts] = useState([]);
   // Fetch Comments
@@ -170,7 +171,19 @@ const handleDeletePost = (postId) => {
         </div>
         <button><TurnedInNotSharpIcon className="savePost-btn" /></button>
       </div>
-      <Link to={`/posts/show-reactions/${post.id}`}>Show All Reactions</Link>
+      {/* <Link to={`/posts/show-reactions/${post.id}`}>Show All Reactions</Link> */}
+      <div className="post-container">
+      <p className="Show-All-Reactions" onClick={() => setShowReactionsModal(true)}>
+        Show All Reactions
+      </p>
+        {/* Reactions Modal */}
+        {showReactionsModal && (
+        <ReactionsModal
+          postId={post.id}
+          onClose={() => setShowReactionsModal(false)}
+        />
+      )}
+    </div>
       <hr />
 
       <div className="comment-section">

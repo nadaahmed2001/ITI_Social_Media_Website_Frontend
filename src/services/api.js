@@ -26,7 +26,7 @@ api.interceptors.request.use(
 if (!localStorage.getItem("access_token")) {
   localStorage.setItem(
     "access_token",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzM5OTY4LCJpYXQiOjE3NDM2NTM1NjgsImp0aSI6ImU0YjkyYWVlYWMwZDRjZWFhZjZiMjE2YmY1MDVmNTYwIiwidXNlcl9pZCI6MTV9.m4WVpjPbfhcuMjD2D219YSMokLM7tFvpQKXf0uQLEPU"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzQzNTYxLCJpYXQiOjE3NDM2NTcxNjEsImp0aSI6IjlkMmJkMzg1MWIzYzQxZjg5Zjg5YjBiYzgzYzkzMzQ3IiwidXNlcl9pZCI6MTV9.3IUj411TcV0KS170R1meKO8GtmA5gM0k1uiE_QMmsxM"
   );
 }
 
@@ -66,14 +66,24 @@ export const deletePost = (postId) => {
   }
 };
 
+// In api.js
 export const fetchReactionsForPost = async (postId) => {
   try {
     const response = await api.get(`/posts/${postId}/reactions/`);
-    return response.data; // Directly return the data array
+    return response.data; // Ensure this returns an array of reactions
   } catch (error) {
     console.error("API Error:", error);
-    throw error; // Re-throw to handle in component
+    return []; // Return empty array on error
   }
 };
+// export const fetchReactionsForPost = async (postId) => {
+//   try {
+//     const response = await api.get(`/posts/${postId}/reactions/`);
+//     return response.data; // Directly return the data array
+//   } catch (error) {
+//     console.error("API Error:", error);
+//     throw error; // Re-throw to handle in component
+//   }
+// };
 
 export default api;

@@ -242,11 +242,8 @@
   .comment-submit:active {
     transform: scale(0.95);
   }
-  .Show-All-Reactions{
-    background: #282828;
-
-  }
-  .Show-All-Reactions a{
+ 
+  .Show-All-Reactions {
     color: #fffd02;
     cursor: pointer;
     text-decoration: none;
@@ -365,7 +362,6 @@
 
 /* Individual post container */
 .post-container {
- 
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   padding: 20px;
@@ -391,4 +387,65 @@
   .feed-container {
     padding: 10px;
   }
+}
+/**/
+/* Add to your CSS file */
+.show-reactions-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.show-reactions-content {
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.show-reactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.show-reactions-close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.show-reactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.show-reaction-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.show-reactions-user {
+  font-weight: bold;
+}
+
+.show-no-reactions {
+  text-align: center;
+  color: #666;
+  padding: 20px;
 }
