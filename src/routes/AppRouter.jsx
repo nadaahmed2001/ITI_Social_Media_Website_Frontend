@@ -15,6 +15,8 @@ import GroupsPage from "../pages/StudentDashboard/GroupsPage";
 // Components (Optional - For Direct Rendering in Pages)
 import SignUpForm from "../components/auth/SignUpForm";
 import LoginForm from "../components/auth/LoginForm";
+import ForgotPassword from "../components/auth/ForgotPassword";
+import PasswordResetConfirm from "../components/auth/PasswordResetConfirm";
 import CreatePost from "../components/posts/CreatePost";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
@@ -29,6 +31,8 @@ const AppRouter = () => {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
         {/* Dashboards */}
         <Route path="/dashboard" element={<DashboardPage />} />
         {/* Supervisor Routes */}
