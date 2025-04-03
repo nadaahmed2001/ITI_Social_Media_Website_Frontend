@@ -20,15 +20,18 @@ export const SECTIONS = {
   EDIT_PHOTO: 'editPhoto',
   CHANGE_CREDENTIALS: 'changeCredentials',
   SKILLS_PROJECTS: 'skillsProjects',
-  PRIVACY: 'privacy', // Added placeholder
-  MY_POSTS: 'myPosts', // Added placeholder
-  SAVED: 'saved', // Added placeholder
+  PRIVACY: 'privacy', 
+  MY_POSTS: 'myPosts',
+  SAVED: 'saved', 
 };
 
 
 export default function Sidebar({ activeSection, setActiveSection, onLogout }) {
   const handleLogout = () => {
-    // Implement your logout logic here (e.g., clear token, redirect)
+      localStorage.removeItem('access_token'); 
+      localStorage.removeItem('refresh_token');
+      window.location.href = '/login'; 
+
     console.log("Logout clicked");
     if (onLogout) {
         onLogout();
@@ -38,7 +41,7 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout }) {
   // Helper to create sidebar options
   const SidebarOption = ({ sectionKey, icon, label }) => (
     <div
-      className={`sidebar-option ${activeSection === sectionKey ? 'active' : ''}`} // Add 'active' class
+      className={`sidebar-option ${activeSection === sectionKey ? 'active' : ''}`}
       onClick={() => setActiveSection(sectionKey)}
     >
       {icon}

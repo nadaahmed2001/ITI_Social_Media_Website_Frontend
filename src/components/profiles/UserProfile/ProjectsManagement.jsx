@@ -8,7 +8,8 @@ import {
     deleteProject,
     getContributors,
     addContributor,
-    removeContributor
+    removeContributor,
+    getAllTags
 } from '../../../services/api'; // Import API functions
 
 // Import necessary Icons
@@ -20,7 +21,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PersonIcon from '@mui/icons-material/Person';
 
-import './ProjectsManagement.css'; // Create/Update this CSS file
+import './ProjectsManagement.css'; 
 
 // Initial empty state for the project form
 const initialProjectFormState = {
@@ -28,18 +29,22 @@ const initialProjectFormState = {
     description: '',
     demo_link: '',
     source_link: '',
-    tags: '', // Comma-separated string for simplicity initially
-    // featured_image: null // Omit image handling for now
+    tags: '', // Comma-separated string 
+    featured_image: null // Omit image handling for now
 };
 
 // Define default avatar path (adjust if necessary)
-const DEFAULT_AVATAR = '/images/profiles/user-default.png';
+const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
 
 const ProjectsManagement = ({ profileId }) => {
     // --- State ---
     const [projects, setProjects] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
+
+    const [availableTags, setAvailableTags] = useState([]); // Stores [{id, name}, ...]
+    const [isLoadingTags, setIsLoadingTags] = useState(true); // Separate loading for tags
+    
 
     // Project Add/Edit Modal State (Corrected Names)
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
@@ -86,12 +91,26 @@ const ProjectsManagement = ({ profileId }) => {
         }
     }, [profileId]);
 
+    const fetchTags = useCallback(async () => {
+        setIsLoadingTags(true);
+        try {
+            const response = await getAllTags();
+            setAvailableTags(response.data || []);
+        } catch (err) {
+            console.error("Failed to fetch tags:", err);
+            // Handle tag fetch error separately if needed, maybe less critical
+            setError(prev => prev ? `${prev} Could not load tags.` : 'Could not load tags.');
+        } finally {
+            setIsLoadingTags(false);
+        }
+    }, []);
+
     useEffect(() => {
         fetchProjects();
-    }, [fetchProjects]);
+        fetchTags(); 
+    }, [fetchProjects, fetchTags]); 
 
 
-    // --- Project Modal Handlers (Using Corrected Names) ---
     const openModalForAdd = () => {
         setEditingProject(null);
         setProjectFormData(initialProjectFormState);
@@ -101,27 +120,36 @@ const ProjectsManagement = ({ profileId }) => {
 
     const openModalForEdit = (project) => {
         setEditingProject(project);
-        // Assuming project.tags is an array of IDs from the backend
-        const tagsString = Array.isArray(project.tags) ? project.tags.join(', ') : '';
+
+        // --- Map Tag IDs to Names ---
+        let tagsString = '';
+        if (Array.isArray(project.tags) && availableTags.length > 0) {
+            tagsString = project.tags.map(tagId => {
+                const foundTag = availableTags.find(tag => tag.id === tagId);
+                return foundTag ? foundTag.name : ''; 
+            }).filter(Boolean).join(', '); 
+        }
+        // --- End Mapping ---
+
         setProjectFormData({
             title: project.title || '',
             description: project.description || '',
             demo_link: project.demo_link || '',
             source_link: project.source_link || '',
-            tags: tagsString, // Display IDs for now; ideally fetch names
+            tags: tagsString, // <-- Set the string of names
         });
         setProjectModalError('');
         setIsProjectModalOpen(true);
     };
 
-    const closeProjectModal = () => { // Renamed
+    const closeProjectModal = () => { 
         if (isSavingProject) return;
         setIsProjectModalOpen(false);
         setEditingProject(null);
         setProjectModalError('');
     };
 
-    const handleProjectModalChange = (e) => { // Renamed
+    const handleProjectModalChange = (e) => { 
         const { name, value } = e.target;
         setProjectFormData(prev => ({ ...prev, [name]: value }));
         setProjectModalError('');
@@ -160,7 +188,7 @@ const ProjectsManagement = ({ profileId }) => {
             const errors = err.response?.data;
             let errorMessage = 'Failed to save project.';
             if (typeof errors === 'object' && errors !== null) {
-                 errorMessage = Object.entries(errors)
+                errorMessage = Object.entries(errors)
                     .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
                     .join(' ');
             } else if (typeof errors === 'string') {
@@ -263,7 +291,8 @@ const ProjectsManagement = ({ profileId }) => {
 
     // --- Render Logic ---
     const renderProjectList = () => {
-        if (isLoading) return <p className="loading-text">Loading projects...</p>;
+        const initialLoading = isLoading || isLoadingTags;
+        if (initialLoading) return <p className="loading-text">Loading projects...</p>;
         // Show fetch error only if list is empty
         if (error && projects.length === 0) return <p className="error-message">{error}</p>;
         if (!isLoading && projects.length === 0) {

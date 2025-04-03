@@ -1,174 +1,248 @@
-// src/components/UserProfile/EditPhoto.jsx
 import React, { useState, useRef } from 'react';
-// Import both API functions
-import { updateProfilePicture, updateAccount } from '../../../services/api';
+// Import the API function that sends FormData to the /users/account/ PUT endpoint
+// We'll use this for both uploading and clearing the image.
+// If you had separate functions (updateAccountData vs updateAccount), ensure you use the one sending FormData.
+// Let's assume 'updateProfilePicture' is the one sending FormData based on previous context.
+import { updateProfilePicture } from '../../../services/api'; // Adjust path if needed
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import UploadIcon from '@mui/icons-material/Upload';
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from '@mui/icons-material/Person'; // Placeholder icon
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'; // Import Delete icon
-import './EditPhoto.css';
+import './EditPhoto.css'; // Your CSS file
 
-const DEFAULT_PROFILE_PIC = '/images/profiles/user-default.png';
+// Define default avatar path (ADJUST THIS PATH TO YOUR PROJECT STRUCTURE)
+const DEFAULT_PROFILE_PIC = '../../src/assets/images/user-default.webp';
 
 const EditPhoto = ({ currentImageUrl, onUpdateSuccess }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [isLoading, setIsLoading] = useState(false); // For upload
-  const [isDeleting, setIsDeleting] = useState(false); // For delete
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const fileInputRef = useRef(null);
+// --- State ---
+const [selectedFile, setSelectedFile] = useState(null); // Holds the selected File object
+const [previewUrl, setPreviewUrl] = useState(null); // Holds URL for local preview
+const [isUploading, setIsUploading] = useState(false); // Loading state specifically for upload action
+const [isDeleting, setIsDeleting] = useState(false); // Loading state specifically for delete action
+const [error, setError] = useState(''); // Holds error messages
+const [success, setSuccess] = useState(''); // Holds success messages
+const fileInputRef = useRef(null); // Ref to access hidden file input
 
-  const handleFileChange = (event) => {
-    // ... (keep existing file change logic, including validation) ...
-     const file = event.target.files[0];
-     setError('');
-     setSuccess('');
-     if (file) {
-       if (!file.type.startsWith('image/')) {
-           setError('Please select an image file (e.g., JPG, PNG, GIF).');
-           setSelectedFile(null); setPreviewUrl(null); return;
-       }
-        if (file.size > 5 * 1024 * 1024) { // 5MB limit
-            setError('File size cannot exceed 5MB.');
-            setSelectedFile(null); setPreviewUrl(null); return;
+// --- Handlers ---
+
+// Handles file selection from the input
+const handleFileChange = (event) => {
+const file = event.target.files[0];
+// Reset messages on new selection attempt
+setError('');
+setSuccess('');
+if (file) {
+    // Basic validation (optional but recommended)
+    if (!file.type.startsWith('image/')) {
+        setError('Please select an image file (e.g., JPG, PNG, GIF).');
+        setSelectedFile(null); setPreviewUrl(null); return;
+    }
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit example
+        setError('File size cannot exceed 5MB.');
+        setSelectedFile(null); setPreviewUrl(null); return;
+    }
+    // Update state if file is valid
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file)); // Show local preview
+} else {
+    // Clear state if user cancels file selection
+    setSelectedFile(null);
+    setPreviewUrl(null);
+}
+};
+
+// Programmatically clicks the hidden file input
+const triggerFileChoose = () => {
+// Clear previous errors/success when user intends to choose a new file
+setError('');
+setSuccess('');
+fileInputRef.current?.click();
+};
+
+// Handles the actual upload API call
+const handleUpload = async () => {
+if (!selectedFile) {
+    setError('Please select an image file first.');
+    return;
+}
+setIsUploading(true); // Set uploading state
+setError('');
+setSuccess('');
+const formData = new FormData();
+
+// --- CORRECTED: Use 'profile_image' key matching Profile model field ---
+formData.append('profile_image', selectedFile);
+// --- End Correction ---
+
+try {
+    // Use the API function sending FormData to PUT /users/account/
+    const response = await updateProfilePicture(formData);
+    console.log("Backend PUT Response Data:", JSON.stringify(response.data, null, 2));
+    setSuccess('Profile picture updated successfully!');
+    setSelectedFile(null); // Clear selection state
+    setPreviewUrl(null); // Clear local preview
+
+    // Pass the updated image URL (which should be a Cloudinary URL now) back to parent
+    // Prioritize 'profile_image' based on the model change
+    const newImageUrl = response.data.profile_image || response.data.profile_picture; // Check both just in case
+    if (onUpdateSuccess) {
+        // If backend returns null/empty after successful save, pass that along
+        onUpdateSuccess(newImageUrl || null);
+    }
+} catch (err) {
+    console.error("Photo upload error:", err.response?.data || err.message);
+    const errors = err.response?.data;
+    let errorMessage = 'Failed to upload photo.';
+    if (typeof errors === 'object' && errors !== null) {
+        // Try to extract specific errors
+        errorMessage = errors.profile_image?.[0] || errors.detail || JSON.stringify(errors);
+    } else if (typeof errors === 'string') {
+        errorMessage = errors;
+    }
+    setError(errorMessage);
+} finally {
+    setIsUploading(false); // Clear uploading state
+}
+};
+
+// Handles deleting the existing profile image
+const handleDeleteImage = async () => {
+    // Check the prop passed from the parent for the current image URL
+    if (!currentImageUrl || currentImageUrl === DEFAULT_PROFILE_PIC) {
+        setError("No custom profile picture to remove.");
+        return;
+    }
+    if (!window.confirm("Are you sure you want to remove your profile picture?")) {
+        return;
+    }
+    setIsDeleting(true); // Set deleting state
+    setError('');
+    setSuccess('');
+
+    // --- CORRECTED: Send FormData with empty string to clear ---
+    const formData = new FormData();
+    // Use the correct field name 'profile_image' and send an empty string
+    // The backend's partial update + ImageField should interpret this as clearing
+    formData.append('profile_image', '');
+    // --- End Correction ---
+
+    try {
+        // Use the same API function that sends FormData
+        await updateProfilePicture(formData); // It sends PUT to /users/account/
+        setSuccess("Profile picture removed successfully.");
+        setSelectedFile(null); // Clear any file selection
+        setPreviewUrl(null);   // Clear preview
+        if (onUpdateSuccess) {
+            onUpdateSuccess(null); // Update parent state (image is now null)
         }
-       setSelectedFile(file);
-       setPreviewUrl(URL.createObjectURL(file));
-     } else {
-        setSelectedFile(null); setPreviewUrl(null);
-     }
-  };
+    } catch (err) {
+        console.error("Delete photo error:", err.response?.data || err.message);
+        const errors = err.response?.data;
+        setError(errors?.detail || 'Failed to remove profile picture.');
+    } finally {
+        setIsDeleting(false); // Clear deleting state
+    }
+};
 
-  const triggerFileChoose = () => {
-    fileInputRef.current?.click();
-  };
+// --- Render Variables ---
+// Determine the image source: local preview > current image from props (Cloudinary URL)
+const imageToDisplay = previewUrl || currentImageUrl;
+// Check if there is a current image stored (and it's not the default placeholder)
+const hasCustomImage = currentImageUrl && currentImageUrl !== DEFAULT_PROFILE_PIC;
+// Combine loading states for disabling elements
+const isProcessing = isUploading || isDeleting;
 
-  const handleUpload = async () => {
-    // ... (keep existing upload logic) ...
-     if (!selectedFile) { setError('Please select an image file first.'); return; }
-     setIsLoading(true); setError(''); setSuccess('');
-     const formData = new FormData();
-     formData.append('profile_picture', selectedFile); // Key check!
-     try {
-       const response = await updateProfilePicture(formData);
-       setSuccess('Profile picture updated successfully!');
-       setSelectedFile(null); setPreviewUrl(null);
-       const newImageUrl = response.data.profile_picture || response.data.profile_image;
-       if (onUpdateSuccess && newImageUrl) { onUpdateSuccess(newImageUrl); }
-     } catch (err) {
-        console.error("Photo upload error:", err.response?.data || err.message);
-        const detailError = err.response?.data?.detail;
-        const fieldError = err.response?.data?.profile_picture?.[0] || err.response?.data?.profile_image?.[0];
-        setError(fieldError || detailError || 'Failed to upload photo.');
-     } finally { setIsLoading(false); }
-  };
+// --- JSX ---
+return (
+<div className="edit-photo-container section-container">
+    {/* Title Section */}
+    <div className='photo-title-section'>
+    <h2><PhotoCameraIcon /> Photo</h2>
+    <p>Add a nice photo of yourself for your profile.</p>
+    </div>
 
-  // --- NEW: Delete Image Handler ---
-  const handleDeleteImage = async () => {
-      if (!currentImageUrl || currentImageUrl === DEFAULT_PROFILE_PIC) {
-          setError("No custom profile picture to remove.");
-          return;
-      }
+    {/* Display Error/Success Messages */}
+    {error && <p className="error-message">{error}</p>}
+    {success && <p className="success-message">{success}</p>}
 
-      if (!window.confirm("Are you sure you want to remove your profile picture?")) {
-          return;
-      }
+    {/* Main Content Area */}
+    <div className="photo-edit-area">
 
-      setIsDeleting(true);
-      setError('');
-      setSuccess('');
-
-      try {
-          // Send null for the picture field using the standard updateAccount (JSON)
-          // Ensure the key matches what the backend PUT expects for clearing
-          await updateAccount({ profile_picture: null });
-          setSuccess("Profile picture removed successfully.");
-          setSelectedFile(null); // Clear any selection
-          setPreviewUrl(null);   // Clear preview
-          if (onUpdateSuccess) {
-              onUpdateSuccess(null); // Update parent state to remove image
-          }
-      } catch (err) {
-          console.error("Delete photo error:", err.response?.data || err.message);
-          setError(err.response?.data?.detail || 'Failed to remove profile picture.');
-      } finally {
-          setIsDeleting(false);
-      }
-  };
-
-   const imageToDisplay = previewUrl || currentImageUrl;
-   const hasCustomImage = currentImageUrl && currentImageUrl !== DEFAULT_PROFILE_PIC;
-
-
-  return (
-    <div className="edit-photo-container section-container">
-      {/* Title Section */}
-      <div className='photo-title-section'>
-        <h2><PhotoCameraIcon /> Photo</h2>
-        <p>Add a nice photo of yourself for your profile.</p>
-      </div>
-
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">{success}</p>}
-
-      {/* --- Image Preview Area --- */}
-      <div className="photo-preview-area">
-          <h4>Image preview</h4>
-          <div className="image-placeholder">
-             {imageToDisplay && imageToDisplay !== DEFAULT_PROFILE_PIC ? ( // Only show img if not default
+        {/* Image Preview Section */}
+        <div className="photo-preview-section">
+            <h4>Image preview</h4>
+            <div className="image-placeholder">
+                {/* Show local preview or current image, otherwise placeholder icon */}
+                {imageToDisplay && imageToDisplay !== DEFAULT_PROFILE_PIC ? (
                 <img
-                    key={imageToDisplay}
+                    // Using previewUrl or currentImageUrl helps refresh if URL string doesn't change but content might
+                    key={previewUrl || currentImageUrl}
                     src={imageToDisplay}
                     alt="Profile Preview"
                     className="profile-image-preview"
+                    // Add onError handler for potentially broken Cloudinary URLs
+                    onError={(e) => {
+                        console.warn(`Error loading image: ${e.target.src}. Falling back to default.`);
+                        // Avoid infinite loop if default image also fails
+                        if (e.target.src !== DEFAULT_PROFILE_PIC) {
+                            e.target.src = DEFAULT_PROFILE_PIC;
+                        }
+                        }}
                 />
-             ) : (
-                 <PersonIcon className="placeholder-icon" /> // Show placeholder icon
-             )}
-          </div>
-            {/* --- NEW: Delete Button --- */}
-            {hasCustomImage && ( // Show delete button only if there's a non-default image
+                ) : (
+                    <PersonIcon className="placeholder-icon" /> // Placeholder
+                )}
+            </div>
+            {/* Delete Button (only show if a custom image exists and not currently previewing a new one) */}
+            {hasCustomImage && !previewUrl && (
                 <button
                     className="delete-photo-button"
                     onClick={handleDeleteImage}
-                    disabled={isDeleting || isLoading} // Disable if deleting or uploading
+                    disabled={isProcessing} // Disable if uploading or deleting
                     title="Remove profile picture"
                 >
-                   {isDeleting ? <span className="spinner small red"></span> : <DeleteForeverIcon fontSize="small"/>}
-                   {isDeleting ? 'Removing...' : 'Remove Photo'}
+                    {isDeleting ? <span className="spinner small red"></span> : <DeleteForeverIcon fontSize="small"/>}
+                    {isDeleting ? 'Removing...' : 'Remove Photo'}
                 </button>
-           )}
-      </div>
+            )}
+        </div>
 
+        {/* Upload Control Section */}
+        <div className="photo-upload-control">
+            <h4>Add / Change Image</h4>
+            {/* Hidden file input */}
+            <input
+                type="file"
+                accept="image/png, image/jpeg, image/gif" // Specific image types
+                onChange={handleFileChange}
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                disabled={isProcessing} // Disable if uploading or deleting
+            />
+            {/* Row for file name display and upload button */}
+            <div className="upload-input-row">
+                <span
+                    className="file-name-display"
+                    onClick={triggerFileChoose} // Click text area to choose file
+                    title="Click to choose an image"
+                    aria-disabled={isProcessing} // Accessibility hint
+                >
+                    {selectedFile ? selectedFile.name : "No File Selected"}
+                </span>
+                <button
+                    className="upload-button"
+                    onClick={handleUpload} // This button triggers the upload
+                    disabled={!selectedFile || isProcessing} // Disable if no file or loading
+                    title={selectedFile ? "Upload selected image" : "Select an image first"}
+                >
+                    <UploadIcon fontSize="small"/> {isUploading ? 'UPLOADING...' : 'UPLOAD'}
+                </button>
+            </div>
+        </div>
 
-      {/* --- Upload Control Section --- */}
-      <div className="photo-upload-control">
-          <h4>Add / Change Image</h4>
-          <input /* Hidden file input (same as before) */
-              type="file" accept="image/png, image/jpeg, image/gif" onChange={handleFileChange}
-              ref={fileInputRef} style={{ display: 'none' }} disabled={isLoading || isDeleting}
-          />
-          <div className="upload-input-row">
-              <span
-                  className="file-name-display"
-                  onClick={triggerFileChoose}
-                  title="Click to choose an image"
-              >
-                  {selectedFile ? selectedFile.name : "No File Selected"}
-              </span>
-              <button
-                  className="upload-button"
-                  onClick={handleUpload}
-                  disabled={!selectedFile || isLoading || isDeleting}
-                  title={selectedFile ? "Upload selected image" : "Select an image first"}
-              >
-                  <UploadIcon fontSize="small"/> {isLoading ? 'UPLOADING...' : 'UPLOAD'}
-              </button>
-          </div>
-      </div>
     </div>
-  );
+</div>
+);
 };
 
 export default EditPhoto;

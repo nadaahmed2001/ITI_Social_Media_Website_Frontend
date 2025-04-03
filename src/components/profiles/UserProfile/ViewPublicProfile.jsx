@@ -1,24 +1,23 @@
-// src/components/UserProfile/ViewPublicProfile.jsx
+{/* ================= TODO: Adding more fields, batch, department track, join date ================ */}
 import React, { useState, useEffect, useCallback } from 'react';
-import { getPublicProfile, getAllProjects, getAllTags } from '../../../services/api'; // Assuming getMyProjects is in api.js
+import { getPublicProfile, getAllProjects, getAllTags } from '../../../services/api'; 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LinkIcon from '@mui/icons-material/Link';
 import CodeIcon from '@mui/icons-material/Code';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import LanguageIcon from '@mui/icons-material/Language'; // For website url
-import { FaGithub, FaLinkedin, FaGlobe, FaHackerrank } from 'react-icons/fa'; // Using FontAwesome set
-import { SiLeetcode } from 'react-icons/si'; // Using SimpleIcons set for LeetCode
+import LanguageIcon from '@mui/icons-material/Language'; 
+import { FaGithub, FaLinkedin, FaGlobe, FaHackerrank } from 'react-icons/fa'; 
+import { SiLeetcode } from 'react-icons/si'; 
 import ImageIcon from '@mui/icons-material/Image';
 import PeopleIcon from '@mui/icons-material/People';
 import PersonIcon from '@mui/icons-material/Person'; 
 import Link from '@mui/material/Link';
-// Add other icons if needed (LeetCode, HackerRank etc.)
 
 import './ViewPublicProfile.css';
 
-const DEFAULT_PROJECT_IMAGE = '/images/projects/default.jpg'; // Example default project image
-const DEFAULT_AVATAR = '/images/profiles/user-default.png'; // Default user avatar
+const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp'; // Default project image
+const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp'; // Default user avatar
 
 const ViewPublicProfile = ({ profileId }) => {
     const [profileData, setProfileData] = useState(null);
@@ -33,7 +32,7 @@ const ViewPublicProfile = ({ profileId }) => {
         if (!profileId) {
         setError("Profile ID is missing.");
         setIsLoadingProfile(false);
-        setIsLoadingProjects(false); // Stop projects loading too
+        setIsLoadingProjects(false); 
         return;
         }
         setIsLoadingProfile(true);
@@ -52,7 +51,6 @@ const ViewPublicProfile = ({ profileId }) => {
     const fetchProjects = useCallback(async () => {
         if (!profileId) return;
         setIsLoadingProjects(true);
-        // Clear project-specific errors if needed
         try {
             const response = await getAllProjects(); // Fetch ALL projects
             const allProjects = response.data || [];
@@ -86,24 +84,21 @@ const ViewPublicProfile = ({ profileId }) => {
     useEffect(() => {
         fetchProfile();
         fetchProjects();
-        fetchTags(); // Fetch tags as well
-      }, [fetchProfile, fetchProjects, fetchTags]); // Add fetchTags dependency
+        fetchTags(); 
+    }, [fetchProfile, fetchProjects, fetchTags]);
 
-  // --- Render Helpers ---
 
   const renderLinks = () => {
     if (!profileData) return null;
 
     // Define links with react-icons components
     const links = [
-      { url: profileData.github_url, icon: <FaGithub />, label: 'GitHub Profile' }, // Added label for accessibility/tooltip
-      // Assuming leetcode_username field stores the username
+      { url: profileData.github_url, icon: <FaGithub />, label: 'GitHub Profile' }, 
       { url: profileData.leetcode_username ? `https://leetcode.com/${profileData.leetcode_username}` : null, icon: <SiLeetcode />, label: 'LeetCode Profile' },
-      // Assuming hackerrank_username field stores the username
       { url: profileData.hackerrank_username ? `https://www.hackerrank.com/${profileData.hackerrank_username}` : null, icon: <FaHackerrank />, label: 'HackerRank Profile' },
       { url: profileData.linkedin_url, icon: <FaLinkedin />, label: 'LinkedIn Profile' },
       { url: profileData.website_url, icon: <FaGlobe />, label: 'Personal Website/Portfolio' },
-      // Add others like twitter_url, stackoverflow_url if needed
+      // ========== TODO:Add others like twitter_url, stackoverflow_url =============
     ].filter(link => link.url); // Only show links that have a valid URL
 
     if (links.length === 0) return null; // Don't render section if no links
@@ -111,25 +106,24 @@ const ViewPublicProfile = ({ profileId }) => {
         
     return (
         <div className="profile-section links-section">
-          <h3>Links</h3>
-          <ul className="links-list icon-links"> {/* Add class for specific styling */}
+            <h3>Links</h3>
+            <ul className="links-list icon-links"> 
             {links.map((link, index) => (
-              <li key={index} className="link-item">
+                <li key={index} className="link-item">
                 <a
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={link.label} // Use label for tooltip
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={link.label} // Use label for tooltip
                 >
-                  {link.icon}
-                  {/* Label removed for icon-only look like the target image */}
-                  {/* <span>{link.label}</span> */}
+                    {link.icon}
+                    {/* Label removed for icon-only look like the target image */}
                 </a>
-              </li>
+                </li>
             ))}
-          </ul>
+            </ul>
         </div>
-      );
+    );
     };
     const renderSkills = () => {
         if (!profileData || (!profileData.main_skills?.length && !profileData.other_skills?.length)) {
@@ -176,8 +170,8 @@ const ViewPublicProfile = ({ profileId }) => {
         // If not loading but still no projects (after filtering), don't render the section
         if (!isLoading && projectsData.length === 0) {
             // Optionally show a "No projects yet" message if desired within the section
-            // return <div className="profile-section projects-section"><h3>Projects</h3><p className="no-data-text">No projects added yet.</p></div>;
-             return null; // Or just render nothing
+            return <div className="profile-section projects-section"><h3>Projects</h3><p className="no-data-text">No projects added yet.</p></div>;
+            //  return null; // Or just render nothing
         }
 
         const getTagName = (tagId) => {
@@ -214,9 +208,7 @@ const ViewPublicProfile = ({ profileId }) => {
                                 ))}
                             </div>
                         )}
-                         {isLoadingTags && project.tags?.length > 0 && <p className='loading-text tiny'>Loading tags...</p>}
-
-
+                        {isLoadingTags && project.tags?.length > 0 && <p className='loading-text tiny'>Loading tags...</p>}
                         {/* --- Contributors --- */}
                         {/* Ensure project.contributors is an array and has items */}
                         {Array.isArray(project.contributors) && project.contributors.length > 0 && (
@@ -240,21 +232,20 @@ const ViewPublicProfile = ({ profileId }) => {
                                 </ul>
                             </div>
                         )}
-
-                        {/* --- Links --- */}
+                        {/* --- Project Links --- */}
                         <div className="project-links">
-                             {project.demo_link && (
-                                <a href={project.demo_link} target="_blank" rel="noopener noreferrer" className="project-link-button demo">
-                                <LanguageIcon fontSize="small"/> Demo
-                                </a>
-                             )}
-                             {project.source_link && (
-                                <a href={project.source_link} target="_blank" rel="noopener noreferrer" className="project-link-button source">
-                                <GitHubIcon fontSize="small"/> Source
-                                </a>
-                             )}
+                            {project.demo_link && (
+                            <a href={project.demo_link} target="_blank" rel="noopener noreferrer" className="project-link-button demo">
+                            <LanguageIcon fontSize="small"/> Demo
+                            </a>
+                            )}
+                            {project.source_link && (
+                            <a href={project.source_link} target="_blank" rel="noopener noreferrer" className="project-link-button source">
+                            <GitHubIcon fontSize="small"/> Source
+                            </a>
+                            )}
                         </div>
-                    </div> {/* End project-details-content */}
+                    </div> 
                 </li>
             ))}
             </ul>
@@ -288,7 +279,7 @@ const ViewPublicProfile = ({ profileId }) => {
         {/* --- Profile Header --- */}
         <div className="profile-header">
             <img
-            src={profileData.profile_image || '/path/to/your/default-user.png'} // Use default if no image
+            src={ DEFAULT_AVATAR } // Use default if no image
             alt={`${fullName}'s profile`}
             className="profile-avatar"
             />
@@ -305,7 +296,7 @@ const ViewPublicProfile = ({ profileId }) => {
         {/* --- Bio --- */}
         {profileData.bio && (
             <div className="profile-section bio-section">
-            <h3>About</h3>
+            <h3>Bio</h3>
             <p>{profileData.bio}</p>
             </div>
         )}

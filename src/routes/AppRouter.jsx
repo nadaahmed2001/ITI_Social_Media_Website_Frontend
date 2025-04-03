@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthPage from "../pages/AuthPage";
 import DashboardPage from "../pages/DashboardPage";
-import ProfilePage from "../pages/ProfilePage";
+// import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
 import ChatPage from "../pages/ChatPage";
 import NotificationsPage from "../pages/NotificationsPage";
@@ -21,12 +21,14 @@ import PostList from "../components/posts/PostList";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import FollowButton from "../components/profiles/FollowButton";
-import UserProfile from "../components/profiles/UserProfile";
+// import UserProfile from "../components/profiles/UserProfile";
 import SearchFilters from "../components/search/SearchFilters";
 import DeletePost from "../components/posts/DeletePost";
 import EditPost from "../components/posts/EditPost";
 import Sidebar from "../components/profiles/Sidebar/Sidebar";
 import UserProfilePage from "../pages/UserProfilePage";
+import EmailChangeSuccess from "../pages/EmailChangeSuccess";
+import EmailChangeFailed from "../pages/EmailChangeFailed";
 
 const AppRouter = () => {
   return (
@@ -62,11 +64,15 @@ const AppRouter = () => {
         <Route path="/chat/messagesList" element={<MessagesList />} />
          {/* Profile Components */}
         <Route path="/profiles/followbutton" element={<FollowButton />} />
-        <Route path="/profiles/userprofile" element={<UserProfile />} />
+        {/* <Route path="/profiles/userprofile" element={<UserProfile />} /> */}
         {/* Search Components */}
         <Route path="/search/filters" element={<SearchFilters />} />
         {/* Default Route (Redirects to Dashboard or Login) */}
         <Route path="*" element={<AuthPage />} />
+
+        <Route path="/email-change-success" element={<EmailChangeSuccess />} />
+        <Route path="/email-change-failed/" element={<EmailChangeFailed />} />
+      
       </Routes>
     </Router>
   );

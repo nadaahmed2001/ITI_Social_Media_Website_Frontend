@@ -14,8 +14,8 @@ const EditProfile = ({ initialData, onUpdateSuccess }) => {
     leetcode_username: '',
     linkedin_url: '',
     hackerrank_username: '',
-    website_url: '', // Personal portfolio
-    // Add other fields from Profile model if needed (location, etc.)
+    website_url: '', 
+    location: '',
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -100,6 +100,7 @@ const EditProfile = ({ initialData, onUpdateSuccess }) => {
               disabled={isLoading}
             />
           </div>
+          {renderInput('location', 'Location')}
         </div>
 
         <div className="form-section">

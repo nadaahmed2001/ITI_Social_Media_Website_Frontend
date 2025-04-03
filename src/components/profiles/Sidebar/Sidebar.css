@@ -3,11 +3,14 @@
     
 }
 .sidebar-container {
-    width: 250px;
+    width: 300px;
     background: #282828;
     color: white;
     padding: 10px;
     border-radius: 8px;
+    height: min-content;
+    margin-top: 30px;
+    margin-left: 20px;
   }
   
   .search-bar {
