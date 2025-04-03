@@ -48,8 +48,9 @@ const AppRouter = () => {
         <Route path="/posts/create" element={<CreatePost />} />
         {/* Chat Component Example */}
 
-        <Route path="/chat/sidebar" element={<ChatSidebar />} />
-        <Route path="/chat/messagesList" element={<MessagesList />} />
+        <Route path="/chat/" element={<ChatSidebar />} />
+        <Route path="/chat/messagesList/group/:id" element={<MessagesList isGroupChat={true} />} />
+        <Route path="/chat/messagesList/private/:id" element={<MessagesList isGroupChat={false} />} />
 
          {/* Profile Components */}
         <Route path="/profiles/followbutton" element={<FollowButton />} />

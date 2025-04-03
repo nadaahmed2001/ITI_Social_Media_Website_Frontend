@@ -6,10 +6,18 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNTc0MTk5LCJpYXQiOjE3NDM0ODc3OTksImp0aSI6ImVhYjlkNTIzNWFmOTQ5OWM5ZDk5NWM2MzUxYzI1MDg2IiwidXNlcl9pZCI6MTV9.mrQjaiqsLu8m9OhztZS8ajCfcTyW5LtU6t37V8aI9MA"
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzE2MjMzLCJpYXQiOjE3NDM2Mjk4MzMsImp0aSI6ImQ2NzJmNTY4NDk4NzQwZGZhYzQ1ZDU0NjQ0Y2NhNzU2IiwidXNlcl9pZCI6MX0.bG9tNz65NHyEqrHUUoHF789nwOYm7BKE4sCJfUTt9zY"
   }
 });
 
+
+const api2 = axios.create({
+  baseURL: "http://127.0.0.1:8000/",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzEzOTE1LCJpYXQiOjE3NDM2Mjc1MTUsImp0aSI6ImE3ZGZmNGI1YThjOTRjNzFhMWMxZmFhZDJhNzg3MmQxIiwidXNlcl9pZCI6MX0.bGT0j-8EQOMIEGJ_Ev7hAWA7B2rCkqUFNjrrKL7B_28"
+  }
+});
 // Chat API functions
 export const fetchUserChats = () => api.get("/chat/user_chats/");
 export const fetchGroupChats = () => api.get("/chat/groups/"); // Fetch all group chats
@@ -17,8 +25,36 @@ export const fetchGroupChats = () => api.get("/chat/groups/"); // Fetch all grou
 export const fetchGroupMessages = (groupId) => api.get(`/chat/groups/${groupId}/messages/`);
 export const fetchPrivateMessages = (receiverId) => api.get(`/chat/messages/${receiverId}/`);
 export const sendGroupMessage = (groupId, content) => api.post(`/chat/groups/${groupId}/messages/`, { content });
-export const sendPrivateMessage = (receiverId, content) => api.post(`/chat/messages/${receiverId}/`, { content });
+export const sendPrivateMessage = (receiverId, message) => api.post(`/chat/messages/${receiverId}/`, { message });
 export const fetchPrivateChatUsers = () => api.get("/chat/private_chat_users/");
+
+// New API functions
+export const clearGroupChat = (groupId) => api.delete(`/chat/group-chats/${groupId}/clear/`);
+export const clearPrivateChat = (receiverId) => api.delete(`/chat/private-chats/${receiverId}/clear/`);
+export const editMessage = async (messageId, newContent) => {
+    try {
+        const response = await api.put(`/chat/messages/${messageId}/edit/`, { content: newContent });
+        return response;
+    } catch (error) {
+        console.error("Error editing message:", error);
+        throw error;
+    }
+};
+export const deleteMessage = async (messageId, isGroupChat, groupId = null) => {
+    try {
+        // Determine the correct URL based on whether it's a group chat or private chat
+        const url = isGroupChat
+            ? `/chat/groups/${groupId}/messages/${messageId}/delete/` // Group chat endpoint
+            : `/chat/messages/${messageId}/delete/`; // Private chat endpoint
+
+        // Make the DELETE request
+        const response = await api.delete(url);
+        return response;
+    } catch (error) {
+        console.error("Error deleting message:", error);
+        throw error;
+    }
+};
 
 // Other API functions
 export const fetchPosts = () => api.get("/posts/");
@@ -30,5 +66,8 @@ export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`
 export const fetchNotifications = () => api.get("/notifications/");
 export const markNotificationAsRead = (notificationId) => api.patch(`/notifications/${notificationId}/mark-as-read/`);
 export const markAllNotificationsAsRead = () => api.patch(`/notifications/mark-all-as-read/`);
+
+export const fetchUser = () => api2.get("users/account/");
+
 
 export default api;
