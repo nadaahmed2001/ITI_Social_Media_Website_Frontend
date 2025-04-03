@@ -121,6 +121,7 @@ const MessagesList = ({ isGroupChat }) => {
     const handleEditMessage = async (messageId, newContent) => {
         try {
             console.log("Editing message with ID:", messageId);
+            const response = await editMessage(messageId, newContent);
 
             // Update the messages state with the edited message
             setMessages((prevMessages) =>
