@@ -1,6 +1,6 @@
 // components/ReactionsModal.jsx
 import React, { useEffect, useState } from "react";
-import { fetchReactionsForPost } from "../../services/api";
+import { fetchReactionsForPost , removeReactionsForPost } from "../../services/api";
 
 export default function ReactionsModal({ postId, onClose }) {
   const [reactions, setReactions] = useState([]);
@@ -16,6 +16,18 @@ export default function ReactionsModal({ postId, onClose }) {
       });
   }, [postId]);
 
+  useEffect(() => {
+    removeReactionsForPost(postId)
+      .then((data) => {
+        setReactions(Array.isArray(data) ? data : []);
+      })
+      .catch((error) => {
+        console.error("Error fetching reactions:", error);
+        setReactions([]);
+      });
+  }, [postId]);
+  
+
   return (
     <div className="show-reactions-overlay">
       <div className="show-reactions-content">
@@ -30,6 +42,7 @@ export default function ReactionsModal({ postId, onClose }) {
               <div key={reaction.id} className="show-reaction-item">
                 <span className="show-reactions-user">{reaction.user}</span>
                 <span className="show-reactions-reaction-type">{reaction.reaction_type}</span>
+                <button className="show-reactions-remove-btn">Remove</button>
               </div>
             ))
           ) : (

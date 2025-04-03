@@ -76,6 +76,16 @@ export const fetchReactionsForPost = async (postId) => {
     return []; // Return empty array on error
   }
 };
+//remove rections
+export const removeReactionsForPost = async (postId) => {
+  try {
+    const response = await api.get(`/posts/${postId}/react/remove/`);
+    return response.data; // Ensure this returns an array of reactions
+  } catch (error) {
+    console.error("API Error:", error);
+    return []; // Return empty array on error
+  }
+};
 // export const fetchReactionsForPost = async (postId) => {
 //   try {
 //     const response = await api.get(`/posts/${postId}/reactions/`);
