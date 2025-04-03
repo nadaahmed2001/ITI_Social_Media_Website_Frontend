@@ -21,6 +21,7 @@ import MessagesList from "../components/chat/MessagesList";
 import FollowButton from "../components/profiles/FollowButton";
 import UserProfile from "../components/profiles/UserProfile";
 import SearchFilters from "../components/search/SearchFilters";
+
 const AppRouter = () => {
   return (
     <Router>
@@ -40,19 +41,15 @@ const AppRouter = () => {
         {/* Profile, Search, and Chat */}
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/search" element={<SearchPage />} />
-        
-        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/chat/*" element={<ChatPage />} />
         {/* Notifications */}
         <Route path="/notifications" element={<NotificationsPage />} />
-        {/* Posts  */}
+        {/* Posts */}
         <Route path="/posts/create" element={<CreatePost />} />
-        {/* Chat Component Example */}
-
-        <Route path="/chat/" element={<ChatSidebar />} />
-        <Route path="/chat/messagesList/group/:id" element={<MessagesList isGroupChat={true} />} />
-        <Route path="/chat/messagesList/private/:id" element={<MessagesList isGroupChat={false} />} />
-
-         {/* Profile Components */}
+        {/* Chat Routes */}
+        <Route path="/messagesList/group/:id" element={<MessagesList isGroupChat={true} />} />
+        <Route path="/messagesList/private/:id" element={<MessagesList isGroupChat={false} />} />
+        {/* Profile Components */}
         <Route path="/profiles/followbutton" element={<FollowButton />} />
         <Route path="/profiles/userprofile" element={<UserProfile />} />
         {/* Search Components */}

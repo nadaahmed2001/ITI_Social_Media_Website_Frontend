@@ -37,7 +37,7 @@ const ChatSidebar = () => {
                             <li
                                 key={chat.id}
                                 className="bg-gray-700 p-2 rounded-md cursor-pointer hover:bg-gray-600 transition-colors w-full max-w-xs"
-                                onClick={() => navigate(`/chat/messagesList/private/${chat.id}`)}
+                                onClick={() => navigate(`/messagesList/private/${chat.id}`)}
                             >
                                 <div className="flex items-center">
                                     <div className="ml-2">
@@ -59,7 +59,7 @@ const ChatSidebar = () => {
                             <li
                                 key={chat.id}
                                 className="bg-gray-700 p-2 rounded-md cursor-pointer hover:bg-gray-600 transition-colors w-full max-w-xs"
-                                onClick={() => navigate(`/chat/messagesList/group/${chat.id}`)}
+                                onClick={() => navigate(`/messagesList/group/${chat.id}`)}
                             >
                                 <div className="flex items-center">
                                     <div className="ml-2">
