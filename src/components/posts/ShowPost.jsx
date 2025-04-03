@@ -13,6 +13,7 @@ import TurnedInNotSharpIcon from '@mui/icons-material/TurnedInNotSharp';
 import ImageSharpIcon from '@mui/icons-material/ImageSharp';
 import EditPost from "./EditPost";
 import DeletePost from "./DeletePost";
+import { Link } from "react-router-dom";
 import { likePost } from "../../services/api";  // API function to handle reactions
 import "./Posts.css";
 
@@ -66,7 +67,6 @@ const handleAddReaction = async (reactionType) => {
     console.error("Error adding reaction:", error);
   }
 };
-
 // Function to handle removing a reaction
 const handleRemoveReaction = async (reactionType) => {
   try {
@@ -170,8 +170,7 @@ const handleDeletePost = (postId) => {
         </div>
         <button><TurnedInNotSharpIcon className="savePost-btn" /></button>
       </div>
-
-      <p className="Show-All-Reactions"><a href="">Show All Reactions</a></p>
+      <Link to={`/posts/show-reactions/${post.id}`}>Show All Reactions</Link>
       <hr />
 
       <div className="comment-section">
