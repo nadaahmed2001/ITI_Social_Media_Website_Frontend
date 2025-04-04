@@ -11,7 +11,11 @@ import {
   Moon,
   LogOut,
   Menu,
+  ChartBarDecreasing 
 } from "lucide-react";
+
+
+
 import logo from "../../assets/images/logo.png"; // Adjust the path to your logo image
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
@@ -36,6 +40,8 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
       }
       setLastScrollY(window.scrollY); // Update last scroll position
     };
+    // console.log(ChartBarDecreasing);//testing
+
   
     useEffect(() => {
       window.addEventListener("scroll", handleScroll);
@@ -77,7 +83,8 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
           { path: "/profile", Icon: User },
           { path: "/notifications", Icon: Bell },
           { path: "/settings", Icon: Settings },
-          { path: "/add", Icon: Plus },
+          // { path: "/add", Icon: Plus },
+          {path: "/supervisor/dashboard", Icon: ChartBarDecreasing},//New
         ].map(({ path, Icon }) => (
           <Link
             key={path}
@@ -129,7 +136,8 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
               { path: "/profile", label: "Profile", Icon: User },
               { path: "/notifications", label: "Notifications", Icon: Bell },
               { path: "/settings", label: "Settings", Icon: Settings },
-              { path: "/add", label: "Add Post", Icon: Plus },
+              // { path: "/add", label: "Add Post", Icon: Plus },
+              {path: "/supervisor/dashboard", label: "Supervisor Dashboard", Icon: ChartBarDecreasing},//New
             ].map(({ path, label, Icon }) => (
               <Link
                 key={path}

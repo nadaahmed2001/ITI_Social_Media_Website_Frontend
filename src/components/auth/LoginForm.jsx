@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, FormControlLabel, Checkbox, CircularProgress } from "@mui/material";
-import { Link ,useNavigate} from "react-router-dom";
+import {
+  TextField,
+  Button,
+  Typography,
+  FormControlLabel,
+  Checkbox,
+  CircularProgress,
+} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "../auth/auth.css";
-
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -33,7 +39,9 @@ const LoginForm = () => {
         const data = await response.json();
 
         if (response.ok) {
-          localStorage.setItem("accessToken", data.access);
+          // Save tokens in local storage
+          localStorage.setItem("access_token", data.access);
+          localStorage.setItem("refresh_token", data.refresh);
           navigate("/dashboard");
         } else {
           setErrorMessage(data.detail || "Login error");
@@ -45,7 +53,6 @@ const LoginForm = () => {
       setLoading(false);
     },
   });
-
 
   return (
     <div className="auth-container">
