@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const ChatSidebar = () => {
     const [groupChats, setGroupChats] = useState([]);
     const [privateChats, setPrivateChats] = useState([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for toggling sidebar
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,8 +24,20 @@ const ChatSidebar = () => {
 
     return (
         <div className="flex h-screen">
+            {/* Toggle Button for Small Screens */}
+            <button
+                className="md:hidden bg-yellow-400 text-black p-2 fixed top-4 left-4 z-50 rounded"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+                {isSidebarOpen ? "Close" : "Chats"}
+            </button>
+
             {/* Sidebar */}
-            <div className="flex-4 bg-black text-yellow-400 p-4 overflow-y-auto">
+            <div
+                className={`flex-4 bg-black text-yellow-400 p-4 overflow-y-auto transform ${
+                    isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+                } md:translate-x-0 transition-transform fixed md:static h-full z-40`}
+            >
                 <h2 className="text-xl font-bold mb-8 mt-4 text-center">CHATS</h2>
 
                 {/* Private Chats Section */}
@@ -70,7 +83,6 @@ const ChatSidebar = () => {
                         ))}
                     </ul>
                 </div>
-                
             </div>
         </div>
     );

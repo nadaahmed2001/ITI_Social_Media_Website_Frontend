@@ -16,3 +16,13 @@
     transform: translateY(20px);
     transition: opacity 300ms, transform 300ms;
 }
+
+/* Add custom scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-thumb {
+    overflow-y: hidden ;
+    background-color: yellow;
+    border-radius: 4px;
+}

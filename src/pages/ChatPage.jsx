@@ -12,9 +12,8 @@ const ChatPage = () => {
             <div className="flex-1 bg-gray-800">
                 <Routes>
                     {/* Pass the token to MessagesList */}
-                    
-                    <Route path="ws/chat/messagesList/group/:id" element={<MessagesList isGroupChat={true}  />} />
-                    <Route path="ws/chat/messagesList/group/:id" element={<MessagesList isGroupChat={false}  />} />
+                    <Route path="/messagesList/group/:id" element={<MessagesList isGroupChat={true} />} />
+                    <Route path="/messagesList/private/:id" element={<MessagesList isGroupChat={false} />} />
                 </Routes>
             </div>
         </div>
