@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { fetchGroupMessages, fetchPrivateMessages, fetchUser , sendGroupMessage, sendPrivateMessage } from "../../services/api";
 import { useParams } from 'react-router-dom';
 import ChatSidebar from './ChatSidebar';
@@ -15,10 +15,10 @@ const MessagesList = ({ isGroupChat }) => {
     const nodeRefs = useRef({}); // Store refs for each message
 
     // Temporary hardcoded token
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzY3NzY2LCJpYXQiOjE3NDM2ODEzNjYsImp0aSI6ImM4OWM0ZDBkZGE3ZTQyNTJiMjdhN2ZkYWI0NmE5ZDkxIiwidXNlcl9pZCI6NH0.9OprrJiTDX8Niro6KpXfiQKrO0LQPiMrOluntJ0YJbQ";
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODY3ODg3LCJpYXQiOjE3NDM3ODE0ODcsImp0aSI6ImFlMzNhZmE3MjUwMjQ5MWZiMTQ1ZGJkOTNmNzQwNjZhIiwidXNlcl9pZCI6MX0.G420CoY1QYI-OSWZinE5HUMf5Z50xE2AklJSlMFkRzw";
 
-    // Function to connect to the WebSocket
-    const connect_to_group_chat = () => {
+    // Memoize the WebSocket connection function
+    const connect_to_group_chat = useCallback(() => {
         const socketUrl = isGroupChat
             ? `ws://127.0.0.1:8000/ws/chat/group/${id}/?token=${token}` // Group chat WebSocket URL
             : `ws://127.0.0.1:8000/ws/chat/private/${id}/?token=${token}`; // Private chat WebSocket URL
@@ -59,35 +59,10 @@ const MessagesList = ({ isGroupChat }) => {
         };
         
         socketRef.current.onclose = () => {
-            console.log("WebSocket connection closed.");
+            console.log("WebSocket connection closed. Reconnecting...");
+            setTimeout(() => connect_to_group_chat(), 1000); // Reconnect after 1 second
         };
-        // Handle WebSocket connection open
-        socketRef.current.onopen = () => {
-            console.log("WebSocket connection established");
-        };
-
-        // Listen for messages from the WebSocket server
-        socketRef.current.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                if (data.type === "chat_message") {
-                    setMessages((prevMessages) => [...prevMessages, data.message]);
-                }
-            } catch (error) {
-                console.error("Error parsing WebSocket message:", error);
-            }
-        };
-
-        // Handle WebSocket errors
-        socketRef.current.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-
-        // Handle WebSocket connection close
-        socketRef.current.onclose = (event) => {
-            console.log("WebSocket connection closed:", event.reason);
-        };
-    };
+    }, [id, isGroupChat, token]);
 
     useEffect(() => {
         // Fetch the current user's username
@@ -155,7 +130,7 @@ const MessagesList = ({ isGroupChat }) => {
                 socketRef.current.close();
             }
         };
-    }, [id, isGroupChat]);
+    }, [id, isGroupChat, connect_to_group_chat]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

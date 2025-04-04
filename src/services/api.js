@@ -6,7 +6,7 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzY3NzY2LCJpYXQiOjE3NDM2ODEzNjYsImp0aSI6ImM4OWM0ZDBkZGE3ZTQyNTJiMjdhN2ZkYWI0NmE5ZDkxIiwidXNlcl9pZCI6NH0.9OprrJiTDX8Niro6KpXfiQKrO0LQPiMrOluntJ0YJbQ"
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODY3ODg3LCJpYXQiOjE3NDM3ODE0ODcsImp0aSI6ImFlMzNhZmE3MjUwMjQ5MWZiMTQ1ZGJkOTNmNzQwNjZhIiwidXNlcl9pZCI6MX0.G420CoY1QYI-OSWZinE5HUMf5Z50xE2AklJSlMFkRzw"
   }
 });
 
@@ -15,7 +15,7 @@ const api2 = axios.create({
   baseURL: "http://127.0.0.1:8000/",
   headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzY3NzY2LCJpYXQiOjE3NDM2ODEzNjYsImp0aSI6ImM4OWM0ZDBkZGE3ZTQyNTJiMjdhN2ZkYWI0NmE5ZDkxIiwidXNlcl9pZCI6NH0.9OprrJiTDX8Niro6KpXfiQKrO0LQPiMrOluntJ0YJbQ"
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODY3ODg3LCJpYXQiOjE3NDM3ODE0ODcsImp0aSI6ImFlMzNhZmE3MjUwMjQ5MWZiMTQ1ZGJkOTNmNzQwNjZhIiwidXNlcl9pZCI6MX0.G420CoY1QYI-OSWZinE5HUMf5Z50xE2AklJSlMFkRzw"
   }
 });
 // Chat API functions
