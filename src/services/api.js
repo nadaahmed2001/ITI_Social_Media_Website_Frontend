@@ -33,6 +33,7 @@ export const clearGroupChat = (groupId) => api.delete(`/chat/group-chats/${group
 export const clearPrivateChat = (receiverId) => api.delete(`/chat/private-chats/${receiverId}/clear/`);
 export const editMessage = async (messageId, newContent) => {
     try {
+        // Use the correct endpoint for editing messages
         const response = await api.put(`/chat/messages/${messageId}/edit/`, { content: newContent });
         return response;
     } catch (error) {
@@ -54,6 +55,16 @@ export const deleteMessage = async (messageId, isGroupChat, groupId = null) => {
         console.error("Error deleting message:", error);
         throw error;
     }
+};
+
+export const clearGroupMessages = async (groupId) => {
+    const response = await api.delete(`/chat/group-chats/${groupId}/clear/`); // Corrected endpoint
+    return response.data;
+};
+
+export const clearPrivateMessages = async (receiverId) => {
+    const response = await api.delete(`/chat/private-chats/${receiverId}/clear/`); // Corrected endpoint
+    return response.data;
 };
 
 // Other API functions

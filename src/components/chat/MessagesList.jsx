@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { fetchGroupMessages, fetchPrivateMessages, fetchUser, sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage } from "../../services/api";
+import { fetchGroupMessages, fetchPrivateMessages, fetchUser, sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage, clearGroupMessages, clearPrivateMessages } from "../../services/api";
 import { useParams } from 'react-router-dom';
 import ChatSidebar from './ChatSidebar';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -49,6 +49,15 @@ const MessagesList = ({token, isGroupChat }) => {
                             (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
                         );
                     });
+                } else if (data.type === "edit_message") {
+                    // Handle real-time message editing
+                    setMessages((prevMessages) =>
+                        prevMessages.map((msg) =>
+                            msg.id === data.message.id
+                                ? { ...msg, content: data.message.content }
+                                : msg
+                        )
+                    );
                 }
             } catch (error) {
                 console.error("Error parsing WebSocket message:", error);
@@ -273,11 +282,36 @@ const MessagesList = ({token, isGroupChat }) => {
         }
     };
 
+    const handleClearMessages = async () => {
+        const confirmClear = window.confirm("Are you sure you want to clear all messages?");
+        if (confirmClear) {
+            try {
+                if (isGroupChat) {
+                    await clearGroupMessages(id); // Call API to clear group messages
+                } else {
+                    await clearPrivateMessages(id); // Call API to clear private messages
+                }
+                setMessages([]); // Clear messages in the UI
+            } catch (error) {
+                console.error("Error clearing messages:", error);
+                alert("Failed to clear messages. Please try again.");
+            }
+        }
+    };
+
     return (
         <div className="flex h-screen">
             <ChatSidebar />
-            <div className="flex-1 flex flex-col bg-black text-yellow-400">
-                <div className="flex-1  overflow-x-hidden p-4"> {/* Show y-axis, hide x-axis */}
+            <div className="flex-1 flex flex-col bg-black text-yellow-400 relative">
+                {/* Clear Messages Button */}
+                <button
+                    onClick={handleClearMessages}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg absolute top-4 right-4 z-10"
+                >
+                    Clear All Messages
+                </button>
+                <div className="flex-1 overflow-x-hidden p-4">
+                    {/* Messages List */}
                     <TransitionGroup>
                         {messages.map((message, index) => {
                             if (!nodeRefs.current[index]) {
@@ -293,19 +327,11 @@ const MessagesList = ({token, isGroupChat }) => {
                                 >
                                     <div
                                         ref={nodeRefs.current[index]}
-                                        className={`mb-4 p-3 rounded-lg ${
+                                        className={`mb-4 p-3 rounded-lg shadow-lg ${
                                             message.sender === currentUser
                                                 ? "bg-yellow-500 text-black text-right self-end"
                                                 : "bg-gray-800 text-yellow-400 text-left self-start"
-                                        }`}
-                                        style={{
-                                            maxWidth: "50%", // Make the message width smaller
-                                            overflowX: "hidden", // Hide x-axis overflow
-                                            wordWrap: "break-word",
-                                            padding: "10px 15px",
-                                            borderRadius: "15px",
-                                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                                        }}
+                                        } max-w-full sm:max-w-md`} // Full width on small screens, limited width on larger screens
                                         onContextMenu={(e) => {
                                             e.preventDefault(); // Prevent default right-click menu
                                             if (message.sender === currentUser) {
@@ -323,18 +349,10 @@ const MessagesList = ({token, isGroupChat }) => {
                                         }}
                                     >
                                         <strong>{message.sender === currentUser ? "Me" : message.sender}:</strong>
-                                        <div
-                                            style={{
-                                                maxHeight: message.content.split(" ").length > 40 ? "150px" : "auto", // Add scroll for long messages
-                                                overflowY: message.content.split(" ").length > 40 ? "auto" : "hidden", // Enable y-axis scroll for long messages
-                                                overflowX: "hidden", // Hide x-axis overflow
-                                                fontSize: "1rem",
-                                                lineHeight: "1.5",
-                                            }}
-                                        >
+                                        <div className="break-words text-sm">
                                             {message.content}
-                                        </div> {/* Corrected: Closing tag added here */}
-                                        <div className="text-sm text-gray-500">
+                                        </div>
+                                        <div className="text-xs text-gray-500">
                                             {new Date(message.timestamp).toLocaleString()}
                                         </div>
                                     </div>
