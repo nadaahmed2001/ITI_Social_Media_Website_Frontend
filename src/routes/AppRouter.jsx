@@ -4,7 +4,6 @@ import AuthPage from "../pages/AuthPage";
 import DashboardPage from "../pages/DashboardPage";
 import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
-import ChatPage from "../pages/ChatPage";
 import NotificationsPage from "../pages/NotificationsPage";
 // Supervisor Pages
 import ManageBatches from "../pages/SupervisorDashboard/ManageBatches";
@@ -41,7 +40,7 @@ const AppRouter = () => {
         {/* Profile, Search, and Chat */}
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/chat/*" element={<ChatPage />} />
+        <Route path="/chat/*" element={<ChatSidebar />} />
         {/* Notifications */}
         <Route path="/notifications" element={<NotificationsPage />} />
         {/* Posts */}
