@@ -7,7 +7,7 @@ const api = axios.create({
   headers: {
 
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODU5NjU4LCJpYXQiOjE3NDM3NzMyNTgsImp0aSI6IjFkZWY3MjNhOTRjMDQxOTk4MTRmNzU2ODRmNzY4MWFlIiwidXNlcl9pZCI6Mn0.XQExm_TKbZWP0Af4n8cCyW8Avb4F_ZzqYJ90jALlCT8"
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODc1Njc1LCJpYXQiOjE3NDM3ODkyNzUsImp0aSI6ImFmYzhjOGIwOGFkNjQwMzFiOTMwZDg3MmIxM2ZjZDIzIiwidXNlcl9pZCI6Mn0.X8s-Irsm8UMzbaigfyag2QRzP41nPpO92Yt5fscUmwc"
   }
 
 });
@@ -46,7 +46,15 @@ export const editPost = (postId, updatedContent) =>
 // Delete a post
 export const deletePost = (postId) => 
   api.delete(`/posts/${postId}/`);
+// Edit a comment
+export const editComment = (postId,commentId, updatedContent) => 
+  api.put(`/posts/comment/edit/${postId}/${commentId}/`, updatedContent);
 
+// Delete a comment
+export const deleteComment = (postId, commentId) => 
+  api.delete(`/posts/comment/delete/${postId}/${commentId}/`, {
+    data: { confirmation: true },
+  });
 // Like a post
 export const likePost = async (postId, reactionType) => {
   try {

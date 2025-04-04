@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchComments, addComment , editPost , deletePost } from "../../services/api";
+import { fetchComments, addComment , editPost , deletePost , deleteComment , editComment} from "../../services/api";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import VolunteerActivismSharpIcon from "@mui/icons-material/VolunteerActivismSharp";
@@ -15,21 +15,32 @@ import EditPost from "./EditPost";
 import DeletePost from "./DeletePost";
 import ReactionsModal from "./ReactionsModal"; // Import the ReactionsModal component
 import { likePost } from "../../services/api";  // API function to handle reactions
+import EditComment from "./EditComment";
+import DeleteComment from "./Deletecomment";
 import "./Posts.css";
 import { fetchReactionsForPost } from "../../services/api";
 
 
-export default function ShowPost({ post, onDelete }) {
+export default function ShowPost({ post , onDelete }) {
   const [userReactions, setUserReactions] = useState([]); // To track user's reactions
   const [showOptions, setShowOptions] = useState(false);
+
+  const [showOptionsComment, setShowOptionsComment] = useState(false);
+
   const [showReactions, setShowReactions] = useState(false);
 
+  
   // Comments State
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
 
    // Pop-Up Modal States
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+   const [selectedComment, setSelectedComment] = useState(null);
+
+   const [isEditModalOpenComment, setIsEditModalOpenComment] = useState(false);
+   const [isDeleteModalOpenComment, setIsDeleteModalOpenComment] = useState(false);
+
    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
    const [showReactionsModal, setShowReactionsModal] = useState(false)
 
@@ -134,6 +145,31 @@ const handleDeletePost = (postId) => {
     .catch((err) => console.error("Error deleting post:", err));
 };
 //end
+
+//start
+// Handle editing the post
+const handleEditComment = (postId, commentId, updatedData) => {
+  editComment(postId, commentId , { comment: updatedData })
+  .then((response) => {
+    alert("comment updated successfully!");
+    setIsEditModalOpenComment(false); // Close the modal after success
+  })
+  .catch((err) => console.error("Error updating comment:", err));
+};
+
+// Handle deleting the post
+const handleDeleteComment = (postId,commentId) => {
+deleteComment(postId, commentId)
+  .then((response) => {
+    alert("Post deleted successfully!");
+    onDelete(postId, commentId); // Remove the post from the parent list
+    setIsDeleteModalOpenComment(false); // Close the modal after success
+  })
+  .catch((err) => console.error("Error deleting comment:", err));
+};
+//end
+//end
+
   if (!post) return <p>Loading post...</p>;
 
   const reactions = [
@@ -220,8 +256,29 @@ const handleDeletePost = (postId) => {
         <h4>Comments</h4>
         {comments.length > 0 ? (
           comments.map((comment) => (
-            <div key={comment.id} className="comment">
+            <div key={comment} className="comment">
               <b>{comment.author}</b>: {comment.comment}
+              <div className="post-options">
+          <MoreVertIcon className="MoreVertIcon" onClick={() => setShowOptionsComment(!showOptionsComment)} />
+          {showOptionsComment && (
+            <div className="options-menu">
+             <div className="option" onClick={() => {
+                  setSelectedComment(comment);  // Store the selected comment
+                  setIsEditModalOpenComment(true);
+                }}>
+                  <EditIcon className="EditIcon" /> Edit
+                </div>
+
+                <div className="option" onClick={() => {
+                  setSelectedComment(comment);
+                  setIsDeleteModalOpenComment(true);
+                }}>
+                  <DeleteIcon className="DeleteIcon" /> Delete
+                </div>
+
+            </div>
+          )}
+        </div>
             </div>
           ))
         ) : (
@@ -252,6 +309,21 @@ const handleDeletePost = (postId) => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleDeletePost(post.id)}
       />
+
+      <EditComment
+        isOpen={isEditModalOpenComment}
+        onClose={() => setIsEditModalOpenComment(false)}
+        onConfirm={(updatedContent) => handleEditComment(post.id, selectedComment.id, updatedContent)}
+        comment={selectedComment}
+      />
+
+
+      <DeleteComment
+        isOpen={isDeleteModalOpenComment}
+        onClose={() => setIsDeleteModalOpenComment(false)}
+        onConfirm={() => handleDeleteComment(post.id, selectedComment.id)}
+      />
+
     </div>
   );
 }
