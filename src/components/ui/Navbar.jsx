@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 
-
+import NotificationsDropdown from "../../pages/NotificationsDropdown";
 import logo from "../../assets/images/logo.png"; // Adjust the path to your logo image
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
@@ -81,7 +81,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
           { path: "/dashboard", Icon: Home },
           { path: "/chat", Icon: MessageCircle },
           { path: "/profile", Icon: User },
-          { path: "/notifications", Icon: Bell },
+          // { path: "/notifications", Icon: Bell },
           { path: "/settings", Icon: Settings },
           // { path: "/add", Icon: Plus },
           {path: "/supervisor/dashboard", Icon: ChartBarDecreasing},//New
@@ -107,6 +107,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
             )}
           </Link>
         ))}
+        <NotificationsDropdown />
       </div>
 
       {/* Mobile Menu Button */}

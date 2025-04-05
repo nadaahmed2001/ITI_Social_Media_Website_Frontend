@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthPage from "../pages/AuthPage";
-import DashboardPage from "../pages/DashboardPage";
+// import DashboardPage from "../pages/DashboardPage";
 import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
 import ChatPage from "../pages/ChatPage";
-import NotificationsPage from "../pages/NotificationsPage";
+import NotificationsDropdown from "../pages/NotificationsDropdown";
 // Supervisor Pages
 import ManageBatches from "../pages/SupervisorDashboard/ManageBatches";
 import TrackOverview from "../pages/SupervisorDashboard/TrackOverview";
@@ -34,6 +34,7 @@ import ShowReactionsPost from "../components/posts/ShowReactionsPost";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
+import StudentDashboard  from "../pages/StudentDashboard/Dashboard";
 
 const AppRouter = () => {
   return (
@@ -54,7 +55,7 @@ const AppRouter = () => {
 
 
         {/* Dashboards (Posts and homepage) */}
-        {/* <Route path="/dashboard" element={<DashboardPage />} /> */}
+        <Route path="/student/dashboard" element={<StudentDashboard />} />
         {/* <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} /> */}
 
 
@@ -74,7 +75,7 @@ const AppRouter = () => {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/chat" element={<ChatPage />} />
         {/* Notifications */}
-        <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/notifications" element={<NotificationsDropdown />} />
 
 
         {/* Posts  */}

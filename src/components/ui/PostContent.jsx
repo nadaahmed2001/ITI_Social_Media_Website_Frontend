@@ -2,6 +2,7 @@ import React from "react";
 import { ThumbsUp, Heart, Smile, Frown, Angry, Send, Share2, UserPlus } from "lucide-react";
 
 export default function PostContent({ isDarkMode }) {
+  
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
       {/* Post Input Section */}
