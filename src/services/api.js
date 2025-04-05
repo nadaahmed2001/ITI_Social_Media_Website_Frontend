@@ -20,7 +20,11 @@ const api = axios.create({
 export const fetchPosts = () => api.get("/posts/");
 
 // Create a new post
-export const createPost = (data) => api.post("/posts/", data);
+export const createPost = (data) => api.post("/posts/", data, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+});
 
 // Fetch comments for a post
 export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
@@ -92,7 +96,7 @@ export const removePostReaction = async (postId) => {
 // ✅ Add a reaction to a comment
 export const likeComment = async (commentId, reactionType) => {
   try {
-    const response = await api.post(`/comment/${commentId}/react/${reactionType}/`);
+    const response = await api.post(`/posts/comment/${commentId}/react/${reactionType}/`);
     return response.data;
   } catch (error) {
     console.error("Error reacting to comment:", error.response?.data || error);
@@ -103,7 +107,7 @@ export const likeComment = async (commentId, reactionType) => {
 // ✅ Fetch all reactions for a comment
 export const fetchReactionsForComment = async (commentId) => {
   try {
-    const response = await api.get(`/comment/${commentId}/reactions/`);
+    const response = await api.get(`/posts/comment/${commentId}/reactions/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching comment reactions:", error.response?.data || error);
@@ -115,7 +119,7 @@ export const fetchReactionsForComment = async (commentId) => {
 // ✅ Remove a reaction from a comment
 export const removeCommentReaction = async (commentId) => {
   try {
-    const response = await api.post(`/comment/${commentId}/react/remove/`);
+    const response = await api.post(`/posts/comment/${commentId}/react/remove/`);
     return response.data;
   } catch (error) {
     console.error("Error removing comment reaction:", error.response?.data || error);

@@ -13,6 +13,7 @@ export default function CreatePost({ onPostCreated }) {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       setImage(file);
       setPreview(URL.createObjectURL(file));

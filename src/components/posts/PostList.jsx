@@ -25,6 +25,11 @@ export default function PostList() {
   const handleNewPost = (newPost) => {
     setPosts((prevPosts) => [newPost, ...prevPosts]);
   };
+
+  const handleDeletePost = (postId) => {
+    setPosts(posts.filter((post) => post.id !== postId));
+  }
+
   return (
     <>
     <div className="feed-container">
@@ -38,7 +43,7 @@ export default function PostList() {
           <p className="loading-message">Loading posts...</p>
         ) : posts.length > 0 ? (
           posts.map((post) => (
-            <ShowPost key={post.id} post={post} />
+            <ShowPost key={post.id} postData={post} onDeletePost={() => handleDeletePost(post.id)} />
           ))
         ) : (
           <p className="no-posts-message">No posts available.</p>

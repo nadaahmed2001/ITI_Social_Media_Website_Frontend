@@ -30,12 +30,14 @@ import EditComment from "./EditComment";
 import DeleteComment from "./Deletecomment";
 import ReactionsModal from "./ReactionsModal";
 import "./Posts.css";
+import ReactionsCommentModal from "./ReactionsCommentModal";
 
-export default function ShowPost({ post, onDelete, currentUserId }) {
+export default function ShowPost({ postData, onDeletePost, currentUserId }) {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [showOptions, setShowOptions] = useState(false);
   const [showOptionsCommentId, setShowOptionsCommentId] = useState(null);
+
   const [userReactions, setUserReactions] = useState([]);
   const [commentReactions, setCommentReactions] = useState({});
   const [showReactions, setShowReactions] = useState(false);
@@ -43,19 +45,36 @@ export default function ShowPost({ post, onDelete, currentUserId }) {
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const [isEditModalOpenComment, setIsEditModalOpenComment] = useState(false);
   const [isDeleteModalOpenComment, setIsDeleteModalOpenComment] = useState(false);
 
   const [selectedComment, setSelectedComment] = useState(null);
+  const [post, setPost] = useState(postData)
 
   const [showReactionsModal, setShowReactionsModal] = useState(false);
   const [showReactionsModalforcomment, setShowReactionsModalforcomment] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => {commentReactions
     fetchComments(post.id).then((res) => setComments(res.data));
     fetchReactionsForPost(post.id).then((res) => setUserReactions(res.filter(r => r.user.id === currentUserId)));
   }, [post.id, currentUserId]);
+
+
+  useEffect(() => {
+    if (post?.comments?.length) {
+      const fetchAllCommentReactions = async () => {
+        const reactionsMap = {};
+        for (const comment of post.comments) {
+          const reactions = await fetchReactionsForComment(comment.id);
+          reactionsMap[comment.id] = reactions;
+        }
+        setCommentReactions(reactionsMap);
+      };
+  
+      fetchAllCommentReactions();
+    }
+  }, [post.comments]);
+  
 
   const handleComment = () => {
     if (!commentText.trim()) return;
@@ -83,19 +102,15 @@ export default function ShowPost({ post, onDelete, currentUserId }) {
 
   const handleAddReactionForComment = async (commentId, reactionType) => {
     try {
-      // Clear existing reaction first
       const existingReaction = commentReactions[commentId]?.find(
         r => r.user.id === currentUserId
       );
-      
       if (existingReaction) {
         await removeCommentReaction(commentId);
+      } else {
+        await likeComment(commentId, reactionType);
       }
       
-      // Add new reaction
-      await likeComment(commentId, reactionType);
-      
-      // Refresh reactions
       const updated = await fetchReactionsForComment(commentId);
       setCommentReactions(prev => ({
         ...prev,
@@ -104,7 +119,6 @@ export default function ShowPost({ post, onDelete, currentUserId }) {
       
     } catch (error) {
       console.error("Reaction error:", error);
-      // Add error state handling here if needed
     }
   };
   
@@ -118,29 +132,40 @@ export default function ShowPost({ post, onDelete, currentUserId }) {
       }));
     } catch (error) {
       console.error("Remove reaction error:", error);
-      // Add error state handling here if needed
     }
   };
 
   const handleEditPost = (postId, updatedContent) => {
-    editPost(postId, { body: updatedContent }).then(() => setIsEditModalOpen(false));
+    editPost(postId, { body: updatedContent }).then(() => {
+      setIsEditModalOpen(false);
+      
+      post.body = updatedContent;
+      setPost(post);
+    });
   };
 
   const handleDeletePost = (postId) => {
     deletePost(postId).then(() => {
-      onDelete(postId);                                          
       setIsDeleteModalOpen(false);
+      onDeletePost(postId);                                     
     });
   };
 
-  const handleEditComment = (postId, commentId, updatedData) => {
-    editComment(postId, commentId, { comment: updatedData }).then(() => setIsEditModalOpenComment(false));
+  const handleEditComment = (postId, comment, updatedData) => {
+    editComment(postId, comment.id, { comment: updatedData }).then(() => {
+     setIsEditModalOpenComment(false);
+
+     comment.comment = updatedData;
+     setComments(comments);
+    });
+
   };
 
   const handleDeleteComment = (postId, commentId) => {
     deleteComment(postId, commentId).then(() => {
-      onDelete(postId, commentId);
       setIsDeleteModalOpenComment(false);
+
+      setComments(comments.filter((comment) => comment.id !== commentId));
     });
   };
 
@@ -180,7 +205,7 @@ export default function ShowPost({ post, onDelete, currentUserId }) {
       <div className="post-content">
         <p>{post.body}</p>
         <br></br>
-         {post.image && <img src={post.image} alt="Post" className="post-image" />}
+         {post.attachments.length > 0 && <img src={post.attachments[0].image} className="post-image" />}
       </div>
 
       <div className="post-actions">
@@ -232,7 +257,7 @@ export default function ShowPost({ post, onDelete, currentUserId }) {
             <div className="post-heade-comment">
             <img src={post.authorAvatar || "/default-avatar.png"} alt="User" className="user-avatar" />
             <div className="user-info">
-            <b>{comment.author}</b>
+            <b>{comment.author}</b> {comment.id} 
             <p className="comment-created-on"> 
             {post.created_on
               ? `${new Date(post.created_on).toISOString().split("T")[0]} ${new Date(post.created_on).toTimeString().slice(0, 5)}`
@@ -276,8 +301,18 @@ export default function ShowPost({ post, onDelete, currentUserId }) {
                         key={reaction.name}
                         className="reaction-item"
                         onClick={() => {
-                          (commentReactions[comment.id]?.some(r => r.reaction_type === reaction.name))
-                            ? handleremoveCommentReaction (comment.id)
+                          {commentReactions[comment.id]?.length > 0 && (
+                            <div className="comment-reactions-summary">
+                              {commentReactions[comment.id].map((reaction, index) => (
+                                <span key={index}>
+                                  {reaction.reaction_type} by {reaction.user.username}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+
+                          hasReacted(reaction.name)
+                            ? handleremoveCommentReaction(comment.id)
                             : handleAddReactionForComment(comment.id, reaction.name);
                             setShowCommentReactions(false);
                         }}
@@ -294,7 +329,14 @@ export default function ShowPost({ post, onDelete, currentUserId }) {
                 )}
               </div>
               <p className="Show-All-Reactions-comment" onClick={() => setShowReactionsModalforcomment(true)}>Show All Reactions</p>
-              {showReactionsModalforcomment && <ReactionsModal commentId={comment.id} onClose={() => setShowReactionsModalforcomment(false)} />}
+              {showReactionsModalforcomment && (
+                <ReactionsCommentModal
+                  commentId={comment.id}
+                  reactions={commentReactions[comment.id]}
+                  onClose={() => setShowReactionsModalforcomment(false)}
+                />
+              )}
+
             </div>
             <hr></hr>
           </div>
@@ -327,7 +369,7 @@ export default function ShowPost({ post, onDelete, currentUserId }) {
       <EditComment
         isOpen={isEditModalOpenComment}
         onClose={() => setIsEditModalOpenComment(false)}
-        onConfirm={(updatedContent) => handleEditComment(post.id, selectedComment.id, updatedContent)}
+        onConfirm={(updatedContent) => handleEditComment(post.id, selectedComment, updatedContent)}
         comment={selectedComment}
       />
       <DeleteComment
