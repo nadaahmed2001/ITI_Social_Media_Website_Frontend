@@ -1,8 +1,9 @@
 import axios from "axios";
 
 // Axios instance with base URL
+const API_BASE_URL= "http://127.0.0.1:8000/api/";
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -18,8 +19,8 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// API functions
 
+// API functions for Posts app
 export const fetchPosts = () => api.get("/posts/");
 export const createPost = (data) => api.post("/posts/", data);
 export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
@@ -69,5 +70,73 @@ export const removePostReaction = async (postId) => {
     throw error;
   }
 };
+
+
+
+//------------------------------- API Functions for supervisor (batches app) -------------------------------
+// Fetch Programs for Supervisor's Department
+export const fetchPrograms = async () => {
+  try {
+    const response = await api.get("supervisor/programs/");  // Use the 'api' instance here
+    console.log("from api.js in fetchPrograms", response.data);  // Debugging
+    return response.data;  // Return program data
+  } catch (error) {
+    console.error('Failed to fetch programs:', error);
+    throw error;
+  }
+};
+
+// Fetch Tracks for the Selected Program
+export const fetchTracksForProgram = async (programId) => {
+  try {
+    const response = await api.get("supervisor/tracks/", { params: { program_id: programId } });  // Use 'api' instance and updated URL
+    return response.data;  // Return track data
+  } catch (error) {
+    console.error('Failed to fetch tracks:', error);
+    throw error;
+  }
+};
+
+// Fetch Batches for the Selected Track
+export const fetchBatches = async (trackId) => {
+  try {
+    const response = await api.get("supervisor/batches/", { params: { track_id: trackId } });  // Use 'api' instance and updated URL
+    return response.data;  // Return batch data
+  } catch (error) {
+    console.error('Failed to fetch batches:', error);
+    throw error;
+  }
+};
+
+// Create a New Batch
+export const createBatch = async (name, program_id, track_id) => {
+  try {
+    const response = await api.post("supervisor/batches/",  { name, program_id, track_id });  // Use 'api' instance and updated URL
+    return response.data;  // Return newly created batch data
+  } catch (error) {
+    console.error('Failed to create batch:', error);
+    throw error;
+  }
+};
+
+// Upload CSV File for Batch
+export const uploadBatchCSV = async (batchId, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("batch_id", batchId);
+
+    try {
+        const response = await api.post(`/upload-national-id/`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Failed to upload CSV:", error);
+        throw error;
+    }
+};
+
 
 export default api;

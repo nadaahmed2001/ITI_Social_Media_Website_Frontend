@@ -34,6 +34,7 @@ import ShowReactionsPost from "../components/posts/ShowReactionsPost";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
+import BatchPage from "../pages/SupervisorDashboard/BatchPage";
 
 const AppRouter = () => {
   return (
@@ -61,6 +62,7 @@ const AppRouter = () => {
 
         {/* Supervisor Routes */}
         <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/batches/:trackId" element={<BatchPage />} />
         {/* <Route path="/supervisor/track-overview" element={<TrackOverview />} /> */}
 
         
