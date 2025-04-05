@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { fetchComments, addComment , editPost , deletePost , deleteComment , editComment} from "../../services/api";
+import {
+  fetchComments,
+  addComment,
+  editPost,
+  deletePost,
+  deleteComment,
+  editComment,
+  likePost,
+  likeComment,
+  fetchReactionsForPost,
+  removePostReaction,
+  removeCommentReaction,
+  fetchReactionsForComment,
+} from "../../services/api";
 import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
 import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
 import VolunteerActivismSharpIcon from "@mui/icons-material/VolunteerActivismSharp";
@@ -13,158 +26,123 @@ import TurnedInNotSharpIcon from '@mui/icons-material/TurnedInNotSharp';
 import ImageSharpIcon from '@mui/icons-material/ImageSharp';
 import EditPost from "./EditPost";
 import DeletePost from "./DeletePost";
-import ReactionsModal from "./ReactionsModal"; // Import the ReactionsModal component
-import { likePost } from "../../services/api";  // API function to handle reactions
 import EditComment from "./EditComment";
 import DeleteComment from "./Deletecomment";
+import ReactionsModal from "./ReactionsModal";
 import "./Posts.css";
-import { fetchReactionsForPost } from "../../services/api";
 
-
-export default function ShowPost({ post , onDelete }) {
-  const [userReactions, setUserReactions] = useState([]); // To track user's reactions
-  const [showOptions, setShowOptions] = useState(false);
-
-  const [showOptionsComment, setShowOptionsComment] = useState(false);
-
-  const [showReactions, setShowReactions] = useState(false);
-  const [showReactionsComment, setShowReactionsComment] = useState(false);
-  
-  // Comments State
+export default function ShowPost({ post, onDelete, currentUserId }) {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
+  const [showOptions, setShowOptions] = useState(false);
+  const [showOptionsCommentId, setShowOptionsCommentId] = useState(null);
+  const [userReactions, setUserReactions] = useState([]);
+  const [commentReactions, setCommentReactions] = useState({});
+  const [showReactions, setShowReactions] = useState(false);
+  const [showCommentReactions, setShowCommentReactions] = useState(null);
 
-   // Pop-Up Modal States
-   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-   const [selectedComment, setSelectedComment] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-   const [isEditModalOpenComment, setIsEditModalOpenComment] = useState(false);
-   const [isDeleteModalOpenComment, setIsDeleteModalOpenComment] = useState(false);
+  const [isEditModalOpenComment, setIsEditModalOpenComment] = useState(false);
+  const [isDeleteModalOpenComment, setIsDeleteModalOpenComment] = useState(false);
 
-   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-   const [showReactionsModal, setShowReactionsModal] = useState(false)
-   const [showReactionsModalComment, setShowReactionsModalComment] = useState(false)
-   const [posts, setPosts] = useState([]);
-  // Fetch Comments
+  const [selectedComment, setSelectedComment] = useState(null);
+
+  const [showReactionsModal, setShowReactionsModal] = useState(false);
+  const [showReactionsModalforcomment, setShowReactionsModalforcomment] = useState(false);
+
   useEffect(() => {
-    fetchComments(post.id)
-      .then((res) => setComments(res.data))
-      .catch((err) => console.error("Error fetching comments:", err));
-  }, [post.id]);
+    fetchComments(post.id).then((res) => setComments(res.data));
+    fetchReactionsForPost(post.id).then((res) => setUserReactions(res.filter(r => r.user.id === currentUserId)));
+  }, [post.id, currentUserId]);
 
-// Fetch current reactions of the post when the component mounts
-useEffect(() => {
-  // Ideally, you should fetch user's reactions here, 
-  // For now, assuming user reactions are passed with post or fetched from API
-  setUserReactions(post.reactions || []);
-}, [post]);
-
-
-  // Handle adding a comment
   const handleComment = () => {
     if (!commentText.trim()) return;
-
-    addComment(post.id, { post: post.id, comment: commentText })
-      .then((res) => {
-        setComments((prevComments) => [...prevComments, res.data]);
-        setCommentText(""); // Clear input after posting
-      })
-      .catch((err) => console.error("Error adding comment:", err));
+    addComment(post.id, { post: post.id, comment: commentText }).then((res) => {
+      setComments((prev) => [...prev, res.data]);
+      setCommentText("");
+    });
   };
 
-const handleAddReaction = async (reactionType) => {
-  try {
-    await like(post.id, reactionType);
-    // Refresh reactions from server
+  const handleAddReaction = async (reactionType) => {
+    await likePost(post.id, reactionType);
     const updated = await fetchReactionsForPost(post.id);
-    setUserReactions(updated.filter(r => r.user.id === currentUser.id));
-  } catch (error) {
-    console.error("Error adding reaction:", error);
-  }
-};
+    setUserReactions(updated.filter(r => r.user.id === currentUserId));
+  };
 
-const hasReacted = (reactionType) => {
-  return userReactions.some(r => r.reaction_type === reactionType);
-};
-// Function to handle removing a reaction
-// Update handleRemoveReaction
-const handleRemoveReaction = async (reactionType) => {
-  try {
+  const hasReacted = (reactionType) => {
+    return userReactions.some(r => r.reaction_type === reactionType);
+  };
+
+  const handleRemoveReaction = async (reactionType) => {
     await removePostReaction(post.id);
-    // Update local state
-    setUserReactions(prev => prev.filter(r => r !== reactionType));
-    // Refresh reactions
     const updated = await fetchReactionsForPost(post.id);
     setUserReactions(updated.filter(r => r.user?.id === currentUserId));
-  } catch (error) {
-    console.error("Removal error:", error);
-  }
-};
-//////////////////////////////////////////////////////////////////////
+  };
 
-const handleAddReactionComment = async (reactionType) => {
-  try {
-    await likecomment(comment.id, reactionType);
-    // Refresh reactions from server
-    const updated = await fetchReactionsForaComment(comment.id);
-    setUserReactionsC(updated.filter(r => r.user.id === currentUser.id));
-  } catch (error) {
-    console.error("Error adding reaction:", error);
-  }
-};
+  const handleAddReactionForComment = async (commentId, reactionType) => {
+    try {
+      // Clear existing reaction first
+      const existingReaction = commentReactions[commentId]?.find(
+        r => r.user.id === currentUserId
+      );
+      
+      if (existingReaction) {
+        await removeCommentReaction(commentId);
+      }
+      
+      // Add new reaction
+      await likeComment(commentId, reactionType);
+      
+      // Refresh reactions
+      const updated = await fetchReactionsForComment(commentId);
+      setCommentReactions(prev => ({
+        ...prev,
+        [commentId]: updated
+      }));
+      
+    } catch (error) {
+      console.error("Reaction error:", error);
+      // Add error state handling here if needed
+    }
+  };
+  
+  const handleremoveCommentReaction = async (commentId) => {
+    try {
+      await removeCommentReaction(commentId);
+      const updated = await fetchReactionsForComment(commentId);
+      setCommentReactions(prev => ({
+        ...prev,
+        [commentId]: updated
+      }));
+    } catch (error) {
+      console.error("Remove reaction error:", error);
+      // Add error state handling here if needed
+    }
+  };
 
-const hasReactedComment = (reactionType) => {
-  return userReactions.some(r => r.reaction_type === reactionType);
-};
+  const handleEditPost = (postId, updatedContent) => {
+    editPost(postId, { body: updatedContent }).then(() => setIsEditModalOpen(false));
+  };
 
+  const handleDeletePost = (postId) => {
+    deletePost(postId).then(() => {
+      onDelete(postId);                                          
+      setIsDeleteModalOpen(false);
+    });
+  };
 
-// Handle editing the post
-const handleEditPost = (postId, updatedContent) => {
-    editPost(postId, { body: updatedContent })
-    .then((response) => {
-      alert("Post updated successfully!");
-      setIsEditModalOpen(false); // Close the modal after success
-    })
-    .catch((err) => console.error("Error updating post:", err));
-};
+  const handleEditComment = (postId, commentId, updatedData) => {
+    editComment(postId, commentId, { comment: updatedData }).then(() => setIsEditModalOpenComment(false));
+  };
 
-// Handle deleting the post
-const handleDeletePost = (postId) => {
-  deletePost(postId)
-    .then((response) => {
-      alert("Post deleted successfully!");
-      onDelete(postId); // Remove the post from the parent list
-      setIsDeleteModalOpen(false); // Close the modal after success
-    })
-    .catch((err) => console.error("Error deleting post:", err));
-};
-//end
-
-//start
-// Handle editing the post
-const handleEditComment = (postId, commentId, updatedData) => {
-  editComment(postId, commentId , { comment: updatedData })
-  .then((response) => {
-    alert("comment updated successfully!");
-    setIsEditModalOpenComment(false); // Close the modal after success
-  })
-  .catch((err) => console.error("Error updating comment:", err));
-};
-
-// Handle deleting the post
-const handleDeleteComment = (postId,commentId) => {
-deleteComment(postId, commentId)
-  .then((response) => {
-    alert("Post deleted successfully!");
-    onDelete(postId, commentId); // Remove the post from the parent list
-    setIsDeleteModalOpenComment(false); // Close the modal after success
-  })
-  .catch((err) => console.error("Error deleting comment:", err));
-};
-//end
-//end
-
-  if (!post) return <p>Loading post...</p>;
+  const handleDeleteComment = (postId, commentId) => {
+    deleteComment(postId, commentId).then(() => {
+      onDelete(postId, commentId);
+      setIsDeleteModalOpenComment(false);
+    });
+  };
 
   const reactions = [
     { name: "Like", icon: <ThumbUpSharpIcon className="Reaction-Post" /> },
@@ -181,18 +159,19 @@ deleteComment(postId, commentId)
         <img src={post.authorAvatar || "/default-avatar.png"} alt="User" className="user-avatar" />
         <div className="user-info">
           <p>{post.author || "Unknown"}</p>
-          <p>{post.createdAt || "Just now"}</p>
+          <p>
+            {post.created_on
+              ? `${new Date(post.created_on).toISOString().split("T")[0]} ${new Date(post.created_on).toTimeString().slice(0, 5)}`
+              : "Just now"}
+          </p>
+
         </div>
         <div className="post-options">
           <MoreVertIcon className="MoreVertIcon" onClick={() => setShowOptions(!showOptions)} />
           {showOptions && (
             <div className="options-menu">
-              <div className="option" onClick={() => setIsEditModalOpen(true)}>
-                <EditIcon className="EditIcon" /> Edit
-              </div>
-              <div className="option" onClick={() => setIsDeleteModalOpen(true)}>
-                <DeleteIcon className="DeleteIcon"/> Delete
-              </div>
+              <div className="option" onClick={() => setIsEditModalOpen(true)}><EditIcon className="EditIcon" /> Edit</div>
+              <div className="option" onClick={() => setIsDeleteModalOpen(true)}><DeleteIcon className="DeleteIcon"/> Delete</div>
             </div>
           )}
         </div>
@@ -200,129 +179,126 @@ deleteComment(postId, commentId)
 
       <div className="post-content">
         <p>{post.body}</p>
-        <p>{post.id}</p>
-        {post.image && <img src={post.image} alt="Post" className="post-image" />}
+        <br></br>
+         {post.image && <img src={post.image} alt="Post" className="post-image" />}
       </div>
 
       <div className="post-actions">
-        <div className="reactions-container">
-          <div className="reaction-trigger" onClick={() => setShowReactions(!showReactions)}>
-            <ThumbUpSharpIcon />
-            <span className="react-name">Like</span>
-          </div>
-          {showReactions && (
-            <div className="reactions-popover">
-              {reactions.map((reaction) => (
-                <div
-                  className="reaction-item"
-                  key={reaction.name}
-                  onClick={() => {
-                    hasReacted(reaction.name) 
-                    ? handleRemoveReaction(reaction.name) 
-                    : handleAddReaction(reaction.name);
-                  setShowReactions(false); // Close the popover after selection
-                }}
-             >
-                  {reaction.icon} {reaction.name}
+  <div className="reactions-container">
+    <div 
+      className="reaction-trigger" 
+      onClick={() => setShowReactions(!showReactions)}
+      onMouseLeave={() => setShowReactions(false)}
+    >
+      <ThumbUpSharpIcon className="ThumbUpSharpIcon"/> 
+      <span>Like</span>
+     
+      {showReactions && (
+        <div className="reactions-popover">
+          {reactions.map((reaction) => (
+            <div
+              key={reaction.name}
+              className="reaction-item"
+              onClick={() => {
+                hasReacted(reaction.name)
+                  ? handleRemoveReaction(reaction.name)
+                  : handleAddReaction(reaction.name);
+                  setShowReactions(false);
+              }}
+            >
+              <div className="reaction-icon-container">
+                <div className="reaction-icon">
+                  {reaction.icon}
+                  <span className="reaction-name">{reaction.name}</span>
                 </div>
-              ))}
+              </div>
             </div>
-          )}
+          ))}
         </div>
-        <button><TurnedInNotSharpIcon className="savePost-btn" /></button>
-      </div>
-      {/* <Link to={`/posts/show-reactions/${post.id}`}>Show All Reactions</Link> */}
-      <div className="post-container">
-      <p className="Show-All-Reactions" onClick={() => setShowReactionsModal(true)}>
-        Show All Reactions
-      </p>
-        {/* Reactions Modal */}
-        {showReactionsModal && (
-        <ReactionsModal
-          postId={post.id}
-          onClose={() => setShowReactionsModal(false)}
-        />
       )}
     </div>
-      <hr />
+  </div>
+</div>
+
+      <p className="Show-All-Reactions" onClick={() => setShowReactionsModal(true)}>Show All Reactions</p>
+      {showReactionsModal && <ReactionsModal postId={post.id} onClose={() => setShowReactionsModal(false)} />}
+
 
       <div className="comment-section">
         <h4>Comments</h4>
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <div key={comment} className="comment">
-              <b>{comment.author}</b>: {comment.comment}
-              <div className="post-options">
-{/* ///////////////////////////////////////////////////////////////////////////// */}
-<div className="post-actions">
-        <div className="reactions-container">
-          <div className="reaction-trigger" onClick={() => setShowReactionsComment(!showReactionsComment)}>
-            <ThumbUpSharpIcon />
-            <span className="react-name">Like</span>
+        
+        {comments.length ? comments.map((comment) => (
+          <div key={comment.id} className="comment">
+            <div className="post-heade-comment">
+            <img src={post.authorAvatar || "/default-avatar.png"} alt="User" className="user-avatar" />
+            <div className="user-info">
+            <b>{comment.author}</b>
+            <p className="comment-created-on"> 
+            {post.created_on
+              ? `${new Date(post.created_on).toISOString().split("T")[0]} ${new Date(post.created_on).toTimeString().slice(0, 5)}`
+              : "Just now"}
+          </p>
+            </div>
+            <div className="post-options">
+              <MoreVertIcon onClick={() => setShowOptionsCommentId(comment.id ,!showOptionsCommentId)} />
+              {showOptionsCommentId === comment.id && (
+                <div className="options-menu">
+                   <div className="option" onClick={() => { 
+                        setIsEditModalOpenComment(true); 
+                        setSelectedComment(comment);  // Add this
+                               
+                      }}>
+                        <EditIcon className="EditIcon" /> Edit
+                      </div>
+                      <div className="option" onClick={() => { 
+                        setIsDeleteModalOpenComment(true);
+                        setSelectedComment(comment);  // Add this
+                        
+                      }}>
+                        <DeleteIcon className="DeleteIcon" /> Delete
+                      </div>
+                </div>
+              )}
+            </div>
+            </div>
+
+             <p className="comment-body">{comment.comment}</p>
+            <div className="comment-actions">
+              <div className="reactions-container">
+                <div className="reaction-trigger" onClick={() => setShowCommentReactions(comment.id)}>
+                  <ThumbUpSharpIcon /> <span>Like</span>
+                </div>
+             
+                {showCommentReactions === comment.id && (
+                  <div className="reactions-popover">
+                    {reactions.map((reaction) => (
+                      <div
+                        key={reaction.name}
+                        className="reaction-item"
+                        onClick={() => {
+                          (commentReactions[comment.id]?.some(r => r.reaction_type === reaction.name))
+                            ? handleremoveCommentReaction (comment.id)
+                            : handleAddReactionForComment(comment.id, reaction.name);
+                            setShowCommentReactions(false);
+                        }}
+                      >
+                         <div className="reaction-icon-container">
+                            <div className="reaction-icon">
+                              {reaction.icon}
+                              <span className="reaction-name">{reaction.name}</span>
+                            </div>
+                          </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <p className="Show-All-Reactions-comment" onClick={() => setShowReactionsModalforcomment(true)}>Show All Reactions</p>
+              {showReactionsModalforcomment && <ReactionsModal commentId={comment.id} onClose={() => setShowReactionsModalforcomment(false)} />}
+            </div>
+            <hr></hr>
           </div>
-          {showReactionsComment && (
-            <div className="reactions-popover">
-              {reactions.map((reaction) => (
-                <div
-                  className="reaction-item"
-                  key={reaction.name}
-                  onClick={() => {
-                    hasReactedComment(reaction.name) 
-                    ? handleRemoveReactionComment(reaction.name) 
-                    : handleAddReactionComment(reaction.name);
-                  setShowReactionsComment(false); // Close the popover after selection
-                }}
-             >
-                  {reaction.icon} {reaction.name}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        <button><TurnedInNotSharpIcon className="savePost-btn" /></button>
-      </div>
-      {/* <Link to={`/posts/show-reactions/${post.id}`}>Show All Reactions</Link> */}
-      <div className="post-container">
-      <p className="Show-All-Reactions" onClick={() => setShowReactionsModalComment(true)}>
-        Show All Reactions
-      </p>
-        {/* Reactions Modal */}
-        {showReactionsModal && (
-        <ReactionsModal
-          postId={post.id}
-          onClose={() => setShowReactionsModalComment(false)}
-        />
-      )}
-    </div>
-      <hr />
-
-{/* ///////////////////////////////////////////////////////////////////////////// */}
-
-          <MoreVertIcon className="MoreVertIcon" onClick={() => setShowOptionsComment(!showOptionsComment)} />
-          {showOptionsComment && (
-            <div className="options-menu">
-             <div className="option" onClick={() => {
-                  setSelectedComment(comment);  // Store the selected comment
-                  setIsEditModalOpenComment(true);
-                }}>
-                  <EditIcon className="EditIcon" /> Edit
-                </div>
-
-                <div className="option" onClick={() => {
-                  setSelectedComment(comment);
-                  setIsDeleteModalOpenComment(true);
-                }}>
-                  <DeleteIcon className="DeleteIcon" /> Delete
-                </div>
-
-            </div>
-          )}
-        </div>
-            </div>
-          ))
-        ) : (
-          <p>No comments yet.</p>
-        )}
+        )) : <p>No comments yet.</p>}
 
         <div className="post-comment">
           <img src="/default-avatar.png" alt="User" className="user-avatar" />
@@ -336,7 +312,7 @@ deleteComment(postId, commentId)
           <button className="comment-submit" onClick={handleComment}>Post</button>
         </div>
       </div>
-      {/* Edit and Delete Pop-Up Modals */}
+
       <EditPost
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
@@ -348,26 +324,23 @@ deleteComment(postId, commentId)
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleDeletePost(post.id)}
       />
-
       <EditComment
         isOpen={isEditModalOpenComment}
         onClose={() => setIsEditModalOpenComment(false)}
         onConfirm={(updatedContent) => handleEditComment(post.id, selectedComment.id, updatedContent)}
         comment={selectedComment}
       />
-
-
       <DeleteComment
         isOpen={isDeleteModalOpenComment}
         onClose={() => setIsDeleteModalOpenComment(false)}
         onConfirm={() => handleDeleteComment(post.id, selectedComment.id)}
       />
-
     </div>
   );
 }
 
-/////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////
 // import React, { useState, useEffect } from "react";
 // import { fetchComments, addComment , editPost , deletePost , deleteComment , editComment} from "../../services/api";
 // import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
