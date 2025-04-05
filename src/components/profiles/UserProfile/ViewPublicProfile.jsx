@@ -1,31 +1,23 @@
 {/* ================= TODO: Adding more fields, batch, department track, join date ================ */}
 import React, { useState, useEffect, useCallback } from 'react';
-import { getPublicProfile, getAllProjects, getAllTags } from '../../../services/api'; 
+import { getPublicProfile, getMyProjects,} from '../../../services/api'; 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LinkIcon from '@mui/icons-material/Link';
-import CodeIcon from '@mui/icons-material/Code';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import LanguageIcon from '@mui/icons-material/Language'; 
 import { FaGithub, FaLinkedin, FaGlobe, FaHackerrank } from 'react-icons/fa'; 
 import { SiLeetcode } from 'react-icons/si'; 
-import ImageIcon from '@mui/icons-material/Image';
-import PeopleIcon from '@mui/icons-material/People';
-import PersonIcon from '@mui/icons-material/Person'; 
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom'; // For internal links
 
 import './ViewPublicProfile.css';
 
-const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp'; // Default project image
-const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp'; // Default user avatar
+const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp'; 
+const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp'; 
 
 const ViewPublicProfile = ({ profileId }) => {
     const [profileData, setProfileData] = useState(null);
     const [projectsData, setProjectsData] = useState([]); // Stores the *filtered* projects
-    const [availableTags, setAvailableTags] = useState([]); // State to store all tags {id, name}
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [isLoadingProjects, setIsLoadingProjects] = useState(true);
-    const [isLoadingTags, setIsLoadingTags] = useState(true); // Loading state for tags
     const [error, setError] = useState('');
 
     const fetchProfile = useCallback(async () => {
@@ -49,55 +41,36 @@ const ViewPublicProfile = ({ profileId }) => {
     }, [profileId]);
 
     const fetchProjects = useCallback(async () => {
-        if (!profileId) return;
-        setIsLoadingProjects(true);
-        try {
-            const response = await getAllProjects(); // Fetch ALL projects
-            const allProjects = response.data || [];
-            // Filter projects client-side based on the owner field matching profileId
-            const userProjects = allProjects.filter(project => project.owner === profileId);
-            setProjectsData(userProjects); // Set state with the filtered list
-        } catch (err) {
-            console.error("Failed to fetch projects:", err);
-            setError(prev => prev ? `${prev} Could not load projects.` : 'Could not load projects.');
-        } finally {
-            setIsLoadingProjects(false);
+        if (!profileId) {
+            setError("Cannot load projects without a Profile ID."); setIsLoadingProjects(false); return;
         }
-      }, [profileId]); // Depends on profileId for filtering
+        setIsLoadingProjects(true); setError('');
+        try {
+            // --- Call the filtered API endpoint ---
+            const response = await getMyProjects(profileId);
+            // --- No client-side filter needed ---
+            setProjectsData(response.data || []); // Directly set the response data
+        } catch (err) {
+            console.error("Failed to fetch projects:", err); setError('Could not load your projects.'); setProjectsData([]);
+        } finally { setIsLoadingProjects(false); }
+    }, [profileId]);
     
     
-
-    const fetchTags = useCallback(async () => {
-        setIsLoadingTags(true);
-        try {
-            const response = await getAllTags();
-            setAvailableTags(response.data || []);
-        } catch (err) {
-            console.error("Failed to fetch tags:", err);
-            // Non-critical error, maybe just log it or add minor note to error state
-            setError(prev => prev ? `${prev} Could not load tag names.` : 'Could not load tag names.');
-        } finally {
-            setIsLoadingTags(false);
-        }
-    }, []);
-
     useEffect(() => {
         fetchProfile();
         fetchProjects();
-        fetchTags(); 
-    }, [fetchProfile, fetchProjects, fetchTags]);
+    }, [fetchProfile, fetchProjects ]);
 
 
-  const renderLinks = () => {
+const renderLinks = () => {
     if (!profileData) return null;
 
-    // Define links with react-icons components
     const links = [
-      { url: profileData.github_url, icon: <FaGithub />, label: 'GitHub Profile' }, 
-      { url: profileData.leetcode_username ? `https://leetcode.com/${profileData.leetcode_username}` : null, icon: <SiLeetcode />, label: 'LeetCode Profile' },
-      { url: profileData.hackerrank_username ? `https://www.hackerrank.com/${profileData.hackerrank_username}` : null, icon: <FaHackerrank />, label: 'HackerRank Profile' },
-      { url: profileData.linkedin_url, icon: <FaLinkedin />, label: 'LinkedIn Profile' },
-      { url: profileData.website_url, icon: <FaGlobe />, label: 'Personal Website/Portfolio' },
+    { url: profileData.github_url, icon: <FaGithub />, label: 'GitHub Profile' }, 
+    { url: profileData.leetcode_username ? `https://leetcode.com/${profileData.leetcode_username}` : null, icon: <SiLeetcode />, label: 'LeetCode Profile' },
+    { url: profileData.hackerrank_username ? `https://www.hackerrank.com/${profileData.hackerrank_username}` : null, icon: <FaHackerrank />, label: 'HackerRank Profile' },
+    { url: profileData.linkedin_url, icon: <FaLinkedin />, label: 'LinkedIn Profile' },
+    { url: profileData.website_url, icon: <FaGlobe />, label: 'Personal Website/Portfolio' },
       // ========== TODO:Add others like twitter_url, stackoverflow_url =============
     ].filter(link => link.url); // Only show links that have a valid URL
 
@@ -114,10 +87,9 @@ const ViewPublicProfile = ({ profileId }) => {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    title={link.label} // Use label for tooltip
+                    title={link.label}
                 >
                     {link.icon}
-                    {/* Label removed for icon-only look like the target image */}
                 </a>
                 </li>
             ))}
@@ -134,28 +106,21 @@ const ViewPublicProfile = ({ profileId }) => {
         <div className="profile-section skills-section">
             <h3>Skills</h3>
             {profileData.main_skills?.length > 0 && (
+            
             <div className="skills-subsection">
-                <h4>Main Skills</h4>
-                <ul className="main-skills-list">
+                <ul className="other-skills-list">
+
                 {profileData.main_skills.map(skill => (
-                    <li key={skill.id} className="main-skill-item">
+                    <li key={skill.id} className="other-skill-item">
                     <span className="main-skill-name">{skill.name}</span>
                     {skill.description && <p className="main-skill-description">{skill.description}</p>}
                     </li>
                 ))}
-                </ul>
-            </div>
-            )}
-            {profileData.other_skills?.length > 0 && (
-            <div className="skills-subsection">
-                {/* <h4>Other Skills</h4> */}
-                <ul className="other-skills-list">
+                
                 {profileData.other_skills.map(skill => (
                     <li key={skill.id} className="other-skill-item">{skill.name}</li>
                 ))}
-
-                {profileData.main_skills.map(skill => (
-                    <li key={skill.id} className="other-skill-item"> </li> ))}
+                
                 </ul>
             </div>
             )}
@@ -163,29 +128,39 @@ const ViewPublicProfile = ({ profileId }) => {
         );
     };
 
+    // --- Render Projects ---
     const renderProjects = () => {
-        const isLoading = isLoadingProjects || isLoadingTags;
-        if (isLoading && projectsData.length === 0) return <p className='loading-text small'>Loading projects...</p>;
-
-        // If not loading but still no projects (after filtering), don't render the section
-        if (!isLoading && projectsData.length === 0) {
-            // Optionally show a "No projects yet" message if desired within the section
-            return <div className="profile-section projects-section"><h3>Projects</h3><p className="no-data-text">No projects added yet.</p></div>;
-            //  return null; // Or just render nothing
+        // Use loading state specific to projects
+        if (isLoadingProjects && projectsData.length === 0) {
+            return (
+                <div className="profile-section projects-section">
+                    <h3>Projects</h3>
+                    <p className='loading-text small'>Loading projects...</p>
+                </div>
+            );
         }
-
-        const getTagName = (tagId) => {
-            const tag = availableTags.find(t => t.id === tagId);
-            return tag ? tag.name : 'Tag?'; // Shorter fallback
-        };
-
+    
+        // Don't render the section if there are no projects after loading
+        if (!isLoadingProjects && projectsData.length === 0) {
+            // return null; 
+            return (
+              <div className="profile-section projects-section">
+                <h3>Projects</h3>
+                <p className="no-data-text">No projects to display yet.</p>
+              </div>
+            );
+        }
+    
+        // If projects exist, render the list
         return (
         <div className="profile-section projects-section">
             <h3>Projects</h3>
             <ul className="projects-list">
             {projectsData.map(project => (
+                // Use project ID for the list item key
                 <li key={project.id} className="project-item-card">
-                    {/* --- Project Image --- */}
+    
+                    {/* Project Image */}
                     <div className="project-image-container">
                         <img
                             src={project.featured_image || DEFAULT_PROJECT_IMAGE}
@@ -194,55 +169,47 @@ const ViewPublicProfile = ({ profileId }) => {
                             onError={(e) => { if (e.target.src !== DEFAULT_PROJECT_IMAGE) e.target.src = DEFAULT_PROJECT_IMAGE; }}
                         />
                     </div>
-
-                    {/* --- Project Details --- */}
+    
+                    {/* Project Text Content */}
                     <div className="project-details-content">
-                        <h4>{project.title}</h4>
-                        {project.description && <p className="project-description">{project.description}</p>}
-
-                        {/* --- Tags --- */}
-                        {project.tags && project.tags.length > 0 && !isLoadingTags && (
+                        {/* Title */}
+                        <h4>{project.title || 'Untitled Project'}</h4>
+    
+                        {/* Description */}
+                        {project.description && (
+                            <p className="project-description">{project.description}</p>
+                        )}
+    
+                        {/* Tags - Map directly over nested tag objects */}
+                        {Array.isArray(project.tags) && project.tags.length > 0 && (
                             <div className="project-tags">
-                                {project.tags.map(tagId => (
-                                    <span key={tagId} className="project-tag">{getTagName(tagId)}</span>
+                                {project.tags.map(tag => (
+                                    // Use tag.id for key and tag.name for display
+                                    <span key={tag.id} className="project-tag">{tag.name}</span>
                                 ))}
                             </div>
                         )}
-                        {isLoadingTags && project.tags?.length > 0 && <p className='loading-text tiny'>Loading tags...</p>}
-                        {/* --- Contributors --- */}
-                        {/* Ensure project.contributors is an array and has items */}
+    
+                        {/* Contributors - Map over nested contributor objects */}
                         {Array.isArray(project.contributors) && project.contributors.length > 0 && (
                             <div className="project-contributors">
                                 <h5>Contributors:</h5>
                                 <ul className="contributors-list">
                                     {project.contributors.map(contributor => (
-                                        <li key={contributor} className="contributor-item">
-                                            {/* Link to the contributor's profile page */}
-                                            <Link to={`/profiles/${contributor}`} title={`View ${project.contributors.usename}'s profile`}>
-                                                <img
-                                                    src={contributor.profile_image || DEFAULT_AVATAR}
-                                                    alt={contributor.username}
-                                                    className="contributor-avatar"
-                                                    onError={(e) => { if(e.target.src !== DEFAULT_AVATAR) e.target.src = DEFAULT_AVATAR; }}
-                                                />
-                                                <span className="contributor-username">{contributor.username}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                                        <li key={contributor.id} className="contributor-item"><Link to={`/profiles/${contributor.id}`} title={`View ${contributor.username}'s profile`}><img src={contributor.profile_picture || DEFAULT_AVATAR} alt={contributor.username} title={contributor.username} className="contributor-avatar small" onError={(e) => { if(e.target.src !== DEFAULT_AVATAR) e.target.src = DEFAULT_AVATAR;}}/></Link></li>))}</ul></div>
                         )}
-                        {/* --- Project Links --- */}
+    
+                        {/* Project Links */}
                         <div className="project-links">
                             {project.demo_link && (
-                            <a href={project.demo_link} target="_blank" rel="noopener noreferrer" className="project-link-button demo">
-                            <LanguageIcon fontSize="small"/> Demo
-                            </a>
+                                <a href={project.demo_link} target="_blank" rel="noopener noreferrer" className="project-link-button demo">
+                                    <LanguageIcon fontSize="small"/> Demo
+                                </a>
                             )}
                             {project.source_link && (
-                            <a href={project.source_link} target="_blank" rel="noopener noreferrer" className="project-link-button source">
-                            <GitHubIcon fontSize="small"/> Source
-                            </a>
+                                <a href={project.source_link} target="_blank" rel="noopener noreferrer" className="project-link-button source">
+                                    <GitHubIcon fontSize="small"/> Source
+                                </a>
                             )}
                         </div>
                     </div> 
@@ -251,10 +218,8 @@ const ViewPublicProfile = ({ profileId }) => {
             </ul>
         </div>
         );
-    };
-
-
-  // --- Main Render ---
+    }; 
+    
 
     if (isLoadingProfile) {
         return <div className="loading-text section-container">Loading profile view...</div>;
@@ -270,16 +235,17 @@ const ViewPublicProfile = ({ profileId }) => {
 
     // Construct full name, handle cases where one might be missing
     const fullName = [profileData.first_name, profileData.last_name].filter(Boolean).join(' ') || profileData.username;
+    console.log(profileData.profile_picture)
 
     return (
         <div className="view-public-profile-container section-container">
         <h2><AccountCircleIcon /> Public Profile View</h2>
-        {error && <p className="error-message">{error}</p>} {/* Show non-critical errors here */}
+        {error && <p className="error-message">{error}</p>} 
 
         {/* --- Profile Header --- */}
         <div className="profile-header">
             <img
-            src={ DEFAULT_AVATAR } // Use default if no image
+            src={ profileData.profile_picture || DEFAULT_AVATAR } 
             alt={`${fullName}'s profile`}
             className="profile-avatar"
             />

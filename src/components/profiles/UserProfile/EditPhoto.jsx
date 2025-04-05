@@ -1,247 +1,285 @@
-import React, { useState, useRef } from 'react';
-// Import the API function that sends FormData to the /users/account/ PUT endpoint
-// We'll use this for both uploading and clearing the image.
-// If you had separate functions (updateAccountData vs updateAccount), ensure you use the one sending FormData.
-// Let's assume 'updateProfilePicture' is the one sending FormData based on previous context.
-import { updateProfilePicture } from '../../../services/api'; // Adjust path if needed
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import UploadIcon from '@mui/icons-material/Upload';
-import PersonIcon from '@mui/icons-material/Person'; // Placeholder icon
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'; // Import Delete icon
-import './EditPhoto.css'; // Your CSS file
+import React, { useState, useEffect, useRef } from 'react';
+// Use the API function that sends JSON (contains image URL) to PUT /users/account/
+import { updateAccount } from '../../../services/api'; // Adjust path as needed
 
-// Define default avatar path (ADJUST THIS PATH TO YOUR PROJECT STRUCTURE)
-const DEFAULT_PROFILE_PIC = '../../src/assets/images/user-default.webp';
+// Import MUI components used
+import Button from '@mui/material/Button'; // Using MUI button for Save
+import CircularProgress from '@mui/material/CircularProgress';
+import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined'; // Or PhotoCameraIcon
+import PersonIcon from '@mui/icons-material/Person'; // Placeholder icon
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'; // For remove text button
+
+// Import the CSS file with light theme styles
+import './EditPhoto.css';
+
+// Define default avatar path (ADJUST THIS PATH TO YOUR PROJECT STRUCTURE in /public folder)
+const DEFAULT_PROFILE_PIC = '/images/profiles/user-default.png';
+
+// --- CLOUDINARY CONFIG (Use Environment Variables for security!) ---
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dsaznefnt"; // Replace with yours
+const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "ITIHub_profile_pics"; // Replace with yours
+// --- End Cloudinary Config ---
 
 const EditPhoto = ({ currentImageUrl, onUpdateSuccess }) => {
-// --- State ---
-const [selectedFile, setSelectedFile] = useState(null); // Holds the selected File object
-const [previewUrl, setPreviewUrl] = useState(null); // Holds URL for local preview
-const [isUploading, setIsUploading] = useState(false); // Loading state specifically for upload action
-const [isDeleting, setIsDeleting] = useState(false); // Loading state specifically for delete action
-const [error, setError] = useState(''); // Holds error messages
-const [success, setSuccess] = useState(''); // Holds success messages
-const fileInputRef = useRef(null); // Ref to access hidden file input
+// State to hold the current image URL (from props or after widget upload)
+// Initialize with currentImageUrl from props
+const [imageUrl, setImageUrl] = useState(currentImageUrl);
+// State to track if the image was changed (by widget or cleared) since last load/save
+const [imageChanged, setImageChanged] = useState(false);
+// Loading state for the Save Changes action
+const [isSaving, setIsSaving] = useState(false);
+const [error, setError] = useState('');
+const [success, setSuccess] = useState('');
 
-// --- Handlers ---
+// Ref for Cloudinary widget instance
+const cloudinaryWidget = useRef(null);
 
-// Handles file selection from the input
-const handleFileChange = (event) => {
-const file = event.target.files[0];
-// Reset messages on new selection attempt
-setError('');
-setSuccess('');
-if (file) {
-    // Basic validation (optional but recommended)
-    if (!file.type.startsWith('image/')) {
-        setError('Please select an image file (e.g., JPG, PNG, GIF).');
-        setSelectedFile(null); setPreviewUrl(null); return;
+// Initialize Cloudinary Widget on component mount
+useEffect(() => {
+// Check if Cloudinary script is loaded
+if (window.cloudinary) {
+    cloudinaryWidget.current = window.cloudinary.createUploadWidget({
+    cloudName: CLOUDINARY_CLOUD_NAME,
+    uploadPreset: CLOUDINARY_UPLOAD_PRESET,
+    sources: ['local', 'url', 'camera'], // Allowed upload sources
+    multiple: false, // Only allow single file selection
+    // Optional: Add folder, tags, cropping, etc.
+    folder: 'user_profiles',
+    // cropping: true, // Enable cropping aspect ratio
+    // croppingAspectRatio: 1, // Square aspect ratio
+    // showSkipCropButton: false,
+    }, (widgetError, result) => {
+    // Widget Callback Handler
+    if (!widgetError && result && result.event === "success") {
+        // On successful upload via widget
+        console.log('Cloudinary Upload Success:', result.info);
+        setError(''); // Clear previous errors
+        setSuccess(''); // Clear previous success
+        setImageUrl(result.info.secure_url); // Update state with the new Cloudinary URL
+        setImageChanged(true); // Mark that image has been changed
+    } else if (widgetError) {
+        // Handle widget errors
+        console.error('Cloudinary Widget Error:', widgetError);
+        setError("Image upload failed. Please try again.");
+        // Close widget on error maybe? widget.close();
     }
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit example
-        setError('File size cannot exceed 5MB.');
-        setSelectedFile(null); setPreviewUrl(null); return;
-    }
-    // Update state if file is valid
-    setSelectedFile(file);
-    setPreviewUrl(URL.createObjectURL(file)); // Show local preview
+    });
 } else {
-    // Clear state if user cancels file selection
-    setSelectedFile(null);
-    setPreviewUrl(null);
+    // Handle script loading issue
+    console.error("Cloudinary upload widget script not loaded");
+    setError("Image upload service is unavailable.");
+}
+}, []); // Empty dependency array ensures this runs only once on mount
+
+// Effect to update local state if the prop changes from the parent component
+useEffect(() => {
+setImageUrl(currentImageUrl); // Update local URL state
+setImageChanged(false); // Reset 'changed' status when prop updates
+}, [currentImageUrl]); // Dependency on the prop from parent
+
+// Function to open the Cloudinary widget
+const openCloudinaryWidget = () => {
+if (cloudinaryWidget.current) {
+    setError(''); setSuccess(''); // Clear messages before opening
+    cloudinaryWidget.current.open();
+} else {
+    setError("Image upload service is not ready. Please refresh the page.");
 }
 };
 
-// Programmatically clicks the hidden file input
-const triggerFileChoose = () => {
-// Clear previous errors/success when user intends to choose a new file
-setError('');
-setSuccess('');
-fileInputRef.current?.click();
+// Handles the action of *marking* the image for removal (doesn't save yet)
+const handleClearImage = () => {
+// Check if there's actually an image URL to clear
+if (!imageUrl || imageUrl === DEFAULT_PROFILE_PIC) return;
+
+if (window.confirm("Are you sure you want to remove your profile picture? Click 'Save Changes' to confirm.")) {
+    setImageUrl(null); // Clear the URL in local state
+    setImageChanged(true); // Mark that a change occurred
+    setError(''); setSuccess(''); // Clear messages
+}
 };
 
-// Handles the actual upload API call
-const handleUpload = async () => {
-if (!selectedFile) {
-    setError('Please select an image file first.');
+// Handles the final "Save Changes" button click
+const handleSaveChanges = async () => {
+// Only proceed if the image state has actually been changed
+if (!imageChanged) {
+    // Optionally show a message or just do nothing
+    // setSuccess("No changes to save.");
     return;
 }
-setIsUploading(true); // Set uploading state
+
+setIsSaving(true); // Set loading state for save button
 setError('');
 setSuccess('');
-const formData = new FormData();
 
-// --- CORRECTED: Use 'profile_image' key matching Profile model field ---
-formData.append('profile_image', selectedFile);
-// --- End Correction ---
+// Prepare the payload - just the profile_image field needs updating
+// Send null if imageUrl state is null (meaning user cleared it)
+const payload = {
+    profile_picture: imageUrl
+};
 
 try {
-    // Use the API function sending FormData to PUT /users/account/
-    const response = await updateProfilePicture(formData);
-    console.log("Backend PUT Response Data:", JSON.stringify(response.data, null, 2));
-    setSuccess('Profile picture updated successfully!');
-    setSelectedFile(null); // Clear selection state
-    setPreviewUrl(null); // Clear local preview
+    // Call the API function that sends JSON via PUT to /users/account/
+    const response = await updateAccount(payload);
 
-    // Pass the updated image URL (which should be a Cloudinary URL now) back to parent
-    // Prioritize 'profile_image' based on the model change
-    const newImageUrl = response.data.profile_image || response.data.profile_picture; // Check both just in case
+    setSuccess('Profile photo updated successfully!');
+    setImageChanged(false); // Reset changed status after successful save
+
+    // Notify parent component of the update (passing the new URL or null)
     if (onUpdateSuccess) {
-        // If backend returns null/empty after successful save, pass that along
-        onUpdateSuccess(newImageUrl || null);
+    onUpdateSuccess(response.data.profile_picture || null);
     }
+
 } catch (err) {
-    console.error("Photo upload error:", err.response?.data || err.message);
+    console.error("Save photo error:", err.response?.data || err.message);
     const errors = err.response?.data;
-    let errorMessage = 'Failed to upload photo.';
+    let errorMessage = 'Failed to save photo changes.';
     if (typeof errors === 'object' && errors !== null) {
-        // Try to extract specific errors
-        errorMessage = errors.profile_image?.[0] || errors.detail || JSON.stringify(errors);
-    } else if (typeof errors === 'string') {
-        errorMessage = errors;
-    }
+        errorMessage = errors.profile_picture?.[0] || errors.detail || JSON.stringify(errors);
+    } else if (typeof errors === 'string') { errorMessage = errors; }
     setError(errorMessage);
+    // Optional: Revert local imageUrl state to original currentImageUrl on failure?
+    setImageUrl(currentImageUrl);
 } finally {
-    setIsUploading(false); // Clear uploading state
+    setIsSaving(false); // Clear loading state
 }
 };
 
-// Handles deleting the existing profile image
-const handleDeleteImage = async () => {
-    // Check the prop passed from the parent for the current image URL
-    if (!currentImageUrl || currentImageUrl === DEFAULT_PROFILE_PIC) {
-        setError("No custom profile picture to remove.");
-        return;
-    }
-    if (!window.confirm("Are you sure you want to remove your profile picture?")) {
-        return;
-    }
-    setIsDeleting(true); // Set deleting state
-    setError('');
-    setSuccess('');
+// Determine what to show in the preview area based on current state
+const imageToDisplay = imageUrl; // Use state which holds preview or current
+const hasCustomImage = imageUrl && imageUrl !== DEFAULT_PROFILE_PIC; // Check if current state has a non-default image
 
-    // --- CORRECTED: Send FormData with empty string to clear ---
-    const formData = new FormData();
-    // Use the correct field name 'profile_image' and send an empty string
-    // The backend's partial update + ImageField should interpret this as clearing
-    formData.append('profile_image', '');
-    // --- End Correction ---
-
-    try {
-        // Use the same API function that sends FormData
-        await updateProfilePicture(formData); // It sends PUT to /users/account/
-        setSuccess("Profile picture removed successfully.");
-        setSelectedFile(null); // Clear any file selection
-        setPreviewUrl(null);   // Clear preview
-        if (onUpdateSuccess) {
-            onUpdateSuccess(null); // Update parent state (image is now null)
-        }
-    } catch (err) {
-        console.error("Delete photo error:", err.response?.data || err.message);
-        const errors = err.response?.data;
-        setError(errors?.detail || 'Failed to remove profile picture.');
-    } finally {
-        setIsDeleting(false); // Clear deleting state
-    }
-};
-
-// --- Render Variables ---
-// Determine the image source: local preview > current image from props (Cloudinary URL)
-const imageToDisplay = previewUrl || currentImageUrl;
-// Check if there is a current image stored (and it's not the default placeholder)
-const hasCustomImage = currentImageUrl && currentImageUrl !== DEFAULT_PROFILE_PIC;
-// Combine loading states for disabling elements
-const isProcessing = isUploading || isDeleting;
-
-// --- JSX ---
+// --- JSX Structure ---
 return (
-<div className="edit-photo-container section-container">
-    {/* Title Section */}
-    <div className='photo-title-section'>
-    <h2><PhotoCameraIcon /> Photo</h2>
-    <p>Add a nice photo of yourself for your profile.</p>
+// Use class names matching the light theme CSS
+
+    <div>
+    {/* Title and Subtitle */}
+    <div className='photo-title-section-light'>
+        <h2><PhotoCameraOutlinedIcon /> Photo</h2>
+        <p>Add a nice photo of yourself for your profile.</p>
     </div>
 
-    {/* Display Error/Success Messages */}
-    {error && <p className="error-message">{error}</p>}
-    {success && <p className="success-message">{success}</p>}
+    <div className="edit-photo-container-light section-container-light">
 
-    {/* Main Content Area */}
-    <div className="photo-edit-area">
+        {/* Error/Success Messages */}
+        {error && <p className="error-message-light">{error}</p>}
+        {success && <p className="success-message-light">{success}</p>}
 
         {/* Image Preview Section */}
-        <div className="photo-preview-section">
+        <div className="photo-preview-area-light">
             <h4>Image preview</h4>
-            <div className="image-placeholder">
-                {/* Show local preview or current image, otherwise placeholder icon */}
-                {imageToDisplay && imageToDisplay !== DEFAULT_PROFILE_PIC ? (
-                <img
-                    // Using previewUrl or currentImageUrl helps refresh if URL string doesn't change but content might
-                    key={previewUrl || currentImageUrl}
-                    src={imageToDisplay}
-                    alt="Profile Preview"
-                    className="profile-image-preview"
-                    // Add onError handler for potentially broken Cloudinary URLs
-                    onError={(e) => {
-                        console.warn(`Error loading image: ${e.target.src}. Falling back to default.`);
-                        // Avoid infinite loop if default image also fails
-                        if (e.target.src !== DEFAULT_PROFILE_PIC) {
-                            e.target.src = DEFAULT_PROFILE_PIC;
-                        }
-                        }}
-                />
+            <div className="image-placeholder-light">
+                {/* Show image from state (Cloudinary URL or null) */}
+                {imageToDisplay ? (
+                    <img
+                        key={imageToDisplay} // Helps React detect src changes
+                        src={imageToDisplay}
+                        alt="Profile Preview"
+                        className="profile-image-preview-light"
+                        // Fallback to default ONLY if the Cloudinary URL itself is broken
+                        onError={(e) => { if (e.target.src !== DEFAULT_PROFILE_PIC) e.target.src = DEFAULT_PROFILE_PIC; }}
+                    />
                 ) : (
-                    <PersonIcon className="placeholder-icon" /> // Placeholder
+                    // Show placeholder icon if imageUrl state is null
+                    <PersonIcon className="placeholder-icon-light" />
                 )}
             </div>
-            {/* Delete Button (only show if a custom image exists and not currently previewing a new one) */}
-            {hasCustomImage && !previewUrl && (
+            {/* Show remove button only if there IS an image currently displayed */}
+            {hasCustomImage && (
                 <button
-                    className="delete-photo-button"
-                    onClick={handleDeleteImage}
-                    disabled={isProcessing} // Disable if uploading or deleting
-                    title="Remove profile picture"
+                    type="button"
+                    className="text-button remove-link-light"
+                    onClick={handleClearImage} // Triggers setting state to null
+                    disabled={isSaving} // Disable while saving
                 >
-                    {isDeleting ? <span className="spinner small red"></span> : <DeleteForeverIcon fontSize="small"/>}
-                    {isDeleting ? 'Removing...' : 'Remove Photo'}
+                    Remove current photo
                 </button>
             )}
         </div>
 
-        {/* Upload Control Section */}
-        <div className="photo-upload-control">
+        {/* Upload Control Section - Styled as Input Row */}
+        <div className="photo-upload-control-light">
             <h4>Add / Change Image</h4>
-            {/* Hidden file input */}
-            <input
-                type="file"
-                accept="image/png, image/jpeg, image/gif" // Specific image types
-                onChange={handleFileChange}
-                ref={fileInputRef}
-                style={{ display: 'none' }}
-                disabled={isProcessing} // Disable if uploading or deleting
-            />
-            {/* Row for file name display and upload button */}
-            <div className="upload-input-row">
-                <span
-                    className="file-name-display"
-                    onClick={triggerFileChoose} // Click text area to choose file
-                    title="Click to choose an image"
-                    aria-disabled={isProcessing} // Accessibility hint
-                >
-                    {selectedFile ? selectedFile.name : "No File Selected"}
+            {/* This row looks like an input but triggers the widget */}
+            <div
+            className="upload-input-row-light"
+            onClick={openCloudinaryWidget} // Click row to open widget
+            title="Choose or upload an image"
+            >
+                <span className="file-name-display-light">
+                    {/* Display status based on whether image was changed */}
+                    {imageChanged ? (imageUrl ? "New image selected" : "Image marked for removal") : (imageUrl ? "Current image shown" : "No image selected")}
                 </span>
+                {/* This button also triggers the widget */}
                 <button
-                    className="upload-button"
-                    onClick={handleUpload} // This button triggers the upload
-                    disabled={!selectedFile || isProcessing} // Disable if no file or loading
-                    title={selectedFile ? "Upload selected image" : "Select an image first"}
+                    type="button"
+                    className="upload-image-button-light" // Styled with purple border
+                    onClick={openCloudinaryWidget} // Also opens widget
+                    disabled={isSaving} // Disable while saving
                 >
-                    <UploadIcon fontSize="small"/> {isUploading ? 'UPLOADING...' : 'UPLOAD'}
+                    Upload image {/* Text from screenshot */}
                 </button>
             </div>
         </div>
 
+        {/* Save Action Area */}
+        <div className="save-action-area-light">
+            {/* Dark  */}
+            
+
+                <Button // Using MUI Button
+                    variant="contained"
+                    className="save-button-light" // Optional class
+                    onClick={handleSaveChanges}
+                    disabled={isSaving || !imageChanged}
+                    // --- UPDATE SX PROP with Hardcoded Dark Theme Colors ---
+                    sx = {{
+                        backgroundColor: '#fffd02', // Hardcoded YELLOW
+                        color: '#191919',       // Hardcoded DARK TEXT
+                        minWidth: '100px',
+                        fontWeight: 'bold',
+                        textTransform: 'uppercase', // Match target style "SAVE"
+                        '&:hover': {
+                            backgroundColor: '#e6e400', // Darker yellow
+                        },
+                        '&:disabled': {
+                            backgroundColor: '#555', // Dark disabled background
+                            color: '#888'           // Dark disabled text
+                        }
+                    }}
+                    // --- END UPDATE ---
+                >
+                    {/* Update CircularProgress color to match text */}
+                    {isSaving ? <CircularProgress size={24} sx={{color: '#191919'}}/> : 'Save'}
+                </Button>
+            
+            
+            
+            {/* light  */}
+            {/* <Button // Using MUI Button
+                variant="contained"
+                className="save-button-light" // Keep class if specific CSS needed
+                onClick={handleSaveChanges} // Trigger save function
+                // Disable if saving OR if no change has been marked
+                disabled={isSaving || !imageChanged}
+                sx = {{ // MUI styles for purple button
+                    backgroundColor: '#6f42c1',
+                    color: 'white',
+                    minWidth: '100px', // Ensure decent button width
+                    '&:hover': { backgroundColor: '#5a349b' },
+                    '&:disabled': { backgroundColor: '#cdc1e0', color: '#6c757d'}
+                }}
+            >
+                {isSaving ? <CircularProgress size={24} sx={{color: 'white'}}/> : 'Save Changes'}
+            </Button> */}
     </div>
+</div> 
+
+
+
 </div>
+
 );
 };
 

@@ -24,7 +24,7 @@ api.interceptors.request.use(
   }
 );
 
-localStorage.setItem("access_token",  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzNzY0Mzg5LCJpYXQiOjE3NDM2Nzc5ODksImp0aSI6ImVkY2M4YTg2MThjNzQ3ZGRhYzFkZDc4YzBjYTFiOWExIiwidXNlcl9pZCI6MTV9.6sa-VJIRqOgYfxkRANos5LUtw6asf4v_pP6lsSavcXA");
+localStorage.setItem("access_token",  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODUzNjIzLCJpYXQiOjE3NDM3NjcyMjMsImp0aSI6IjdhNTMwYzY3MTA4MjRmMzM4MjE2Mjg2ZmM1MGRjOTE3IiwidXNlcl9pZCI6MTV9.2NGzFRIF56c5Dl_DCSo1s-IRvWqPOiuXMCnflpWOE4Q");
 
 // API functions
 export const fetchPosts = () => api.get("/posts/");
@@ -85,8 +85,9 @@ apiClient.interceptors.request.use(
 // ========================================================= User Profile ===========================================================
 export const getAccount = () => apiClient.get('/users/account/');
 export const updateAccountData = (formData) => apiClient.put('/users/account/', formData);
+export const updateAccount = (jsonData) => apiClient.put('/users/account/', jsonData);
 
-export const updateAccount = (profileData) => apiClient.put('/users/account/', profileData);
+// export const updateAccount = (profileData) => apiClient.put('/users/account/', profileData);
 export const updateProfilePicture = (formData) => apiClient.put('/users/account/', formData); // Send FormData
 export const getPublicProfile = (profileId) => apiClient.get(`/users/profiles/${profileId}/`);
 
@@ -103,6 +104,7 @@ export const deleteSkill = (skillId) => apiClient.delete(`/users/skills/${skillI
 // =========================================================== Projects =============================================================
 
 export const getAllProjects = () => apiClient.get('/api/projects/'); // Fetches ALL projects
+export const getMyProjects = (profileId) => apiClient.get(`/api/projects/?owner=${profileId}`);
 export const getProject = (projectId) => apiClient.get(`/api/projects/${projectId}/`);
 export const addProject = (projectData) => apiClient.post('/api/projects/', projectData);
 export const updateProject = (projectId, projectData) => apiClient.put(`/api/projects/${projectId}/`, projectData);
@@ -115,3 +117,4 @@ export const removeTagFromProject = (projectId, tagId) => apiClient.delete(`/api
 export const getContributors = (projectId) => apiClient.get(`/api/projects/${projectId}/contributors/`);
 export const addContributor = (projectId, username) => apiClient.post(`/api/projects/${projectId}/contributors/`, { username });
 export const removeContributor = (projectId, username) => apiClient.delete(`/api/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
+// export const getMyProjects = (profileId) => apiClient.get(`/api/projects/?owner=${profileId}`);

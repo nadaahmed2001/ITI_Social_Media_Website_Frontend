@@ -29,6 +29,7 @@ import Sidebar from "../components/profiles/Sidebar/Sidebar";
 import UserProfilePage from "../pages/UserProfilePage";
 import EmailChangeSuccess from "../pages/EmailChangeSuccess";
 import EmailChangeFailed from "../pages/EmailChangeFailed";
+import ProfilePage from "../pages/ProfilePage";
 
 const AppRouter = () => {
   return (
@@ -47,7 +48,7 @@ const AppRouter = () => {
         <Route path="/student/feed" element={<FeedPage />} />
         <Route path="/student/groups" element={<GroupsPage />} />
         {/* Profile, Search, and Chat */}
-        <Route path="/profile" element={<UserProfilePage />} />
+        <Route path="/profile" element={<UserProfilePage />} />  
         <Route path="/search" element={<SearchPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/Sidebar" element={<Sidebar />} />
@@ -67,11 +68,15 @@ const AppRouter = () => {
         {/* <Route path="/profiles/userprofile" element={<UserProfile />} /> */}
         {/* Search Components */}
         <Route path="/search/filters" element={<SearchFilters />} />
-        {/* Default Route (Redirects to Dashboard or Login) */}
-        <Route path="*" element={<AuthPage />} />
-
+        
+        {/* Email Change */}
         <Route path="/email-change-success" element={<EmailChangeSuccess />} />
         <Route path="/email-change-failed/" element={<EmailChangeFailed />} />
+
+        <Route path="/profiles/:userId" element={<ProfilePage />} />
+
+        {/* Default Route (Redirects to Dashboard or Login) */}
+        <Route path="*" element={<AuthPage />} />
       
       </Routes>
     </Router>
