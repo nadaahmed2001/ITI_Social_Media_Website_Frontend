@@ -24,7 +24,7 @@ api.interceptors.request.use(
   }
 );
 
-localStorage.setItem("access_token",  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODUzNjIzLCJpYXQiOjE3NDM3NjcyMjMsImp0aSI6IjdhNTMwYzY3MTA4MjRmMzM4MjE2Mjg2ZmM1MGRjOTE3IiwidXNlcl9pZCI6MTV9.2NGzFRIF56c5Dl_DCSo1s-IRvWqPOiuXMCnflpWOE4Q");
+// localStorage.setItem("access_token",  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODUzNjIzLCJpYXQiOjE3NDM3NjcyMjMsImp0aSI6IjdhNTMwYzY3MTA4MjRmMzM4MjE2Mjg2ZmM1MGRjOTE3IiwidXNlcl9pZCI6MTV9.2NGzFRIF56c5Dl_DCSo1s-IRvWqPOiuXMCnflpWOE4Q");
 
 // API functions
 export const fetchPosts = () => api.get("/posts/");
@@ -118,3 +118,5 @@ export const getContributors = (projectId) => apiClient.get(`/api/projects/${pro
 export const addContributor = (projectId, username) => apiClient.post(`/api/projects/${projectId}/contributors/`, { username });
 export const removeContributor = (projectId, username) => apiClient.delete(`/api/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
 // export const getMyProjects = (profileId) => apiClient.get(`/api/projects/?owner=${profileId}`);
+
+export const verifyOtp = (data) => { return apiClient.post('/users/verify-otp/', data);};
