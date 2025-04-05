@@ -88,5 +88,26 @@ export const removePostReaction = async (postId) => {
     throw error;
   }
 };
+////////////////////////////
 
+export const fetchReactionsForComment = async (commentId) => {
+  try {
+    const response = await api.get(`/posts/${commentId}/reactions/`);
+    return response.data; // Ensure this returns an array of reactions
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error);
+    return []; // Return empty array on error
+  }
+};
+
+// Remove reaction from a post
+export const removePostReactionComment = async (postId) => {
+  try {
+    const response = await api.post(`/posts/${commentId}/react/remove/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error removing reaction:", error.response?.data || error);
+    throw error;
+  }
+};
 export default api;
