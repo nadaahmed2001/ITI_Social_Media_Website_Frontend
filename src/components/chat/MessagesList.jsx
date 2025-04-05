@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { fetchGroupMessages, fetchPrivateMessages, fetchUser, sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage, clearGroupMessages, clearPrivateMessages, editGroupChat } from "../../services/api";
+import { fetchGroupMessages, fetchPrivateMessages, fetchUser, sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage, clearGroupMessages, clearPrivateMessages } from "../../services/api";
 import { useParams } from 'react-router-dom';
 import ChatSidebar from './ChatSidebar';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -16,7 +16,7 @@ const MessagesList = ({token, isGroupChat }) => {
     const nodeRefs = useRef({}); // Store refs for each message
 
     // Temporary hardcoded token
-     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTU1NTk5LCJpYXQiOjE3NDM4NjkxOTksImp0aSI6ImI3Yzg3Nzg5MTYwNjQzYzY4YTU4NTJjODE3YmQ4NTZlIiwidXNlcl9pZCI6NH0.Is4z_RTUA6L4qYgdDlgwvaNYiBM4832gjdAPf1gN2fo";
+     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTYzMzg0LCJpYXQiOjE3NDM4NzY5ODQsImp0aSI6Ijc5OWVjZmQ1ODIwMTQzZmRiMjBiYTlhZTM4YjQ0MDJjIiwidXNlcl9pZCI6NH0.q_7ng9BE4f2gI6k8chtfqOp4nXdJVD5PmWMTYR8UtvY";
 
     // Memoize the WebSocket connection function
     const connect_to_group_chat = useCallback(() => {
@@ -254,11 +254,7 @@ const MessagesList = ({token, isGroupChat }) => {
         const newContent = prompt("Edit your message:", oldContent); // Prompt user for new content
         if (newContent && newContent.trim() !== "") {
             try {
-                if (isGroupChat) {
-                    await editGroupChat(id, messageId, newContent); // Use editGroupChat for group messages
-                } else {
-                    await editMessage(messageId, newContent); // Use editMessage for private messages
-                }
+                await editMessage(messageId, newContent); // Call API to edit the message
                 setMessages((prevMessages) =>
                     prevMessages.map((msg) =>
                         msg.id === messageId ? { ...msg, content: newContent } : msg

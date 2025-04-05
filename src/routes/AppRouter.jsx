@@ -20,6 +20,7 @@ import MessagesList from "../components/chat/MessagesList";
 import FollowButton from "../components/profiles/FollowButton";
 import UserProfile from "../components/profiles/UserProfile";
 import SearchFilters from "../components/search/SearchFilters";
+import Aichat from "../components/chat/Aichat";
 
 const AppRouter = () => {
   return (
@@ -37,17 +38,18 @@ const AppRouter = () => {
         {/* Student Routes */}
         <Route path="/student/feed" element={<FeedPage />} />
         <Route path="/student/groups" element={<GroupsPage />} />
-        {/* Profile, Search, and Chat */}
+        {/* Profile, Search */}
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/chat/*" element={<ChatSidebar />} />
         {/* Notifications */}
         <Route path="/notifications" element={<NotificationsPage />} />
         {/* Posts */}
         <Route path="/posts/create" element={<CreatePost />} />
         {/* Chat Routes */}
+        <Route path="/chat/*" element={<ChatSidebar />} />
         <Route path="/messagesList/group/:id" element={<MessagesList isGroupChat={true} />} />
         <Route path="/messagesList/private/:id" element={<MessagesList isGroupChat={false} />} />
+        <Route path="/chat/aiChat" element={<Aichat />} />
         {/* Profile Components */}
         <Route path="/profiles/followbutton" element={<FollowButton />} />
         <Route path="/profiles/userprofile" element={<UserProfile />} />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchGroupChats, fetchPrivateChatUsers } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import Aichat from "./Aichat";
 
 const ChatSidebar = () => {
     const [groupChats, setGroupChats] = useState([]);
@@ -45,6 +46,12 @@ const ChatSidebar = () => {
                     <h4 className="text-sm font-semibold mb-4 uppercase tracking-wider text-yellow-300 text-center">
                         Private Chats
                     </h4>
+                    <button
+                        className="bg-yellow-400 text-black p-2 rounded mb-4 hover:bg-yellow-500 transition-colors"
+                        onClick={() => navigate("/chat/aiChat")}
+                    >
+                        Go to AI Chat
+                    </button>
                     <ul className="space-y-2 flex flex-col items-center">
                         {privateChats.map((chat) => (
                             <li
