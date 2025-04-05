@@ -6,7 +6,7 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTYzMzg0LCJpYXQiOjE3NDM4NzY5ODQsImp0aSI6Ijc5OWVjZmQ1ODIwMTQzZmRiMjBiYTlhZTM4YjQ0MDJjIiwidXNlcl9pZCI6NH0.q_7ng9BE4f2gI6k8chtfqOp4nXdJVD5PmWMTYR8UtvY"
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTY4NjU4LCJpYXQiOjE3NDM4ODIyNTgsImp0aSI6IjNmZDEzN2RhMTVkNTRjZGE5ZTM3MGY2YjAxMTRmNmE3IiwidXNlcl9pZCI6NH0.attP3etscne7JkqU2zPSv-4t5VVpXeFiZum69LM90BY"
   }
 });
 
@@ -15,7 +15,7 @@ const api2 = axios.create({
   baseURL: "http://127.0.0.1:8000/",
   headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTYzMzg0LCJpYXQiOjE3NDM4NzY5ODQsImp0aSI6Ijc5OWVjZmQ1ODIwMTQzZmRiMjBiYTlhZTM4YjQ0MDJjIiwidXNlcl9pZCI6NH0.q_7ng9BE4f2gI6k8chtfqOp4nXdJVD5PmWMTYR8UtvY"
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTY4NjU4LCJpYXQiOjE3NDM4ODIyNTgsImp0aSI6IjNmZDEzN2RhMTVkNTRjZGE5ZTM3MGY2YjAxMTRmNmE3IiwidXNlcl9pZCI6NH0.attP3etscne7JkqU2zPSv-4t5VVpXeFiZum69LM90BY"
   }
 });
 // Chat API functions
@@ -29,9 +29,6 @@ export const sendGroupMessage = (groupId, content) => api.post(`/chat/groups/${g
 export const sendPrivateMessage = (receiverId, message) => api.post(`/chat/messages/${receiverId}/`, { message });
 
 // New API functions
-
-
-
 export const clearGroupChat = (groupId) => api.delete(`/chat/group-chats/${groupId}/clear/`);
 export const clearPrivateChat = (receiverId) => api.delete(`/chat/private-chats/${receiverId}/clear/`);
 export const editMessage = async (messageId, newContent) => {
