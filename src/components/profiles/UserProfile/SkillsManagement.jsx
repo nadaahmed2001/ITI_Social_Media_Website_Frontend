@@ -1,136 +1,122 @@
+// src/components/UserProfile/SkillsManagement.jsx (Adjust path)
 import React, { useState, useEffect, useCallback } from 'react';
-import { getSkills, addSkill, deleteSkill } from '../../../services/api'; // Adjust path if needed
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import CircularProgress from '@mui/material/CircularProgress'; // For loading spinner
+import { getSkills, addSkill, deleteSkill } from '../../../services/api'; // Adjust path
 
-
-
-import './SkillsManagement.css'; // Ensure CSS is imported
-
-const SkillsManagement = ({ profileId }) => { // profileId might not be strictly needed by API but good practice
+// Import Icons
+import { TagIcon, PlusIcon, XCircleIcon } from '@heroicons/react/24/outline'; // Use Tag for section title
+const SkillsManagement = ({ profileId }) => {
   const [skills, setSkills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(''); // General fetch/delete errors
-
-  // Add Form State
   const [newSkillName, setNewSkillName] = useState('');
-  // Optional: Keep description if your addSkill API/model uses it
-  // const [newSkillDescription, setNewSkillDescription] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [addError, setAddError] = useState(''); // Error specific to adding
-
-  // Delete State (track ID being deleted for visual feedback)
   const [deletingId, setDeletingId] = useState(null);
 
   // --- Fetch skills ---
   const fetchSkills = useCallback(async () => {
     setIsLoading(true); setError('');
     try {
-      const response = await getSkills(); // Assumes API gets skills for logged-in user
+      const response = await getSkills(); // Assumes API gets skills for logged-in user via token
       setSkills(response.data || []);
-    } catch (err) {
-      console.error("Failed to fetch skills:", err); setError('Could not load skills.');
-    } finally { setIsLoading(false); }
+    } catch (err) { console.error("Fetch skills error:", err); setError('Could not load skills.'); }
+    finally { setIsLoading(false); }
   }, []); // No dependency needed if API uses token auth
 
   useEffect(() => { fetchSkills(); }, [fetchSkills]);
 
   // --- Handlers ---
-
   const handleAddSkill = async (e) => {
     e.preventDefault();
-    if (!newSkillName.trim()) { setAddError('Skill name cannot be empty.'); return; }
-    if (skills.some(skill => skill.name.toLowerCase() === newSkillName.trim().toLowerCase())) {
+    const trimmedName = newSkillName.trim();
+    if (!trimmedName) { setAddError('Skill name cannot be empty.'); return; }
+    if (skills.some(skill => skill.name.toLowerCase() === trimmedName.toLowerCase())) {
         setAddError('This skill already exists.'); return;
     }
     setIsAdding(true); setAddError('');
     try {
-      // Assuming addSkill API takes name and optional description
-      await addSkill({ name: newSkillName.trim() /*, description: newSkillDescription.trim() */ });
+      await addSkill({ name: trimmedName }); // Only send name
       setNewSkillName(''); // Clear form
-      // setNewSkillDescription('');
       await fetchSkills(); // Refresh list
     } catch (err) {
-      console.error("Add skill error:", err.response?.data || err.message);
+      console.error("Add skill error:", err);
       setAddError(err.response?.data?.detail || err.response?.data?.name?.[0] || 'Failed to add skill.');
     } finally { setIsAdding(false); }
   };
 
   const handleDeleteSkill = async (skillId, skillName) => {
-    // Optional confirmation
-    if (!window.confirm(`Are you sure you want to delete the skill "${skillName}"?`)) { return; }
-
-    setDeletingId(skillId); setError(''); // Clear general errors, set deleting state
+    if (!window.confirm(`Remove skill "${skillName}"?`)) return;
+    setDeletingId(skillId); setError('');
     try {
       await deleteSkill(skillId);
-      // Update list locally for instant feedback - or refetch
       setSkills(prevSkills => prevSkills.filter(skill => skill.id !== skillId));
-      // await fetchSkills(); // Option: refetch instead of local update
     } catch (err) {
-      console.error("Delete skill error:", err.response?.data || err.message);
-      setError(`Failed to delete skill: ${err.response?.data?.detail || err.message}`);
-    } finally { setDeletingId(null); } // Clear deleting state
+      console.error("Delete skill error:", err);
+      setError(`Failed to delete skill: ${err.response?.data?.detail || 'Error'}`);
+    } finally { setDeletingId(null); }
   };
 
   // --- Render Logic ---
   return (
-    // Using general section class, assuming it provides dark background etc.
-    <div className="skills-management-container form-section">
-      {/* Section Title - Assuming h3 is styled correctly by parent/global CSS */}
-      <h3 className="skills-title">Skills</h3>
+    // Section Container
+    <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+      {/* Section Title */}
+      <h3 className="flex items-center text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100">
+        <TagIcon className="w-5 h-5 mr-2 text-primary-600" /> Skills
+      </h3>
 
       {/* Add Skill Form */}
-      <form onSubmit={handleAddSkill} className="add-skill-form">
-        {/* Optional: Add h4 heading */}
-        {/* <h4>Add New Skill</h4> */}
-        {addError && <p className="error-message">{addError}</p>}
-        <div className="add-form-inputs">
+      <form onSubmit={handleAddSkill} className="mb-6">
+        <label htmlFor="newSkillName" className="block text-sm font-medium text-gray-700 mb-1">Add New Skill</label>
+        <div className="flex items-center gap-2">
           <input
             type="text"
+            id="newSkillName"
             value={newSkillName}
             onChange={(e) => { setNewSkillName(e.target.value); setAddError(''); }}
-            placeholder="Enter new skill name..." // Clearer placeholder
+            placeholder="Enter skill name (e.g., React)"
             required
             disabled={isAdding}
+            className="flex-grow block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 text-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 disabled:opacity-60 disabled:bg-gray-100"
           />
-          
+          <button type="submit"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-60"
+            disabled={isAdding || !newSkillName.trim()}
+          >
+            {isAdding ? ( <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> ) : <PlusIcon className="w-5 h-5 -ml-1 mr-1" />}
+            Add
+          </button>
         </div>
-        <button type="submit" className="submit-button add-skill-button" disabled={isAdding}>
-          {isAdding ? 'Adding...' : 'Add Skill'}
-        </button>
+        {addError && <p className="text-red-600 text-xs mt-1">{addError}</p>}
       </form>
 
       {/* Skills List Area */}
       <div className="skills-list-section">
-        {/* Display loading/error/empty states */}
-        {isLoading && <p className="loading-text">Loading skills...</p>}
-        {!isLoading && error && <p className="error-message">{error}</p>}
+        <h4 className="text-base font-medium text-gray-700 mb-3">Your Skills</h4>
+        {/* Loading/Error/Empty states */}
+        {isLoading && <p className="text-sm text-gray-500">Loading skills...</p>}
+        {!isLoading && error && <p className="text-sm text-red-600">{error}</p>}
         {!isLoading && !error && skills.length === 0 && (
-          <p className="no-data-text">No skills added yet.</p>
+          <p className="text-sm text-gray-500">No skills added yet.</p>
         )}
-
         {/* Render skills as tags */}
         {!isLoading && !error && skills.length > 0 && (
-          <ul className="skills-tag-list">
+          <ul className="flex flex-wrap gap-2">
             {skills.map(skill => {
                 const isDeletingThis = deletingId === skill.id;
                 return (
-                    <li
-                      key={skill.id}
-                      className={`skill-tag-item ${isDeletingThis ? 'deleting' : ''}`}
-                      title={skill.description || skill.name} // Show description on hover maybe
-                    >
+                    <li key={skill.id} className={`skill-tag-item ${isDeletingThis ? 'opacity-50' : ''}`} title={skill.description || skill.name} >
                         <span className="skill-tag-name">{skill.name}</span>
                         <button
+                            type="button"
                             className="remove-skill-button"
                             onClick={() => handleDeleteSkill(skill.id, skill.name)}
-                            disabled={isDeletingThis || isAdding} // Disable if deleting this or adding new
+                            disabled={isDeletingThis || isAdding}
                             title={`Remove ${skill.name}`}
                             aria-label={`Remove ${skill.name}`}
                         >
-                            {/* Show spinner if deleting this one */}
-                            {isDeletingThis ? <CircularProgress size={14} color="inherit"/> : <span className="remove-icon-wrapper"> X </span>}
-                          
+                            {isDeletingThis ? <svg className="animate-spin h-4 w-4 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            : <XCircleIcon className="w-4 h-4" />} {/* Use Heroicon X */}
                         </button>
                     </li>
                 );
@@ -138,6 +124,15 @@ const SkillsManagement = ({ profileId }) => { // profileId might not be strictly
           </ul>
         )}
       </div>
+      {/* Add these utility component styles to your global CSS or index.css @layer components */}
+      {/*
+        @layer components {
+          .skill-tag-item { @apply inline-flex items-center bg-primary-100 text-primary-800 rounded-full pl-3 pr-1 py-1 text-sm font-medium transition-opacity; }
+          .skill-tag-name { @apply mr-1; }
+          .remove-skill-button { @apply ml-1 flex-shrink-0 p-0.5 rounded-full inline-flex items-center justify-center text-primary-500 hover:bg-primary-200 hover:text-primary-700 focus:outline-none focus:ring-1 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed; }
+          .remove-skill-button svg { @apply h-4 w-4; }
+        }
+      */}
     </div>
   );
 };
