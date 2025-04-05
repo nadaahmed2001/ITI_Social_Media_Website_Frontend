@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { fetchPosts } from "../services/api";
 import CreatePost from "./CreatePost";
 import ShowPost from "./ShowPost";
-import Sidebar from "../profiles/Sidebar";
+// import Sidebar from "../profiles/Sidebar";
 import Navbar from "../../components/ui/Navbar"; // Import Navbar component
 export default function PostList() {
   const [posts, setPosts] = useState([]);
@@ -33,9 +33,9 @@ export default function PostList() {
     <Navbar />
     <div className="feed-container">
 
-    <div className="sidebar-showpost">
+    {/* <div className="sidebar-showpost">
     <Sidebar />
-    </div>
+    </div> */}
     <div className="main-content">
     <CreatePost onPostCreated={handleNewPost} />
     <div className="posts-list">
