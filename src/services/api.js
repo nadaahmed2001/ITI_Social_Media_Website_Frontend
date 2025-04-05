@@ -44,6 +44,17 @@ export const editMessage = async (messageId, newContent) => {
         throw error;
     }
 };
+export const editGroupChat = async (groupId, messageId, newContent) => {
+    try {
+        // Corrected endpoint for editing group chat messages
+        const response = await api.put(`/chat/groups/${groupId}/messages/${messageId}/edit/`, { content: newContent });
+        return response;
+    } catch (error) {
+        console.error("Error editing group chat message:", error);
+        throw error;
+    }
+};
+
 export const deleteMessage = async (messageId, isGroupChat, groupId = null) => {
     try {
         // Determine the correct URL based on whether it's a group chat or private chat
@@ -56,17 +67,6 @@ export const deleteMessage = async (messageId, isGroupChat, groupId = null) => {
         return response;
     } catch (error) {
         console.error("Error deleting message:", error);
-        throw error;
-    }
-};
-
-export const editGroupChat = async (groupId, messageId, newContent) => {
-    try {
-        // Corrected endpoint for editing group chat messages
-        const response = await api.put(`/chat/groups/${groupId}/messages/${messageId}/edit/`, { content: newContent });
-        return response;
-    } catch (error) {
-        console.error("Error editing group chat message:", error);
         throw error;
     }
 };

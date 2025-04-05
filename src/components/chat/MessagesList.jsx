@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { fetchGroupMessages, fetchPrivateMessages, fetchUser, sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage, clearGroupMessages, clearPrivateMessages } from "../../services/api";
+import { fetchGroupMessages, fetchPrivateMessages, fetchUser, sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage, clearGroupMessages, clearPrivateMessages ,editGroupChat } from "../../services/api";
 import { useParams } from 'react-router-dom';
 import ChatSidebar from './ChatSidebar';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -254,7 +254,13 @@ const MessagesList = ({token, isGroupChat }) => {
         const newContent = prompt("Edit your message:", oldContent); // Prompt user for new content
         if (newContent && newContent.trim() !== "") {
             try {
-                await editMessage(messageId, newContent); // Call API to edit the message
+                if (isGroupChat) {
+                    // Use editGroupChat for group messages
+                    await editGroupChat(id, messageId, newContent);
+                } else {
+                    // Use editMessage for private messages
+                    await editMessage(messageId, newContent);
+                }
                 setMessages((prevMessages) =>
                     prevMessages.map((msg) =>
                         msg.id === messageId ? { ...msg, content: newContent } : msg
