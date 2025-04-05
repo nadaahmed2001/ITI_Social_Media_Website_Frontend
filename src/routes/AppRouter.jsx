@@ -4,7 +4,7 @@ import AuthPage from "../pages/AuthPage";
 // import DashboardPage from "../pages/DashboardPage";
 import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
-import ChatPage from "../pages/ChatPage";
+// import ChatPage from "../pages/ChatPage";
 import NotificationsDropdown from "../pages/NotificationsDropdown";
 // Supervisor Pages
 import ManageBatches from "../pages/SupervisorDashboard/ManageBatches";
@@ -36,6 +36,8 @@ import MessagesList from "../components/chat/MessagesList";
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
 import BatchPage from "../pages/SupervisorDashboard/BatchPage";
 import StudentDashboard  from "../pages/StudentDashboard/Dashboard";
+
+import Aichat from "../components/chat/Aichat";
 
 const AppRouter = () => {
   return (
@@ -75,7 +77,6 @@ const AppRouter = () => {
         {/* Profile, Search, and Chat */}
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/chat" element={<ChatPage />} />
         {/* Notifications */}
         <Route path="/notifications" element={<NotificationsDropdown />} />
 
@@ -91,9 +92,15 @@ const AppRouter = () => {
 
 
         {/* Chat Component Example */}
-        <Route path="/chat/sidebar" element={<ChatSidebar />} />
-        <Route path="/chat/messagesList" element={<MessagesList />} />
+        {/* <Route path="/chat/sidebar" element={<ChatSidebar />} />
+        <Route path="/chat/messagesList" element={<MessagesList />} /> */}
          {/* Profile Components */}
+        {/* Chat Routes */}
+        <Route path="/chat/*" element={<ChatSidebar />} />
+        <Route path="/messagesList/group/:id" element={<MessagesList isGroupChat={true} />} />
+        <Route path="/messagesList/private/:id" element={<MessagesList isGroupChat={false} />} />
+        <Route path="/chat/aiChat" element={<Aichat />} />
+        {/* Profile Components */}
         <Route path="/profiles/followbutton" element={<FollowButton />} />
         <Route path="/profiles/userprofile" element={<UserProfile />} />
         {/* Search Components */}
