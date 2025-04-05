@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ChatSidebar from "./ChatSidebar";
-import axios from "axios";
+import api from "../services/api";
 
 export default function Aichat() {
     const [messages, setMessages] = useState([]);
@@ -21,21 +21,21 @@ export default function Aichat() {
         ]);
 
         try {
-            // Send message to the chatbot endpoint with the correct body format
-            const response = await axios.post(
+            const token = localStorage.getItem("access_token"); 
+
+            const response = await api.post(
                 "http://127.0.0.1:8000/api/chat/chatbot/",
                 { message: newMessage },
                 {
                     headers: {
-                        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTU1NTk5LCJpYXQiOjE3NDM4NjkxOTksImp0aSI6ImI3Yzg3Nzg5MTYwNjQzYzY4YTU4NTJjODE3YmQ4NTZlIiwidXNlcl9pZCI6NH0.Is4z_RTUA6L4qYgdDlgwvaNYiBM4832gjdAPf1gN2fo", // Replace with a valid token
+                        Authorization: `Bearer ${token}`,
                     },
                 }
             );
 
-            // Add AI response to the chat
             setMessages((prevMessages) => [
                 ...prevMessages,
-                { sender: "AI", content: response.data.response }, // Use the correct property for AI response
+                { sender: "AI", content: response.data.response },
             ]);
         } catch (error) {
             console.error("Error communicating with chatbot:", error);

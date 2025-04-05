@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { fetchGroupMessages, fetchPrivateMessages, fetchUser, sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage, clearGroupMessages, clearPrivateMessages ,editGroupChat } from "../../services/api";
+import { fetchGroupMessages, fetchPrivateMessages, fetchUser, 
+    sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage,
+    clearGroupMessages, clearPrivateMessages ,editGroupChat } from "../../components/services/api";
 import { useParams } from 'react-router-dom';
 import ChatSidebar from './ChatSidebar';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './MessagesList.css';
 
 const MessagesList = ({token, isGroupChat }) => {
+    // console.log( )
     const { id } = useParams(); // `id` is the group_id or user_id depending on the chat type
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -16,8 +19,10 @@ const MessagesList = ({token, isGroupChat }) => {
     const nodeRefs = useRef({}); // Store refs for each message
 
     // Temporary hardcoded token
-     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTY4NjU4LCJpYXQiOjE3NDM4ODIyNTgsImp0aSI6IjNmZDEzN2RhMTVkNTRjZGE5ZTM3MGY2YjAxMTRmNmE3IiwidXNlcl9pZCI6NH0.attP3etscne7JkqU2zPSv-4t5VVpXeFiZum69LM90BY";
-
+    //  token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTY4NjU4LCJpYXQiOjE3NDM4ODIyNTgsImp0aSI6IjNmZDEzN2RhMTVkNTRjZGE5ZTM3MGY2YjAxMTRmNmE3IiwidXNlcl9pZCI6NH0.attP3etscne7JkqU2zPSv-4t5VVpXeFiZum69LM90BY";
+    if (!token) {
+        console.error("No token passed to MessagesList component!");
+    }
     // Memoize the WebSocket connection function
     const connect_to_group_chat = useCallback(() => {
         const socketUrl = isGroupChat

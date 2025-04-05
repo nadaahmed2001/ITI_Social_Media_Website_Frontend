@@ -36,10 +36,14 @@ import MessagesList from "../components/chat/MessagesList";
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
 import BatchPage from "../pages/SupervisorDashboard/BatchPage";
 import StudentDashboard  from "../pages/StudentDashboard/Dashboard";
-
+import PostListWithSideBar from "../components/posts/PostListWithSideBar";
 import Aichat from "../components/chat/Aichat";
 
+
+
 const AppRouter = () => {
+  const userToken = localStorage.getItem("access_token") || sessionStorage.getItem("userToken") || null;
+  console.log("User Token:", userToken); // Log the token to check its value
   return (
     <Router>
       <AuthProvider>
@@ -65,6 +69,7 @@ const AppRouter = () => {
 
         {/* Supervisor Routes */}
         <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+
         <Route path="/batches/:trackId" element={<BatchPage />} />
         {/* <Route path="/supervisor/track-overview" element={<TrackOverview />} /> */}
 
@@ -87,7 +92,8 @@ const AppRouter = () => {
         <Route path="/posts/delete" element={<DeletePost />} />   
         <Route path="/posts/edit" element={<EditPost />} />
         {/* <Route path="/posts/list" element={<PostList />} /> */}
-        <Route path="/dashboard" element={<PrivateRoute><PostList /></PrivateRoute>} />
+        {/* <Route path="/dashboard" element={<PrivateRoute><PostList /></PrivateRoute>} /> */}
+        <Route path="/dashboard" element={<PrivateRoute><PostListWithSideBar /></PrivateRoute>} />
         <Route path="/posts/show-reactions/:postId" element={<ShowReactionsPost />} />
 
 
@@ -96,9 +102,9 @@ const AppRouter = () => {
         <Route path="/chat/messagesList" element={<MessagesList />} /> */}
          {/* Profile Components */}
         {/* Chat Routes */}
-        <Route path="/chat/*" element={<ChatSidebar />} />
-        <Route path="/messagesList/group/:id" element={<MessagesList isGroupChat={true} />} />
-        <Route path="/messagesList/private/:id" element={<MessagesList isGroupChat={false} />} />
+        <Route path="/chat/*" element={<ChatSidebar token={userToken} />} />
+        <Route path="/messagesList/group/:id" element={<MessagesList token={userToken} isGroupChat={true} />} />
+        <Route path="/messagesList/private/:id" element={<MessagesList token={userToken} isGroupChat={false} />} />
         <Route path="/chat/aiChat" element={<Aichat />} />
         {/* Profile Components */}
         <Route path="/profiles/followbutton" element={<FollowButton />} />

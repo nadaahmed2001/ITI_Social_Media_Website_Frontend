@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchGroupChats, fetchPrivateChatUsers } from "../../services/api";
+import { fetchGroupChats, fetchPrivateChatUsers } from "../../components/services/api";
 import { useNavigate } from "react-router-dom";
 import Aichat from "./Aichat";
 
