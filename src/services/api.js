@@ -1,99 +1,122 @@
-// import axios from "axios";
+import axios from "axios";
 
-// const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "http://127.0.0.1:8000/api";
 
-// const api = axios.create({
-//   baseURL: API_URL,
-//   headers: {
-//     "Content-Type": "application/json",
-//     "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTY4NjU4LCJpYXQiOjE3NDM4ODIyNTgsImp0aSI6IjNmZDEzN2RhMTVkNTRjZGE5ZTM3MGY2YjAxMTRmNmE3IiwidXNlcl9pZCI6NH0.attP3etscne7JkqU2zPSv-4t5VVpXeFiZum69LM90BY"
-//   }
-// });
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true, // Ensure credentials like cookies are sent
+});
 
+// Automatically set Authorization header before each request
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("access_token"); // Retrieve token from local storage
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`; // Corrected syntax
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-// const api2 = axios.create({
-//   baseURL: "http://127.0.0.1:8000/",
-//   headers: {
-//     "Content-Type": "application/json",
-//     "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTY4NjU4LCJpYXQiOjE3NDM4ODIyNTgsImp0aSI6IjNmZDEzN2RhMTVkNTRjZGE5ZTM3MGY2YjAxMTRmNmE3IiwidXNlcl9pZCI6NH0.attP3etscne7JkqU2zPSv-4t5VVpXeFiZum69LM90BY"
-//   }
-// });
-// // Chat API functions
-// export const fetchPrivateChatUsers = () => api.get("/chat/private_chat_users/");
-// export const fetchGroupChats = () => api.get("/chat/groups/"); // Fetch all group chats
+// localStorage.setItem("access_token",  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODUzNjIzLCJpYXQiOjE3NDM3NjcyMjMsImp0aSI6IjdhNTMwYzY3MTA4MjRmMzM4MjE2Mjg2ZmM1MGRjOTE3IiwidXNlcl9pZCI6MTV9.2NGzFRIF56c5Dl_DCSo1s-IRvWqPOiuXMCnflpWOE4Q");
 
-// export const fetchGroupMessages = (groupId) => api.get(`/chat/groups/${groupId}/messages/`);
-// export const fetchPrivateMessages = (receiverId) => api.get(`/chat/messages/${receiverId}/`);
+// API functions
+export const fetchPosts = () => api.get("/posts/");
+export const createPost = (data) => api.post("/posts/", data);
+export const likePost = (postId, reactionType) =>
+  api.post(`/posts/${postId}/react/`, { reaction_type: reactionType });
+export const fetchComments = (postId) => api.get(`/posts/${postId}/comment/`);
+export const addComment = (postId, data) =>
+  api.post(`/posts/${postId}/comment/`, data);
 
-// export const sendGroupMessage = (groupId, content) => api.post(`/chat/groups/${groupId}/messages/`, { content });
-// export const sendPrivateMessage = (receiverId, message) => api.post(`/chat/messages/${receiverId}/`, { message });
-
-// // New API functions
-// export const clearGroupChat = (groupId) => api.delete(`/chat/group-chats/${groupId}/clear/`);
-// export const clearPrivateChat = (receiverId) => api.delete(`/chat/private-chats/${receiverId}/clear/`);
-// export const editMessage = async (messageId, newContent) => {
-//     try {
-//         // Corrected endpoint for editing private messages
-//         const response = await api.put(`/chat/messages/${messageId}/edit/`, { content: newContent });
-//         return response;
-//     } catch (error) {
-//         console.error("Error editing message:", error);
-//         throw error;
-//     }
-// };
-// export const editGroupChat = async (groupId, messageId, newContent) => {
-//     try {
-//         // Corrected endpoint for editing group chat messages
-//         const response = await api.put(`/chat/groups/${groupId}/messages/${messageId}/edit/`, { content: newContent });
-//         return response;
-//     } catch (error) {
-//         console.error("Error editing group chat message:", error);
-//         throw error;
-//     }
-// };
-
-// export const deleteMessage = async (messageId, isGroupChat, groupId = null) => {
-//     try {
-//         // Determine the correct URL based on whether it's a group chat or private chat
-//         const url = isGroupChat
-//             ? `/chat/groups/${groupId}/messages/${messageId}/delete/` // Group chat endpoint
-//             : `/chat/messages/${messageId}/delete/`; // Private chat endpoint
-
-//         // Make the DELETE request
-//         const response = await api.delete(url);
-//         return response;
-//     } catch (error) {
-//         console.error("Error deleting message:", error);
-//         throw error;
-//     }
-// };
-
-// export const clearGroupMessages = async (groupId) => {
-//     const response = await api.delete(`/chat/group-chats/${groupId}/clear/`); // Corrected endpoint
-//     return response.data;
-// };
-
-// export const clearPrivateMessages = async (receiverId) => {
-//     const response = await api.delete(`/chat/private-chats/${receiverId}/clear/`); // Corrected endpoint
-//     return response.data;
-// };
-
-// // Other API functions
+export const fetchNotifications = () => api.get("/notifications/");
+export const markNotificationAsRead = (notificationId) =>
+  api.patch(`/notifications/${notificationId}/mark-as-read/`);
+export const markAllNotificationsAsRead = () =>
+  api.patch("/notifications/mark-all-as-read/");
 
 
 
 
-// export const fetchPosts = () => api.get("/posts/");
-// export const createPost = (data) => api.post("/posts/", data);
-// export const likePost = (postId, reactionType) => api.post(`/posts/${postId}/react/`, { reaction_type: reactionType });
-// export const fetchComments = (postId) => api.get(`/posts/${postId}/comment/`);
-// export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`, data);
+export default api;
 
-// export const fetchNotifications = () => api.get("/notifications/");
-// export const markNotificationAsRead = (notificationId) => api.patch(`/notifications/${notificationId}/mark-as-read/`);
-// export const markAllNotificationsAsRead = () => api.patch(`/notifications/mark-all-as-read/`);
+// ======================================================================================================================================
 
-// export const fetchUser = () => api2.get("users/account/");
+const API_BASE_URL =  'http://localhost:8000/'; 
 
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-// export default api;
+// --- Interceptor to add Auth Token ---
+apiClient.interceptors.request.use(
+  (config) => {
+    // Assume token is stored in localStorage after login
+    const token = localStorage.getItem('access_token'); // Adjust key as needed
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    // IMPORTANT: When sending FormData (for file uploads),
+    // axios sets the Content-Type automatically. Don't override it here.
+    if (config.data instanceof FormData) {
+      // Let axios handle the Content-Type for FormData
+      delete config.headers['Content-Type'];
+    } else {
+      config.headers['Content-Type'] = 'application/json';
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// --- API Functions ---
+
+// ========================================================= User Profile ===========================================================
+export const getAccount = () => apiClient.get('/users/account/');
+export const updateAccountData = (formData) => apiClient.put('/users/account/', formData);
+export const updateAccount = (jsonData) => apiClient.put('/users/account/', jsonData);
+
+// export const updateAccount = (profileData) => apiClient.put('/users/account/', profileData);
+export const updateProfilePicture = (formData) => apiClient.put('/users/account/', formData); // Send FormData
+export const getPublicProfile = (profileId) => apiClient.get(`/users/profiles/${profileId}/`);
+
+// ======================================================= User Credentials ==========================================================
+export const changeEmail = (data) => apiClient.post('/users/change-email/', data);
+export const changePassword = (data) => apiClient.post('/users/change-password/', data);
+
+// =========================================================== Skills ===============================================================
+export const getSkills = () => apiClient.get('/users/skills/'); // Gets skills for logged-in user
+export const addSkill = (skillData) => apiClient.post('/users/skills/', skillData);
+export const updateSkill = (skillId, skillData) => apiClient.put(`/users/skills/${skillId}/`, skillData);
+export const deleteSkill = (skillId) => apiClient.delete(`/users/skills/${skillId}/`);
+
+// =========================================================== Projects =============================================================
+
+export const getAllProjects = () => apiClient.get('/api/projects/'); // Fetches ALL projects
+export const getMyProjects = (profileId) => apiClient.get(`/api/projects/?owner=${profileId}`);
+export const getProject = (projectId) => apiClient.get(`/api/projects/${projectId}/`);
+export const addProject = (projectData) => apiClient.post('/api/projects/', projectData);
+export const updateProject = (projectId, projectData) => apiClient.put(`/api/projects/${projectId}/`, projectData);
+export const deleteProject = (projectId) => apiClient.delete(`/api/projects/${projectId}/`);
+export const getAllTags = () => apiClient.get('/api/projects/tags/'); // For tag input suggestions
+export const addTagToProject = (projectId, tagId) => apiClient.post(`/api/projects/${projectId}/tags/`, { tag_id: tagId });
+export const removeTagFromProject = (projectId, tagId) => apiClient.delete(`/api/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
+
+// ==================================================== Project Contributors =========================================================
+export const getContributors = (projectId) => apiClient.get(`/api/projects/${projectId}/contributors/`);
+export const addContributor = (projectId, username) => apiClient.post(`/api/projects/${projectId}/contributors/`, { username });
+export const removeContributor = (projectId, username) => apiClient.delete(`/api/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
+// export const getMyProjects = (profileId) => apiClient.get(`/api/projects/?owner=${profileId}`);
+
+export const verifyOtp = (data) => { return apiClient.post('/users/verify-otp/', data);};

@@ -1,7 +1,12 @@
 import React from 'react'
+import './ProfilePage.css'
 
-export default function ProfilePage() {
+function ProfilePage() {
   return (
-    <h1>ProfilePage</h1>
+    <div>
+      Profile by id
+    </div>
   )
 }
+
+export default ProfilePage

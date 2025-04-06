@@ -1,1 +1,19 @@
 @import "tailwindcss";
+/* Example Dark Theme Variables (in index.css or App.css) */
+body[data-theme='dark'] { /* Or :root if dark is default, or .dark-theme class */
+    --background-primary: #191919;        /* Main dark background */
+    --background-secondary: #282828;     /* Slightly lighter section background */
+    --background-input: #1f1f1f;       /* Dark input background */
+    --text-primary: #e0e0e0;           /* Primary light text */
+    --text-secondary: #aaa;            /* Secondary grey text */
+    --text-placeholder: #6c757d;      /* Placeholder text */
+    --border-color: #444;              /* Darker border */
+    --border-color-input: #444;
+    --accent-primary: #fffd02;         /* Yellow accent */
+    --text-on-accent: #191919;         /* Text on yellow buttons (dark) */
+    --danger-color: #ff6666;           /* Red for remove/error */
+    --danger-background: rgba(255, 102, 102, 0.1);
+    --success-color: #66ff66;
+    --success-background: rgba(102, 255, 102, 0.1);
+    /* Add any other variables you use */
+}

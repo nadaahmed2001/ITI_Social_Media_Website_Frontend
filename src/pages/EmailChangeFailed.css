@@ -1,0 +1,65 @@
+
+body, html {
+margin: 0;
+padding: 0;
+background-color: #191919; 
+color: #e0e0e0;
+font-family: sans-serif;
+}
+
+.email-confirm-container {
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh; 
+padding: 20px;
+box-sizing: border-box;
+}
+
+.email-confirm-box {
+background-color: #282828; 
+padding: 40px 50px;
+border-radius: 8px;
+text-align: center;
+border: 1px solid #444;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+max-width: 500px;
+width: 100%;
+}
+
+
+.email-confirm-box.failure {
+border-color: #ff6666; /* Red border */
+box-shadow: 0 4px 15px rgba(255, 60, 60, 0.2); 
+}
+
+.failure-icon {
+font-size: 60px !important; 
+color: #ff6666;
+margin-bottom: 20px;
+}
+
+.failure-link-button {
+display: inline-block;
+background-color: #555; 
+color: #eee;
+padding: 12px 25px;
+border-radius: 5px;
+text-decoration: none;
+font-weight: bold;
+transition: background-color 0.3s ease;
+margin-top: 10px;
+border: 1px solid #777;
+}
+
+.failure-link-button:hover {
+background-color: #666;
+}
+
+.email-confirm-box.failure h2 {
+color: #ffdddd; 
+}
+
+.email-confirm-box.failure p {
+color: #bbb; 
+}
