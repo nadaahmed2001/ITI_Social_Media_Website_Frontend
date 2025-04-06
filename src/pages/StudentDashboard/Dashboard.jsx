@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Navbar from "../../components/ui/Navbar"; // Navbar component
-import Sidebar from "../../components/ui/Sidebar"; // Sidebar component
+import Sidebar from "../../components/ui/Sidebar"; // Sidebar component ChatSidebar
 import PostContent from "../../components/ui/PostContent"; // PostContent component
 import CreatePost from "../../components/posts/CreatePost"; // PostContent component
 import PostList from "../../components/posts/PostList"; // PostContent component
-import ChatContent from "../../components/ui/ChatContent"; // ChatContent component
+// import ChatContent from "../../components/ui/ChatContent"; // ChatContent component
+import ChatSidebar from "../../components/chat/ChatSidebar"; // ChatContent component
 
 export default function DashboardPage() {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -27,7 +28,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Chat Content */}
-        <ChatContent isDarkMode={isDarkMode} className="md:w-64 w-full" />
+        <ChatSidebar isDarkMode={isDarkMode} className="md:w-64 w-full" />
       </div>
     </div>
   );

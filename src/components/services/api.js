@@ -30,10 +30,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-<<<<<<< HEAD
-// API functions
-=======
-
 
 api2.interceptors.request.use((config) => {
   const token = localStorage.getItem("access_token");
@@ -45,7 +41,6 @@ api2.interceptors.request.use((config) => {
 
 
 // API functions for Posts app
->>>>>>> 4da5ce689a110240501aa0425ed1334380d0a5e5
 export const fetchPosts = () => api.get("/posts/");
 export const createPost = (data) => api.post("/posts/", data);
 export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
