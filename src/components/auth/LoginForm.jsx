@@ -50,6 +50,7 @@ const LoginForm = () => {
           body: JSON.stringify(values),
         });
         const data = await response.json();
+        console.log("Data:",data)
 
         // Step 2: Check response
         if (response.ok && data.access) {
