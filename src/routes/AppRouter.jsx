@@ -30,7 +30,7 @@ import ShowPost from "../components/posts/ShowPost";
 import PostList from "../components/posts/PostList";
 import DeletePost from "../components/posts/DeletePost";
 import EditPost from "../components/posts/EditPost";
-import ShowReactionsPost from "../components/posts/ShowReactionsPost";
+import ShowReactionsPost from "../components/posts/showReactionsPost";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
