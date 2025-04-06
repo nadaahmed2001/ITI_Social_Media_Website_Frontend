@@ -7,7 +7,7 @@ const api = axios.create({
   headers: {
 
     "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTMxMDUzLCJpYXQiOjE3NDM4NDQ2NTMsImp0aSI6ImIwMzEzOWFhZDY5ZTRmMzZiNjNkMjZmYzNhNTc5N2Q1IiwidXNlcl9pZCI6Mn0.qxYK-P397B-qxMMQjicmU0QdtgSQcqGoU6xbOuCWbX4"
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0MDAzOTc4LCJpYXQiOjE3NDM5MTc1NzgsImp0aSI6IjdmNTExMzMxYzE2MDRmMmQ4YTQzYjQ1MDdlMjVlZjY3IiwidXNlcl9pZCI6Mn0.R1piUbLIhr9Wnkl7qqFGES0mb_GKX5lrlUPE6wUcinQ"
   }
 
 });
@@ -69,18 +69,15 @@ export const likePost = async (postId, reactionType) => {
     throw error;
   }
 };
-// Fetch reactions for a specific post
 export const fetchReactionsForPost = async (postId) => {
   try {
     const response = await api.get(`/posts/${postId}/reactions/`);
-    return response.data; // Ensure this returns an array of reactions
+    return response.data; 
   } catch (error) {
     console.error("API Error:", error.response?.data || error);
-    return []; // Return empty array on error
+    return [];
   }
 };
-
-// Remove reaction from a post
 export const removePostReaction = async (postId) => {
   try {
     const response = await api.post(`/posts/${postId}/react/remove/`);
@@ -90,10 +87,6 @@ export const removePostReaction = async (postId) => {
     throw error;
   }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-// ✅ Add a reaction to a comment
 export const likeComment = async (commentId, reactionType) => {
   try {
     const response = await api.post(`/posts/comment/${commentId}/react/${reactionType}/`);
@@ -103,8 +96,6 @@ export const likeComment = async (commentId, reactionType) => {
     throw error;
   }
 };
-
-// ✅ Fetch all reactions for a comment
 export const fetchReactionsForComment = async (commentId) => {
   try {
     const response = await api.get(`/posts/comment/${commentId}/reactions/`);
@@ -114,9 +105,6 @@ export const fetchReactionsForComment = async (commentId) => {
     return [];
   }
 };
-
-// ❌ FIX: You had `postId` as a parameter and wrong URL/method
-// ✅ Remove a reaction from a comment
 export const removeCommentReaction = async (commentId) => {
   try {
     const response = await api.post(`/posts/comment/${commentId}/react/remove/`);
@@ -130,7 +118,6 @@ export const removeCommentReaction = async (commentId) => {
 
 export default api;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // import axios from "axios";
 // const API_URL = "http://127.0.0.1:8000/api"
 
