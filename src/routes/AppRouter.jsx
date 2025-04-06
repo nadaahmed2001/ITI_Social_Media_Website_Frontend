@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthPage from "../pages/AuthPage";
-import DashboardPage from "../pages/DashboardPage";
+// import DashboardPage from "../pages/DashboardPage";
 import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
 import NotificationsDropdown from "../pages/NotificationsDropdown";

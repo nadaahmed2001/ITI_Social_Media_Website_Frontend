@@ -227,6 +227,43 @@ export const clearPrivateMessages = async (receiverId) => {
 
 export const fetchUser = () => api2.get("users/account/");
 
+// ========================================================= User Profile ===========================================================
+export const getAccount = () => api2.get('/users/account/');
+export const updateAccountData = (formData) => api2.put('/users/account/', formData);
+export const updateAccount = (jsonData) => api2.put('/users/account/', jsonData);
 
+// export const updateAccount = (profileData) => api2.put('/users/account/', profileData);
+export const updateProfilePicture = (formData) => api2.put('/users/account/', formData); // Send FormData
+export const getPublicProfile = (profileId) => api2.get(`/users/profiles/${profileId}/`);
+
+// ======================================================= User Credentials ==========================================================
+export const changeEmail = (data) => api2.post('/users/change-email/', data);
+export const changePassword = (data) => api2.post('/users/change-password/', data);
+
+// =========================================================== Skills ===============================================================
+export const getSkills = () => api2.get('/users/skills/'); // Gets skills for logged-in user
+export const addSkill = (skillData) => api2.post('/users/skills/', skillData);
+export const updateSkill = (skillId, skillData) => api2.put(`/users/skills/${skillId}/`, skillData);
+export const deleteSkill = (skillId) => api2.delete(`/users/skills/${skillId}/`);
+
+// =========================================================== Projects =============================================================
+
+export const getAllProjects = () => api2.get('/api/projects/'); // Fetches ALL projects
+export const getMyProjects = (profileId) => api2.get(`/api/projects/?owner=${profileId}`);
+export const getProject = (projectId) => api2.get(`/api/projects/${projectId}/`);
+export const addProject = (projectData) => api2.post('/api/projects/', projectData);
+export const updateProject = (projectId, projectData) => api2.put(`/api/projects/${projectId}/`, projectData);
+export const deleteProject = (projectId) => api2.delete(`/api/projects/${projectId}/`);
+export const getAllTags = () => api2.get('/api/projects/tags/'); // For tag input suggestions
+export const addTagToProject = (projectId, tagId) => api2.post(`/api/projects/${projectId}/tags/`, { tag_id: tagId });
+export const removeTagFromProject = (projectId, tagId) => api2.delete(`/api/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
+
+// ==================================================== Project Contributors =========================================================
+export const getContributors = (projectId) => api2.get(`/api/projects/${projectId}/contributors/`);
+export const addContributor = (projectId, username) => api2.post(`/api/projects/${projectId}/contributors/`, { username });
+export const removeContributor = (projectId, username) => api2.delete(`/api/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
+// export const getMyProjects = (profileId) => api2.get(`/api/projects/?owner=${profileId}`);
+
+export const verifyOtp = (data) => { return api2.post('/users/verify-otp/', data);};
 export default api;
 
