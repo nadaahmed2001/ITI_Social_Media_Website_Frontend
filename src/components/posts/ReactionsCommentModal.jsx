@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { fetchReactionsForComment, removePostReaction } from "../../services/api";
+import { fetchReactionsForComment, removeCommentReaction } from "../../services/api";
 
 export default function ReactionsCommentModal({ commentId, onClose }) {
-  const [reactions, setReactions] = useState([]);
+  const [reactionsForcomment, setreactionsForcomment] = useState([]);
 
   // Only keep the fetch useEffect
   useEffect(() => {
     fetchReactionsForComment(commentId)
-      .then((data) => setReactions(Array.isArray(data) ? data : []))
+      .then((data) => setreactionsForcomment(Array.isArray(data) ? data : []))
       .catch(console.error);
   }, [commentId]);
 
-  const handleRemoveReaction = async (reactionId) => {
+  const handleRemoveCommentReaction = async (reactionId) => {
     try {
-      await removePostReaction(commentId);
+      await removeCommentReaction(commentId);
       // Refresh reactions after removal
       const updated = await fetchReactionsForComment(commentId);
-      setReactions(updated);
+      setreactionsForcomment(updated);
     } catch (error) {
       console.error("Removal failed:", error);
     }
@@ -33,8 +33,8 @@ export default function ReactionsCommentModal({ commentId, onClose }) {
         </div>
         
         <div className="show-reactions-list">
-          {reactions.length > 0 ? (
-            reactions.map((reaction) => (
+          {reactionsForcomment.length > 0 ? (
+            reactionsForcomment.map((reaction) => (
               <div key={reaction.id} className="show-reaction-item">
                 <span className="show-reactions-user">{reaction.user}</span>
                 <span className="show-reactions-reaction-type">
@@ -42,7 +42,7 @@ export default function ReactionsCommentModal({ commentId, onClose }) {
                 </span>
                 <button 
                   className="show-reactions-remove-btn"
-                  onClick={() => handleRemoveReaction(reaction.id)}
+                  onClick={() => handleRemoveCommentReaction(reaction.id)}
                 >
                   Remove
                 </button>

@@ -105,22 +105,30 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
       const existingReaction = commentReactions[commentId]?.find(
         r => r.user.id === currentUserId
       );
+  
       if (existingReaction) {
-        await removeCommentReaction(commentId);
+        // If the same reaction is clicked, remove it
+        if (existingReaction.reaction_type === reactionType) {
+          await removeCommentReaction(commentId);
+        } else {
+          // If a different reaction is clicked, replace it
+          await removeCommentReaction(commentId);
+          await likeComment(commentId, reactionType);
+        }
       } else {
         await likeComment(commentId, reactionType);
       }
-      
+  
       const updated = await fetchReactionsForComment(commentId);
       setCommentReactions(prev => ({
         ...prev,
-        [commentId]: updated
+        [commentId]: updated,
       }));
-      
     } catch (error) {
       console.error("Reaction error:", error);
     }
   };
+  
   
   const handleremoveCommentReaction = async (commentId) => {
     try {
@@ -173,7 +181,7 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
     { name: "Like", icon: <ThumbUpSharpIcon className="Reaction-Post" /> },
     { name: "Love", icon: <FavoriteSharpIcon className="Reaction-Post" /> },
     { name: "Celebrate", icon: <CelebrationSharpIcon className="Reaction-Post" /> },
-    { name: "Funny", icon: <SentimentVerySatisfiedSharpIcon className="Reaction-Post" /> },
+    { name: "funny", icon: <SentimentVerySatisfiedSharpIcon className="Reaction-Post" /> },
     { name: "Support", icon: <VolunteerActivismSharpIcon className="Reaction-Post" /> },
     { name: "Insightful", icon: <TipsAndUpdatesSharpIcon className="Reaction-Post" /> },
   ];
@@ -245,8 +253,12 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
   </div>
 </div>
 
-      <p className="Show-All-Reactions" onClick={() => setShowReactionsModal(true)}>Show All Reactions</p>
-      {showReactionsModal && <ReactionsModal postId={post.id} onClose={() => setShowReactionsModal(false)} />}
+      <p className="Show-All-Reactions"
+       onClick={() => setShowReactionsModal(true)}
+       >Show All Reactions</p>
+      {showReactionsModal &&
+       <ReactionsModal postId={post.id}
+        onClose={() => setShowReactionsModal(false)} />}
 
 
       <div className="comment-section">
@@ -301,15 +313,15 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
                         key={reaction.name}
                         className="reaction-item"
                         onClick={() => {
-                          {commentReactions[comment.id]?.length > 0 && (
-                            <div className="comment-reactions-summary">
-                              {commentReactions[comment.id].map((reaction, index) => (
-                                <span key={index}>
-                                  {reaction.reaction_type} by {reaction.user.username}
-                                </span>
-                              ))}
-                            </div>
-                          )}
+                          // {commentReactions[comment.id]?.length > 0 && (
+                          //   <div className="comment-reactions-summary">
+                          //     {commentReactions[comment.id].map((reaction, index) => (
+                          //       <span key={index}>
+                          //         {reaction.reaction_type} by {reaction.user.username}
+                          //       </span>
+                          //     ))}
+                          //   </div>
+                          // )}
 
                           hasReacted(reaction.name)
                             ? handleremoveCommentReaction(comment.id)
@@ -328,14 +340,16 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
                   </div>
                 )}
               </div>
-              <p className="Show-All-Reactions-comment" onClick={() => setShowReactionsModalforcomment(true)}>Show All Reactions</p>
-              {showReactionsModalforcomment && (
+              <p className="Show-All-Reactions-comment"
+              onClick={() => setShowReactionsModalforcomment(true)}
+              >Show All Reactions</p>
+              {showReactionsModalforcomment && 
                 <ReactionsCommentModal
                   commentId={comment.id}
-                  reactions={commentReactions[comment.id]}
+                  // reactions={commentReactions[comment.id]}
                   onClose={() => setShowReactionsModalforcomment(false)}
                 />
-              )}
+              }
 
             </div>
             <hr></hr>
