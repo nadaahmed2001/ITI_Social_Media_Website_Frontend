@@ -33,13 +33,15 @@ const LoginForm = () => {
         const data = await response.json();
 
         if (response.ok) {
-          localStorage.setItem("accessToken", data.access);
+          localStorage.setItem("access_token", data.access);
+          console.log("Login successful:", data.access);
           navigate("/dashboard");
         } else {
           setErrorMessage(data.detail || "Login error");
         }
       } catch (err) {
         setErrorMessage("An unexpected error occurred");
+        console.error("Login error:", err);
       }
 
       setLoading(false);
