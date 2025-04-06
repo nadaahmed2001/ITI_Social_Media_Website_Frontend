@@ -4,7 +4,7 @@ import AuthPage from "../pages/AuthPage";
 // import DashboardPage from "../pages/DashboardPage";
 import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
-import ChatPage from "../pages/ChatPage";
+// import ChatPage from "../pages/ChatPage";
 import NotificationsDropdown from "../pages/NotificationsDropdown";
 // Supervisor Pages
 import ManageBatches from "../pages/SupervisorDashboard/ManageBatches";
@@ -30,13 +30,20 @@ import ShowPost from "../components/posts/ShowPost";
 import PostList from "../components/posts/PostList";
 import DeletePost from "../components/posts/DeletePost";
 import EditPost from "../components/posts/EditPost";
-import ShowReactionsPost from "../components/posts/ShowReactionsPost";
+import ShowReactionsPost from "../components/posts/showReactionsPost";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
+import BatchPage from "../pages/SupervisorDashboard/BatchPage";
 import StudentDashboard  from "../pages/StudentDashboard/Dashboard";
+import PostListWithSideBar from "../components/posts/PostListWithSideBar";
+import Aichat from "../components/chat/Aichat";
+
+
 
 const AppRouter = () => {
+  const userToken = localStorage.getItem("access_token") || sessionStorage.getItem("access_token") || null;
+  console.log("User Token:", userToken); // Log the token to check its value
   return (
     <Router>
       <AuthProvider>
@@ -61,6 +68,8 @@ const AppRouter = () => {
 
         {/* Supervisor Routes */}
         <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+
+        <Route path="/batches/:trackId" element={<BatchPage />} />
         {/* <Route path="/supervisor/track-overview" element={<TrackOverview />} /> */}
 
         
@@ -72,7 +81,6 @@ const AppRouter = () => {
         {/* Profile, Search, and Chat */}
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/chat" element={<ChatPage />} />
         {/* Notifications */}
         <Route path="/notifications" element={<NotificationsDropdown />} />
 
@@ -83,14 +91,21 @@ const AppRouter = () => {
         <Route path="/posts/delete" element={<DeletePost />} />   
         <Route path="/posts/edit" element={<EditPost />} />
         {/* <Route path="/posts/list" element={<PostList />} /> */}
-        <Route path="/dashboard" element={<PrivateRoute><PostList /></PrivateRoute>} />
+        {/* <Route path="/dashboard" element={<PrivateRoute><PostList /></PrivateRoute>} /> */}
+        <Route path="/dashboard" element={<PrivateRoute><PostListWithSideBar /></PrivateRoute>} />
         <Route path="/posts/show-reactions/:postId" element={<ShowReactionsPost />} />
 
 
         {/* Chat Component Example */}
-        <Route path="/chat/sidebar" element={<ChatSidebar />} />
-        <Route path="/chat/messagesList" element={<MessagesList />} />
+        {/* <Route path="/chat/sidebar" element={<ChatSidebar />} />
+        <Route path="/chat/messagesList" element={<MessagesList />} /> */}
          {/* Profile Components */}
+        {/* Chat Routes */}
+        <Route path="/chat/*" element={<ChatSidebar token={userToken} />} />
+        <Route path="/messagesList/group/:id" element={<MessagesList token={userToken} isGroupChat={true} />} />
+        <Route path="/messagesList/private/:id" element={<MessagesList token={userToken} isGroupChat={false} />} />
+        <Route path="/chat/aiChat" element={<Aichat />} />
+        {/* Profile Components */}
         <Route path="/profiles/followbutton" element={<FollowButton />} />
         <Route path="/profiles/userprofile" element={<UserProfile />} />
         {/* Search Components */}

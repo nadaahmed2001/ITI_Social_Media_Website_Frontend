@@ -5,7 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [authTokens, setAuthTokens] = useState(() =>
-    localStorage.getItem("accessToken") || null
+    localStorage.getItem("access_token") || null
   );
   const [user, setUser] = useState(() =>
     authTokens ? jwtDecode(authTokens) : null
@@ -13,13 +13,13 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true); // 
 
   const loginUser = (token) => {
-    localStorage.setItem("accessToken", token);
+    localStorage.setItem("access_token", token);
     setAuthTokens(token);
     setUser(jwtDecode(token));
   };
 
   const logoutUser = () => {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("access_token");
     setAuthTokens(null);
     setUser(null);
   };

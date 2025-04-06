@@ -42,7 +42,9 @@ const LoginForm = () => {
           // Save tokens in local storage
           localStorage.setItem("access_token", data.access);
           localStorage.setItem("refresh_token", data.refresh);
+          console.log("Navigating to dashboard...");
           navigate("/dashboard");
+          console.log("Navigation executed.");
         } else {
           setErrorMessage(data.detail || "Login error");
         }
