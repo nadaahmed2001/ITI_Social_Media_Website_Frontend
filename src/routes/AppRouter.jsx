@@ -59,7 +59,6 @@ const AppRouter = () => {
         {/* <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} /> */}
 
 
-
         {/* Supervisor Routes */}
         <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         {/* <Route path="/supervisor/track-overview" element={<TrackOverview />} /> */}

@@ -19,7 +19,6 @@ api.interceptors.request.use((config) => {
 });
 
 // API functions
-
 export const fetchPosts = () => api.get("/posts/");
 export const createPost = (data) => api.post("/posts/", data);
 export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
@@ -29,6 +28,11 @@ export const markNotificationAsRead = (notificationId) =>
   api.patch(`/notifications/${notificationId}/mark-as-read/`);
 export const markAllNotificationsAsRead = () =>
   api.patch("/notifications/mark-all-as-read/");
+export const clearNotification = (notificationId) => 
+  api.delete(`/notifications/${notificationId}/`);
+
+export const clearAllNotifications = () => 
+  api.delete("/notifications/clear-all/");
 export const editPost = (postId, updatedContent) => 
   api.put(`/posts/${postId}/`, updatedContent);
 export const deletePost = (postId) => 
@@ -71,3 +75,4 @@ export const removePostReaction = async (postId) => {
 };
 
 export default api;
+
