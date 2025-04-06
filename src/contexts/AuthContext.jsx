@@ -1,3 +1,4 @@
+//AuthContext
 import { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
@@ -16,6 +17,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("access_token", token);
     setAuthTokens(token);
     setUser(jwtDecode(token));
+    console.log("User logged in:", jwtDecode(token)); // Log the user object to the console
   };
 
   const logoutUser = () => {

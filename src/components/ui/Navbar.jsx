@@ -1,62 +1,58 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import {
   Home,
   MessageCircle,
   User,
-  Plus,
   Settings,
-  Bell,
   Sun,
   Moon,
   LogOut,
   Menu,
-  ChartBarDecreasing 
+  ChartBarDecreasing,
 } from "lucide-react";
-
-
 import NotificationsDropdown from "../../pages/NotificationsDropdown";
-import logo from "../../assets/images/logo.png"; // Adjust the path to your logo image
+import logo from "../../assets/images/logo.png"; 
+import AuthContext from "../../contexts/AuthContext"; // Import AuthContext
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
+  const { user } = useContext(AuthContext); // Access the user object from AuthContext
+  console.log("User:",user); // Log the user object to the console
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/dashboard");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [lastScrollY, setLastScrollY] = useState(0);  
-  const [isVisible, setIsVisible] = useState(true); 
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
-    // Handle scroll event
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY) {
-        // Scrolling down
-        setIsVisible(false);
-      } else {
-        // Scrolling up
-        setIsVisible(true);
-      }
-      setLastScrollY(window.scrollY); // Update last scroll position
-    };
-    // console.log(ChartBarDecreasing);//testing
+  // Handle scroll event
+  const handleScroll = () => {
+    if (window.scrollY > lastScrollY) {
+      // Scrolling down
+      setIsVisible(false);
+    } else {
+      // Scrolling up
+      setIsVisible(true);
+    }
+    setLastScrollY(window.scrollY); // Update last scroll position
+  };
 
-  
-    useEffect(() => {
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }, [lastScrollY]);  // Re-run this effect when lastScrollY changes
-  
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]); // Re-run this effect when lastScrollY changes
 
   return (
     <nav
-    className={`fixed top-0 left-0 w-full flex items-center justify-between p-3 bg-transparent backdrop-blur-md transition-all duration-300 ${
-      isVisible ? "opacity-100" : "opacity-0 -translate-y-full"
-    }`}
-  >
+      className={`fixed top-0 left-0 w-full flex items-center justify-between p-3 bg-transparent backdrop-blur-md transition-all duration-300 ${
+        isVisible ? "opacity-100" : "opacity-0 -translate-y-full"
+      }`}
+    >
       <div className="flex items-center gap-5">
         {/* Logo */}
         <div className="text-xl font-bold cursor-pointer">
@@ -81,10 +77,11 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
           { path: "/dashboard", Icon: Home },
           { path: "/chat", Icon: MessageCircle },
           { path: "/profile", Icon: User },
-          // { path: "/notifications", Icon: Bell },
           { path: "/settings", Icon: Settings },
-          // { path: "/add", Icon: Plus },
-          {path: "/supervisor/dashboard", Icon: ChartBarDecreasing},//New
+          // Conditionally render ChartBarDecreasing for supervisors
+          ...(user?.is_supervisor
+            ? [{ path: "/supervisor/dashboard", Icon: ChartBarDecreasing }]
+            : []),
         ].map(({ path, Icon }) => (
           <Link
             key={path}
@@ -135,10 +132,17 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
               { path: "/dashboard", label: "Dashboard", Icon: Home },
               { path: "/chat", label: "Chat", Icon: MessageCircle },
               { path: "/profile", label: "Profile", Icon: User },
-              { path: "/notifications", label: "Notifications", Icon: Bell },
               { path: "/settings", label: "Settings", Icon: Settings },
-              // { path: "/add", label: "Add Post", Icon: Plus },
-              {path: "/supervisor/dashboard", label: "Supervisor Dashboard", Icon: ChartBarDecreasing},//New
+              // Conditionally render ChartBarDecreasing for supervisors
+              ...(user?.is_supervisor
+                ? [
+                    {
+                      path: "/supervisor/dashboard",
+                      label: "Supervisor Dashboard",
+                      Icon: ChartBarDecreasing,
+                    },
+                  ]
+                : []),
             ].map(({ path, label, Icon }) => (
               <Link
                 key={path}
