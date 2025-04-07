@@ -15,6 +15,7 @@
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 300ms, transform 300ms;
+  
 }
 
 /* Add custom scrollbar styling */

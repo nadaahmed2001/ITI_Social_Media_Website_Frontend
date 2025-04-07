@@ -56,59 +56,90 @@ const PasswordResetConfirm = () => {
   };
 
   return (
-    <div className="auth-container">
-      <Typography variant="h5" className="auth-logo">ITI Hub</Typography>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <Typography
+      variant="h5"
+      className="text-2xl font-bold mb-8 text-center"
+    >
+      ITI Hub
+    </Typography>
 
-      <div className="auth-box">
-        <Typography variant="h4" className="auth-title">Reset Your Password</Typography>
+    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+      <Typography
+        variant="h4"
+        className="text-3xl font-semibold mb-6 text-center"
+      >
+        Reset Your Password
+      </Typography>
 
-        {message && <Typography color="error">{message}</Typography>}
-        {passwordError && <Typography color="error">{passwordError}</Typography>}
+      {message && <Typography color="error">{message}</Typography>}
+      {passwordError && <Typography color="error">{passwordError}</Typography>}
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label className="auth-label">Reset Code</label>
-          <TextField
-            fullWidth
-            type="text"
-            variant="outlined"
-            className="auth-input"
-            value={resetCode}
-            onChange={(e) => setResetCode(e.target.value)}
-            required
-          />
+      <form className="mb-4" onSubmit={handleSubmit}>
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="resetCode"
+        >
+          Reset Code
+        </label>
+        <TextField
+          fullWidth
+          type="text"
+          variant="outlined"
+          className="mb-4"
+          value={resetCode}
+          onChange={(e) => setResetCode(e.target.value)}
+          required
+        />
 
-          <label className="auth-label">New Password</label>
-          <TextField
-            fullWidth
-            type="password"
-            variant="outlined"
-            className="auth-input"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="newPassword"
+        >
+          New Password
+        </label>
+        <TextField
+          fullWidth
+          type="password"
+          variant="outlined"
+          className="mb-4"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          required
+        />
 
-          <label className="auth-label">Confirm Password</label>
-          <TextField
-            fullWidth
-            type="password"
-            variant="outlined"
-            className="auth-input"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="confirmPassword"
+        >
+          Confirm Password
+        </label>
+        <TextField
+          fullWidth
+          type="password"
+          variant="outlined"
+          className="mb-4"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
 
-          <Button variant="contained" fullWidth className="auth-button" type="submit" disabled={loading}>
-            {loading ? "Resetting..." : "Reset Password"}
-          </Button>
-        </form>
-      </div>
-
-      <footer className="auth-footer-text">
-        Copyright@2025
-      </footer>
+        <Button
+          variant="contained"
+          fullWidth
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? "Resetting..." : "Reset Password"}
+        </Button>
+      </form>
     </div>
+
+    <footer className="text-center mt-8 text-gray-500 text-xs">
+      Copyright@2025
+    </footer>
+  </div>
   );
 };
 

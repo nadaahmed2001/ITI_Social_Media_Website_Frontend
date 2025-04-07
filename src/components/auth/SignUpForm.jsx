@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { TextField, Button, Typography, CircularProgress } from "@mui/material";
+import {
+  TextField, Button, Typography, CircularProgress, Box
+} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import "../auth/auth.css";
+
+// import "../../styles/auth.css"; // Optional: for any shared styles
+import ItiLogo from "../../assets/images/logo.png";
 
 const SignUpForm = () => {
   const [loading, setLoading] = useState(false);
@@ -54,116 +58,87 @@ const SignUpForm = () => {
       } catch (error) {
         setErrorMessage("Network error. Please try again.");
       }
+
       setLoading(false);
     },
   });
 
-  
   return (
-    <div className="auth-container">
-      <Typography variant="h5" className="auth-logo">ITI Hub</Typography>
+    <div className="flex items-center justify-center min-h-screen bg-white px-4 py-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full bg-white rounded-2xl shadow-md">
+        {/* Left Image */}
+        <div
+          className="hidden md:block bg-cover bg-center rounded-l-2xl"
+          style={{
+            backgroundImage: `url(${new URL('../../assets/images/img.png', import.meta.url)})`,
+          }}
+        ></div>
 
-      <div className="auth-box">
-        <Typography variant="h4" className="auth-title">Register</Typography>
-        <Typography variant="body2" className="register-subtitle">
-          To keep connected with us please register to our website
-        </Typography>
+        {/* Right Form Section */}
+        <div className="flex flex-col justify-center px-6 py-12 lg:px-8">
+          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+            <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+              <img src={ItiLogo} alt="ITI Logo" className="w-10 h-10 mr-2" />
+              <Typography component="h1" variant="h5" sx={{ fontFamily: "Poppins", color: "brown", fontWeight: 600 }}>
+                Join ITI Talents
+              </Typography>
+            </Box>
+          </div>
 
-        {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+          <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
+            {errorMessage && (
+              <Typography color="error" sx={{ mb: 2 }}>{errorMessage}</Typography>
+            )}
 
-        <form className="auth-form" onSubmit={formik.handleSubmit}>
-          <label className="auth-label">User Name</label>
-          <TextField 
-            fullWidth 
-            variant="outlined" 
-            className="auth-input"
-            name="username"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.username && Boolean(formik.errors.username)}
-            helperText={formik.touched.username && formik.errors.username}
-            required 
-          />
+            <form onSubmit={formik.handleSubmit}>
+              {[
+                { name: "username", label: "Username" },
+                { name: "email", label: "Email", type: "email" },
+                { name: "national_id", label: "National ID" },
+                { name: "password", label: "Password", type: "password" },
+                { name: "confirmPassword", label: "Confirm Password", type: "password" },
+              ].map(({ name, label, type = "text" }) => (
+                <TextField
+                  key={name}
+                  fullWidth
+                  variant="filled"
+                  margin="normal"
+                  name={name}
+                  type={type}
+                  label={label}
+                  value={formik.values[name]}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={formik.touched[name] && Boolean(formik.errors[name])}
+                  helperText={formik.touched[name] && formik.errors[name]}
+                  required
+                />
+              ))}
 
-          <label className="auth-label">Email</label>
-          <TextField 
-            fullWidth 
-            variant="outlined" 
-            className="auth-input" 
-            name="email" 
-            type="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-            required 
-          />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 2,
+                  py: 1.5,
+                  backgroundColor: 'brown',
+                  '&:hover': {
+                    backgroundColor: 'brown'
+                  }
+                }}
+                disabled={loading}
+              >
+                {loading ? <CircularProgress size={24} style={{ color: "white" }} /> : "Register"}
+              </Button>
 
-          <label className="auth-label">National ID</label>
-          <TextField 
-            fullWidth 
-            variant="outlined" 
-            className="auth-input"
-            name="national_id"
-            value={formik.values.national_id}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.national_id && Boolean(formik.errors.national_id)}
-            helperText={formik.touched.national_id && formik.errors.national_id}
-            required 
-          />
-
-          <label className="auth-label">Password</label>
-          <TextField 
-            fullWidth 
-            variant="outlined" 
-            className="auth-input" 
-            name="password" 
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-            required 
-          />
-
-          <label className="auth-label">Confirm Password</label>
-          <TextField 
-            fullWidth 
-            variant="outlined" 
-            className="auth-input"
-            name="confirmPassword" 
-            type="password"
-            value={formik.values.confirmPassword}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-            helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-            required 
-          />
-
-          <Button 
-            variant="contained" 
-            fullWidth 
-            className="auth-button" 
-            type="submit" 
-            disabled={loading}
-          >
-            {loading ? <CircularProgress size={24} style={{ color: "white" }} /> : "Register"}
-          </Button>
-        </form>
-
-        <Typography variant="body2" className="auth-link">
-          <Link to="/login">Already have an account?</Link>
-        </Typography>
+              <Typography variant="body2" sx={{ mt: 2, textAlign: "center" , color: "brown" }}>
+                Already have an account? <Link  sx={{ color: "brown" }} to="/login" >Log in</Link>
+              </Typography>
+            </form>
+          </div>
+        </div>
       </div>
-
-      <footer className="auth-footer-text">
-        Copyright@2025
-      </footer>
     </div>
   );
 };

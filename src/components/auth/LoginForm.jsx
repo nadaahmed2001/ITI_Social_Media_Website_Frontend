@@ -112,20 +112,20 @@ const LoginForm = () => {
   const renderLogoHeader = () => (
     <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
       <Avatar sx={{ width: 48, height: 48, mr: 1.5, bgcolor: 'transparent' }}>
-        <img src={Itilogo} alt="ITI Hub Logo" style={{ width: '100%' }} />
+        {/* <img src={Itilogo} alt="ITI Hub Logo" style={{ width: '100%' }} /> */}
       </Avatar>
-      <Typography component="h1" variant="h4" sx={{ fontWeight: 'bold' }}>
-        ITI Hub
+      <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold' , color:'brown'  }}>
+      Log in to explore ITI talents
       </Typography>
     </Box>
   );
 
   const renderLoginForm = () => (
     <>
-      <Typography variant="h5">Sign In</Typography>
+      {/* <Typography variant="h5">Sign In</Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
         Welcome back! Please enter your details.
-      </Typography>
+      </Typography> */}
 
       {errorMessage && (
         <Alert severity="error" sx={{ width: '100%', mb: 2 }}>{errorMessage}</Alert>
@@ -148,17 +148,26 @@ const LoginForm = () => {
         />
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
-          <Link component={RouterLink} to="/forgot-password" variant="body2">Forgot password?</Link>
+          <FormControlLabel control={<Checkbox value="remember" />} label="Remember me"  sx={{ color: "gray" }} />
+          <Link  component={RouterLink} to="/forgot-password" variant="body2">Forgot password?</Link>
         </Box>
 
-        <Button type="submit" fullWidth variant="contained" color="primary" sx={{ mt: 2, py: 1.5 }} disabled={loading}>
+        <Button type="submit" fullWidth variant="contained" 
+         sx={{
+          mt: 2,
+          py: 1.5,
+          backgroundColor: 'brown',
+          '&:hover': {
+            backgroundColor: 'brown'
+          }
+        }}
+        disabled={loading}>
           {loading ? <CircularProgress size={24} /> : "Sign In"}
         </Button>
 
         <Grid container justifyContent="center" sx={{ mt: 1 }}>
           <Grid item>
-            <Link component={RouterLink} to="/signup" variant="body2">{"Don't have an account? Sign Up"}</Link>
+            <Link component={RouterLink} to="/signup" variant="body2" sx={{ color: "brown" }} >{"Don't have an account? Sign Up"}</Link>
           </Grid>
         </Grid>
       </Box>
@@ -201,23 +210,32 @@ const LoginForm = () => {
 
   return (
     <>
-    <Grid container component="main" sx={{ height: '100vh' }}>
-    <Grid
-  item
-  xs={false}
-  sm={4}
-  md={7}
-  sx={{
-    backgroundImage: `url(new URL('../../assets/images/ITI.jpeg', import.meta.url))`,
-    backgroundSize: 'cover',
-  }}
-/>      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {renderLogoHeader()}
-          {isOtpStep ? renderOtpForm() : renderLoginForm()}
-        </Box>
-      </Grid>
-    </Grid>
+  <div className="flex items-center justify-center min-h-screen bg-white px-4 py-12">
+  <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full bg-white rounded-2xl ">
+    {/* Left Image */}
+    <div
+      className="hidden md:block bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${new URL('../../assets/images/img.png', import.meta.url)})`,
+        // backgroundImage: `url(${new URL('../../assets/images/immg.jpeg', import.meta.url)})`,
+      }}
+    ></div>
+
+    {/* Right Form Section */}
+    <div className="flex flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        {renderLogoHeader()}
+       
+      </div>
+
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        {isOtpStep ? renderOtpForm() : renderLoginForm()}
+      </div>
+    </div>
+  </div>
+</div>
+
+
     </>
   );
 };

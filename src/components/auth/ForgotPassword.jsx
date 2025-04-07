@@ -44,39 +44,60 @@ const ForgotPassword = () => {
   });
 
   return (
-    <div className="auth-container">
-      <Typography variant="h5" className="auth-logo">ITI Hub</Typography>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <Typography
+      variant="h5"
+      className="text-2xl font-bold mb-8 text-center"
+    >
+      ITI Hub
+    </Typography>
 
-      <div className="auth-box">
-        <Typography variant="h4" className="auth-title">Forgot Password</Typography>
+    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+      <Typography
+        variant="h4"
+        className="text-3xl font-semibold mb-6 text-center"
+      >
+        Forgot Password
+      </Typography>
 
-        {message && <Typography color="error">{message}</Typography>}
+      {message && <Typography color="error">{message}</Typography>}
 
-        <form className="auth-form" onSubmit={formik.handleSubmit}>
-          <label className="auth-label">Email Address</label>
-          <TextField
-            fullWidth
-            variant="outlined"
-            className="auth-input"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-            required
-          />
+      <form className="mb-4" onSubmit={formik.handleSubmit}>
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="email"
+        >
+          Email Address
+        </label>
+        <TextField
+          fullWidth
+          variant="outlined"
+          className="mb-4"
+          name="email"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
+          required
+        />
 
-          <Button variant="contained" fullWidth className="auth-button" type="submit" disabled={loading}>
-            {loading ? "Sending..." : "Send Reset Code"}
-          </Button>
-        </form>
-      </div>
-
-      <footer className="auth-footer-text">
-        Copyright@2025
-      </footer>
+        <Button
+          variant="contained"
+          fullWidth
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? "Sending..." : "Send Reset Code"}
+        </Button>
+      </form>
     </div>
+
+    <footer className="text-center mt-8 text-gray-500 text-xs">
+      Copyright@2025
+    </footer>
+  </div>
   );
 };
 
