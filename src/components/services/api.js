@@ -264,6 +264,18 @@ export const addContributor = (projectId, username) => api2.post(`/api/projects/
 export const removeContributor = (projectId, username) => api2.delete(`/api/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
 // export const getMyProjects = (profileId) => api2.get(`/api/projects/?owner=${profileId}`);
 
-export const verifyOtp = (data) => { return api2.post('/users/verify-otp/', data);};
+// export const verifyOtp = (data) => { return api2.post('/users/verify-otp/', data);};
+
+export const verifyOtp = (data) => {
+  return axios.post('http://127.0.0.1:8000/users/verify-otp/', data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // prevent Axios from auto-including cookies (just in case)
+    withCredentials: false,
+  });
+};
+
+
 export default api;
 

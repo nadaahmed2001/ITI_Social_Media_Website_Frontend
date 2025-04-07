@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchNotifications, markAllNotificationsAsRead } from "../services/api";
+import { fetchNotifications, markAllNotificationsAsRead } from "../components/services/api";
 
 const NotificationDropdown = () => {
   const [notifications, setNotifications] = useState([]);

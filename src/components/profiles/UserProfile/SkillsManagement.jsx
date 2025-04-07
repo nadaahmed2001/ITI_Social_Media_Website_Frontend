@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getSkills, addSkill, deleteSkill } from '../../../services/api'; // Adjust path if needed
+import { getSkills, addSkill, deleteSkill } from '../../services/api';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CircularProgress from '@mui/material/CircularProgress'; // For loading spinner
 

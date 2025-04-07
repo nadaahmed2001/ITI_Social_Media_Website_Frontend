@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { changeEmail, changePassword } from '../../../services/api';
+import { changeEmail, changePassword } from '../../services/api';
 import EmailIcon from '@mui/icons-material/Email';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import './ChangeCredentials.css';

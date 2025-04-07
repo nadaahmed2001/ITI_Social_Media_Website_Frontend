@@ -8,7 +8,7 @@ import {
     addContributor,
     removeContributor,
     getAllTags
-} from '../../../services/api'; 
+} from '../../services/api';
 
 // Import necessary Icons
 import AddIcon from '@mui/icons-material/Add';

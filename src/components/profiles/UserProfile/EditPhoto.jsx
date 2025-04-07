@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 // Use the API function that sends JSON (contains image URL) to PUT /users/account/
-import { updateAccount } from '../../../services/api'; // Adjust path as needed
+import { updateAccount } from '../../services/api';
 
 // Import MUI components used
 import Button from '@mui/material/Button'; // Using MUI button for Save
