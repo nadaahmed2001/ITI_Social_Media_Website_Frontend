@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link as RouterLink } from "react-router-dom";
+import ItiLogo from "../../assets/images/logo.png";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -110,14 +111,12 @@ const LoginForm = () => {
   };
 
   const renderLogoHeader = () => (
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-      <Avatar sx={{ width: 48, height: 48, mr: 1.5, bgcolor: 'transparent' }}>
-        {/* <img src={Itilogo} alt="ITI Hub Logo" style={{ width: '100%' }} /> */}
-      </Avatar>
-      <Typography component="h1" variant="h6" sx={{ fontWeight: 'bold' , color:'brown'  }}>
-      Log in to explore ITI talents
-      </Typography>
-    </Box>
+    <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+    <img src={ItiLogo} alt="ITI Logo" className="w-10 h-10 mr-2" />
+    <Typography component="h1" variant="h5" sx={{ fontFamily: "Poppins", color: "brown", fontWeight: 600 }}>
+      Join ITI Talents
+    </Typography>
+  </Box>
   );
 
   const renderLoginForm = () => (
@@ -152,18 +151,28 @@ const LoginForm = () => {
           <Link  component={RouterLink} to="/forgot-password" variant="body2">Forgot password?</Link>
         </Box>
 
-        <Button type="submit" fullWidth variant="contained" 
-         sx={{
-          mt: 2,
-          py: 1.5,
-          backgroundColor: 'brown',
-          '&:hover': {
-            backgroundColor: 'brown'
-          }
-        }}
-        disabled={loading}>
-          {loading ? <CircularProgress size={24} /> : "Sign In"}
-        </Button>
+        <Button 
+  type="submit" 
+  fullWidth 
+  variant="contained"
+  disableRipple
+  sx={{
+    mt: 2,
+    py: 1.5,
+    backgroundColor: 'brown !important',
+    '&:hover': {
+      backgroundColor: 'brown !important',  // Darker brown for hover
+      opacity: 0.9
+    },
+    '&.Mui-disabled': {
+      backgroundColor: '#D3D3D3 !important',
+      color: 'white !important'
+    }
+  }}
+  disabled={loading}
+>
+  {loading ? <CircularProgress size={24} /> : "Sign In"}
+</Button>
 
         <Grid container justifyContent="center" sx={{ mt: 1 }}>
           <Grid item>
@@ -211,28 +220,24 @@ const LoginForm = () => {
   return (
     <>
   <div className="flex items-center justify-center min-h-screen bg-white px-4 py-12">
-  <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full bg-white rounded-2xl ">
+  <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full bg-white rounded-2xl h-[600px]">
     {/* Left Image */}
     <div
-      className="hidden md:block bg-cover bg-center"
-      style={{
-        backgroundImage: `url(${new URL('../../assets/images/img.png', import.meta.url)})`,
-        // backgroundImage: `url(${new URL('../../assets/images/immg.jpeg', import.meta.url)})`,
-      }}
-    ></div>
+    className="hidden md:block bg-cover bg-center h-full rounded-l-2xl"
+    style={{
+      backgroundImage: `url(${new URL('../../assets/images/itihub.jpeg', import.meta.url)})`,
+    }}
+  ></div>
 
-    {/* Right Form Section */}
-    <div className="flex flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        {renderLogoHeader()}
-       
-      </div>
-
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+<div className="flex flex-col justify-center px-8 py-12 lg:px-12 flex-1">
+    <div className="mx-auto w-full max-w-sm">
+      {renderLogoHeader()}
+      <div className="mt-8 w-full">
         {isOtpStep ? renderOtpForm() : renderLoginForm()}
       </div>
     </div>
   </div>
+</div>
 </div>
 
 
