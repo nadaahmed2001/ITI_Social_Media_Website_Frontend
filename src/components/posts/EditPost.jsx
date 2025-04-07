@@ -27,4 +27,3 @@ export default function EditPost({ isOpen, onClose, onConfirm, post }) {
     </div>
   );
 }
-

@@ -1,6 +1,5 @@
 import React from "react";
 import "./delete-post.css";
-
 export default function DeletePost({ isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
 

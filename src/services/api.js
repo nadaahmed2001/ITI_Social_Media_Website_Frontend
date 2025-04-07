@@ -27,14 +27,95 @@ api.interceptors.request.use(
 // localStorage.setItem("access_token",  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODUzNjIzLCJpYXQiOjE3NDM3NjcyMjMsImp0aSI6IjdhNTMwYzY3MTA4MjRmMzM4MjE2Mjg2ZmM1MGRjOTE3IiwidXNlcl9pZCI6MTV9.2NGzFRIF56c5Dl_DCSo1s-IRvWqPOiuXMCnflpWOE4Q");
 
 // API functions
+// ============================================================="Rahma"=========================================================================
+// Fetch all posts
 export const fetchPosts = () => api.get("/posts/");
-export const createPost = (data) => api.post("/posts/", data);
-export const likePost = (postId, reactionType) =>
-  api.post(`/posts/${postId}/react/`, { reaction_type: reactionType });
-export const fetchComments = (postId) => api.get(`/posts/${postId}/comment/`);
-export const addComment = (postId, data) =>
-  api.post(`/posts/${postId}/comment/`, data);
+// Create a new post
+export const createPost = (data) => api.post("/posts/", data, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+});
+// Fetch comments for a post
+export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
+// Add a comment to a post
+export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`, data);
+// Edit a post
+export const editPost = (postId, updatedContent) => 
+  api.put(`/posts/${postId}/`, updatedContent);
+// Delete a post
+export const deletePost = (postId) => 
+  api.delete(`/posts/${postId}/`);
+// Edit a comment
+export const editComment = (postId,commentId, updatedContent) => 
+  api.put(`/posts/comment/edit/${postId}/${commentId}/`, updatedContent);
 
+// Delete a comment
+export const deleteComment = (postId, commentId) => 
+  api.delete(`/posts/comment/delete/${postId}/${commentId}/`, {
+    data: { confirmation: true },
+  });
+// Like a post
+export const likePost = async (postId, reactionType) => {
+  try {
+    const response = await api.post(`/posts/${postId}/react/${reactionType}/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error liking post:", error.response?.data || error);
+    throw error;
+  }
+};
+// fetchReactionsForPost
+export const fetchReactionsForPost = async (postId) => {
+  try {
+    const response = await api.get(`/posts/${postId}/reactions/`);
+    return response.data; 
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error);
+    return [];
+  }
+};
+// removePostReaction
+export const removePostReaction = async (postId) => {
+  try {
+    const response = await api.post(`/posts/${postId}/react/remove/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error removing reaction:", error.response?.data || error);
+    throw error;
+  }
+};
+// Add a reaction to a comment
+export const likeComment = async (commentId, reactionType) => {
+  try {
+    const response = await api.post(`/posts/comment/${commentId}/react/${reactionType}/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error reacting to comment:", error.response?.data || error);
+    throw error;
+  }
+};
+// Fetch reactions for a comment
+export const fetchReactionsForComment = async (commentId) => {
+  try {
+    const response = await api.get(`/posts/comment/${commentId}/reactions/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching comment reactions:", error.response?.data || error);
+    return [];
+  }
+};
+// Remove a reaction from a comment
+export const removeCommentReaction = async (commentId) => {
+  try {
+    const response = await api.post(`/posts/comment/${commentId}/react/remove/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error removing comment reaction:", error.response?.data || error);
+    throw error;
+  }
+};
+// ======================================================================================================================================
 export const fetchNotifications = () => api.get("/notifications/");
 export const markNotificationAsRead = (notificationId) =>
   api.patch(`/notifications/${notificationId}/mark-as-read/`);
