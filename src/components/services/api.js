@@ -202,6 +202,11 @@ export const markNotificationAsRead = (notificationId) =>
   api.patch(`/notifications/${notificationId}/mark-as-read/`);
 export const markAllNotificationsAsRead = () =>
   api.patch("/notifications/mark-all-as-read/");
+export const clearNotification = (notificationId) => 
+  api.delete(`/notifications/${notificationId}/`);
+
+export const clearAllNotifications = () => 
+  api.delete("/notifications/clear-all/");
 
 
 //--------------------Chat API functions--------------------

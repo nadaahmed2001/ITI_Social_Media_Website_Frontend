@@ -8,7 +8,7 @@ const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
 
   if (loading) return null;
-  console.log(user);
+  // console.log(user);
   return user ? children : React.createElement(Navigate, { to: "/login" });
 };
 

@@ -17,7 +17,7 @@ import AuthContext from "../../contexts/AuthContext"; // Import AuthContext
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
   const { user } = useContext(AuthContext); // Access the user object from AuthContext
-  console.log("User:",user); // Log the user object to the console
+  // console.log("User:",user); // Log the user object to the console
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/dashboard");
   const [menuOpen, setMenuOpen] = useState(false);
