@@ -9,9 +9,14 @@ import {
 
 import { verifyOtp } from '../../components/services/api';
 import Itilogo from '../../assets/images/logo.png';
+import { useContext } from "react";
+import AuthContext from "../../../src/contexts/AuthContext";
+
+
+
+
 
 import "../auth/auth.css";
-
 
 const validationSchema = Yup.object({
   username: Yup.string().required("Username is required"),
@@ -20,6 +25,7 @@ const validationSchema = Yup.object({
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const { loginUser } = useContext(AuthContext);
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -45,7 +51,7 @@ const LoginForm = () => {
 
         if (response.ok && data.access) {
           storeTokens(data);
-          navigate("/dashboard");
+          setTimeout(() => navigate("/dashboard"), 0);
         } else if (response.ok && data.otp_required) {
           setUsernameForOtp(values.username);
           setIsOtpStep(true);
@@ -70,23 +76,26 @@ const LoginForm = () => {
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!otpCode || otpCode.length !== 6) {
       setErrorMessage("Please enter the 6-digit OTP code.");
       return;
     }
-
+  
     setLoading(true);
     setErrorMessage("");
-
+  
     try {
       console.log('Sending OTP verification data:', { username: usernameForOtp, otp_code: otpCode });
-
+  
       const response = await verifyOtp({ username: usernameForOtp, otp_code: otpCode });
-
+  
+      console.log("OTP verification response:", response);
+  
       if (response.data?.access) {
-        storeTokens(response.data);
+        loginUser(response.data.access);
         resetOtpState();
+        console.log("Navigating to dashboard...");
         navigate("/dashboard");
       } else {
         setErrorMessage("OTP verification succeeded but no tokens received.");
@@ -104,7 +113,8 @@ const LoginForm = () => {
       setLoading(false);
     }
   };
-
+  
+  
   const resetOtpState = () => {
     setIsOtpStep(false);
     setUsernameForOtp('');
@@ -202,25 +212,24 @@ const LoginForm = () => {
   );
 
   return (
-    <>
     <Grid container component="main" sx={{ height: '100vh' }}>
-    <Grid
-  item
-  xs={false}
-  sm={4}
-  md={7}
-  sx={{
-    backgroundImage: `url(new URL('../../assets/images/ITI.jpeg', import.meta.url))`,
-    backgroundSize: 'cover',
-  }}
-/>      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Grid
+        item
+        xs={false}
+        sm={4}
+        md={7}
+        sx={{
+          backgroundImage: `url(new URL('../../assets/images/ITI.jpeg', import.meta.url))`,
+          backgroundSize: 'cover',
+        }}
+      />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {renderLogoHeader()}
           {isOtpStep ? renderOtpForm() : renderLoginForm()}
         </Box>
       </Grid>
     </Grid>
-    </>
   );
 };
 
