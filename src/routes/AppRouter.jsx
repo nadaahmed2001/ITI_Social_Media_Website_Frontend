@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthPage from "../pages/AuthPage";
 import DashboardPage from "../pages/DashboardPage";
@@ -16,19 +16,65 @@ import GroupsPage from "../pages/StudentDashboard/GroupsPage";
 import SignUpForm from "../components/auth/SignUpForm";
 import LoginForm from "../components/auth/LoginForm";
 import CreatePost from "../components/posts/CreatePost";
-import ShowPost from "../components/posts/ShowPost";
-import PostList from "../components/posts/PostList";
-import ShowReactionsPost from "../components/posts/showReactionsPost";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import FollowButton from "../components/profiles/FollowButton";
 import UserProfile from "../components/profiles/UserProfile";
 import SearchFilters from "../components/search/SearchFilters";
-import DeletePost from "../components/posts/DeletePost";
-import EditPost from "../components/posts/EditPost";
 import Sidebar from "../components/profiles/Sidebar";
+import PostsPage from "../pages/PostsPage";
+
+import { UserProvider } from '../context/UserContext'; // Adjust path
+import { getAccount } from '../services/api'; // API function to get logged-in user data (uses token from interceptor)
+
+
 const AppRouter = () => {
+
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true); // Loading state for initial auth check
+  // ---
+
+  // --- Effect to fetch user data on initial load if token exists ---
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem('access_token'); // Check if token exists
+      if (token) {
+        try {
+          console.log("App.js: Found token, attempting to fetch account...");
+          const response = await getAccount(); // Fetch user/profile data
+          setLoggedInUser(response.data); // Set user data in state
+          console.log("App.js: User data set:", response.data);
+        } catch (error) {
+          // Handle errors (e.g., token expired, network error)
+          console.error("App.js: Failed to fetch user account on load:", error);
+          localStorage.removeItem('access_token'); // Clear invalid token maybe
+          localStorage.removeItem('refresh_token');
+          setLoggedInUser(null);
+          // Optional: redirect to login?
+        }
+      } else {
+         console.log("App.js: No token found.");
+         setLoggedInUser(null); // Ensure user is null if no token
+      }
+      setAuthLoading(false); // Finished initial auth check
+    };
+
+    checkAuth();
+  }, []); // Run only once on initial app load
+
+  if (authLoading) {
+    return (
+        <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
+            Loading Application... {/* Or a proper spinner */}
+        </div>
+    );
+}
+
+
+
   return (
+    <UserProvider user={loggedInUser}>
+
     <Router>
       <Routes>
         {/* Authentication */}
@@ -51,12 +97,7 @@ const AppRouter = () => {
         {/* Notifications */}
         <Route path="/notifications" element={<NotificationsPage />} />
         {/* Posts  */}
-        <Route path="/posts/create" element={<CreatePost />} />
-        <Route path="/posts/show" element={<ShowPost />} />
-        <Route path="/posts/delete" element={<DeletePost />} />   
-        <Route path="/posts/edit" element={<EditPost />} />
-        <Route path="/posts/list" element={<PostList />} />
-        <Route path="/posts/show-reactions/:postId" element={<ShowReactionsPost />} />
+        <Route path="/posts/list" element={<PostsPage />} />
         {/* Chat Component Example */}
         <Route path="/chat/sidebar" element={<ChatSidebar />} />
         <Route path="/chat/messagesList" element={<MessagesList />} />
@@ -69,6 +110,7 @@ const AppRouter = () => {
         <Route path="*" element={<AuthPage />} />
       </Routes>
     </Router>
+    </UserProvider>
   );
 };
 

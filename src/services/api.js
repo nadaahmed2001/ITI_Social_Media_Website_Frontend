@@ -1,224 +1,154 @@
 import axios from "axios";
-const API_URL = "http://127.0.0.1:8000/api"
 
-const api = axios.create({
+// Base URL for your Django API (ensure trailing slash)
+const API_BASE_URL = 'http://127.0.0.1:8000/'; // Use '/api/' if your urls.py includes under /api/
 
-  baseURL: API_URL,
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
   headers: {
-
-    "Content-Type": "application/json",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTMxMDUzLCJpYXQiOjE3NDM4NDQ2NTMsImp0aSI6ImIwMzEzOWFhZDY5ZTRmMzZiNjNkMjZmYzNhNTc5N2Q1IiwidXNlcl9pZCI6Mn0.qxYK-P397B-qxMMQjicmU0QdtgSQcqGoU6xbOuCWbX4"
-  }
-
+    // Default headers - Content-Type will be changed by interceptor if needed
+    'Content-Type': 'application/json',
+    'Accept': 'application/json', // Explicitly accept JSON
+  },
 });
 
+// --- Interceptor to add Auth Token ---
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token'); // Use the key you store the token with
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    // --- REMOVED FormData Content-Type check - Assuming JSON for Widget approach ---
+    // If you need FormData for some specific endpoints (like comment attachments later?),
+    // you might need to conditionally set Content-Type here or in the specific API function call.
+    // For now, assume JSON is default. Axios might still override for FormData automatically if needed.
+    config.headers['Content-Type'] = 'application/json'; // Default to JSON
 
-
-// API functions
-
-// Fetch all posts
-export const fetchPosts = () => api.get("/posts/");
-
-// Create a new post
-export const createPost = (data) => api.post("/posts/", data, {
-  headers: {
-    'Content-Type': 'multipart/form-data'
+    return config;
+  },
+  (error) => {
+    // Handle global request errors (e.g., redirect on 401)
+    if (error.response && error.response.status === 401) {
+        console.error("Unauthorized request, redirecting to login...");
+        // Optional: Add redirect logic here
+        // window.location.href = '/login';
+    }
+    return Promise.reject(error);
   }
-});
+);
 
-// Fetch comments for a post
-export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
 
-// Add a comment to a post
-export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`, data);
+// === Authentication ===
+// Assuming your CustomTokenObtainPairView is at /users/login/
+export const loginUser = (credentials) => apiClient.post('/users/login/', credentials);
+// Assuming your VerifyOTPView is at /users/verify-otp/
+export const verifyOtp = (otpData) => apiClient.post('/users/verify-otp/', otpData);
+// Assuming SimpleJWT refresh endpoint is used
+export const refreshToken = (refreshData) => apiClient.post('/users/token/refresh/', refreshData); // Adjust path if needed
+// Assuming you have a separate logout API endpoint to blacklist refresh token
+export const logoutUser = (refreshData) => apiClient.post('/users/logout/', refreshData);
 
-// Fetch all notifications
-export const fetchNotifications = () => api.get("/notifications/");
+// === User Profile & Settings ===
+export const getAccount = () => apiClient.get('/users/account/'); // Fetches Profile data
+// Sends JSON updates (including image URL or 2FA toggle)
+export const updateAccount = (jsonData) => apiClient.put('/users/account/', jsonData);
+export const getPublicProfile = (profileId) => apiClient.get(`/users/profiles/${profileId}/`); // Use UUID if profile ID is UUID
+export const changeEmail = (data) => apiClient.post('/users/change-email/', data); // Initiates change
+export const changePassword = (data) => apiClient.post('/users/change-password/', data);
+// Note: Confirmation endpoint /users/confirm-email-change/<token>/ is usually hit by browser redirect, not direct API call
 
-// Mark a specific notification as read
-export const markNotificationAsRead = (notificationId) =>
-  api.patch(`/notifications/${notificationId}/mark-as-read/`);
+// === Skills ===
+export const getSkills = () => apiClient.get('/users/skills/');
+export const addSkill = (skillData) => apiClient.post('/users/skills/', skillData);
+export const updateSkill = (skillId, skillData) => apiClient.put(`/users/skills/${skillId}/`, skillData);
+export const deleteSkill = (skillId) => apiClient.delete(`/users/skills/${skillId}/`);
 
-// Mark all notifications as read
-export const markAllNotificationsAsRead = () =>
-  api.patch("/notifications/mark-all-as-read/");
-
-// Edit a post
-export const editPost = (postId, updatedContent) => 
-  api.put(`/posts/${postId}/`, updatedContent);
-
-// Delete a post
-export const deletePost = (postId) => 
-  api.delete(`/posts/${postId}/`);
-// Edit a comment
-export const editComment = (postId,commentId, updatedContent) => 
-  api.put(`/posts/comment/edit/${postId}/${commentId}/`, updatedContent);
-
-// Delete a comment
-export const deleteComment = (postId, commentId) => 
-  api.delete(`/posts/comment/delete/${postId}/${commentId}/`, {
-    data: { confirmation: true },
-  });
-// Like a post
-export const likePost = async (postId, reactionType) => {
-  try {
-    const response = await api.post(`/posts/${postId}/react/${reactionType}/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error liking post:", error.response?.data || error);
-    throw error;
-  }
+// === Projects ===
+// Corrected: Fetches projects for specific owner using query param
+export const getMyProjects = (profileId, page = 1, pageSize = 9) => {
+    return apiClient.get(`api/projects/?owner=${profileId}&page=${page}&page_size=${pageSize}`);
 };
-// Fetch reactions for a specific post
-export const fetchReactionsForPost = async (postId) => {
-  try {
-    const response = await api.get(`/posts/${postId}/reactions/`);
-    return response.data; // Ensure this returns an array of reactions
-  } catch (error) {
-    console.error("API Error:", error.response?.data || error);
-    return []; // Return empty array on error
-  }
+// Corrected: Fetches single project detail
+export const getPost = (postId) => { // Renamed from getProject for clarity in post context
+    return apiClient.get(`api/posts/${postId}/`); // Corrected URL for single post
 };
+export const deletePost = (postId) => apiClient.delete(`api/posts/${postId}/`);
 
-// Remove reaction from a post
-export const removePostReaction = async (postId) => {
-  try {
-    const response = await api.post(`/posts/${postId}/react/remove/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error removing reaction:", error.response?.data || error);
-    throw error;
+// export const getProject = (projectId) => apiClient.get(`api/projects/${projectId}/`); // Keep if separate project detail needed
+
+// Sends JSON (incl. attachment_urls from Widget, tag_names)
+export const addProject = (jsonData) => apiClient.post('api/projects/', jsonData);
+// Sends JSON (incl. featured_image URL or tag_names if changed)
+export const updateProject = (projectId, jsonData) => apiClient.put(`api/projects/${projectId}/`, jsonData);
+export const deleteProject = (projectId) => apiClient.delete(`api/projects/${projectId}/`);
+
+// === Tags ===
+export const getAllTags = () => apiClient.get('api/projects/tags/');
+// Optional: Keep if using separate tag add/remove endpoints
+// export const addTagToProject = ...
+// export const removeTagFromProject = ...
+
+// === Project Contributors ===
+export const getContributors = (projectId) => apiClient.get(`api/projects/${projectId}/contributors/`);
+export const addContributor = (projectId, username) => apiClient.post(`api/projects/${projectId}/contributors/`, { username });
+export const removeContributor = (projectId, username) => apiClient.delete(`api/projects/${projectId}/contributors/`, { data: { username } });
+
+// === Posts ===
+// Corrected: Fetches list of posts (general feed or filtered)
+export const fetchPosts = (authorId = null, page = 1, pageSize = 10) => {
+  let url = `api/posts/?page=${page}&page_size=${pageSize}`; // Use posts endpoint
+  if (authorId) {
+      url += `&author=${authorId}`;
   }
-};
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-// ✅ Add a reaction to a comment
-export const likeComment = async (commentId, reactionType) => {
-  try {
-    const response = await api.post(`/posts/comment/${commentId}/react/${reactionType}/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error reacting to comment:", error.response?.data || error);
-    throw error;
-  }
-};
-
-// ✅ Fetch all reactions for a comment
-export const fetchReactionsForComment = async (commentId) => {
-  try {
-    const response = await api.get(`/posts/comment/${commentId}/reactions/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching comment reactions:", error.response?.data || error);
-    return [];
-  }
-};
-
-// ❌ FIX: You had `postId` as a parameter and wrong URL/method
-// ✅ Remove a reaction from a comment
-export const removeCommentReaction = async (commentId) => {
-  try {
-    const response = await api.post(`/posts/comment/${commentId}/react/remove/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error removing comment reaction:", error.response?.data || error);
-    throw error;
-  }
+  return apiClient.get(url);
 };
 
 
-export default api;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// import axios from "axios";
-// const API_URL = "http://127.0.0.1:8000/api"
+// Corrected: Sends JSON including attachment_urls
+export const createPost = (jsonData) => apiClient.post('api/posts/', jsonData);
+// Corrected: Sends JSON for updates (e.g., body)
+export const editPost = (postId, jsonData) => apiClient.patch(`api/posts/${postId}/`, jsonData); // Use PATCH for partial update
 
-// const api = axios.create({
+// Delete post (URL was correct)
+// export const deletePost = (postId) => apiClient.delete(`api/posts/${postId}/`); // Already defined under Projects
 
-//   baseURL: API_URL,
-//   headers: {
+// === Comments ===
+// Corrected: Fetches comments for a specific post
+export const fetchComments = (postId, page = 1, pageSize = 10) => { // Added pagination params
+    return apiClient.get(`api/posts/${postId}/comments/?page=${page}&page_size=${pageSize}`);
+};
+// Corrected: Sends JSON (unless comment attachments added later, then FormData needed)
+export const addComment = (postId, jsonData) => {
+    // jsonData likely: { comment: "text", post: postId (if needed by serializer) }
+    return apiClient.post(`api/posts/${postId}/comment/`, jsonData);
+};
+// Corrected: Sends JSON with { comment: "new text" }
+export const editComment = (postId, commentId, commentData) => {
+    return apiClient.put(`api/posts/comment/edit/${postId}/${commentId}/`, commentData);
+};
+// Corrected: Sends DELETE with confirmation body
+export const deleteComment = (postId, commentId) => {
+    return apiClient.delete(`api/posts/comment/delete/${postId}/${commentId}/`, {
+        data: { confirmation: true }
+    });
+};
 
-//     "Content-Type": "application/json",
-//     "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzODc1Njc1LCJpYXQiOjE3NDM3ODkyNzUsImp0aSI6ImFmYzhjOGIwOGFkNjQwMzFiOTMwZDg3MmIxM2ZjZDIzIiwidXNlcl9pZCI6Mn0.X8s-Irsm8UMzbaigfyag2QRzP41nPpO92Yt5fscUmwc"
-//   }
+// === Reactions ===
+// (Keep existing reaction functions, ensure URLs are relative to baseURL)
+export const fetchReactionsForPost = (postId) => apiClient.get(`api/posts/${postId}/reactions/`);
+export const fetchReactionsForComment = (commentId) => apiClient.get(`api/posts/comment/${commentId}/reactions/`);
+export const likePost = (postId, reactionType) => apiClient.post(`api/posts/${postId}/react/${reactionType}/`);
+export const likeComment = (commentId, reactionType) => apiClient.post(`api/posts/comment/${commentId}/react/${reactionType}/`);
+export const removePostReaction = (postId) => apiClient.post(`api/posts/${postId}/react/remove/`);
+export const removeCommentReaction = (commentId) => apiClient.post(`api/posts/comment/${commentId}/react/remove/`);
 
-// });
-
-
-
-// // API functions
-
-// // Fetch all posts
-// export const fetchPosts = () => api.get("/posts/");
-
-// // Create a new post
-// export const createPost = (data) => api.post("/posts/", data);
-
-// // Fetch comments for a post
-// export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
-
-// // Add a comment to a post
-// export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`, data);
-
-// // Fetch all notifications
-// export const fetchNotifications = () => api.get("/notifications/");
-
-// // Mark a specific notification as read
-// export const markNotificationAsRead = (notificationId) =>
-//   api.patch(`/notifications/${notificationId}/mark-as-read/`);
-
-// // Mark all notifications as read
-// export const markAllNotificationsAsRead = () =>
-//   api.patch("/notifications/mark-all-as-read/");
-
-// // Edit a post
-// export const editPost = (postId, updatedContent) => 
-//   api.put(`/posts/${postId}/`, updatedContent);
-
-// // Delete a post
-// export const deletePost = (postId) => 
-//   api.delete(`/posts/${postId}/`);
-// // Edit a comment
-// export const editComment = (postId,commentId, updatedContent) => 
-//   api.put(`/posts/comment/edit/${postId}/${commentId}/`, updatedContent);
-
-// // Delete a comment
-// export const deleteComment = (postId, commentId) => 
-//   api.delete(`/posts/comment/delete/${postId}/${commentId}/`, {
-//     data: { confirmation: true },
-//   });
-// // Like a post
-// export const likePost = async (postId, reactionType) => {
-//   try {
-//     const response = await api.post(`/posts/${postId}/react/${reactionType}/`);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error liking post:", error.response?.data || error);
-//     throw error;
-//   }
-// };
+// === Notifications ===
+export const fetchNotifications = () => apiClient.get("api/notifications/");
+export const markNotificationAsRead = (notificationId) => apiClient.patch(`api/notifications/${notificationId}/mark-as-read/`);
+export const markAllNotificationsAsRead = () => apiClient.patch("api/notifications/mark-all-as-read/");
 
 
-// // Fetch reactions for a specific post
-// export const fetchReactionsForPost = async (postId) => {
-//   try {
-//     const response = await api.get(`/posts/${postId}/reactions/`);
-//     return response.data; // Ensure this returns an array of reactions
-//   } catch (error) {
-//     console.error("API Error:", error.response?.data || error);
-//     return []; // Return empty array on error
-//   }
-// };
-
-// // Remove reaction from a post
-// export const removePostReaction = async (postId) => {
-//   try {
-//     const response = await api.post(`/posts/${postId}/react/remove/`);
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error removing reaction:", error.response?.data || error);
-//     throw error;
-//   }
-// };
-// export default api;
+// Export the configured instance if needed elsewhere, otherwise just use named exports
+export default apiClient;

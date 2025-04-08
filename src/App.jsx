@@ -1,36 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AppRouter from "./routes/AppRouter";
 import NotificationDropdown from "./components/NotificationDropdown";
 import { js } from '@eslint/js';
+import { UserProvider } from './context/UserContext';
+
+
 function App() {
+  const [user, setUser] = useState(null); 
+
   return (
     <>
-      <AppRouter /> {/* Handles all routing */}
+      <UserProvider user={user}>
+        <AppRouter /> {/* Handles all routing */}
+      </UserProvider>
+
     </>
   );
 }
 
 export default App;
-
-// import React from "react";
-// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
-// import PostForm from "./components/PostForm";
-// import PostList from "./components/PostList";
-// import NotificationDropdown from "./components/NotificationDropdown";
-// import { js } from '@eslint/js';
-
-// const App = () => {
-//   return (
-//     <Router>
-//       <div>
-//         <h1>Social App</h1>
-//         {/* <NotificationDropdown /> */}
-//         <PostForm />
-//         <PostList />
-//       </div>
-//     </Router>
-//   );
-// };
-
-// export default App;
