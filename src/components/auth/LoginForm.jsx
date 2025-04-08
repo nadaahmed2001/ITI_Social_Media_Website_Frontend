@@ -226,24 +226,26 @@ const LoginForm = () => {
   );
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          backgroundImage: `url(new URL('../../assets/images/ITI.jpeg', import.meta.url))`,
-          backgroundSize: 'cover',
-        }}
-      />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box sx={{ my: 8, mx: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {renderLogoHeader()}
+    <div className="flex items-center justify-center min-h-screen bg-white px-4 py-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full bg-white rounded-2xl h-[600px]">
+      {/* Left Image */}
+      <div
+      className="hidden md:block bg-cover bg-center h-full rounded-l-2xl"
+      style={{
+        backgroundImage: `url(${new URL('../../assets/images/itihub.jpeg', import.meta.url)})`,
+      }}
+    ></div>
+  
+  <div className="flex flex-col justify-center px-8 py-12 lg:px-12 flex-1">
+      <div className="mx-auto w-full max-w-sm">
+        {renderLogoHeader()}
+        <div className="mt-8 w-full">
           {isOtpStep ? renderOtpForm() : renderLoginForm()}
-        </Box>
-      </Grid>
-    </Grid>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
   );
 };
 
