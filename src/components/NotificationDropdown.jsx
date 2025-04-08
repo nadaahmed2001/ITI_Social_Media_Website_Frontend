@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
+import { fetchNotifications, markAllNotificationsAsRead } from "../components/services/api";
 
 const NotificationDropdown = () => {
   const [notifications, setNotifications] = useState([]);

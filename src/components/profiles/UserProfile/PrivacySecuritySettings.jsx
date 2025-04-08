@@ -1,6 +1,6 @@
 // src/components/UserProfile/PrivacySecuritySettings.jsx
 import React, { useState, useEffect } from 'react';
-import { updateAccount } from '../../../services/api';
+import { updateAccount } from '../../services/api';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';

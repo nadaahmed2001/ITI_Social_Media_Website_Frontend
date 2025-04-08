@@ -1,6 +1,6 @@
 // src/components/UserProfile/EditProfile.js
 import React, { useState, useEffect } from 'react';
-import { updateAccount } from '../../../services/api';
+import { updateAccount } from '../../services/api';
 import EditIcon from '@mui/icons-material/Edit';
 import './EditProfile.css'; // Create this CSS file
 

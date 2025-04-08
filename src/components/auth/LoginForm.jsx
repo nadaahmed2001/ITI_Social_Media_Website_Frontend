@@ -7,7 +7,7 @@ import {
   Alert, Paper, Grid, Box, Avatar, Link,
 } from "@mui/material";
 
-import { verifyOtp } from '../../services/api';
+import { verifyOtp } from '../../components/services/api';
 import Itilogo from '../../assets/images/logo.png';
 
 import "../auth/auth.css";
@@ -80,6 +80,8 @@ const LoginForm = () => {
     setErrorMessage("");
 
     try {
+      console.log('Sending OTP verification data:', { username: usernameForOtp, otp_code: otpCode });
+
       const response = await verifyOtp({ username: usernameForOtp, otp_code: otpCode });
 
       if (response.data?.access) {

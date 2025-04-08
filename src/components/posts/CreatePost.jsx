@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ImageSharpIcon from "@mui/icons-material/ImageSharp";
-import { createPost } from "../../services/api";
+import { createPost } from "../services/api";
 import "./Posts.css";
 
 export default function CreatePost({ onPostCreated }) {

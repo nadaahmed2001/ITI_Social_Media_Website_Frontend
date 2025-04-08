@@ -1,6 +1,6 @@
 {/* ================= TODO: Adding more fields, batch, department track, join date ================ */}
 import React, { useState, useEffect, useCallback } from 'react';
-import { getPublicProfile, getMyProjects,} from '../../../services/api'; 
+import { getPublicProfile, getMyProjects,} from '../../../components/services/api';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LanguageIcon from '@mui/icons-material/Language'; 

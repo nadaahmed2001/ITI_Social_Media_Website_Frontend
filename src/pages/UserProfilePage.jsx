@@ -12,7 +12,7 @@ import PrivacySecuritySettings from '../components/profiles/UserProfile/PrivacyS
 // import MyPosts from '../components/UserProfile/MyPosts';
 // import SavedItems from '../components/UserProfile/SavedItems';
 
-import { getAccount } from '../services/api'; 
+import { getAccount } from '../components/services/api';
 // --- End Path Verification ---
 
 import './UserProfilePage.css';
@@ -30,6 +30,7 @@ const UserProfilePage = () => {
     setError('');
     try {
       const response = await getAccount();
+      console.log("API Response from UserProfilePage.jsx:", response); // Debugging log
       setUserData(response.data);
     } catch (err) {
       console.error("Failed to fetch user data:", err);

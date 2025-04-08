@@ -43,7 +43,7 @@ import Aichat from "../components/chat/Aichat";
 
 const AppRouter = () => {
         const userToken = localStorage.getItem("access_token") || sessionStorage.getItem("access_token") || null;
-        console.log("User Token:", userToken); // Log the token to check its value
+        // console.log("User Token:", userToken); // Log the token to check its value
         return (
                 <Router>
                         <AuthProvider>
