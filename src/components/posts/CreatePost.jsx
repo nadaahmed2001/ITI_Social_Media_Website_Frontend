@@ -5,6 +5,8 @@ import React, { useState, useEffect, useRef } from "react";
 // Import the API function that sends JSON
 import { createPost } from "../../services/api"; // Adjust path
 import { PhotoIcon, XCircleIcon, PaperAirplaneIcon } from '@heroicons/react/24/solid'; // Using solid icons
+import { useUser } from '../../context/UserContext';
+
 
 // Adjust path relative to /public folder
 const DEFAULT_AVATAR = '../../src/assets/user-default.webp';
@@ -14,13 +16,15 @@ const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dsa
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "ITIHub_profile_pics"; // Create/Use an UNSIGNED preset
 // --- End Cloudinary Config ---
 
-const CreatePost = ({ onPostCreated, currentUserAvatar }) => {
+const CreatePost = ({ onPostCreated }) => {
+    const { currentUser } = useUser();
     const [postText, setPostText] = useState("");
     // State holds array of { url: '...', resource_type: '...' } from widget
     const [attachments, setAttachments] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const postWidgetRef = useRef(null); // Ref for widget
+
 
     // --- Initialize Widget ---
     useEffect(() => {
@@ -132,7 +136,14 @@ const CreatePost = ({ onPostCreated, currentUserAvatar }) => {
             <form onSubmit={handleSubmit}>
                 {/* Input Area */}
                 <div className="flex items-start space-x-3">
-                <img src={DEFAULT_AVATAR} alt="User" className="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-gray-600" onError={(e) => { if(e.target.src !== DEFAULT_AVATAR) e.target.src = DEFAULT_AVATAR; }}/>
+                <img 
+                    src={currentUser?.profile_picture} 
+                    alt={currentUser?.username} 
+                    className="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-gray-600" 
+                    onError={(e) => { if(e.target.src !== DEFAULT_AVATAR) 
+                    e.target.src = DEFAULT_AVATAR; }}
+                />
+                
                 <textarea
                     value={postText}
                     onChange={handleTextChange}
