@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link as RouterLink } from "react-router-dom";
+import ItiLogo from "../../assets/images/logo.png";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -123,21 +124,21 @@ const LoginForm = () => {
 
   const renderLogoHeader = () => (
     <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-      <Avatar sx={{ width: 48, height: 48, mr: 1.5, bgcolor: 'transparent' }}>
-        <img src={Itilogo} alt="ITI Hub Logo" style={{ width: '100%' }} />
-      </Avatar>
-      <Typography component="h1" variant="h4" sx={{ fontWeight: 'bold' }}>
-        ITI Hub
+      {/* <Avatar sx={{ width: 48, height: 48, mr: 1.5, bgcolor: 'transparent' }}> */}
+        <img src={Itilogo} alt="ITI Logo" className="w-10 h-10 mr-2" />
+      {/* </Avatar> */}
+      <Typography component="h1" variant="h5" sx={{ fontFamily: "Poppins", color: "brown", fontWeight: 600 }}>
+        Join ITI Talents
       </Typography>
     </Box>
   );
 
   const renderLoginForm = () => (
     <>
-      <Typography variant="h5">Sign In</Typography>
+      {/* <Typography variant="h5">Sign In</Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
         Welcome back! Please enter your details.
-      </Typography>
+      </Typography> */}
 
       {errorMessage && (
         <Alert severity="error" sx={{ width: '100%', mb: 2 }}>{errorMessage}</Alert>
@@ -160,17 +161,30 @@ const LoginForm = () => {
         />
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+          <FormControlLabel control={<Checkbox value="remember" />} label="Remember me" sx={{ color: "gray" }}  />
           <Link component={RouterLink} to="/forgot-password" variant="body2">Forgot password?</Link>
         </Box>
 
-        <Button type="submit" fullWidth variant="contained" color="primary" sx={{ mt: 2, py: 1.5 }} disabled={loading}>
+        <Button type="submit" fullWidth variant="contained" disableRipple   sx={{
+    mt: 2,
+    py: 1.5,
+    backgroundColor: 'brown !important',
+    '&:hover': {
+      backgroundColor: 'brown !important',  // Darker brown for hover
+      opacity: 0.9
+    },
+    '&.Mui-disabled': {
+      backgroundColor: '#D3D3D3 !important',
+      color: 'white !important'
+    }
+  }}
+  disabled={loading}>
           {loading ? <CircularProgress size={24} /> : "Sign In"}
         </Button>
 
         <Grid container justifyContent="center" sx={{ mt: 1 }}>
           <Grid item>
-            <Link component={RouterLink} to="/signup" variant="body2">{"Don't have an account? Sign Up"}</Link>
+            <Link component={RouterLink} to="/signup" variant="body2" sx={{ color: "brown" }} >{"Don't have an account? Sign Up"}</Link>
           </Grid>
         </Grid>
       </Box>
