@@ -33,9 +33,9 @@ export default function PostList() {
   return (
     <>
     <div className="feed-container">
-    <div className="sidebar-showpost">
+    {/* <div className="sidebar-showpost">
     <Sidebar />
-    </div>
+    </div> */}
     <div className="main-content">
     <CreatePost onPostCreated={handleNewPost} />
     <div className="posts-list">
