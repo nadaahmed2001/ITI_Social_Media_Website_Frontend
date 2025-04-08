@@ -38,8 +38,9 @@ const AppRouter = () => {
         const userToken = localStorage.getItem("access_token") || sessionStorage.getItem("access_token") || null;
         // console.log("User Token:", userToken); // Log the token to check its value
         return (
-                <Router>
-                        <AuthProvider>
+                <AuthProvider>
+                        <Router>
+
                                 <Routes>
                                         {/* Authentication */}
                                         {/* <Route path="/auth" element={<AuthPage />} /> */}
@@ -93,8 +94,9 @@ const AppRouter = () => {
                                         {/* Default Route */}
                                         <Route path="*" element={<LoginForm />} />
                                 </Routes>
-                        </AuthProvider>
-                </Router>
+
+                        </Router>
+                </AuthProvider>
         );
 };
 

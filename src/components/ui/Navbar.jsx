@@ -4,7 +4,7 @@ import {
   Home,
   MessageCircle,
   User,
-  Settings,
+  // Settings,
   Sun,
   Moon,
   LogOut,
@@ -13,11 +13,14 @@ import {
 } from "lucide-react";
 import NotificationsDropdown from "../../pages/NotificationsDropdown";
 import logo from "../../assets/images/logo.png"; 
+
 import AuthContext from "../../contexts/AuthContext"; // Import AuthContext
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
-  const { user } = useContext(AuthContext); // Access the user object from AuthContext
-  // console.log("User:",user); // Log the user object to the console
+  const { user,loading } = useContext(AuthContext); // Access the user object from AuthContext
+  console.log("User from Navbar.jsx:", user); // Log the user object to the console
+
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/dashboard");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -46,6 +49,13 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [lastScrollY]); // Re-run this effect when lastScrollY changes
+
+
+  if (loading) {
+    return null;
+  }
+  console.log("User from Navbar.jsx:", user);
+
 
   return (
     <nav
@@ -77,7 +87,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
           { path: "/Home", Icon: Home },
           { path: "/chat", Icon: MessageCircle },
           { path: "/profile", Icon: User },
-          { path: "/settings", Icon: Settings },
+          // { path: "/settings", Icon: Settings },
           // Conditionally render ChartBarDecreasing for supervisors
           ...(user?.is_supervisor
             ? [{ path: "/supervisor/dashboard", Icon: ChartBarDecreasing }]
@@ -132,13 +142,13 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
               { path: "/Home", label: "Dashboard", Icon: Home },
               { path: "/chat", label: "Chat", Icon: MessageCircle },
               { path: "/profile", label: "Profile", Icon: User },
-              { path: "/settings", label: "Settings", Icon: Settings },
+              // { path: "/settings", label: "Settings", Icon: Settings },
               // Conditionally render ChartBarDecreasing for supervisors
               ...(user?.is_supervisor
                 ? [
                     {
                       path: "/supervisor/dashboard",
-                      label: "Supervisor Dashboard",
+                      label: "Dashboard",
                       Icon: ChartBarDecreasing,
                     },
                   ]

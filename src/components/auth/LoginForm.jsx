@@ -7,16 +7,10 @@ import {
   TextField, Button, Typography, FormControlLabel, Checkbox, CircularProgress,
   Alert, Paper, Grid, Box, Avatar, Link,
 } from "@mui/material";
-
 import { verifyOtp } from '../../components/services/api';
 import Itilogo from '../../assets/images/logo.png';
 import { useContext } from "react";
 import AuthContext from "../../../src/contexts/AuthContext";
-
-
-
-
-
 import "../auth/auth.css";
 
 const validationSchema = Yup.object({
@@ -49,8 +43,10 @@ const LoginForm = () => {
         });
 
         const data = await response.json();
+        console.log("Login response:", data);
 
         if (response.ok && data.access) {
+          console.log("Login successful:", data);
           storeTokens(data);
           setTimeout(() => navigate("/Home"), 0);
         } else if (response.ok && data.otp_required) {
@@ -94,7 +90,11 @@ const LoginForm = () => {
       console.log("OTP verification response:", response);
   
       if (response.data?.access) {
-        loginUser(response.data.access);
+        // loginUser(response.data.access);
+
+        // login API response looks like: { access, refresh, user }
+        loginUser(data.access, data.user);
+
         resetOtpState();
         console.log("Navigating to dashboard...");
         navigate("/Home");
