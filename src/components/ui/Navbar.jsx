@@ -74,7 +74,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
       {/* Desktop Navigation Icons (Hidden on Small Screens) */}
       <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 gap-6">
         {[
-          { path: "/dashboard", Icon: Home },
+          { path: "/Home", Icon: Home },
           { path: "/chat", Icon: MessageCircle },
           { path: "/profile", Icon: User },
           { path: "/settings", Icon: Settings },
@@ -129,7 +129,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
               ✖
             </button>
             {[
-              { path: "/dashboard", label: "Dashboard", Icon: Home },
+              { path: "/Home", label: "Dashboard", Icon: Home },
               { path: "/chat", label: "Chat", Icon: MessageCircle },
               { path: "/profile", label: "Profile", Icon: User },
               { path: "/settings", label: "Settings", Icon: Settings },

@@ -1,16 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AuthPage from "../pages/AuthPage";
-// import DashboardPage from "../pages/DashboardPage";
+// import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
 import NotificationsDropdown from "../pages/NotificationsDropdown";
-// Supervisor Pages
-import ManageBatches from "../pages/SupervisorDashboard/ManageBatches";
-import TrackOverview from "../pages/SupervisorDashboard/TrackOverview";
-// Student Pages
-import FeedPage from "../pages/FeedPage";
-import GroupsPage from "../pages/StudentDashboard/GroupsPage";
 // Components (Optional - For Direct Rendering in Pages)
 import SignUpForm from "../components/auth/SignUpForm";
 import LoginForm from "../components/auth/LoginForm";
@@ -35,7 +28,7 @@ import PrivateRoute from './../components/PrivateRoute';
 // import ShowReactionsPost from "../components/posts/showReactionsPost";
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
 import BatchPage from "../pages/SupervisorDashboard/BatchPage";
-import StudentDashboard from "../pages/StudentDashboard/Dashboard";
+import HomePage from "../pages/HomePage";
 import PostListWithSideBar from "../components/posts/PostListWithSideBar";
 import Aichat from "../components/chat/Aichat";
 
@@ -49,22 +42,21 @@ const AppRouter = () => {
                         <AuthProvider>
                                 <Routes>
                                         {/* Authentication */}
-                                        <Route path="/auth" element={<AuthPage />} />
+                                        {/* <Route path="/auth" element={<AuthPage />} /> */}
                                         <Route path="/signup" element={<SignUpForm />} />
                                         <Route path="/login" element={<LoginForm />} />
                                         <Route path="/forgot-password" element={<ForgotPassword />} />
                                         <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
 
                                         {/* Dashboards */}
-                                        <Route path="/feed" element={<FeedPage />} />
-                                        <Route path="/student/dashboard" element={<StudentDashboard />} />
-                                        <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                                        <Route path="/Home" element={<HomePage />} />
+
 
                                         {/* Supervisor Routes */}
-                                        <Route path="/batches/:trackId" element={<BatchPage />} />
 
-                                        {/* Student Routes */}
-                                        <Route path="/student/groups" element={<GroupsPage />} />
+                                        {/* This is the dashboard that make supervisor manage the batches */}
+                                        <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                                        <Route path="/batches/:trackId" element={<BatchPage />} />
 
                                         {/* Profile, Search, and Chat */}
                                         <Route path="/profile" element={<UserProfilePage />} />
@@ -84,7 +76,7 @@ const AppRouter = () => {
                                         <Route path="/posts/delete" element={<DeletePost />} />
                                         <Route path="/posts/edit" element={<EditPost />} />
                                         <Route path="/posts/list" element={<PostList />} />
-                                        <Route path="/dashboard" element={<PrivateRoute><PostListWithSideBar /></PrivateRoute>} />
+                                        {/* <Route path="/dashboard" element={<PrivateRoute><PostListWithSideBar /></PrivateRoute>} /> */}
                                         {/* <Route path="/posts/show-reactions/:postId" element={<ShowReactionsPost />} /> */}
 
                                         {/* Profile Components */}
@@ -99,7 +91,7 @@ const AppRouter = () => {
                                         <Route path="/email-change-failed/" element={<EmailChangeFailed />} />
 
                                         {/* Default Route */}
-                                        <Route path="*" element={<AuthPage />} />
+                                        <Route path="*" element={<LoginForm />} />
                                 </Routes>
                         </AuthProvider>
                 </Router>

@@ -52,7 +52,7 @@ const LoginForm = () => {
 
         if (response.ok && data.access) {
           storeTokens(data);
-          setTimeout(() => navigate("/dashboard"), 0);
+          setTimeout(() => navigate("/Home"), 0);
         } else if (response.ok && data.otp_required) {
           setUsernameForOtp(values.username);
           setIsOtpStep(true);
@@ -97,7 +97,7 @@ const LoginForm = () => {
         loginUser(response.data.access);
         resetOtpState();
         console.log("Navigating to dashboard...");
-        navigate("/dashboard");
+        navigate("/Home");
       } else {
         setErrorMessage("OTP verification succeeded but no tokens received.");
       }

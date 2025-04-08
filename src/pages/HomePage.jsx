@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Navbar from "../../components/ui/Navbar"; // Navbar component
-import Sidebar from "../../components/ui/Sidebar"; // Sidebar component ChatSidebar
-import PostContent from "../../components/ui/PostContent"; // PostContent component
-import CreatePost from "../../components/posts/CreatePost"; // PostContent component
-import PostList from "../../components/posts/PostList"; // PostContent component
-// import ChatContent from "../../components/ui/ChatContent"; // ChatContent component
-import ChatSidebar from "../../components/chat/ChatSidebar"; // ChatContent component
+import Navbar from "../components/ui/Navbar"; // Navbar component
+import Sidebar from "../components/ui/Sidebar"; // Sidebar component ChatSidebar
+import PostContent from "../components/ui/PostContent"; // PostContent component
+import CreatePost from "../components/posts/CreatePost"; // PostContent component
+import PostList from "../components/posts/PostList"; // PostContent component
+// import ChatContent from "../components/ui/ChatContent"; // ChatContent component
+import ChatSidebar from "../components/chat/ChatSidebar"; // ChatContent component
 
-export default function DashboardPage() {
+export default function HomePage() {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
