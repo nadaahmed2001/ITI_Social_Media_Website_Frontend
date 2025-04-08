@@ -4,6 +4,7 @@ import CreatePost from "./CreatePost";
 import ShowPost from "./ShowPost";
 import Sidebar from "../profiles/Sidebar";
 import Navbar from "../../components/ui/Navbar"; // Import Navbar component
+import PostList from "./PostList";
 
 
 export default function PostListWithSideBar() {
@@ -34,10 +35,10 @@ export default function PostListWithSideBar() {
     {/* Navbar */}
     <Navbar />
     <div className="feed-container">
-
+{/* 
     <div className="sidebar-showpost">
     <Sidebar />
-    </div>
+    </div> */}
     <div className="main-content">
     <CreatePost onPostCreated={handleNewPost} />
     <div className="posts-list">
@@ -45,7 +46,7 @@ export default function PostListWithSideBar() {
           <p className="loading-message">Loading posts...</p>
         ) : posts.length > 0 ? (
           posts.map((post) => (
-            <ShowPost key={post.id} post={post} />
+            <PostList key={post.id} post={post} />
           ))
         ) : (
           <p className="no-posts-message">No posts available.</p>

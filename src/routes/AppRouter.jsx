@@ -32,7 +32,7 @@ import EmailChangeFailed from "../pages/EmailChangeFailed";
 
 import { AuthProvider } from "../contexts/AuthContext";
 import PrivateRoute from './../components/PrivateRoute';
-import ShowReactionsPost from "../components/posts/showReactionsPost";
+// import ShowReactionsPost from "../components/posts/showReactionsPost";
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
 import BatchPage from "../pages/SupervisorDashboard/BatchPage";
 import StudentDashboard from "../pages/StudentDashboard/Dashboard";
@@ -83,7 +83,7 @@ const AppRouter = () => {
                                         <Route path="/posts/edit" element={<EditPost />} />
                                         <Route path="/posts/list" element={<PostList />} />
                                         <Route path="/dashboard" element={<PrivateRoute><PostListWithSideBar /></PrivateRoute>} />
-                                        <Route path="/posts/show-reactions/:postId" element={<ShowReactionsPost />} />
+                                        {/* <Route path="/posts/show-reactions/:postId" element={<ShowReactionsPost />} /> */}
 
                                         {/* Profile Components */}
                                         <Route path="/profiles/followbutton" element={<FollowButton />} />

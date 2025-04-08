@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { fetchPosts } from "../services/api";
+import { fetchPosts } from "../../services/api";
 import CreatePost from "./CreatePost";
 import ShowPost from "./ShowPost";
-// import Sidebar from "../profiles/Sidebar";
-import Navbar from "../../components/ui/Navbar"; // Import Navbar component
+import Sidebar from "../profiles/Sidebar";
 export default function PostList() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,16 +25,17 @@ export default function PostList() {
   const handleNewPost = (newPost) => {
     setPosts((prevPosts) => [newPost, ...prevPosts]);
   };
+
+  const handleDeletePost = (postId) => {
+    setPosts(posts.filter((post) => post.id !== postId));
+  }
+
   return (
     <>
-    <div className={"min-h-screen bg-gray-100 text-gray-900"}>
-    {/* Navbar */}
-    <Navbar />
     <div className="feed-container">
-
-    {/* <div className="sidebar-showpost">
+    <div className="sidebar-showpost">
     <Sidebar />
-    </div> */}
+    </div>
     <div className="main-content">
     <CreatePost onPostCreated={handleNewPost} />
     <div className="posts-list">
@@ -43,14 +43,13 @@ export default function PostList() {
           <p className="loading-message">Loading posts...</p>
         ) : posts.length > 0 ? (
           posts.map((post) => (
-            <ShowPost key={post.id} post={post} />
+            <ShowPost key={post.id} postData={post} onDeletePost={() => handleDeletePost(post.id)} />
           ))
         ) : (
           <p className="no-posts-message">No posts available.</p>
         )}
       </div>
     </div>
-  </div>
   </div>
   </>
   );
