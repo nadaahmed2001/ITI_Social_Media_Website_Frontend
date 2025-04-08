@@ -85,22 +85,35 @@ const NotificationDropdown = () => {
 
   // Handle opening the notification link and marking it as read
   const handleOpenLink = (id, link) => {
-    handleMarkAsRead(id); // Mark notification as read when user clicks it
+    handleMarkAsRead(id);
   
-    // Check the link to route to the correct section
-    if (link.includes("comment")) {
-      const commentId = link.split("/")[2]; // Extract comment ID from URL
-      navigate(`/posts/${link.split("/")[2]}/comment/${commentId}`);  // Navigate to specific comment page
-    } else if (link.includes("reaction")) {
-      const postId = link.split("/")[2]; // Extract post ID from URL
-      navigate(`/posts/${postId}/reactions`);  // Navigate to post reactions page
-    } else if (link.includes("post")) {
-      const postId = link.split("/")[2]; // Extract post ID
-      navigate(`/posts/show/${postId}`);  // Navigate to show specific post page
-    } else {
-      navigate(link);  // Default case for other links
+    if (link.includes("/comment/") && link.includes("/reactions")) {
+      const matches = link.match(/\/posts\/(\d+)\/comment\/(\d+)\/reactions/);
+      if (matches) {
+        const postId = matches[1];
+        const commentId = matches[2];
+        navigate(`/posts/${postId}`, {
+          state: {
+            openCommentReactionModal: true,
+            commentId: commentId,
+          },
+        });
+        return;
+      }
     }
+  
+    if (link.includes("/reactions")) {
+      const matches = link.match(/\/posts\/(\d+)/);
+      if (matches) {
+        const postId = matches[1];
+        navigate(`/posts/${postId}/reactions`);
+        return;
+      }
+    }
+  
+    navigate(link);
   };
+  
 
   return (
     <div className="notification-dropdown">

@@ -39,10 +39,6 @@ import StudentDashboard from "../pages/StudentDashboard/Dashboard";
 import PostListWithSideBar from "../components/posts/PostListWithSideBar";
 import Aichat from "../components/chat/Aichat";
 
-import PostReactionsPage from "../components/notifications/PostReactionsPage";
-import CommentReactionsPage from "../components/notifications/CommentReactionsPage";    
-import CommentPage  from "../components/notifications/CommentPage";    
-import MentionPage   from "../components/notifications/MentionPage";    
 
 
 const AppRouter = () => {
@@ -101,13 +97,6 @@ const AppRouter = () => {
                                         {/* Email Change */}
                                         <Route path="/email-change-success" element={<EmailChangeSuccess />} />
                                         <Route path="/email-change-failed/" element={<EmailChangeFailed />} />
-
-                                        {/* notifications */}
-                                        <Route path="/posts/:id/reactions" element={<PostReactionsPage />} />
-                                        <Route path="/posts/:postId/comment/:commentId/reactions" element={<CommentReactionsPage />} />
-                                        <Route path="/posts/:postId/comment/:commentId" element={<CommentPage />} />
-                                        <Route path="/profile/:username" element={<MentionPage />} />
-
 
                                         {/* Default Route */}
                                         <Route path="*" element={<AuthPage />} />
