@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { createPost } from '../../services/api';
 import { ImageSharp as ImageSharpIcon, Close as CloseIcon } from '@mui/icons-material';
+import AuthContext from '../../contexts/AuthContext'; 
+
 
 const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
 const CLOUDINARY_CLOUD_NAME = "dsaznefnt";
 const CLOUDINARY_UPLOAD_PRESET = "ITIHub_profile_pics";
 const MAX_POST_LENGTH = 3000;
 const TRUNCATE_LENGTH = 500;
+
 
 export default function CreatePost({ onPostCreated }) {
   const [postText, setPostText] = useState('');
@@ -15,6 +18,10 @@ export default function CreatePost({ onPostCreated }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const widgetRef = useRef(null);
 
+
+  const { user, loading: authLoading } = useContext(AuthContext); // Destructure 'user'
+  const avatarSrc = user?.profile_picture || DEFAULT_USER_AVATAR;
+  
   // Initialize Cloudinary widget
   useEffect(() => {
     const handleCloudinaryUpload = (error, result) => {
@@ -99,17 +106,30 @@ export default function CreatePost({ onPostCreated }) {
   return (
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200">
       <div className="relative">
-        <textarea
-          value={postText}
-          onChange={handleTextChange}
-          placeholder={`What's on your mind? (${MAX_POST_LENGTH} characters max)`}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-          rows={3}
-          maxLength={MAX_POST_LENGTH}
-        />
-        <div className={`absolute bottom-2 right-2 text-xs ${getCharCounterClass()}`}>
-          {postText.length}/{MAX_POST_LENGTH}
-        </div>
+      <div className="flex items-center space-x-3">
+          <img 
+                src={avatarSrc} 
+                alt= "you" 
+                title= {user?.username} 
+                className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                onError={(e) => { 
+                  // Prevent infinite loop if default avatar also fails
+                  if (e.target.src !== DEFAULT_USER_AVATAR) {
+                    e.target.src = DEFAULT_USER_AVATAR; 
+                  }}}
+          />
+          <textarea
+            value={postText}
+            onChange={handleTextChange}
+            placeholder={`What's on your mind? (${MAX_POST_LENGTH} characters max)`}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+            rows={3}
+            maxLength={MAX_POST_LENGTH}
+          />
+      </div>
+          <div className={`absolute bottom-2 right-2 text-xs ${getCharCounterClass()}`}>
+            {postText.length}/{MAX_POST_LENGTH}
+          </div>
       </div>
 
       {/* Attachments preview */}

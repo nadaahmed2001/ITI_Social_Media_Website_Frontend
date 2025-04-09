@@ -13,13 +13,20 @@ const api = axios.create({
 // Automatically set Authorization header before each request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token"); // Retrieve token from local storage
+    // --- ADD LOGS HERE ---
+    console.log(`API Interceptor: Requesting ${config.method?.toUpperCase()} ${config.url}`); 
+    const token = localStorage.getItem("access_token"); // Ensure 'access_token' is the correct key
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Corrected syntax
+      config.headers.Authorization = `Bearer ${token}`; 
+      console.log("API Interceptor: Token FOUND and attached."); // Log success
+    } else {
+      console.warn("API Interceptor: Token NOT FOUND in localStorage."); // Log failure
     }
+    // --- END LOGS ---
     return config;
   },
   (error) => {
+    console.error("API Interceptor: Request setup error", error); // Log errors during request setup
     return Promise.reject(error);
   }
 );
@@ -29,8 +36,14 @@ api.interceptors.request.use(
 // API functions
 // ============================================================="Rahma"=========================================================================
 // Fetch all posts
-export const fetchPosts = () => api.get("/posts/");
-
+export const fetchPosts = (page = 1, pageSize = 10) => {
+  return api.get('/posts/', {
+    params: {
+      page,
+      page_size: pageSize
+    }
+  });
+};
 
 // Create a new post
 export const createPost = (data) => api.post("/posts/", data, {

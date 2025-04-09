@@ -42,7 +42,15 @@ api2.interceptors.request.use((config) => {
 
 // ============================================================="Rahma"=========================================================================
 // Fetch all posts
-export const fetchPosts = () => api.get("/posts/");
+export const fetchPosts = (page = 1, pageSize = 10) => {
+  return api.get('/posts/', {
+    params: {
+      page,
+      page_size: pageSize
+    }
+  });
+};
+
 // Create a new post
 export const createPost = (postData) => {
   const formData = new FormData();
