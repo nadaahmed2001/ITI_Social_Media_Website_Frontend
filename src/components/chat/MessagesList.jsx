@@ -8,7 +8,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './MessagesList.css';
 
 const MessagesList = ({token, isGroupChat }) => {
-    // console.log( )
     const { id } = useParams(); // `id` is the group_id or user_id depending on the chat type
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -18,11 +17,6 @@ const MessagesList = ({token, isGroupChat }) => {
     const socketRef = useRef(null); // WebSocket reference
     const nodeRefs = useRef({}); // Store refs for each message
 
-    // Temporary hardcoded token
-    //  token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTY4NjU4LCJpYXQiOjE3NDM4ODIyNTgsImp0aSI6IjNmZDEzN2RhMTVkNTRjZGE5ZTM3MGY2YjAxMTRmNmE3IiwidXNlcl9pZCI6NH0.attP3etscne7JkqU2zPSv-4t5VVpXeFiZum69LM90BY";
-    if (!token) {
-        console.error("No token passed to MessagesList component!");
-    }
     // Memoize the WebSocket connection function
     const connect_to_group_chat = useCallback(() => {
         const socketUrl = isGroupChat
@@ -312,83 +306,92 @@ const MessagesList = ({token, isGroupChat }) => {
 
     return (
         <div className="flex h-screen">
+            <div className="" >
             <ChatSidebar />
-            <div className="flex-1 flex flex-col bg-black text-yellow-400 relative">
-                {/* Clear Messages Button */}
+            </div>
+           
+            <div className="flex-1 flex flex-col text-yellow-400 relative " >
                 <button
                     onClick={handleClearMessages}
                     className="bg-red-500 text-white px-4 py-2 rounded-lg absolute top-4 right-4 z-10"
                 >
                     Clear All Messages
                 </button>
-                <div className="flex-1 overflow-x-hidden p-4">
+              <div className="flex-1 overflow-x-hidden p-4 background-div overflow-y-auto ">
                     {/* Messages List */}
-                    <TransitionGroup>
+                    <TransitionGroup className="flex flex-col gap-2">
                         {messages.map((message, index) => {
                             if (!nodeRefs.current[index]) {
                                 nodeRefs.current[index] = React.createRef();
                             }
 
-                            return (
-                                <CSSTransition
-                                    key={index}
-                                    timeout={300}
-                                    classNames="message"
-                                    nodeRef={nodeRefs.current[index]}
-                                >
-                                    <div
-                                        ref={nodeRefs.current[index]}
-                                        className={`mb-4 p-3 rounded-lg shadow-lg ${
-                                            message.sender === currentUser
-                                                ? "bg-yellow-500 text-black text-right self-end"
-                                                : "bg-gray-800 text-yellow-400 text-left self-start"
-                                        } max-w-full sm:max-w-md`} // Full width on small screens, limited width on larger screens
-                                        onContextMenu={(e) => {
-                                            e.preventDefault(); // Prevent default right-click menu
-                                            if (message.sender === currentUser) {
-                                                const action = window.prompt(
-                                                    "Right-click actions:\n1. Edit\n2. Delete\nEnter your choice:"
-                                                );
-                                                if (action === "1") {
-                                                    handleEditMessage(message.id, message.content);
-                                                } else if (action === "2") {
-                                                    handleDeleteMessage(message.id);
-                                                }
-                                            } else {
-                                                alert("You can only edit or delete your own messages.");
-                                            }
-                                        }}
-                                    >
-                                        <strong>{message.sender === currentUser ? "Me" : message.sender}:</strong>
-                                        <div className="break-words text-sm">
-                                            {message.content}
-                                        </div>
-                                        <div className="text-xs text-gray-500">
-                                            {new Date(message.timestamp).toLocaleString()}
-                                        </div>
-                                    </div>
-                                </CSSTransition>
-                            );
-                        })}
-                    </TransitionGroup>
-                    <div ref={messagesEndRef} /> {/* Add ref for autoscroll */}
-                </div>
-                <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-700">
-                    <input
-                        type="text"
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Type a message..."
-                        className="border p-2 w-full bg-gray-800 text-yellow-400 rounded-lg"
-                    />
-                    <button
-                        type="submit"
-                        className="bg-yellow-500 text-black px-4 py-2 mt-2 rounded-lg"
-                        disabled={isSending} // Disable the button while sending
+            const isMine = message.sender === currentUser;
+
+            return (
+                <CSSTransition
+                    key={index}
+                    timeout={300}
+                    classNames="message"
+                    nodeRef={nodeRefs.current[index]}
+                >
+                    <div
+                        ref={nodeRefs.current[index]}
+                        className={`max-w-[80%] sm:max-w-md p-3 rounded-xl shadow-md transition-all duration-300 ${
+                            isMine
+                                ? "ml-auto bg-yellow-500 text-black text-right"
+                                : "mr-auto bg-gray-800 text-yellow-400 text-left"
+                        }`}
+                        onContextMenu={(e) => {
+                            e.preventDefault();
+                            if (isMine) {
+                                const action = window.prompt(
+                                    "Right-click options:\n1. Edit\n2. Delete\nType your choice:"
+                                );
+                                if (action === "1") {
+                                    handleEditMessage(message.id, message.content);
+                                } else if (action === "2") {
+                                    handleDeleteMessage(message.id);
+                                }
+                            } else {
+                                alert("Only your messages can be edited or deleted.");
+                            }
+                        }}
                     >
-                        {isSending ? "Sending..." : "Send"}
-                    </button>
-                </form>
+                        <div className="font-semibold text-sm bg-transparent">
+                            {isMine ? "Me" : message.sender}
+                        </div>
+                        <div className="break-words text-sm mt-1 bg-transparent">
+                            {message.content}
+                        </div>
+                        <div className="text-xs text-gray-400 mt-2 text-right bg-transparent">
+                            {new Date(message.timestamp).toLocaleString()}
+                        </div>
+                    </div>
+                </CSSTransition>
+            );
+        })}
+    </TransitionGroup>
+
+    <div ref={messagesEndRef} />
+</div>
+
+    <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-700 flex items-center gap-2  bg-opacity-60 backdrop-blur-sm">
+    <input
+        type="text"
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+        placeholder="Type a message..."
+        className="flex-1 border-none outline-none px-4 py-2 rounded-lg bg-gray-800 text-yellow-400 placeholder-yellow-300 focus:ring-2 focus:ring-yellow-500 transition-all duration-200"
+    />
+    <button
+        type="submit"
+        className="bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isSending}
+    >
+        {isSending ? "Sending..." : "Send"}
+    </button>
+    </form>
+
             </div>
         </div>
     );
