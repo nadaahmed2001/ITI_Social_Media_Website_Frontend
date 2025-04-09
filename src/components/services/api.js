@@ -44,15 +44,41 @@ api2.interceptors.request.use((config) => {
 // Fetch all posts
 export const fetchPosts = () => api.get("/posts/");
 // Create a new post
-export const createPost = (data) => api.post("/posts/", data, {
-  headers: {
-    'Content-Type': 'multipart/form-data'
+export const createPost = (postData) => {
+  const formData = new FormData();
+  formData.append('body', postData.body);
+  
+  // Only append attachment_url if it exists
+  if (postData.attachment_url) {
+    formData.append('attachment_url', postData.attachment_url);
   }
-});
+  
+  return api.post('/posts/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+
 // Fetch comments for a post
 export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
+
 // Add a comment to a post
-export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`, data);
+export const addComment = (postId, commentData) => {
+  const formData = new FormData();
+  formData.append('comment', commentData.comment);
+  if (commentData.attachment_url) {
+    formData.append('attachment_url', commentData.attachment_url);
+  }
+  
+  return api.post(`/posts/${postId}/comment/`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 // Edit a post
 export const editPost = (postId, updatedContent) => 
   api.put(`/posts/${postId}/`, updatedContent);

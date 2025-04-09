@@ -30,6 +30,8 @@ api.interceptors.request.use(
 // ============================================================="Rahma"=========================================================================
 // Fetch all posts
 export const fetchPosts = () => api.get("/posts/");
+
+
 // Create a new post
 export const createPost = (data) => api.post("/posts/", data, {
   headers: {
