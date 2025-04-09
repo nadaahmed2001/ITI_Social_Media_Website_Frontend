@@ -1,3 +1,4 @@
+//Navbar.jsx
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -18,7 +19,7 @@ import AuthContext from "../../contexts/AuthContext"; // Import AuthContext
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
   const { user,loading } = useContext(AuthContext); // Access the user object from AuthContext
-  console.log("User from Navbar.jsx:", user); // Log the user object to the console
+  // console.log("User from Navbar.jsx:", user); // Log the user object to the console
 
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -54,7 +55,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
   if (loading) {
     return null;
   }
-  console.log("User from Navbar.jsx:", user);
+  // console.log("User from Navbar.jsx:", user);
 
 
   return (

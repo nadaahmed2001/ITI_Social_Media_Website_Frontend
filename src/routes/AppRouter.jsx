@@ -1,6 +1,6 @@
+//AppRouter.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
 import NotificationsDropdown from "../pages/NotificationsDropdown";
@@ -26,8 +26,8 @@ import EmailChangeFailed from "../pages/EmailChangeFailed";
 import { AuthProvider } from "../contexts/AuthContext";
 import PrivateRoute from './../components/PrivateRoute';
 // import ShowReactionsPost from "../components/posts/showReactionsPost";
-// import Dashboard from "../pages/SupervisorDashboard/Dashboard";
-import Dashboard from "../pages/SupervisorDashboard/Dashboard2";
+import Dashboard from "../pages/SupervisorDashboard/Dashboard";
+// import Dashboard from "../pages/SupervisorDashboard/Dashboard2";
 import BatchPage from "../pages/SupervisorDashboard/BatchPage";
 import HomePage from "../pages/HomePage";
 import PostListWithSideBar from "../components/posts/PostListWithSideBar";
@@ -59,7 +59,7 @@ const AppRouter = () => {
                                         {/* This is the dashboard that make supervisor manage the batches */}
                                         {/* <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}
                                         <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                                        <Route path="/batches/:trackId" element={<BatchPage />} />
+                                        <Route path="/batches/:programId/:trackId" element={<BatchPage />} />
 
                                         {/* Profile, Search, and Chat */}
                                         <Route path="/profile" element={<UserProfilePage />} />

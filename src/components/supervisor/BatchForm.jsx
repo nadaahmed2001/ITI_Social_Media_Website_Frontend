@@ -13,19 +13,16 @@ const BatchForm = ({ trackId, programId, onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
-      // 1️⃣ Create the batch first
-      const newBatch = await createBatch({
-        name: batchName,
-        program_id: programId,
-        track_id: trackId
-      });
-
+      // Send correct values to create a batch
+      const newBatch = await createBatch(batchName, programId, trackId);
+  
+      // If batch creation is successful and CSV is uploaded
       if (newBatch?.id && csvFile) {
         await uploadBatchCSV(newBatch.id, csvFile);
       }
-
+  
       alert("Batch Created Successfully!");
       onSubmit(); // Refresh batch list
     } catch (error) {
@@ -35,7 +32,7 @@ const BatchForm = ({ trackId, programId, onSubmit }) => {
       setLoading(false);
     }
   };
-
+  
   return (
     <form onSubmit={handleSubmit}>
       <label>

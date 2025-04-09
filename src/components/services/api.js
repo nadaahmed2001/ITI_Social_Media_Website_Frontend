@@ -1,3 +1,4 @@
+//api.js
 import axios from "axios";
 
 // Axios instance with base URL
@@ -135,7 +136,7 @@ export const removeCommentReaction = async (commentId) => {
 export const fetchPrograms = async () => {
   try {
     const response = await api.get("supervisor/programs/");  // Use the 'api' instance here
-    console.log("from api.js in fetchPrograms", response.data);  // Debugging
+    // console.log("from api.js in fetchPrograms", response.data);  // Debugging
     return response.data;  // Return program data
   } catch (error) {
     console.error('Failed to fetch programs:', error);
@@ -147,6 +148,7 @@ export const fetchPrograms = async () => {
 export const fetchTracksForProgram = async (programId) => {
   try {
     const response = await api.get("supervisor/tracks/", { params: { program_id: programId } });  // Use 'api' instance and updated URL
+    // console.log("from api.js, in fetchTracksForProgram", response.data);  // Debugging
     return response.data;  // Return track data
   } catch (error) {
     console.error('Failed to fetch tracks:', error);
@@ -168,22 +170,30 @@ export const fetchBatches = async (trackId) => {
 // Create a New Batch
 export const createBatch = async (name, program_id, track_id) => {
   try {
-    const response = await api.post("supervisor/batches/",  { name, program_id, track_id });  // Use 'api' instance and updated URL
-    return response.data;  // Return newly created batch data
+    const response = await api.post("supervisor/batches/", {
+      name,
+      program_id,
+      track_id
+    });
+
+    console.log("Created Batch:", response.data); // Debugging
+    return response.data;  // Return the newly created batch data
   } catch (error) {
     console.error('Failed to create batch:', error);
-    throw error;
+    throw error; // Make sure to propagate error for frontend handling
   }
 };
+
 
 // Upload CSV File for Batch
 export const uploadBatchCSV = async (batchId, file) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("batch_id", batchId);
+    console.log("I'm inside uploadBatchCSV function and formData is", formData); // Debugging
 
     try {
-        const response = await api.post(`/upload-national-id/`, formData, {
+        const response = await api.post(`supervisor/upload-national-id/`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
