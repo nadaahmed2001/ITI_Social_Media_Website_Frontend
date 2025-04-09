@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef, useContext} from "react";
 import AuthContext from '../../contexts/AuthContext'; 
 import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material"; // Import arrow icons
+import TimeAgo from '../TimeAgo';
+
 import {
   fetchComments,
   addComment,
@@ -110,7 +112,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
           <div>
             <p className="font-medium text-sm text-gray-900">{authorName}</p>
             <p className="text-xs text-gray-500">
-              {new Date(comment.created_on).toLocaleString()}
+              <TimeAgo timestamp={comment.created_on} />
             </p>
           </div>
         </div>
@@ -487,9 +489,8 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
           <div>
             <p className="font-medium text-gray-900">{post.author || "Unknown"}</p>
             <p className="text-xs text-gray-500">
-              {post.created_on
-                ? `${new Date(post.created_on).toISOString().split("T")[0]} ${new Date(post.created_on).toTimeString().slice(0, 5)}`
-                : "Just now"}
+            <TimeAgo timestamp={post.created_on} />
+
             </p>
           </div>
         </div>
