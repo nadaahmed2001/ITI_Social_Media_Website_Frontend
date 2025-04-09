@@ -4,7 +4,7 @@
 
 .post-container {
   width: 500px;
-  background: #282828;
+  background: #fcf8e7;
   color: white;
   padding: 15px;
   border-radius: 10px;
@@ -295,8 +295,11 @@
   justify-content: center;
   background: #333;
   border-radius: 20px;
-  width: 50%;
   height: 100px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  width: 100%;
 }
 .create-post {
   display: flex;
@@ -382,14 +385,7 @@ top: 20px;
 height: fit-content;
 
 }
-/* Create post form positioning */
-.create-post-container {
-margin-bottom: 30px;
-border-radius: 10px;
-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-padding: 20px;
-width: 100%;
-}
+
 /* Posts list styling */
 .posts-list {
 flex: 1;
