@@ -137,6 +137,7 @@ export default function CreatePost({ onPostCreated }) {
         {attachmentUrls.map((url, index) => (
           <div key={index} className="relative group">
             {url.match(/\.(jpeg|jpg|gif|png)$/) ? (
+              
               <img 
                 src={url} 
                 alt={`Attachment ${index}`}

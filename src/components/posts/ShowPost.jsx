@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef, useContext} from "react";
 import AuthContext from '../../contexts/AuthContext'; 
 import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material"; // Import arrow icons
+import { PaperClipIcon } from '@heroicons/react/24/outline'; // or '/solid'
+
 import TimeAgo from '../TimeAgo';
 
 import {
@@ -18,7 +20,7 @@ import {
   removeCommentReaction,
   fetchReactionsForComment,
   
-} from "../services/api";
+} from "../../components/services/api";
 
 import {
   ThumbUpSharp as ThumbUpSharpIcon,
@@ -105,12 +107,12 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
           <img 
             src={ comment.author_profile_picture || DEFAULT_USER_AVATAR } // Use comment author pic
             alt={authorName} 
-            title={authorName}
+            title={isCommentAuthor ?  "You" : `${authorName}`} 
             className="w-8 h-8 rounded-full object-cover border border-gray-200"
             onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
           />
           <div>
-            <p className="font-medium text-sm text-gray-900">{authorName}</p>
+            <p className="font-medium text-sm text-gray-900">{isCommentAuthor ?  "You" : `${authorName}`} </p>
             <p className="text-xs text-gray-500">
               <TimeAgo timestamp={comment.created_on} />
             </p>
@@ -178,11 +180,29 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
       
       {/* Comment Attachments (if any - simplified) */}
       {comment.attachments?.length > 0 && (
-         <div className="ml-10 mt-2"> {/* Margin to align */}
-             {/* Render comment attachments - needs logic based on your data */}
-            <p className="text-xs text-gray-500 italic">(Attachment present - display logic needed)</p>
-        </div>
-      )}
+  <div className="ml-10 mt-2 space-y-2">
+    {comment.attachments.map((attachment) => (
+      <div key={attachment.id} className="flex items-center">
+        {attachment.image != null ? (
+          <img 
+            src={attachment.image} 
+            alt="Comment attachment" 
+            className="max-w-xs rounded-md"
+          />
+        ) : (
+          <video 
+            href={attachment.video} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline text-sm"
+          >
+            Download {attachment.name}
+          </video>
+        )}
+      </div>
+        ))}
+      </div>
+        )}
 
       {/* Comment Actions (Like, Reactions - Simplified Placeholder) */}
       <div className="flex items-center space-x-4 ml-10 mt-2">
@@ -228,31 +248,31 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
 
 
 
-  // Initialize Cloudinary widget
-  useEffect(() => {
-    if (window.cloudinary) {
-      widgetRef.current = window.cloudinary.createUploadWidget(
-        {
-          cloudName: CLOUDINARY_CLOUD_NAME,
-          uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-          sources: ['local', 'url', 'camera'],
-          multiple: false,
-          resourceType: 'auto', // Accepts both images and videos
-          clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm', 'mkv'],
-          maxFileSize: 15000000 // 15MB
-        },
-        (error, result) => {
-          if (!error && result && result.event === "success") {
-            setAttachmentUrl(result.info.secure_url);
-            setIsUploading(false);
-          } else if (error) {
-            console.error("Upload error:", error);
-            setIsUploading(false);
-          }
-        }
-      );
-    }
-  }, []);
+  // // Initialize Cloudinary widget
+  // useEffect(() => {
+  //   if (window.cloudinary) {
+  //     widgetRef.current = window.cloudinary.createUploadWidget(
+  //       {
+  //         cloudName: CLOUDINARY_CLOUD_NAME,
+  //         uploadPreset: CLOUDINARY_UPLOAD_PRESET,
+  //         sources: ['local', 'url', 'camera'],
+  //         multiple: false,
+  //         resourceType: 'auto', // Accepts both images and videos
+  //         clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm', 'mkv'],
+  //         maxFileSize: 15000000 // 15MB
+  //       },
+  //       (error, result) => {
+  //         if (!error && result && result.event === "success") {
+  //           setAttachmentUrl(result.info.secure_url);
+  //           setIsUploading(false);
+  //         } else if (error) {
+  //           console.error("Upload error:", error);
+  //           setIsUploading(false);
+  //         }
+  //       }
+  //     );
+  //   }
+  // }, []);
 
   const handleOpenUploadWidget = () => {
     setIsUploading(true);
@@ -351,7 +371,7 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
             console.log("Edit successful, response:", res.data); // Debug
             // Update the comment in the state array
             setComments(prevComments =>
-               prevComments.map(c => c.id === selectedComment.id ? res.data : c)
+              prevComments.map(c => c.id === selectedComment.id ? res.data : c)
             );
             setIsEditModalOpenComment(false); // Close modal
             setSelectedComment(null);         // Clear selection
@@ -359,12 +379,12 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
               console.error("Failed to edit comment:", err.response?.data || err); // Log detailed error
               // Optionally show error to user
           });
-       };
+      };
       const handleConfirmDeleteComment = () => {
         if (!selectedComment) return;
         console.log(`Deleting comment ${selectedComment.id} for post ${post.id}`); // Debug
          // Call the imported API function
-         deleteComment(post.id, selectedComment.id).then(() => {
+        deleteComment(post.id, selectedComment.id).then(() => {
           console.log("Delete successful"); // Debug
           setComments(prevComments => prevComments.filter((comment) => comment.id !== selectedComment.id));
           setIsDeleteModalOpenComment(false); // Close modal
@@ -490,7 +510,6 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
             <p className="font-medium text-gray-900">{post.author || "Unknown"}</p>
             <p className="text-xs text-gray-500">
             <TimeAgo timestamp={post.created_on} />
-
             </p>
           </div>
         </div>

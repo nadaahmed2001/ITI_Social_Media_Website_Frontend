@@ -75,6 +75,7 @@ export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
 // Add a comment to a post
 export const addComment = (postId, commentData) => {
   const formData = new FormData();
+  formData.append('post', postId)
   formData.append('comment', commentData.comment);
   if (commentData.attachment_url) {
     formData.append('attachment_url', commentData.attachment_url);
