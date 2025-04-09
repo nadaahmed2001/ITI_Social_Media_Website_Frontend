@@ -26,7 +26,8 @@ import EmailChangeFailed from "../pages/EmailChangeFailed";
 import { AuthProvider } from "../contexts/AuthContext";
 import PrivateRoute from './../components/PrivateRoute';
 // import ShowReactionsPost from "../components/posts/showReactionsPost";
-import Dashboard from "../pages/SupervisorDashboard/Dashboard";
+// import Dashboard from "../pages/SupervisorDashboard/Dashboard";
+import Dashboard from "../pages/SupervisorDashboard/Dashboard2";
 import BatchPage from "../pages/SupervisorDashboard/BatchPage";
 import HomePage from "../pages/HomePage";
 import PostListWithSideBar from "../components/posts/PostListWithSideBar";
@@ -56,6 +57,7 @@ const AppRouter = () => {
                                         {/* Supervisor Routes */}
 
                                         {/* This is the dashboard that make supervisor manage the batches */}
+                                        {/* <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}
                                         <Route path="/supervisor/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
                                         <Route path="/batches/:trackId" element={<BatchPage />} />
 
