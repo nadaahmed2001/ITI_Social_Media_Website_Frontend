@@ -1,3 +1,6 @@
+*{
+    background: transparent !important;
+}
 .message-enter {
     opacity: 0;
     transform: translateY(20px);
@@ -26,3 +29,48 @@
     background-color: yellow;
     border-radius: 4px;
 }
+
+/* Add semi-transparent background to messages */
+.message-enter-active, .message-exit-active {
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(2px);
+  }
+  
+  /* Add background to input area */
+  form {
+    background: rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: blur(5px);
+  }
+  
+  /* Message bubbles background */
+  .bg-yellow-500, .bg-gray-800 {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(3px);
+  }
+  
+  /* Keep existing yellow color for sender's messages */
+  .bg-yellow-500 {
+    background-color: #eab308 !important;
+  }
+
+  .background-div {
+    background-image: url('../../assets/images/bg.jpg') !important;
+    background-size: cover;
+    background-position: center;
+    background-color: #000; /* Fallback color */
+}
+.message {
+    background: transparent !important;
+}
+/**//**/
+form {
+    /* background-color: rgba(0, 0, 0, 0.6) !important; */
+    backdrop-filter: blur(6px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  input::placeholder {
+    color: #facc15; /* Soft yellow */
+  }
+  
+  
