@@ -184,7 +184,6 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
       <div className="flex items-start justify-between mb-2 !bg-[#292928]">
         <div className="flex items-center space-x-2 !bg-[#292928]">
         <Link to={`/profiles/${comment.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
-
           <img 
             src={ comment.author_profile_picture || DEFAULT_USER_AVATAR } // Use comment author pic
             alt={authorName} 
@@ -194,7 +193,9 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
           />
           </Link>
           <div className="!bg-[#292928]">
-            <p className="font-medium text-sm text-white mb-0 pt-2 !bg-[#292928]">{isCommentAuthor ?  "You" : `${authorName}`} </p>
+            <Link to={`/profiles/${comment.author_id}`} className="!bg-[#292928] no-underline flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+              <p className="font-bold text-sm !text-[#7a2226] mb-0 pt-2 !bg-[#292928] !no-underline ">{isCommentAuthor ?  "You" : `${authorName}`} </p>
+            </Link>
             <p className="text-xs text-white !bg-[#292928]">
               <TimeAgo timestamp={comment.created_on} />
             </p>
@@ -203,8 +204,8 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
         {/* Edit/Delete Menu */}
         {isCommentAuthor && (
           <div className="relative !bg-[#292928]" ref={optionsMenuRef}>
-              <button onClick={toggleOptionsMenu} className="!text-[#fffd02] text-gray-500 hover:text-gray-700 !bg-[#292928]">
-                <MoreVertIcon className="w-5 h-5 !bg-[#292928]" />
+              <button onClick={toggleOptionsMenu} className="!text-[#be8a8d]] text-gray-500 hover:text-gray-700 !bg-[#292928]">
+                <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
               </button>
               {showOptionsMenu && (
                 <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20">
@@ -229,14 +230,14 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
       </div>
 
       {/* --- Comment Body with See more/less --- */}
-      <div className="text-gray-800 ml-10 mb-2 whitespace-pre-wrap !bg-[#292928]"> {/* Margin to align with author name */}
+      <div className="text-gray-800 ml-10 mb-3 !bg-[#292928]"> {/* Margin to align with author name */}
           {isExpanded ? (
             <>
               <p className="text-white !bg-[#292928]">{displayText}</p>
               {needsTruncation && (
                 <button
                   onClick={toggleExpansion}
-                  className="mt-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[#292928]" 
+                  className="mt-0 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[#292928]" 
                   aria-expanded={isExpanded}
                 >
                   See less
@@ -741,7 +742,7 @@ const loadMoreComments = async () => {
             onClick={() => setShowOptions(!showOptions)}
             className="text-gray-500 hover:text-gray-700 !bg-[#292928] "
           >
-            <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#fffd02]" />
+            <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
           </button>
           
           {isPostAuthor && ( 
@@ -768,7 +769,7 @@ const loadMoreComments = async () => {
       <div className="mb-3 !bg-[#292928]">
         {/* Post body */}
         {/* --- MODIFIED POST BODY DISPLAY with Conditional Line Break --- */}
-        <div className="text-gray-800 mb-3 whitespace-pre-wrap !bg-[#292928]"> {/* Keep whitespace-pre-wrap */}
+        <div className="text-gray-800  !bg-[#292928]"> {/* Keep whitespace-pre-wrap */}
           
           {/* Conditionally render structure based on isPostExpanded state */}
           {isPostExpanded ? (
@@ -780,7 +781,7 @@ const loadMoreComments = async () => {
               {postneedsTruncation && ( // Only show button if text was actually long enough
                 <button
                   onClick={postToggleExpansion}
-                  className="mt-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-sm !bg-[#292928]" 
+                  className="text-[#A52B2B] hover:underline focus:outline-none font-medium text-sm !bg-[#292928]" 
                   aria-expanded={isPostExpanded}
                 >
                   See less
@@ -902,7 +903,7 @@ const loadMoreComments = async () => {
 
 
       <div className="mt-4 !bg-[#292928]">
-      <h4 className="!text-small !font-medium !text-[#fffd02] !bg-[#292928] mb-3">Comments</h4> 
+      <h4 className="!text-xs !font-bold !text-[#7a2226] !bg-[#292928] mb-3">Comments</h4> 
 
   
         {/* Error message */}
@@ -935,28 +936,29 @@ const loadMoreComments = async () => {
                   
                   {/* Load More button */}
                   {commentPagination.hasMore && (
-                  <div className="flex justify-center">
+                  <div className="flex justify-center !bg-[#292928]">
                     <button
                       onClick={loadMoreComments}
                       disabled={commentPagination.isLoading}
                       className={`px-4 py-2 rounded-md text-sm font-medium flex items-center ${
                         commentPagination.isLoading 
-                          ? 'bg-gray-400 text-gray-700 cursor-not-allowed' // Adjusted disabled style
-                          : 'bg-primary-600 text-grey hover:bg-primary-700' // Check primary color definition
+                          ? '!bg-[#292928] text-gray-700 cursor-not-allowed' // Adjusted disabled style
+                          : '!bg-[#292928] text-grey hover:bg-primary-700' // Check primary color definition
                       }`}
                     >
                       {commentPagination.isLoading ? (
                         <>
                           <CircularProgress 
                         // Set size (in pixels) - smaller for buttons usually looks better
-                        size={18} 
+                        size={28} 
                         // Option 1: Inherit color from button text (useful if text color changes)
                         color="red" 
+                        variant="determinate" value={50}
                         // Option 2: Use sx prop for specific styling
-                        sx={{ 
-                            color: 'white', // Set color explicitly (if button text is white)
-                            marginRight: '8px' // Add some spacing before the text (like Tailwind mr-2)
-                        }} 
+                        // sx={{ 
+                        //     color: 'white', // Set color explicitly (if button text is white)
+                        //     marginRight: '8px' // Add some spacing before the text (like Tailwind mr-2)
+                        // }} 
                       />
                         </>
                       ) : (
@@ -968,7 +970,7 @@ const loadMoreComments = async () => {
                   
             {/* End of comments message */}
              {!commentPagination.hasMore && !commentPagination.isLoading && (
-                 <p className="text-center text-gray-500 text-xs italic mt-4">No more comments</p>
+                 <p className="!bg-[#292928] text-center !text-[#7a2226] text-xs italic mt-4">No more comments</p>
              )}
           </>
         ) : (
@@ -998,7 +1000,7 @@ const loadMoreComments = async () => {
           <div className="flex-grow !bg-[#292928]">
              
             {/* --- Input Wrapper with Relative Positioning --- */}
-            <div className="relative w-full"> 
+            <div className="relative w-full !bg-[#292928]"> 
                <input
                  type="text"
                  placeholder="Write your comment..."
@@ -1014,10 +1016,10 @@ const loadMoreComments = async () => {
                   onClick={handleOpenUploadWidget}
                   disabled={isUploading || !!attachmentUrl} 
                   // Position inside the input padding area
-                  className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="!bg-[#7a2226] absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Add Photo/Video" // Accessibility
                 >
-                 <ImageSharpIcon className="w-5 h-5" /> 
+                 <ImageSharpIcon className="w-5 h-5 !bg-[#7a2226]" /> 
                </button>
 
                
@@ -1057,13 +1059,12 @@ const loadMoreComments = async () => {
             )}
 
             {/* Action Buttons (Only Post button remains here) */}
-            <div className="flex items-center justify-end mt-2 !bg-[#292928]"> 
-              {/* "Add Photo/Video" button was moved inside input wrapper */}
+            <div className="flex items-center justify-end mt-2 !bg-[#292928] rounded-lg"> 
               <button
                 type="button" // Or type="submit" if this div is wrapped in a <form>
                 onClick={handleComment}
                 disabled={(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit} 
-                className={`px-3 py-1 rounded-md text-sm font-medium ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-primary-600 text-white hover:bg-primary-700'}`} 
+                className={`px-3 py-1 rounded-lg text-sm font-medium !bg-[#7a2226] text-gray-900 ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
               >
                 Comment
               </button>
@@ -1097,10 +1098,10 @@ const loadMoreComments = async () => {
         // ** Pass the CORRECT confirmation handler **
         onConfirm={handleConfirmDeleteComment} 
       />
-      <ReactionsModal 
+      {/* <ReactionsModal 
         postId={post.id}
         onClose={() => setShowReactionsModal(false)} 
-      />
+      /> */}
     </div>
   );
 }
