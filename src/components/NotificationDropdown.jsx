@@ -24,7 +24,7 @@ const NotificationDropdown = () => {
       .then((res) => {
         console.log("API Response:", res); // Debugging log
         if (res && res.data && Array.isArray(res.data)) {
-          setNotifications(res.data); // ✅ Ensure it's an array
+          setNotifications(res.data);
         } else {
           console.error("Unexpected API response:", res);
           setNotifications([]); // Prevent crashes
@@ -85,36 +85,27 @@ const NotificationDropdown = () => {
   };
 
   // Handle opening the notification link and marking it as read
-  const handleOpenLink = (id, link) => {
+  const handleOpenLink = (id, link, highlightedReactionId) => {
     handleMarkAsRead(id);
+
+    const commentMatch = link.match(/\/posts\/(\d+)\/comment\/(\d+)/);
+    const reactionMatch = link.match(/\/posts\/(\d+)\/reactions/);
   
-    if (link.includes("/comment/") && link.includes("/reactions")) {
-      const matches = link.match(/\/posts\/(\d+)\/comment\/(\d+)\/reactions/);
-      if (matches) {
-        const postId = matches[1];
-        const commentId = matches[2];
-        navigate(`/posts/${postId}`, {
-          state: {
-            openCommentReactionModal: true,
-            commentId: commentId,
-          },
-        });
-        return;
-      }
+    if (commentMatch) {
+      const postId = commentMatch[1];
+      const commentId = commentMatch[2];
+      navigate(`/posts/${postId}?highlightComment=${commentId}`);
+      return;
     }
   
-    if (link.includes("/reactions")) {
-      const matches = link.match(/\/posts\/(\d+)/);
-      if (matches) {
-        const postId = matches[1];
-        navigate(`/posts/${postId}/reactions`);
-        return;
-      }
+    if (reactionMatch) {
+      const postId = reactionMatch[1];
+      navigate(`/posts/${postId}?highlightReactionId=${highlightedReactionId}`);
+      return;
     }
   
     navigate(link);
   };
-  
 
   return (
     <div className="notification-dropdown">
@@ -126,7 +117,7 @@ const NotificationDropdown = () => {
           {notifications.map((notif) => (
             <li
               key={notif.id}
-              onClick={() => handleOpenLink(notif.id, notif.notification_link)}
+              onClick={() => handleOpenLink(notif.id, notif.notification_link, notif.reaction_id)}  // Pass the reaction_id to highlight
               style={{
                 backgroundColor: notif.is_read ? "#f0f0f0" : "#fff",
                 cursor: "pointer",
