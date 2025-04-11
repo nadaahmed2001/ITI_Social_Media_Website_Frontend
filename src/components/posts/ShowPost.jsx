@@ -181,9 +181,9 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
   return (
     <div className="mb-1 pb-4 border-b border-gray-100 last:border-0">
       {/* Comment Header */}
-      <div className="flex items-start justify-between mb-2">
+      <div className="flex items-start justify-between mb-2 !bg-[#292928]">
         <div className="flex items-center space-x-2">
-        <Link to={`/profiles/${comment.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+        <Link to={`/profiles/${comment.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
 
           <img 
             src={ comment.author_profile_picture || DEFAULT_USER_AVATAR } // Use comment author pic
@@ -194,8 +194,8 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
           />
           </Link>
           <div>
-            <p className="font-medium text-sm text-gray-900 mb-0 pt-2">{isCommentAuthor ?  "You" : `${authorName}`} </p>
-            <p className="text-xs text-gray-500">
+            <p className="font-medium text-sm text-gray-900 mb-0 pt-2 !bg-[292928]">{isCommentAuthor ?  "You" : `${authorName}`} </p>
+            <p className="text-xs text-gray-500 !bg-[292928]">
               <TimeAgo timestamp={comment.created_on} />
             </p>
           </div>
@@ -203,7 +203,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
         {/* Edit/Delete Menu */}
         {isCommentAuthor && (
           <div className="relative" ref={optionsMenuRef}>
-              <button onClick={toggleOptionsMenu} className="text-gray-500 hover:text-gray-700">
+              <button onClick={toggleOptionsMenu} className="text-gray-500 hover:text-gray-700 !bg-[#292928]">
                 <MoreVertIcon className="w-5 h-5" />
               </button>
               {showOptionsMenu && (
@@ -716,12 +716,12 @@ const loadMoreComments = async () => {
       {/* Post Header */}
       <div className="flex items-center justify-between mb-2 !bg-[#292928]">
         <div className="flex items-center space-x-3 !bg-[#292928]">
-        <Link to={`/profiles/${post.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+        <Link to={`/profiles/${post.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
         <img 
               src={displayAuthorAvatar} 
               alt={avatarAltText} 
               title={avatarTitleText} 
-              className="w-10 h-10 rounded-full object-cover border border-gray-200"
+              className="w-10 h-10 rounded-full object-cover border border-gray-200 [background-color:inherit]"
               onError={(e) => { 
                 if (e.target.src !== DEFAULT_USER_AVATAR) {
                   e.target.src = DEFAULT_USER_AVATAR; 
@@ -729,32 +729,32 @@ const loadMoreComments = async () => {
               }}
           />
           </Link>
-          <div>
-            <p className="font-medium text-gray-900 mb-0 mt-3">{avatarTitleText|| "Unknown"}</p>
-            <p className="text-xs text-gray-500">
-            <TimeAgo timestamp={post.created_on} />
+          <div className="!bg-[#292928]">
+            <p className="font-medium text-white mb-0 mt-3 !bg-[#292928]">{avatarTitleText|| "Unknown"}</p>
+            <p className="text-xs text-gray-500 !bg-[#292928]">
+              <TimeAgo timestamp={post.created_on}/>
             </p>
           </div>
         </div>
         <div className="relative">
           <button 
             onClick={() => setShowOptions(!showOptions)}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-gray-700 !bg-[#292928] "
           >
-            <MoreVertIcon className="w-5 h-5" />
+            <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#fffd02]" />
           </button>
           
           {isPostAuthor && ( 
-            <div className="relative"> 
+            <div className="relative !bg-[#292928] "> 
               {showOptions && ( 
-                <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-20"> 
+                <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20"> 
                   {/* Edit Post Button */}
                   <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"> 
                     <EditIcon className="w-4 h-4 mr-2 text-primary-600" /> Edit 
                   </button> 
                   {/* Delete Post Button */}
                   <button onClick={() => { setIsDeleteModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-red-700 hover:bg-gray-100 w-full text-left"> 
-                    <DeleteIcon className="w-4 h-4 mr-2" /> Delete 
+                    <DeleteIcon className="w-4 h-4 mr-2 " /> Delete 
                   </button> 
                 </div> 
               )} 
@@ -765,23 +765,22 @@ const loadMoreComments = async () => {
       </div>
 
       {/* Post Content */}
-      <div className="mb-3">
+      <div className="mb-3 !bg-[#292928]">
         {/* Post body */}
         {/* --- MODIFIED POST BODY DISPLAY with Conditional Line Break --- */}
-        <div className="text-gray-800 mb-3 whitespace-pre-wrap"> {/* Keep whitespace-pre-wrap */}
+        <div className="text-gray-800 mb-3 whitespace-pre-wrap !bg-[#292928]"> {/* Keep whitespace-pre-wrap */}
           
           {/* Conditionally render structure based on isPostExpanded state */}
           {isPostExpanded ? (
             // --- Expanded View ---
             <>
               {/* Full text in a block-level paragraph */}
-              <p>{postdisplayText}</p> 
+              <p className="text-white !bg-[#292928]">{postdisplayText}</p> 
               {/* Button appears after the block paragraph, naturally on new line */}
               {postneedsTruncation && ( // Only show button if text was actually long enough
                 <button
                   onClick={postToggleExpansion}
-                  // Style button: brown color, add some top margin
-                  className="mt-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-sm" 
+                  className="mt-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-sm !bg-[#292928]" 
                   aria-expanded={isPostExpanded}
                 >
                   See less
@@ -792,13 +791,13 @@ const loadMoreComments = async () => {
             // --- Collapsed View ---
             <>
               {/* Truncated text in an INLINE paragraph */}
-              <p className="inline">{postdisplayText}</p>
+              <p className="inline text-white !bg-[#292928]">{postdisplayText}</p>
               {/* "See more" button appears immediately after inline text */}
               {postneedsTruncation && (
                 <button
                   onClick={postToggleExpansion}
                    // Style button: brown color, add left margin for spacing
-                  className="ml-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-sm"
+                  className="ml-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-sm !bg-[#292928]"
                   aria-expanded={isPostExpanded}
                 >
                   See more
@@ -809,25 +808,25 @@ const loadMoreComments = async () => {
         </div>
         {/* Post attachments */}
         {post.attachments?.length > 0 && (
-          <div className="mt-2">
+          <div className="mt-2 !bg-[#292928]">
             {/* --- SLIDESHOW ATTACHMENT DISPLAY --- */}
         {numAttachments > 0 && (
           // Apply a wrapper for styling context if needed, e.g., for arrow/dot position
           // The border/rounded can apply here or on the slider itself
-          <div className="mt-2 slick-slider-container relative border border-gray-100 rounded-lg overflow-hidden"> 
+          <div className="!bg-[#292928] mt-2 slick-slider-container relative border border-gray-800 rounded-lg overflow-hidden"> 
             {/* 3. Use Slider component with settings */}
             <Slider {...sliderSettings}>
               
               {/* Map over ALL attachments */}
               {attachments.map((attachment, index) => (
                 // Each child of Slider is a slide
-                <div key={attachment.id || index} className="slide-item bg-gray-50"> {/* Added bg */}
+                <div key={attachment.id || index} className="slide-item !bg-[#292928] "> {/* Added bg */}
                   {attachment.image ? (
                     <img
                       src={attachment.image}
                       alt={`Post attachment ${index + 1}`}
                       // Style image to fit well within the slide
-                      className="w-full h-auto object-contain mx-auto block max-h-[75vh]" // Use object-contain, limit max height
+                      className="w-full h-auto object-contain mx-auto block max-h-[75vh] !bg-[#292928]" // Use object-contain, limit max height
                     />
                   ) : attachment.video ? (
                     <video
@@ -835,14 +834,14 @@ const loadMoreComments = async () => {
                       controls
                       playsInline
                       // Style video to fit well
-                      className="w-full h-auto block max-h-[75vh] bg-black" // Limit height, add bg for potential letterboxing
+                      className="w-full h-auto block max-h-[75vh] !bg-[#292928]" // Limit height, add bg for potential letterboxing
                       preload="metadata" // Don't preload the whole video
                     >
                       Your browser does not support the video tag.
                     </video>
                   ) : (
                      // Fallback for unknown type
-                    <div className="aspect-video flex items-center justify-center text-gray-400 text-xs p-1">
+                    <div className="!bg-[#292928] aspect-video flex items-center justify-center text-gray-400 text-xs p-1">
                       Unsupported Attachment Type
                     </div>
                   )}
@@ -856,7 +855,7 @@ const loadMoreComments = async () => {
       </div>
 
       {/* Post Actions */}
-      <div className="post-actions">
+      <div className="post-actions !bg-[#292928] " >
   <div className="reactions-container">
     <div 
       className="reaction-trigger" 
@@ -987,7 +986,7 @@ const loadMoreComments = async () => {
 
         {/* --- Add Comment Section with Icon Inside Input --- */}
         <div className="mt-1 flex items-start space-x-3 border-t border-gray-100 pt-4">
-        <Link to={`/profiles/${post.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+        <Link to={`/profiles/${post.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
         <img 
             src={ currentUserAvatar } // Use derived avatar
             alt={ user?.username || "You" }

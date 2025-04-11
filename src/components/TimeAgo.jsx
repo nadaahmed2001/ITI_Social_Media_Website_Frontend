@@ -12,7 +12,7 @@ const TimeAgo = ({ timestamp }) => {
     return () => clearInterval(interval);
   }, [timestamp]);
 
-  return <span title={new Date(timestamp).toLocaleString()}>{timeAgo}</span>;
+  return <span className="text-xs text-gray-500 !bg-[#292928]" title={new Date(timestamp).toLocaleString()}>{timeAgo}</span>;
 };
 
 export default TimeAgo;

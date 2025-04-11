@@ -84,7 +84,7 @@ export default function PostList() {
     <div className="max-w-2xl mx-auto py-4 px-4 sm:px-6 lg:px-8 !bg-[#181819]">
       <CreatePost onPostCreated={handleNewPost} />
       
-      <div className="mt-6 space-y-6">
+      <div className="mt-6 space-y-6 !bg-[#181819]">
         {posts.map((post, index) => (
           <ShowPost 
             key={post.id} 
