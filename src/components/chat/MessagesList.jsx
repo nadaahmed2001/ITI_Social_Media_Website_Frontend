@@ -321,7 +321,7 @@ const MessagesList = ({token, isGroupChat }) => {
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg absolute top-4 right-4 z-10"
+                    className=" text-red-400 px-4 py-2 rounded-lg absolute top-4 right-4 z-10"
                 >
                     Clear All Messages
                 </button>
@@ -344,8 +344,8 @@ const MessagesList = ({token, isGroupChat }) => {
                                         ref={nodeRefs.current[index]}
                                         className={`max-w-[80%] sm:max-w-md p-3 rounded-xl shadow-md transition-all duration-300 ${
                                             message.sender === currentUser
-                                                ? "ml-auto bg-yellow-500 text-white text-right"
-                                                : "mr-auto bg-gray-800 text-yellow-400 text-left"
+                                                ? "ml-auto bg-red-400 text-white text-right"
+                                                : "mr-auto bg-gray-800 text-red-400 text-left"
                                         } max-w-full sm:max-w-md`} // Full width on small screens, limited width on larger screens
                                         onContextMenu={(e) => {
                                             e.preventDefault(); // Prevent default right-click menu
@@ -369,7 +369,7 @@ const MessagesList = ({token, isGroupChat }) => {
                         <div className="break-words text-sm mt-1 bg-transparent">
                             {message.content}
                         </div>
-                        <div className="text-xs text-gray-400 mt-2 text-right bg-transparent">
+                        <div className="text-xs text-gray-500 mt-2 text-right bg-transparent">
                             {new Date(message.timestamp).toLocaleString()}
                         </div>
                                     </div>
@@ -379,17 +379,17 @@ const MessagesList = ({token, isGroupChat }) => {
                     </TransitionGroup>
                     <div ref={messagesEndRef} /> {/* Add ref for autoscroll */}
                 </div>
-                <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-700 flex items-center gap-2  bg-opacity-60 backdrop-blur-sm">
+                <form onSubmit={handleSendMessage} className="p-4 border-t flex items-center gap-2 backdrop-blur-sm bg-white">
                     <input
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
-                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg bg-gray-800 text-yellow-400 placeholder-yellow-300 focus:ring-2 focus:ring-yellow-500 transition-all duration-200"
+                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg  text-red-400 placeholder-white focus:ring-2 focus:ring-red-400 transition-all duration-200 bg-[rgba(199,199,199,0.591)]"
                     />
                     <button
                         type="submit"
-                        className="bg-yellow-500 hover:bg-yellow-400  font-semibold px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className=" text-red-400 bg-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={isSending} // Disable the button while sending
                     >
                         {isSending ? "Sending..." : "Send"}
