@@ -56,7 +56,7 @@ const CLOUDINARY_UPLOAD_PRESET = "ITIHub_profile_pics";
 
 const MAX_COMMENT_INPUT_LENGTH = 2000;
 
-function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /* Add other handlers like onReaction if needed */ }) {
+function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  , post ,comments/* Add other handlers like onReaction if needed */ }) {
   
   // --- State specific to THIS comment ---
   const [isExpanded, setIsExpanded] = useState(false);
@@ -64,7 +64,6 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
   const optionsMenuRef = useRef(null); 
   // --- End Component State ---
   const MAX_COMMENT_LENGTH = 150;
-
   // --- Calculate text display based on local state ---
   const fullText = comment.comment || "";
   const needsTruncation = fullText.length > MAX_COMMENT_LENGTH;
@@ -72,7 +71,9 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
                       ? fullText.slice(0, MAX_COMMENT_LENGTH) + "..." 
                       : fullText;
   // ---
-
+  const [commentReactions, setCommentReactions] = useState({});
+  const [showCommentReactions, setShowCommentReactions] = useState(null);
+  const [showReactionsModalforcomment, setShowReactionsModalforcomment] = useState(false);
   // --- Check if current user is the author ---
   // Ensure your comment object from API has author_id or a similar field
   const isCommentAuthor = comment.author_id === currentUserId; 
@@ -87,6 +88,79 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
   // ---
 
   // --- Effect for closing options menu ---
+  // useEffect(() => {
+  //   if (comments?.length) {
+  //     const fetchAllCommentReactions = async () => {
+  //       const reactionsMap = {};
+  //       for (const comment of post.comments) {
+  //         const reactions = await fetchReactionsForComment(comment.id);
+  //         reactionsMap[comment.id] = reactions;
+  //       }
+  //       setCommentReactions(reactionsMap);
+  //     };
+  
+  //     fetchAllCommentReactions();
+  //   }
+  // }, [comments]);
+  
+  const hasReacted = (reactionName) => {
+    const userReaction = commentReactions[comment.id]?.find(r => r.user.id === currentUserId);
+    return userReaction?.reaction_type === reactionName;
+  };
+  
+  const handleAddReactionForComment = async (commentId, reactionType) => {
+    try {
+      const existingReaction = commentReactions[commentId]?.find(
+        r => r.user.id === currentUserId
+      );
+  
+      if (existingReaction) {
+        // If the same reaction is clicked, remove it
+        if (existingReaction.reaction_type === reactionType) {
+          await removeCommentReaction(commentId);
+        } else {
+          // If a different reaction is clicked, replace it
+          await removeCommentReaction(commentId);
+          await likeComment(post.id, commentId, reactionType);
+        }
+      } else {
+        await likeComment(post.id, commentId, reactionType);
+      }
+  
+      const updated = await fetchReactionsForComment(commentId);
+      setCommentReactions(prev => ({
+        ...prev,
+        [commentId]: updated,
+      }));
+    } catch (error) {
+      console.error("Reaction error:", error);
+    }
+  };
+  
+  
+  const handleremoveCommentReaction = async (commentId) => {
+    try {
+      await removeCommentReaction(commentId);
+      const updated = await fetchReactionsForComment(commentId);
+      setCommentReactions(prev => ({
+        ...prev,
+        [commentId]: updated
+      }));
+    } catch (error) {
+      console.error("Remove reaction error:", error);
+    }
+  };
+
+  const reactions = [
+    { name: "Like", icon: <ThumbUpSharpIcon className="Reaction-Post" /> },
+    { name: "Love", icon: <FavoriteSharpIcon className="Reaction-Post" /> },
+    { name: "Celebrate", icon: <CelebrationSharpIcon className="Reaction-Post" /> },
+    { name: "funny", icon: <SentimentVerySatisfiedSharpIcon className="Reaction-Post" /> },
+    { name: "Support", icon: <VolunteerActivismSharpIcon className="Reaction-Post" /> },
+    { name: "Insightful", icon: <TipsAndUpdatesSharpIcon className="Reaction-Post" /> },
+  ];
+
+  ///////////////////////////////////////////////
   useEffect(() => {
       const handleClickOutside = (event) => {
           if (optionsMenuRef.current && !optionsMenuRef.current.contains(event.target)) {
@@ -214,18 +288,60 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
       )}
       {/* Comment Actions (Like, Reactions - Simplified Placeholder) */}
       <div className="flex items-center space-x-4 ml-10 mt-2">
-        <div className="relative">
-            {/* Placeholder Like Button */}
-          <button className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 text-sm">
-              <ThumbUpSharpIcon className="w-4 h-4" />
-              <span>Like</span>
-          </button>
-           {/* Reaction Popover logic would go here */}
-        </div>
-        {/* Placeholder Show Reactions Button */}
-        <button className="text-sm text-primary-600 hover:text-primary-800">
-            Show Reactions
-        </button>
+      <div className="comment-actions">
+              <div className="reactions-container">
+                <div className="reaction-trigger" onClick={() => setShowCommentReactions(comment.id)}>
+                  <ThumbUpSharpIcon /> <span>Like</span>
+                </div>
+             
+                {showCommentReactions === comment.id && (
+                  <div className="reactions-popover">
+                    {reactions.map((reaction) => (
+                      <div
+                        key={reaction.name}
+                        className="reaction-item"
+                        onClick={() => {
+                          // {commentReactions[comment.id]?.length > 0 && (
+                          //   <div className="comment-reactions-summary">
+                          //     {commentReactions[comment.id].map((reaction, index) => (
+                          //       <span key={index}>
+                          //         {reaction.reaction_type} by {reaction.user.username}
+                          //       </span>
+                          //     ))}
+                          //   </div>
+                          // )}
+
+                          hasReacted(reaction.name)
+                            ? handleremoveCommentReaction(comment.id)
+                            : handleAddReactionForComment(comment.id, reaction.name);
+                            setShowCommentReactions(false);
+                        }}
+                      >
+                         <div className="reaction-icon-container">
+                            <div className="reaction-icon">
+                              {reaction.icon}
+
+                              <span className="reaction-name">{reaction.name}</span>
+                            </div>
+                          </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <p className="Show-All-Reactions-comment"
+              onClick={() => setShowReactionsModalforcomment(true)}
+              >Show All Reactions</p>
+              {showReactionsModalforcomment && 
+                <ReactionsCommentModal
+                  commentId={comment.id}
+                  reactions={commentReactions[comment.id]}
+                  // reactions={commentReactions[comment.id]}
+                  onClose={() => setShowReactionsModalforcomment(false)}
+                />
+              }
+
+            </div>
       </div>
     </div>
   );
@@ -240,6 +356,7 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
   const [showOptions, setShowOptions] = useState(false);
   const [userReactions, setUserReactions] = useState([]);
   const [commentReactions, setCommentReactions] = useState({});
+  const [showReactionsModal, setShowReactionsModal] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -247,13 +364,12 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
   const [isDeleteModalOpenComment, setIsDeleteModalOpenComment] = useState(false);
   const [selectedComment, setSelectedComment] = useState(null);
   const [post, setPost] = useState(postData);
-  const [showReactionsModalforcomment, setShowReactionsModalforcomment] = useState(false);
   const [attachmentUrl, setAttachmentUrl] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const widgetRef = useRef(null);
   const [isPostExpanded, setIsPostExpanded] = useState(false);
   const { user, loading: authLoading } = useContext(AuthContext); // Destructure 'user'
-
+  
   console.log(currentUserId)
 
   // const currentUserId = user?.id; // Get logged-in user's UUID string (or null)
@@ -331,11 +447,7 @@ const loadMoreComments = async () => {
     console.log(error)
   }
 };
-
-
-
-
-  // // Initialize Cloudinary widget
+// // Initialize Cloudinary widget
   useEffect(() => {
     if (window.cloudinary) {
       widgetRef.current = window.cloudinary.createUploadWidget(
@@ -366,17 +478,13 @@ const loadMoreComments = async () => {
     if (widgetRef.current) {
       widgetRef.current.open();
     }
-  };
-
-  
-    
-    
+  };  
   useEffect(() => {
     if (post?.comments?.length) {
       const fetchAllCommentReactions = async () => {
         const reactionsMap = {};
         for (const comment of post.comments) {
-          const reactions = await fetchReactionsForComment(comment.id);
+          const reactions = await fetchReactionsForComment( post.id, comment.id);
           reactionsMap[comment.id] = reactions;
         }
         setCommentReactions(reactionsMap);
@@ -447,10 +555,13 @@ const loadMoreComments = async () => {
         return userReactions.some(r => r.reaction_type === reactionType);
       };
     
-      const handleRemoveReaction = async (reactionType) => {
-        await removePostReaction(post.id);
-        const updated = await fetchReactionsForPost(post.id);
-        setUserReactions(updated.filter(r => r.user?.id === currentUserId));
+      const handleRemoveReaction = async (reactionId) => {
+        try {
+          await removePostReaction(postId, reactionId); // Pass both IDs
+          setReactions(prev => prev.filter(r => r.id !== reactionId));
+        } catch (error) {
+          console.error("Removal failed:", error);
+        }
       };
     
       
@@ -459,7 +570,7 @@ const loadMoreComments = async () => {
           setIsEditModalOpen(false);
           
           post.body = updatedContent;
-          setPost(post);
+          setPost({ ...post, body: updatedContent });
         });
       };
     
@@ -745,43 +856,51 @@ const loadMoreComments = async () => {
       </div>
 
       {/* Post Actions */}
-      <div className="flex items-center justify-between border-t border-b border-gray-100 py-2 mb-3">
-        <div className="relative">
-          <button
-            onClick={() => setShowReactions(!showReactions)}
-            onMouseLeave={() => setShowReactions(false)}
-            className="flex items-center space-x-1 text-gray-600 hover:text-primary-600"
-          >
-            <ThumbUpSharpIcon className="w-5 h-5" />
-            <span>Like</span>
-          </button>
-          {showReactions && (
-            <div className="absolute bottom-full left-0 mb-2 bg-white rounded-full shadow-lg p-2 flex space-x-2 z-10">
-              {reactions.map((reaction) => (
-                <button
-                  key={reaction.name}
-                  onClick={() => {
-                    hasReacted(reaction.name)
-                      ? handleRemoveReaction(reaction.name)
-                      : handleAddReaction(reaction.name);
-                    setShowReactions(false);
-                  }}
-                  className="transform hover:scale-125 transition-transform duration-200"
-                  title={reaction.name}
-                >
+      <div className="post-actions">
+  <div className="reactions-container">
+    <div 
+      className="reaction-trigger" 
+      onClick={() => setShowReactions(!showReactions)}
+      onMouseLeave={() => setShowReactions(false)}
+    >
+      <ThumbUpSharpIcon className="ThumbUpSharpIcon"/> 
+      <span>Like</span>
+     
+      {showReactions && (
+        <div className="reactions-popover">
+          {reactions.map((reaction) => (
+            <div
+              key={reaction.name}
+              className="reaction-item"
+              onClick={() => {
+                hasReacted(reaction.name)
+                  ? handleRemoveReaction(reaction.name)
+                  : handleAddReaction(reaction.name);
+                  setShowReactions(false);
+              }}
+            >
+              <div className="reaction-icon-container">
+                <div className="reaction-icon">
                   {reaction.icon}
-                </button>
-              ))}
+                  <span className="reaction-name">{reaction.name}</span>
+                </div>
+              </div>
             </div>
-          )}
+          ))}
         </div>
-        <button
-          onClick={() => setShowReactionsModal(true)}
-          className="text-sm text-primary-600 hover:text-primary-800"
-        >
-          Show All Reactions
-        </button>
-      </div>
+      )}
+    </div>
+  </div>
+</div>
+
+<p className="Show-All-Reactions"
+       onClick={() => setShowReactionsModal(true)}
+       >Show All Reactions</p>
+      {showReactionsModal &&
+       <ReactionsModal postId={post.id}
+        onClose={() => setShowReactionsModal(false)} />}
+
+
 
       <div className="mt-4">
       <h4 className="!text-xs !font-medium !text-[#fffd02] mb-3">Comments</h4> 
@@ -983,12 +1102,6 @@ const loadMoreComments = async () => {
         postId={post.id}
         onClose={() => setShowReactionsModal(false)} 
       />
-      {showReactionsModalforcomment && selectedComment && (
-        <ReactionsCommentModal
-          commentId={selectedComment.id}
-          onClose={() => setShowReactionsModalforcomment(false)}
-        />
-      )}
     </div>
   );
 }
