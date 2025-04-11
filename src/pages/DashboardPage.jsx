@@ -4,7 +4,7 @@
 // import PostContent from "../components/ui/PostContent"; // PostContent component
 // import ChatContent from "../components/ui/ChatContent"; // ChatContent component
 
-// export default function DashboardPage() {
+// export default function HomePage() {
 //   const [isDarkMode, setIsDarkMode] = useState(true);
 
 //   const toggleTheme = () => setIsDarkMode(!isDarkMode);

@@ -1,3 +1,4 @@
+/* Index.css */
 @import "tailwindcss";
 /* Example Dark Theme Variables (in index.css or App.css) */
 body[data-theme='dark'] { /* Or :root if dark is default, or .dark-theme class */

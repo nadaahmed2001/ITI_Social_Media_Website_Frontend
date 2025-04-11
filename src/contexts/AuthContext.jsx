@@ -1,23 +1,33 @@
-//AuthContext
 import { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [authTokens, setAuthTokens] = useState(() =>
-    localStorage.getItem("access_token") || null
-  );
-  const [user, setUser] = useState(() =>
-    authTokens ? jwtDecode(authTokens) : null
-  );
-  const [loading, setLoading] = useState(true); // 
+  const [authTokens, setAuthTokens] = useState(() => {
+    const access = localStorage.getItem("access_token");
+    const refresh = localStorage.getItem("refresh_token");
+    return access && refresh ? { access, refresh } : null;
+  });
 
-  const loginUser = (token) => {
-    localStorage.setItem("access_token", token);
-    setAuthTokens(token);
-    setUser(jwtDecode(token));
-    console.log("User logged in:", jwtDecode(token)); // Log the user object to the console
+  const [user, setUser] = useState(() => {
+    try {
+      return authTokens ? jwtDecode(authTokens.access) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [loading, setLoading] = useState(true); // ✅ You missed this!
+
+  const loginUser = (access, userInfo) => {
+    localStorage.setItem("access_token", access);
+    setAuthTokens((prev) => ({ ...prev, access }));
+    setUser({
+      user_id: userInfo.id,
+      is_supervisor: userInfo.is_supervisor,
+      is_student: userInfo.is_student,
+    });
   };
 
   const logoutUser = () => {
@@ -27,20 +37,24 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (authTokens) {
+    if (authTokens?.access) {
       try {
-        const decoded = jwtDecode(authTokens);
-        setUser(decoded);
+        const decoded = jwtDecode(authTokens.access);
+        setUser({
+          user_id: decoded.user_id,
+          is_supervisor: decoded.is_supervisor,
+          is_student: decoded.is_student,
+        });
       } catch (e) {
         logoutUser();
       }
     }
-    setLoading(false); //  Done loading
+    setLoading(false); // ✅ This is now defined
   }, [authTokens]);
 
   return (
     <AuthContext.Provider value={{ user, loginUser, logoutUser, authTokens, loading }}>
-      {!loading && children} {/*  Only render children when ready */}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

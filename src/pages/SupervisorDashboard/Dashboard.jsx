@@ -1,3 +1,4 @@
+//Dashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // For navigation
@@ -29,13 +30,18 @@ const Dashboard = () => {
 
   const handleTrackSelect = (track) => {
     // Redirect to batches page when a track is selected
-    navigate(`/batches/${track.id}`);
+    if (selectedProgram) {
+      navigate(`/batches/${selectedProgram.id}/${track.id}`);
+    } else {
+      console.warn("No program selected to navigate to batches.");
+      // Optionally handle the case where no program is selected
+    }
   };
 
   return (
     <>
-      <Navbar />
-      <Box sx={{ display: 'flex', height: '100vh', bgcolor: '#1E1E1E', color: 'white' }}>
+      {/* <Navbar /> */}
+      <Box sx={{ display: 'flex', height: '100vh', bgcolor: '#1E1E1E', color: 'black' }}>
         {/* Sidebar */}
         <Box sx={{ width: 240, p: 2, borderRight: '1px solid rgba(255,255,255,0.1)' }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Programs</Typography>
@@ -47,7 +53,7 @@ const Dashboard = () => {
                 sx={{
                   mb: 1,
                   bgcolor: selectedProgram?.id === program.id ? '#FFEB3B' : 'transparent',
-                  color: selectedProgram?.id === program.id ? 'black' : 'white',
+                  color: selectedProgram?.id === program.id ? 'black' : 'black',
                   borderRadius: 1,
                   cursor: 'pointer',
                   px: 2
@@ -64,6 +70,7 @@ const Dashboard = () => {
           {selectedProgram && (
             <>
               <Typography variant="h5" sx={{ mb: 3 }}>Tracks in {selectedProgram.name}</Typography>
+              {/* Pass the handleTrackSelect function */}
               <TrackList programId={selectedProgram.id} onSelectTrack={handleTrackSelect} />
             </>
           )}
