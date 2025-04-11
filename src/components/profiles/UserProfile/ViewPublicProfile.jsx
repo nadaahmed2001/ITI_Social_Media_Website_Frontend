@@ -13,6 +13,10 @@ import './ViewPublicProfile.css';
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp'; 
 const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp'; 
 
+const accentColor = '#fffd02'; 
+const primaryTextColor = '#e0e0e0'; 
+const parentTextColor = '#ffffff'; 
+
 const ViewPublicProfile = ({ profileId }) => {
     const [profileData, setProfileData] = useState(null);
     const [projectsData, setProjectsData] = useState([]); // Stores the *filtered* projects
@@ -84,6 +88,7 @@ const renderLinks = () => {
             {links.map((link, index) => (
                 <li key={index} className="link-item">
                 <a
+                    className="icon"
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -239,7 +244,10 @@ const renderLinks = () => {
 
     return (
         <div className="view-public-profile-container section-container">
-        <h2><AccountCircleIcon /> Public Profile View</h2>
+            <h2 > 
+            <AccountCircleIcon className="icon" />
+            View Public Profile
+        </h2>
         {error && <p className="error-message">{error}</p>} 
 
         {/* --- Profile Header --- */}

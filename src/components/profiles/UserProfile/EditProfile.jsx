@@ -79,7 +79,9 @@ const EditProfile = ({ initialData, onUpdateSuccess }) => {
 
   return (
     <div className="edit-profile-container section-container">
-      <h2><EditIcon /> Edit Profile</h2>
+      <h2>
+        <EditIcon className='icon'/>Edit Profile
+      </h2>
       <form onSubmit={handleSubmit}>
         {error && <p className="error-message">{error}</p>}
         {success && <p className="success-message">{success}</p>}

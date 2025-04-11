@@ -1,0 +1,524 @@
+/* src/pages/ProfilePageById.css */
+.view-public-profile-container {
+    padding: 25px;
+    color: #e0e0e0;
+    background-color: #191919;
+    }
+    
+    .view-public-profile-container h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 15px;
+    font-size: 1.4em;
+    }
+    
+    .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #333; /* Separator */
+    background: none;
+    }
+    
+    .profile-avatar {
+    width: 100px; 
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #444;
+    background-color: #333; 
+    flex-shrink: 0; /* Prevent image shrinking */
+    }
+    
+    .profile-info {
+    flex-grow: 1;
+    background: none; 
+    }
+    
+    .profile-fullname {
+    color: #fff;
+    font-size: 1.5em;
+    margin: 0 0 2px 0;
+    background: none; 
+    }
+    
+    .profile-username {
+    color: #aaa;
+    font-size: 1em;
+    margin: 0 0 8px 0;
+    background: none; 
+    }
+    
+    .profile-headline {
+    color: #ccc;
+    font-size: 1.1em;
+    margin: 0;
+        background: none; /* Override global */
+        font-style: italic;
+    }
+    
+    /* Profile Sections (Common Styling) */
+    .profile-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #282828;
+    border-radius: 8px;
+    border: 1px solid #333; /* Subtle border */
+    }
+    .profile-section h3 {
+    color: #fffd02; /* Section title accent */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+        background: none; 
+    }
+    .profile-section p {
+        background: none; 
+        color: #ddd;
+        line-height: 1.6;
+    }
+    .profile-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        background: none; 
+    }
+    
+    /* Links Section */
+    .links-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .link-item a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #ccc;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        background-color: #333;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .link-item a:hover {
+        background-color: #444;
+        color: #fff;
+    }
+    .link-item svg { /* Icon styling */
+        font-size: 1.2em;
+    }
+    .link-item span {
+        background: none;
+    }
+    
+    /* Skills Section */
+    .skills-section h4 {
+        color: #ccc;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        font-size: 1.05em;
+        background: none; 
+    }
+    .skills-section .skills-subsection:first-child h4 {
+        margin-top: 0; 
+    }
+    
+    .main-skills-list {
+        background: none; 
+    }
+    .main-skill-item {
+        margin-bottom: 15px;
+        padding-left: 10px;
+        border-left: 3px solid #fffd02; 
+        background: none; 
+    }
+    .main-skill-name {
+        display: block;
+        font-weight: 500;
+        color: #f0f0f0;
+        margin-bottom: 4px;
+        background: none;
+    }
+    .main-skill-description {
+        font-size: 0.95em;
+        color: #bbb;
+        margin: 0;
+        background: none; 
+        white-space: pre-wrap;
+    }
+    
+    .other-skills-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+        background-color: #292928 !important;
+    
+    }
+    .other-skill-item {
+        background-color: #444;
+        color: #ddd;
+        padding: 5px 10px;
+        border-radius: 15px; /* Pill shape */
+        font-size: 0.9em;
+    }
+    
+    /* Projects Section */
+    .projects-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+        gap: 20px;
+    }
+    
+    .project-item-card {
+        background-color: #303030; /* Card background */
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid #444;
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* Space between elements inside card */
+    }
+    .project-item-card h4 {
+        color: #eee;
+        margin: 0 0 5px 0;
+        font-size: 1.1em;
+        background: none;
+    }
+    .project-description {
+        color: #ccc;
+        font-size: 0.95em;
+        flex-grow: 1; /* Allow description to take available space */
+        margin-bottom: 10px; /* Space before tags/links */
+        background: none;
+    }
+    
+    .project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 10px; /* Space before links */
+        background: none; 
+    }
+    .project-tag {
+        background-color: #5f5e5e; /* Tag background */
+        color: #ddd;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+    }
+    
+    .project-links {
+        display: flex;
+        gap: 10px;
+        margin-top: auto; /* Push links to the bottom */
+        background: none; /* Override global */
+    }
+    .project-link-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 0.9em;
+        transition: background-color 0.2s ease;
+    }
+    .project-link-button.demo {
+        background-color: #fffd02;
+        color: #191919;
+    }
+    .project-link-button.demo:hover {
+        background-color: #e6e400;
+    }
+    .project-link-button.source {
+        background-color: #555;
+        color: #eee;
+    }
+    .project-link-button.source:hover {
+        background-color: #666;
+    }
+    .project-link-button svg {
+        font-size: 1.1em;
+    }
+    
+    
+    /* Loading/Error/No Data Text reuse */
+    .loading-text, .no-data-text {
+        color: #aaa;
+        padding: 15px 0;
+        text-align: center;
+        font-style: italic;
+        background: none; /* Override global */
+    }
+    .loading-text.small {
+        font-size: 0.9em;
+        padding: 10px 0;
+    }
+    
+    .error-message {
+        color: #ff6666;
+        background-color: rgba(255, 102, 102, 0.1);
+        border: 1px solid #ff6666;
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        font-size: 0.95em;
+    }
+    .view-public-profile-container .error-message { 
+        background: rgba(255, 102, 102, 0.1);
+    }
+    .error-message.main-error { /* For critical loading failure */
+        margin: 20px;
+    }
+    
+    /* Links Section */
+    .links-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .link-item a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #ccc;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        background-color: #333;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .link-item a:hover {
+        background-color: #444;
+        color: #fff;
+    }
+    .link-item svg { /* Icon styling */
+        font-size: 1.2em;
+    }
+    .link-item span {
+         background: none; /* Override global */
+    }
+    
+    
+    /* Style the icon-based links list */
+    .links-list.icon-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px; /* Increase gap between icons */
+        padding-top: 10px; /* Add some space below the heading */
+        background: none;
+    }
+    
+    .links-list.icon-links .link-item {
+        background: none; /* Override any previous list item styling */
+        padding: 0;
+    }
+    
+    /* Style the link wrapping the icon */
+    .links-list.icon-links .link-item a {
+        display: inline-block; /* Treat link as a block for sizing */
+        color: #ccc; /* Default icon color */
+        text-decoration: none;
+        transition: color 0.2s ease, transform 0.2s ease; /* Add transitions */
+        padding: 0; /* Remove padding if any */
+        background: none; /* Ensure no background from previous rule */
+        border-radius: 0; /* Remove border-radius if any */
+    }
+    
+    /* Style the SVG icon itself from react-icons */
+    .links-list.icon-links .link-item a svg {
+        font-size: 36px; /* Adjust icon size - increase */
+        display: block; /* Ensure it takes block space */
+    }
+    
+    /* Add hover effect */
+    .links-list.icon-links .link-item a:hover {
+        color: #fffd02; /* Change color to accent on hover */
+        transform: scale(1.1); /* Slightly enlarge icon on hover */
+    }
+    
+    
+    .projects-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 25px; /* Increased gap */
+    padding: 0; /* Reset padding */
+    margin: 0;
+    list-style: none;
+        background: none;
+    }
+    
+    .project-item-card {
+    background-color: #303030;
+    border-radius: 8px; /* Slightly more rounded */
+    border: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Contain image corners */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+    .project-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* Project Image */
+    .project-image-container {
+    width: 100%;
+    height: 180px; /* Set a fixed height for images */
+    background-color: #252525; /* Darker placeholder bg */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Hide overflow */
+    }
+    .project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the area, might crop */
+    display: block;
+    border-bottom: 1px solid #444; /* Separator line */
+    }
+    /* Placeholder icon styles if needed */
+    .project-image-container .placeholder-icon {
+    font-size: 50px;
+    color: #555;
+    }
+    
+    
+    /* Project Details Container */
+    .project-details-content {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Make content area fill remaining space */
+    gap: 12px; /* Space between elements */
+    background: none;
+    }
+    
+    .project-details-content h4 { /* Project Title */
+    color: #eee;
+    margin: 0 0 5px 0;
+    font-size: 1.15em;
+    font-weight: 600;
+    background: none;
+    }
+    .project-description {
+    color: #ccc;
+    font-size: 0.95em;
+    flex-grow: 1; /* Allow description to push links down */
+    margin: 0; /* Reset margin */
+    line-height: 1.5;
+    background: none;
+    }
+    
+    /* Tags (keep existing styles or adjust) */
+    .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    background: none;
+    }
+    .project-tag {
+    background-color: #555;
+    color: #ddd;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    }
+    .loading-text.tiny {
+    font-size: 0.8em;
+    color: #888;
+    padding: 5px 0;
+    background: none;
+    }
+    
+    .project-contributors {
+    margin-top: 10px; /* Space above contributors */
+    background: none;
+    }
+    .project-contributors h5 {
+    color: #aaa;
+    font-size: 0.9em;
+    margin: 0 0 8px 0;
+    font-weight: 500;
+    background: none;
+    }
+    .contributors-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Gap between contributors */
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    background: none;
+    }
+    .contributor-item {
+    /* No specific style needed, link handles appearance */
+    background: none;
+    }
+    .contributor-item a {
+    display: inline-flex; /* Align avatar and username */
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    background-color: #404040; /* Background for the contributor chip */
+    padding: 3px 8px 3px 3px; /* Padding around avatar/text */
+    border-radius: 15px; /* Pill shape */
+    transition: background-color 0.2s ease;
+    }
+    .contributor-item a:hover {
+    background-color: #505050;
+    }
+    
+    .contributor-avatar {
+    width: 22px; /* Small avatar */
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #666; /* Subtle border */
+    background-color: #555; /* Placeholder bg */
+    }
+    .contributor-username {
+    color: #ccc;
+    font-size: 0.85em;
+    font-weight: 500;
+    background: none;
+    }
+    
+    
+    
+    .project-links {
+    display: flex;
+    gap: 10px;
+    margin-top: auto; /* Push to bottom */
+    padding-top: 10px; /* Space above links */
+        background: none;
+    }
+    
+    
+
+/* Example rule adjustments (optional) */
+.profile-page-container { /* Changed outer class name */
+    padding: 25px;
+    color: #e0e0e0;
+    background-color: #191919; /* Or your preferred page background */
+    max-width: 900px; /* Example max width */
+    margin: 20px auto; /* Center the container */
+    border-radius: 8px; /* Optional rounding */
+}
+
+/* Keep all other rules the same initially */
+.profile-page-container h2 { 
+    background-color: #252525;
+}

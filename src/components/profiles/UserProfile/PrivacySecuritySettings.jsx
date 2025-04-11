@@ -58,17 +58,13 @@ const PrivacySecuritySettings = ({ userData, onUpdateUserData }) => {
     <>{/* Section Header */}
     <div className="privacy-header">
         <SecurityIcon />
-      { /* <div className="privacy-header-text-container"> */}
-        <Typography variant="h5" component="h2" className="privacy-header-text">
+        <h2 className="privacy-header-text-container"> 
             Account Security
-        </Typography>
-        
-        </div>
-    {/* </div> */}
+        </h2>
+    </div> 
     
     <Box className="privacy-security-container">
       {/* 2FA Section */}
-    <div className="setting-section">
     <div className="setting-section-header">
         <Typography variant="h6" component="h3" className="setting-title">
         Two-Factor Authentication (2FA)
@@ -89,8 +85,7 @@ const PrivacySecuritySettings = ({ userData, onUpdateUserData }) => {
     )}
 
     {/* Toggle control */}
-        {/* <FormControlLabel */}
-        {/* control={ */}
+            <div className='two-f-auth-toggle-icon'>
             <Switch
             size="large"
             sx={{ 
@@ -102,15 +97,18 @@ const PrivacySecuritySettings = ({ userData, onUpdateUserData }) => {
                     '&.Mui-checked': {
                     transform: 'translateX(32px)',
                     },
+
                 },
                 '& .MuiSwitch-thumb': {
                     width: 11,  // smaller circle
                     height: 11,
+                    
                 },
                 '& .MuiSwitch-track': {
                     borderRadius: 26 / 2,
-                    backgroundColor: 'gray',
+                    backgroundColor: 'grey',
                     opacity: 1,
+                    
                 },
                 '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
                     backgroundColor: 'lightgreen',
@@ -119,9 +117,7 @@ const PrivacySecuritySettings = ({ userData, onUpdateUserData }) => {
             onChange={handleToggleChange}
             disabled={isLoading || !userData.email}
             />
-        
-        {/* /> */}
-    </div>
+            </div>
 </Box>
 </>
 );

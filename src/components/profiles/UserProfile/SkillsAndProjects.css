@@ -7,6 +7,8 @@
     display: flex;
     flex-direction: column;
     gap: 30px; /* Space between the title and sections, and between sections */
+    max-width: 80%;
+
   }
   
   .skills-projects-container h2 {
@@ -17,7 +19,13 @@
     margin: 0 0 10px 0; /* Adjusted margin */
     border-bottom: 1px solid #444;
     padding-bottom: 15px;
-    font-size: 1.4em;
+    font-size: 2em;
+    background-color: inherit;
+    font-weight: 600;
+  }
+
+  .skills-projects-container h2 svg {
+    background-color: inherit;
   }
   
   /* Ensure sub-components (.form-section) have the correct context */

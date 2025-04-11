@@ -116,17 +116,17 @@ const UserProfilePage = () => {
 
       case SECTIONS.PRIVACY:
         return <PrivacySecuritySettings userData={userData} onUpdateUserData={handleProfileUpdate} />;
-      case SECTIONS.MY_POSTS:
-        return <div className="section-container"><h2>My Posts</h2><p>Content for My Posts goes here.</p></div>;
-      case SECTIONS.SAVED:
-        return <div className="section-container"><h2>Saved Items</h2><p>Content for Saved Items goes here.</p></div>;
+      // case SECTIONS.MY_POSTS:
+      //   return <div className="my-posts"><h2>My Posts</h2><p>To Do</p></div>;
+      // case SECTIONS.SAVED:
+      //   return <div className="my-posts"><h2>Saved Items</h2><p>To Do</p></div>;
       // --- End Placeholders ---
       default:
         // Fallback if activeSection is invalid
         console.warn("Invalid section selected:", activeSection);
         // Redirect to default or show message
         // setActiveSection(SECTIONS.EDIT_PROFILE); // Option: reset to default
-        return <div className="section-container"><h2>Select an option</h2></div>;
+        // return <div className="section-container"><h2>Select an option</h2></div>;
     }
   };
 

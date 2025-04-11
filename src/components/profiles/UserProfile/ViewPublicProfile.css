@@ -9,10 +9,33 @@ display: flex;
 align-items: center;
 gap: 10px;
 color: white;
+background-color: inherit;
 margin-bottom: 30px;
 border-bottom: 1px solid #444;
 padding-bottom: 15px;
-font-size: 1.4em;
+font-size: 2em;
+width: 80%;
+font-weight: 600;
+
+}
+
+
+.view-public-profile-container h2 svg{
+    background-color: inherit;
+
+}
+
+.profile-location {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    background: inherit;
+}
+
+.icon{
+    background: #282828 ;
 }
 
 .profile-header {
@@ -23,6 +46,8 @@ margin-bottom: 30px;
 padding-bottom: 20px;
 border-bottom: 1px solid #333; /* Separator */
 background: none;
+width: 80%;
+
 }
 
 .profile-avatar {
@@ -58,12 +83,15 @@ background: none;
 color: #ccc;
 font-size: 1.1em;
 margin: 0;
-    background: none; /* Override global */
-    font-style: italic;
+background: none; /* Override global */
+font-style: italic;
+
 }
 
 /* Profile Sections (Common Styling) */
 .profile-section {
+    width: 80%;
+
 margin-bottom: 30px;
 padding: 20px;
 background-color: #282828;
@@ -101,11 +129,11 @@ padding-bottom: 10px;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #ccc;
+    color: inherit;
     text-decoration: none;
     padding: 8px 12px;
     border-radius: 5px;
-    background-color: #333;
+    background-color: inherit;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 .link-item a:hover {
@@ -114,6 +142,7 @@ padding-bottom: 10px;
 }
 .link-item svg { /* Icon styling */
     font-size: 1.2em;
+    background-color: inherit;
 }
 .link-item span {
     background: none;
@@ -176,6 +205,7 @@ padding-bottom: 10px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
     gap: 20px;
+
 }
 
 .project-item-card {
@@ -186,6 +216,8 @@ padding-bottom: 10px;
     display: flex;
     flex-direction: column;
     gap: 10px; /* Space between elements inside card */
+    width: 300px;
+
 }
 .project-item-card h4 {
     color: #eee;
@@ -232,6 +264,8 @@ padding-bottom: 10px;
     font-size: 0.9em;
     transition: background-color 0.2s ease;
 }
+
+
 .project-link-button.demo {
     background-color: #fffd02;
     color: #191919;
@@ -248,6 +282,8 @@ padding-bottom: 10px;
 }
 .project-link-button svg {
     font-size: 1.1em;
+    background-color: inherit;
+
 }
 
 
