@@ -179,7 +179,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
   // ---
 
   return (
-    <div className="mb-1 pb-4 border-b border-gray-100 last:border-0 !bg-[#292928]">
+    <div className="mb-1 pb-4 border-b !border-[#181819] last:border-0 !bg-[#292928]">
       {/* Comment Header */}
       <div className="flex items-start justify-between mb-2 !bg-[#292928]">
         <div className="flex items-center space-x-2 !bg-[#292928]">
@@ -194,7 +194,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
           />
           </Link>
           <div className="!bg-[#292928]">
-            <p className="font-medium text-sm text-white mb-0 pt-2 !bg-[292928] !bg-[#292928]">{isCommentAuthor ?  "You" : `${authorName}`} </p>
+            <p className="font-medium text-sm text-white mb-0 pt-2 !bg-[#292928]">{isCommentAuthor ?  "You" : `${authorName}`} </p>
             <p className="text-xs text-white !bg-[#292928]">
               <TimeAgo timestamp={comment.created_on} />
             </p>
@@ -203,7 +203,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
         {/* Edit/Delete Menu */}
         {isCommentAuthor && (
           <div className="relative !bg-[#292928]" ref={optionsMenuRef}>
-              <button onClick={toggleOptionsMenu} className="text-gray-500 hover:text-gray-700 !bg-[#292928]">
+              <button onClick={toggleOptionsMenu} className="!text-[#fffd02] text-gray-500 hover:text-gray-700 !bg-[#292928]">
                 <MoreVertIcon className="w-5 h-5 !bg-[#292928]" />
               </button>
               {showOptionsMenu && (
@@ -229,14 +229,14 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
       </div>
 
       {/* --- Comment Body with See more/less --- */}
-      <div className="text-gray-800 ml-10 mb-2 whitespace-pre-wrap !bg-[292928]"> {/* Margin to align with author name */}
+      <div className="text-gray-800 ml-10 mb-2 whitespace-pre-wrap !bg-[#292928]"> {/* Margin to align with author name */}
           {isExpanded ? (
             <>
-              <p>{displayText}</p>
+              <p className="text-white !bg-[#292928]">{displayText}</p>
               {needsTruncation && (
                 <button
                   onClick={toggleExpansion}
-                  className="mt-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[292928]" 
+                  className="mt-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[#292928]" 
                   aria-expanded={isExpanded}
                 >
                   See less
@@ -245,11 +245,11 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
             </>
           ) : (
             <>
-              <p className="inline">{displayText}</p>
+              <p className="!bg-[#292928] inline text-white">{displayText}</p>
               {needsTruncation && (
                 <button
                   onClick={toggleExpansion}
-                  className="ml-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[292928]"
+                  className="ml-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[#292928]"
                   aria-expanded={isExpanded}
                 >
                   See more
@@ -264,7 +264,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
       {comment.attachments?.length > 0 && (
       <div className="ml-10 mt-2 space-y-2 !bg-[#292928]">
         {comment.attachments.map((attachment) => (
-          <div key={attachment.id} className="flex items-center">
+          <div key={attachment.id} className="flex items-center !bg-[#292928] mt-3">
             {attachment.image != null ? (
               <img 
                 src={attachment.image} 
@@ -287,7 +287,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
       </div>
       )}
       {/* Comment Actions (Like, Reactions - Simplified Placeholder) */}
-      <div className="flex items-center space-x-4 ml-10 mt-2">
+      <div className="flex items-center space-x-4 ml-10 mt-2 !bg-[#292928]">
       <div className="comment-actions">
               <div className="reactions-container">
                 <div className="reaction-trigger" onClick={() => setShowCommentReactions(comment.id)}>
@@ -712,7 +712,7 @@ const loadMoreComments = async () => {
 
 
   return (
-    <div className="!bg-[#292928] rounded-lg shadow-md p-4 mb-4 border border-gray-200">
+    <div className="!bg-[#292928] rounded-lg shadow-md p-4 mb-4 border !border-[#7a2226]">
       {/* Post Header */}
       <div className="flex items-center justify-between mb-2 !bg-[#292928]">
         <div className="flex items-center space-x-3 !bg-[#292928]">
@@ -901,8 +901,8 @@ const loadMoreComments = async () => {
 
 
 
-      <div className="mt-4">
-      <h4 className="!text-xs !font-medium !text-[#fffd02] mb-3">Comments</h4> 
+      <div className="mt-4 !bg-[#292928]">
+      <h4 className="!text-small !font-medium !text-[#fffd02] !bg-[#292928] mb-3">Comments</h4> 
 
   
         {/* Error message */}
@@ -974,7 +974,7 @@ const loadMoreComments = async () => {
         ) : (
           // Show 'No comments' only if not loading and no error
           !commentPagination.isLoading && !commentPagination.error && (
-            <p className="text-gray-500 text-sm italic">No comments yet.</p>
+            <p className="text-gray-500 text-sm italic !bg-[#292928]">No comments yet.</p>
           )
         )}
          {/* Initial loading indicator for comments */}
@@ -985,7 +985,7 @@ const loadMoreComments = async () => {
 {/* ======================================================================= */}
 
         {/* --- Add Comment Section with Icon Inside Input --- */}
-        <div className="mt-1 flex items-start space-x-3 border-t border-gray-100 pt-4">
+        <div className="mt-1 flex items-start space-x-3 border-t border-gray-100 pt-4 !bg-[#292928]">
         <Link to={`/profiles/${post.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
         <img 
             src={ currentUserAvatar } // Use derived avatar
@@ -995,7 +995,7 @@ const loadMoreComments = async () => {
             onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
           />
           </Link>
-          <div className="flex-grow">
+          <div className="flex-grow !bg-[#292928]">
              
             {/* --- Input Wrapper with Relative Positioning --- */}
             <div className="relative w-full"> 
@@ -1004,7 +1004,7 @@ const loadMoreComments = async () => {
                  placeholder="Write your comment..."
                  value={commentText}
                  onChange={(e) => setCommentText(e.target.value)}
-                 className={`w-full pl-3 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent text-sm ${isCommentInputOverLimit ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-primary-500'}`} 
+                 className={`!bg-[#181819] w-full pl-3 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent text-sm ${isCommentInputOverLimit ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-primary-500'}`} 
                  aria-describedby="comment-char-count"
                />
                {/* --- Absolutely Positioned Icon Button --- */}
@@ -1024,7 +1024,7 @@ const loadMoreComments = async () => {
             </div>
 
             {/* Character Counter (Stays outside the relative wrapper) */}
-             <div id="comment-char-count" className={`text-xs mt-1 text-right ${commentCountColorClass}`}>
+             <div id="comment-char-count" className={`text-xs mt-1 text-right !bg-[#292928] ${commentCountColorClass}`}>
                  {currentInputLength} / {MAX_COMMENT_INPUT_LENGTH}
              </div>
 
@@ -1057,7 +1057,7 @@ const loadMoreComments = async () => {
             )}
 
             {/* Action Buttons (Only Post button remains here) */}
-            <div className="flex items-center justify-end mt-2"> 
+            <div className="flex items-center justify-end mt-2 !bg-[#292928]"> 
               {/* "Add Photo/Video" button was moved inside input wrapper */}
               <button
                 type="button" // Or type="submit" if this div is wrapped in a <form>
