@@ -1,7 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { fetchPosts } from '../../services/api';
 import CreatePost from './CreatePost';
 import ShowPost from './ShowPost';
+import { User } from 'lucide-react';
+import AuthContext from '../../contexts/AuthContext'; 
+
+
 
 export default function PostList() {
   const [posts, setPosts] = useState([]);
@@ -9,6 +13,8 @@ export default function PostList() {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const observer = useRef();
+  const { user, loading: authLoading } = useContext(AuthContext); // Destructure 'user'
+
 
   const loadPosts = useCallback(async (pageNum) => {
     setLoading(true);
@@ -84,6 +90,7 @@ export default function PostList() {
             key={post.id} 
             postData={post} 
             onDeletePost={handleDeletePost} 
+            currentUserId={user.id}
           />
         ))}
         

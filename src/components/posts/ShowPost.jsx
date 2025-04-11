@@ -1,8 +1,10 @@
-
 import React, { useState, useEffect, useRef, useContext} from "react";
 import AuthContext from '../../contexts/AuthContext'; 
 import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material"; // Import arrow icons
 import { PaperClipIcon } from '@heroicons/react/24/outline'; // or '/solid'
+import CircularProgress from '@mui/material/CircularProgress';
+import { Link } from "react-router-dom"
+
 
 import TimeAgo from '../TimeAgo';
 
@@ -51,8 +53,8 @@ const DEFAULT_USER_AVATAR   = '../../src/assets/images/user-default.webp'
 const CLOUDINARY_CLOUD_NAME =  "dsaznefnt";
 const CLOUDINARY_UPLOAD_PRESET = "ITIHub_profile_pics";
 
-const MAX_COMMENT_LENGTH = 150;
 
+const MAX_COMMENT_INPUT_LENGTH = 2000;
 
 function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /* Add other handlers like onReaction if needed */ }) {
   
@@ -61,6 +63,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const optionsMenuRef = useRef(null); 
   // --- End Component State ---
+  const MAX_COMMENT_LENGTH = 150;
 
   // --- Calculate text display based on local state ---
   const fullText = comment.comment || "";
@@ -73,6 +76,8 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
   // --- Check if current user is the author ---
   // Ensure your comment object from API has author_id or a similar field
   const isCommentAuthor = comment.author_id === currentUserId; 
+  console.log(comment.author_id) 
+  console.log(currentUserId)
   const authorName = comment.author || "User"; // Use author name from comment data
   // ---
 
@@ -100,10 +105,12 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
   // ---
 
   return (
-    <div className="mb-4 pb-4 border-b border-gray-100 last:border-0">
+    <div className="mb-1 pb-4 border-b border-gray-100 last:border-0">
       {/* Comment Header */}
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center space-x-2">
+        <Link to={`/profiles/${comment.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+
           <img 
             src={ comment.author_profile_picture || DEFAULT_USER_AVATAR } // Use comment author pic
             alt={authorName} 
@@ -111,6 +118,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
             className="w-8 h-8 rounded-full object-cover border border-gray-200"
             onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
           />
+          </Link>
           <div>
             <p className="font-medium text-sm text-gray-900">{isCommentAuthor ?  "You" : `${authorName}`} </p>
             <p className="text-xs text-gray-500">
@@ -225,8 +233,9 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
 // --- End CommentItem Component ---
 
 
+
 export default function ShowPost({ postData, onDeletePost, currentUserId }) {
-  const [comments, setComments] = useState([]);
+  // const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [showOptions, setShowOptions] = useState(false);
   const [userReactions, setUserReactions] = useState([]);
@@ -244,7 +253,85 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
   const widgetRef = useRef(null);
   const [isPostExpanded, setIsPostExpanded] = useState(false);
   const { user, loading: authLoading } = useContext(AuthContext); // Destructure 'user'
-  const avatarSrc = user?.profile_picture || DEFAULT_USER_AVATAR;
+
+  console.log(currentUserId)
+
+  // const currentUserId = user?.id; // Get logged-in user's UUID string (or null)
+  const currentUserAvatar = user?.profile_picture || DEFAULT_USER_AVATAR;
+
+// --- State and Calculation for Validation ---
+const currentInputLength = commentText.length;
+const isCommentInputOverLimit = currentInputLength > MAX_COMMENT_INPUT_LENGTH;
+// Determine color for counter based on limit
+const commentCountColorClass = isCommentInputOverLimit ? 'text-red-600 font-medium' // Red if over limit
+                                                          : 'text-gray-500';
+
+// Add these state variables at the top of your component
+const [comments, setComments] = useState([]);
+const [commentPagination, setCommentPagination] = useState({
+  page: 1,
+  hasMore: true,
+  isLoading: false,
+  error: null
+});
+
+
+// Replace your existing useEffect for fetching comments with:
+useEffect(() => {
+  const loadInitialComments = async () => {
+    const initialPage = 1; // Define page number
+    try {
+      setCommentPagination(prev => ({...prev, isLoading: true, error: null}));
+      console.log(`ShowPost: Calling fetchComments for initial page: ${initialPage}`); // Add log
+      
+      // --- CORRECTED CALL ---
+      const response = await fetchComments(post.id, initialPage); // Pass the number 1
+      // --- END CORRECTION ---
+      
+      // ... rest of the success handling ...
+      const commentsData = Array.isArray(response.data) ? response.data : response.data.results || [];
+      setComments(commentsData);
+      setCommentPagination({
+        page: initialPage, // Set page number state
+        hasMore: response.data.next ? true : false,
+        isLoading: false,
+        error: null
+      });
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  
+  loadInitialComments();
+}, [post.id]);
+
+// Add this function to load more comments
+const loadMoreComments = async () => {
+  if (!commentPagination.hasMore || commentPagination.isLoading) return;
+  
+  try {
+    setCommentPagination(prev => ({...prev, isLoading: true, error: null}));
+    const nextPage = commentPagination.page + 1;
+    console.log(`ShowPost: Calling fetchComments for next page: ${nextPage}`); // Add log
+    
+    // --- CORRECTED CALL ---
+    const response = await fetchComments(post.id, nextPage); // Pass the number nextPage
+    // --- END CORRECTION ---
+
+    // ... rest of success handling ...
+     const newComments = Array.isArray(response.data) ? response.data : response.data.results || [];
+     setComments(prev => [...prev, ...newComments]);
+     setCommentPagination({
+       page: nextPage,
+       hasMore: response.data.next ? true : false,
+       isLoading: false,
+       error: null
+     });
+  } catch (error) { 
+    console.log(error)
+  }
+};
+
 
 
 
@@ -281,10 +368,7 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
     }
   };
 
-  useEffect(() => {commentReactions
-        fetchComments(post.id).then((res) => setComments(res.data));
-        fetchReactionsForPost(post.id).then((res) => setUserReactions(res.filter(r => r.user.id === currentUserId)));
-      }, [post.id, currentUserId]);
+  
     
     
   useEffect(() => {
@@ -303,20 +387,55 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
   }, [post.comments]);
 
   const handleComment = () => {
-    if (!commentText.trim() && !attachmentUrl) return;
+    const trimmedComment = commentText.trim();
+  
+    if (!trimmedComment && !attachmentUrl) {
+      alert("Please write a comment or add an attachment."); 
+      return;
+    }
     
+    if (currentInputLength > MAX_COMMENT_INPUT_LENGTH) {
+      alert(`Comment cannot exceed ${MAX_COMMENT_INPUT_LENGTH} characters.`); 
+      return;
+    }
+  
     const commentData = {
       post: post.id,
-      comment: commentText,
+      comment: trimmedComment,
       attachment_url: attachmentUrl
     };
-
-    addComment(post.id, commentData).then((res) => {
-      setComments((prev) => [...prev, res.data]);
-      setCommentText("");
-      setAttachmentUrl(null);
-    });
+  
+    addComment(post.id, commentData)
+      .then((res) => {
+        // Prepend new comment to the list
+        setComments(prev => [res.data, ...prev]);
+        setCommentText("");
+        setAttachmentUrl(null);
+        
+        // Reset pagination to first page
+        setCommentPagination(prev => ({
+          ...prev,
+          page: 1,
+          hasMore: true
+        }));
+      })
+      .catch(err => {
+        console.error("Failed to add comment:", err);
+        alert("Failed to post comment. Please try again.");
+      });
   };
+  
+  const handleConfirmDeleteComment = () => {
+    if (!selectedComment) return;
+    
+    deleteComment(post.id, selectedComment.id).then(() => {
+      setComments(prev => prev.filter(comment => comment.id !== selectedComment.id));
+      setIsDeleteModalOpenComment(false);
+      setSelectedComment(null);
+    }).catch(err => {
+      console.error("Failed to delete comment:", err);
+    });
+};
 
   const handleAddReaction = async (reactionType) => {
         await likePost(post.id, reactionType);
@@ -380,20 +499,7 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
               // Optionally show error to user
           });
       };
-      const handleConfirmDeleteComment = () => {
-        if (!selectedComment) return;
-        console.log(`Deleting comment ${selectedComment.id} for post ${post.id}`); // Debug
-         // Call the imported API function
-        deleteComment(post.id, selectedComment.id).then(() => {
-          console.log("Delete successful"); // Debug
-          setComments(prevComments => prevComments.filter((comment) => comment.id !== selectedComment.id));
-          setIsDeleteModalOpenComment(false); // Close modal
-          setSelectedComment(null);         // Clear selection
-        }).catch(err => {
-            console.error("Failed to delete comment:", err.response?.data || err); // Log detailed error
-            // Optionally show error to user
-        });
-      };
+      
 
     // Custom Next Arrow Component
     function SampleNextArrow(props) {
@@ -463,7 +569,6 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
     
     const attachments = post.attachments || [];
     const numAttachments = attachments.length;
-    const currentUserAvatar = user?.profile_picture || DEFAULT_USER_AVATAR;
 
 
   const reactions = [
@@ -489,25 +594,32 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
     setIsPostExpanded(!isPostExpanded);
   };
 
+  const isPostAuthor = post.author_id === currentUserId; 
+  const displayAuthorAvatar = post.author_profile_picture || DEFAULT_USER_AVATAR; 
+  const avatarAltText = isPostAuthor ? "You" : `${post.author || "User"}'s avatar`;
+  const avatarTitleText = isPostAuthor ? "You" : post.author || "User";
+
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200">
       {/* Post Header */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-3">
-          <img 
-            src={currentUserAvatar} 
-            alt= {post.author} 
-            title= {post.author} 
-            className="w-10 h-10 rounded-full object-cover border border-gray-200"
-            onError={(e) => { 
-              // Prevent infinite loop if default avatar also fails
-              if (e.target.src !== DEFAULT_USER_AVATAR) {
-                e.target.src = DEFAULT_USER_AVATAR; 
-              }}}
+        <Link to={`/profiles/${post.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+        <img 
+              src={displayAuthorAvatar} 
+              alt={avatarAltText} 
+              title={avatarTitleText} 
+              className="w-10 h-10 rounded-full object-cover border border-gray-200"
+              onError={(e) => { 
+                if (e.target.src !== DEFAULT_USER_AVATAR) {
+                  e.target.src = DEFAULT_USER_AVATAR; 
+                }
+              }}
           />
+          </Link>
           <div>
-            <p className="font-medium text-gray-900">{post.author || "Unknown"}</p>
+            <p className="font-medium text-gray-900 mb-1 mt-3">{avatarTitleText|| "Unknown"}</p>
             <p className="text-xs text-gray-500">
             <TimeAgo timestamp={post.created_on} />
             </p>
@@ -520,30 +632,24 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
           >
             <MoreVertIcon className="w-5 h-5" />
           </button>
-          {showOptions && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-              <button
-                onClick={() => {
-                  setIsEditModalOpen(true);
-                  setShowOptions(false);
-                }}
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-              >
-                <EditIcon className="w-4 h-4 mr-2 text-primary-600" />
-                Edit
-              </button>
-              <button
-                onClick={() => {
-                  setIsDeleteModalOpen(true);
-                  setShowOptions(false);
-                }}
-                className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
-              >
-                <DeleteIcon className="w-4 h-4 mr-2" />
-                Delete
-              </button>
-            </div>
-          )}
+          
+          {isPostAuthor && ( 
+            <div className="relative"> 
+              {showOptions && ( 
+                <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-20"> 
+                  {/* Edit Post Button */}
+                  <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"> 
+                    <EditIcon className="w-4 h-4 mr-2 text-primary-600" /> Edit 
+                  </button> 
+                  {/* Delete Post Button */}
+                  <button onClick={() => { setIsDeleteModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-red-700 hover:bg-gray-100 w-full text-left"> 
+                    <DeleteIcon className="w-4 h-4 mr-2" /> Delete 
+                  </button> 
+                </div> 
+              )} 
+            </div> 
+            )}
+          
         </div>
       </div>
 
@@ -677,93 +783,175 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
         </button>
       </div>
 
-      {/* Comments Section */}
       <div className="mt-4">
-        <h4 className="font-medium text-gray-900 mb-3">Comments</h4>
-        
-        {comments.length > 0 ? (
-          // --- Use CommentItem component in map ---
-          comments.map((comment) => (
-            <CommentItem 
-              key={comment.id} 
-              comment={comment} 
-              currentUserId={currentUserId} // Pass the ID for author check
-              // ** Pass the CORRECT handlers to trigger modals **
-              onEditRequest={handleEditCommentRequest} 
-              onDeleteRequest={handleDeleteCommentRequest} 
-              // Pass other handlers like onReaction if CommentItem needs them
-            />
-          ))
-          // --- End Use CommentItem ---
-        ) : (
-          <p className="text-gray-500 text-sm italic">No comments yet.</p>
+  <h4 className="font-medium text-gray-900 mb-3">Comments</h4>
+  
+  {/* Error message */}
+  {commentPagination.error && (
+          <div className="text-red-500 text-sm mb-3">
+            Error: {commentPagination.error}
+            {/* Optional: Add a retry button */}
+            <button 
+              onClick={() => loadPosts(1)} // Reload first page on retry?
+              className="ml-2 text-primary-600 hover:underline"
+            >
+              Retry
+            </button>
+          </div>
         )}
+        
+        {/* Comments list */}
+        {/* Check if comments array exists before mapping */}
+        {comments && comments.length > 0 ? (
+          <>
+            {comments.map((comment) => (
+              <CommentItem 
+                key={comment.id} 
+                comment={comment} 
+                currentUserId={user?.id} // Use context user ID
+                onEditRequest={handleEditCommentRequest} 
+                onDeleteRequest={handleDeleteCommentRequest} 
+              />
+            ))}
+            
+            {/* Load More button */}
+            {commentPagination.hasMore && (
+            <div className="flex justify-center">
+              <button
+                onClick={loadMoreComments}
+                disabled={commentPagination.isLoading}
+                className={`px-4 py-2 rounded-md text-sm font-medium flex items-center ${
+                  commentPagination.isLoading 
+                    ? 'bg-gray-400 text-gray-700 cursor-not-allowed' // Adjusted disabled style
+                    : 'bg-primary-600 text-grey hover:bg-primary-700' // Check primary color definition
+                }`}
+              >
+                {commentPagination.isLoading ? (
+                  <>
+                    <CircularProgress 
+                  // Set size (in pixels) - smaller for buttons usually looks better
+                  size={18} 
+                  // Option 1: Inherit color from button text (useful if text color changes)
+                  color="red" 
+                  // Option 2: Use sx prop for specific styling
+                  sx={{ 
+                      color: 'white', // Set color explicitly (if button text is white)
+                      marginRight: '8px' // Add some spacing before the text (like Tailwind mr-2)
+                  }} 
+                />
+                  </>
+                ) : (
+                  'Load More Comments'
+                )}
+          </button>
+        </div>
+      )}
+            
+            {/* End of comments message */}
+             {!commentPagination.hasMore && !commentPagination.isLoading && (
+                 <p className="text-center text-gray-500 text-xs italic mt-4">No more comments</p>
+             )}
+          </>
+        ) : (
+          // Show 'No comments' only if not loading and no error
+          !commentPagination.isLoading && !commentPagination.error && (
+            <p className="text-gray-500 text-sm italic">No comments yet.</p>
+          )
+        )}
+         {/* Initial loading indicator for comments */}
+         {commentPagination.isLoading && comments.length === 0 && (
+            <p className="text-center text-gray-500 text-sm py-4">Loading comments...</p>
+         )}
+      </div>
+{/* ======================================================================= */}
 
-
-        {/* Add Comment */}
-        <div className="mt-4 flex items-start space-x-3">
-          <img 
-            src= { avatarSrc }
-            alt= { user?.username }
-            title = { user?.username }
+        {/* --- Add Comment Section with Icon Inside Input --- */}
+        <div className="mt-1 flex items-start space-x-3 border-t border-gray-100 pt-4">
+        <Link to={`/profiles/${post.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+        <img 
+            src={ currentUserAvatar } // Use derived avatar
+            alt={ user?.username || "You" }
+            title={ user?.username || "You" }
             className="w-8 h-8 rounded-full object-cover border border-gray-200 flex-shrink-0"
-            onError={(e) => { 
-              // Prevent infinite loop if default avatar also fails
-              if (e.target.src !== DEFAULT_USER_AVATAR) {
-                e.target.src = DEFAULT_USER_AVATAR; 
-              }}}
+            onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
           />
+          </Link>
           <div className="flex-grow">
-            <input
-              type="text"
-              placeholder="Write your comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
+             
+            {/* --- Input Wrapper with Relative Positioning --- */}
+            <div className="relative w-full"> 
+               <input
+                 type="text"
+                 placeholder="Write your comment..."
+                 value={commentText}
+                 onChange={(e) => setCommentText(e.target.value)}
+                 className={`w-full pl-3 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent text-sm ${isCommentInputOverLimit ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-primary-500'}`} 
+                 aria-describedby="comment-char-count"
+               />
+               {/* --- Absolutely Positioned Icon Button --- */}
+               
+               <button
+                  type="button" // Prevent form submission
+                  onClick={handleOpenUploadWidget}
+                  disabled={isUploading || !!attachmentUrl} 
+                  // Position inside the input padding area
+                  className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Add Photo/Video" // Accessibility
+                >
+                 <ImageSharpIcon className="w-5 h-5" /> 
+               </button>
+
+               
+            </div>
+
+            {/* Character Counter (Stays outside the relative wrapper) */}
+             <div id="comment-char-count" className={`text-xs mt-1 text-right ${commentCountColorClass}`}>
+                 {currentInputLength} / {MAX_COMMENT_INPUT_LENGTH}
+             </div>
+
+            {/* Attachment Preview (Keep as is) */}
             {attachmentUrl && (
               <div className="mt-2 relative">
-                {attachmentUrl.match(/\.(jpeg|jpg|gif|png)$/) ? (
-                  <img 
-                    src={attachmentUrl} 
-                    alt="Preview" 
-                    className="max-w-xs rounded-lg"
-                  />
-                ) : (
-                  <video controls className="max-w-xs rounded-lg">
-                    <source src={attachmentUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                )}
-                <button
-                  onClick={() => setAttachmentUrl(null)}
-                  className="absolute top-1 right-1 bg-white rounded-full p-1 shadow-sm hover:bg-gray-100"
-                >
-                  <CloseIcon className="w-4 h-4 text-gray-600" />
-                </button>
-              </div>
-            )}
-            <div className="flex items-center justify-between mt-2">
+              {attachmentUrl.match(/\.(jpeg|jpg|gif|png)$/) ? (
+                <img 
+                  src={attachmentUrl} 
+                  alt="Preview" 
+                  className="max-w-xs rounded-lg border border-gray-200" // Added border
+                />
+              ) : attachmentUrl.match(/\.(mp4|mov|webm|mkv)$/) ? ( // Check for video extensions
+                <video controls className="max-w-xs rounded-lg border border-gray-200 bg-black">
+                  <source src={attachmentUrl} /* Optional: add type based on extension */ />
+                  Your browser does not support the video tag.
+                </video>
+              ): (
+                <p className="text-xs text-gray-500 italic">Attachment added (preview not available)</p>
+              )}
+              {/* Close button for preview */}
               <button
-                onClick={handleOpenUploadWidget}
-                disabled={isUploading}
-                className="text-gray-500 hover:text-primary-600 flex items-center text-sm"
+                onClick={() => setAttachmentUrl(null)}
+                className="absolute -top-1 -right-1 bg-gray-600 hover:bg-red-500 text-white rounded-full p-0.5 shadow-sm leading-none" // Adjusted position/style
+                aria-label="Remove attachment"
               >
-                <ImageSharpIcon className="w-5 h-5 mr-1" />
-                {isUploading ? "Uploading..." : "Add Photo/Video"}
+                <CloseIcon style={{ fontSize: '0.8rem' }} /> {/* Smaller icon */}
               </button>
+            </div>
+            )}
+
+            {/* Action Buttons (Only Post button remains here) */}
+            <div className="flex items-center justify-end mt-2"> 
+              {/* "Add Photo/Video" button was moved inside input wrapper */}
               <button
+                type="button" // Or type="submit" if this div is wrapped in a <form>
                 onClick={handleComment}
-                disabled={(!commentText.trim() && !attachmentUrl) || isUploading}
-                className={`px-3 py-1 rounded-md text-sm font-medium ${(!commentText.trim() && !attachmentUrl) || isUploading ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-primary-600 text-white hover:bg-primary-700'}`}
+                disabled={(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit} 
+                className={`px-3 py-1 rounded-md text-sm font-medium ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-primary-600 text-white hover:bg-primary-700'}`} 
               >
-                Post
+                Comment
               </button>
             </div>
           </div>
         </div>
-      </div>
-
+        
       {/* Modals */}
       <EditPost
         isOpen={isEditModalOpen}
@@ -778,10 +966,11 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
       />
       <EditComment
         isOpen={isEditModalOpenComment}
+        comment={selectedComment} 
         onClose={() => {setIsEditModalOpenComment(false); setSelectedComment(null);}} 
         // ** Pass the CORRECT confirmation handler **
         onConfirm={handleConfirmEditComment} 
-        comment={selectedComment} 
+        
       />
       <DeleteComment
         isOpen={isDeleteModalOpenComment}

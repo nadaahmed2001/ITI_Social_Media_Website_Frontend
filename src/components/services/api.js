@@ -70,7 +70,17 @@ export const createPost = (postData) => {
 
 
 // Fetch comments for a post
-export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
+export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
+  console.log(`API: Fetching comments for post ${postId}, page ${page}`);
+  if (typeof page !== 'number' || isNaN(page)) {
+    console.error("API ERROR: fetchComments received invalid page number:", page);
+    console.log(page)
+    // Return a rejected promise or throw an error to stop the process
+    return Promise.reject(new Error(`Invalid page number: ${page}`)); 
+  } 
+  // Append the page query parameter to the comments endpoint URL
+  return api.get(`/posts/${postId}/comments/?page=${page}`); 
+};
 
 // Add a comment to a post
 export const addComment = (postId, commentData) => {

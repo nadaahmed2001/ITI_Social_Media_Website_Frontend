@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { createPost } from '../../services/api';
 import { ImageSharp as ImageSharpIcon, Close as CloseIcon } from '@mui/icons-material';
 import AuthContext from '../../contexts/AuthContext'; 
-
+import {Link} from "react-router-dom"
 
 const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
 const CLOUDINARY_CLOUD_NAME = "dsaznefnt";
@@ -107,23 +107,25 @@ export default function CreatePost({ onPostCreated }) {
     <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200">
       <div className="relative">
       <div className="flex items-center space-x-3">
-          <img 
-                src={avatarSrc} 
-                alt= "you" 
-                title= {user?.username} 
-                className="w-10 h-10 rounded-full object-cover border border-gray-200"
-                onError={(e) => { 
-                  // Prevent infinite loop if default avatar also fails
-                  if (e.target.src !== DEFAULT_USER_AVATAR) {
-                    e.target.src = DEFAULT_USER_AVATAR; 
-                  }}}
-          />
+          <Link to={`/profiles/${user?.id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+            <img 
+                  src={avatarSrc} 
+                  alt= "you" 
+                  title= {user?.username} 
+                  className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                  onError={(e) => { 
+                    // Prevent infinite loop if default avatar also fails
+                    if (e.target.src !== DEFAULT_USER_AVATAR) {
+                      e.target.src = DEFAULT_USER_AVATAR; 
+                    }}}
+              />
+          </Link>
           <textarea
             value={postText}
             onChange={handleTextChange}
             placeholder={`What's on your mind? (${MAX_POST_LENGTH} characters max)`}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-            rows={3}
+            rows={2}
             maxLength={MAX_POST_LENGTH}
           />
       </div>
