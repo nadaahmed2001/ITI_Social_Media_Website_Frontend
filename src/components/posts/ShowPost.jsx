@@ -115,12 +115,12 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
             src={ comment.author_profile_picture || DEFAULT_USER_AVATAR } // Use comment author pic
             alt={authorName} 
             title={isCommentAuthor ?  "You" : `${authorName}`} 
-            className="w-8 h-8 rounded-full object-cover border border-gray-200"
+            className="w-10 h-10 rounded-full object-cover border border-gray-200"
             onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
           />
           </Link>
           <div>
-            <p className="font-medium text-sm text-gray-900">{isCommentAuthor ?  "You" : `${authorName}`} </p>
+            <p className="font-medium text-sm text-gray-900 mb-0 pt-2">{isCommentAuthor ?  "You" : `${authorName}`} </p>
             <p className="text-xs text-gray-500">
               <TimeAgo timestamp={comment.created_on} />
             </p>
@@ -601,10 +601,10 @@ const loadMoreComments = async () => {
 
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200">
+    <div className="!bg-[#292928] rounded-lg shadow-md p-4 mb-4 border border-gray-200">
       {/* Post Header */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center space-x-3">
+      <div className="flex items-center justify-between mb-2 !bg-[#292928]">
+        <div className="flex items-center space-x-3 !bg-[#292928]">
         <Link to={`/profiles/${post.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity"> 
         <img 
               src={displayAuthorAvatar} 
@@ -619,7 +619,7 @@ const loadMoreComments = async () => {
           />
           </Link>
           <div>
-            <p className="font-medium text-gray-900 mb-1 mt-3">{avatarTitleText|| "Unknown"}</p>
+            <p className="font-medium text-gray-900 mb-0 mt-3">{avatarTitleText|| "Unknown"}</p>
             <p className="text-xs text-gray-500">
             <TimeAgo timestamp={post.created_on} />
             </p>
@@ -784,69 +784,70 @@ const loadMoreComments = async () => {
       </div>
 
       <div className="mt-4">
-  <h4 className="font-medium text-gray-900 mb-3">Comments</h4>
+      <h4 className="!text-xs !font-medium !text-[#fffd02] mb-3">Comments</h4> 
+
   
-  {/* Error message */}
-  {commentPagination.error && (
-          <div className="text-red-500 text-sm mb-3">
-            Error: {commentPagination.error}
-            {/* Optional: Add a retry button */}
-            <button 
-              onClick={() => loadPosts(1)} // Reload first page on retry?
-              className="ml-2 text-primary-600 hover:underline"
-            >
-              Retry
-            </button>
-          </div>
-        )}
-        
-        {/* Comments list */}
-        {/* Check if comments array exists before mapping */}
-        {comments && comments.length > 0 ? (
-          <>
-            {comments.map((comment) => (
-              <CommentItem 
-                key={comment.id} 
-                comment={comment} 
-                currentUserId={user?.id} // Use context user ID
-                onEditRequest={handleEditCommentRequest} 
-                onDeleteRequest={handleDeleteCommentRequest} 
-              />
-            ))}
-            
-            {/* Load More button */}
-            {commentPagination.hasMore && (
-            <div className="flex justify-center">
-              <button
-                onClick={loadMoreComments}
-                disabled={commentPagination.isLoading}
-                className={`px-4 py-2 rounded-md text-sm font-medium flex items-center ${
-                  commentPagination.isLoading 
-                    ? 'bg-gray-400 text-gray-700 cursor-not-allowed' // Adjusted disabled style
-                    : 'bg-primary-600 text-grey hover:bg-primary-700' // Check primary color definition
-                }`}
-              >
-                {commentPagination.isLoading ? (
-                  <>
-                    <CircularProgress 
-                  // Set size (in pixels) - smaller for buttons usually looks better
-                  size={18} 
-                  // Option 1: Inherit color from button text (useful if text color changes)
-                  color="red" 
-                  // Option 2: Use sx prop for specific styling
-                  sx={{ 
-                      color: 'white', // Set color explicitly (if button text is white)
-                      marginRight: '8px' // Add some spacing before the text (like Tailwind mr-2)
-                  }} 
-                />
-                  </>
-                ) : (
-                  'Load More Comments'
-                )}
-          </button>
-        </div>
-      )}
-            
+        {/* Error message */}
+        {commentPagination.error && (
+                <div className="text-red-500 text-sm mb-3">
+                  Error: {commentPagination.error}
+                  {/* Optional: Add a retry button */}
+                  <button 
+                    onClick={() => loadPosts(1)} // Reload first page on retry?
+                    className="ml-2 text-primary-600 hover:underline"
+                  >
+                    Retry
+                  </button>
+                </div>
+              )}
+              
+              {/* Comments list */}
+              {/* Check if comments array exists before mapping */}
+              {comments && comments.length > 0 ? (
+                <>
+                  {comments.map((comment) => (
+                    <CommentItem 
+                      key={comment.id} 
+                      comment={comment} 
+                      currentUserId={user?.id} // Use context user ID
+                      onEditRequest={handleEditCommentRequest} 
+                      onDeleteRequest={handleDeleteCommentRequest} 
+                    />
+                  ))}
+                  
+                  {/* Load More button */}
+                  {commentPagination.hasMore && (
+                  <div className="flex justify-center">
+                    <button
+                      onClick={loadMoreComments}
+                      disabled={commentPagination.isLoading}
+                      className={`px-4 py-2 rounded-md text-sm font-medium flex items-center ${
+                        commentPagination.isLoading 
+                          ? 'bg-gray-400 text-gray-700 cursor-not-allowed' // Adjusted disabled style
+                          : 'bg-primary-600 text-grey hover:bg-primary-700' // Check primary color definition
+                      }`}
+                    >
+                      {commentPagination.isLoading ? (
+                        <>
+                          <CircularProgress 
+                        // Set size (in pixels) - smaller for buttons usually looks better
+                        size={18} 
+                        // Option 1: Inherit color from button text (useful if text color changes)
+                        color="red" 
+                        // Option 2: Use sx prop for specific styling
+                        sx={{ 
+                            color: 'white', // Set color explicitly (if button text is white)
+                            marginRight: '8px' // Add some spacing before the text (like Tailwind mr-2)
+                        }} 
+                      />
+                        </>
+                      ) : (
+                        'Load More Comments'
+                      )}
+                </button>
+              </div>
+            )}
+                  
             {/* End of comments message */}
              {!commentPagination.hasMore && !commentPagination.isLoading && (
                  <p className="text-center text-gray-500 text-xs italic mt-4">No more comments</p>
