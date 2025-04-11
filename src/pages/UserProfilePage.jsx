@@ -1,3 +1,4 @@
+///Pages/UserProfilePage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar, { SECTIONS } from '../components/profiles/Sidebar/Sidebar'; 
 import ViewPublicProfile from '../components/profiles/UserProfile/ViewPublicProfile';

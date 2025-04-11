@@ -1,4 +1,4 @@
-{/* ================= TODO: Adding more fields, batch, department track, join date ================ */}
+//Component to view a public profile of a user
 import React, { useState, useEffect, useCallback } from 'react';
 import { getPublicProfile, getMyProjects,} from '../../../components/services/api';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -12,6 +12,14 @@ import './ViewPublicProfile.css';
 
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp'; 
 const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp'; 
+
+
+const renderStudentBatches = () => {
+    if (!profileData || profileData.user_type !== 'student' || !Array.isArray(profileData.batches)) {
+      return null;
+    }
+    
+
 
 const ViewPublicProfile = ({ profileId }) => {
     const [profileData, setProfileData] = useState(null);
