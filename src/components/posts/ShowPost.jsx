@@ -179,10 +179,10 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
   // ---
 
   return (
-    <div className="mb-1 pb-4 border-b border-gray-100 last:border-0">
+    <div className="mb-1 pb-4 border-b border-gray-100 last:border-0 !bg-[#292928]">
       {/* Comment Header */}
       <div className="flex items-start justify-between mb-2 !bg-[#292928]">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 !bg-[#292928]">
         <Link to={`/profiles/${comment.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
 
           <img 
@@ -193,21 +193,21 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
             onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
           />
           </Link>
-          <div>
-            <p className="font-medium text-sm text-gray-900 mb-0 pt-2 !bg-[292928]">{isCommentAuthor ?  "You" : `${authorName}`} </p>
-            <p className="text-xs text-gray-500 !bg-[292928]">
+          <div className="!bg-[#292928]">
+            <p className="font-medium text-sm text-white mb-0 pt-2 !bg-[292928] !bg-[#292928]">{isCommentAuthor ?  "You" : `${authorName}`} </p>
+            <p className="text-xs text-white !bg-[#292928]">
               <TimeAgo timestamp={comment.created_on} />
             </p>
           </div>
         </div>
         {/* Edit/Delete Menu */}
         {isCommentAuthor && (
-          <div className="relative" ref={optionsMenuRef}>
+          <div className="relative !bg-[#292928]" ref={optionsMenuRef}>
               <button onClick={toggleOptionsMenu} className="text-gray-500 hover:text-gray-700 !bg-[#292928]">
-                <MoreVertIcon className="w-5 h-5" />
+                <MoreVertIcon className="w-5 h-5 !bg-[#292928]" />
               </button>
               {showOptionsMenu && (
-                <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-20">
+                <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20">
                   {/* Edit Button - Calls prop */}
                   <button
                     onClick={() => { onEditRequest(comment); setShowOptionsMenu(false); }} 
@@ -229,14 +229,14 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
       </div>
 
       {/* --- Comment Body with See more/less --- */}
-      <div className="text-gray-800 ml-10 mb-2 whitespace-pre-wrap"> {/* Margin to align with author name */}
+      <div className="text-gray-800 ml-10 mb-2 whitespace-pre-wrap !bg-[292928]"> {/* Margin to align with author name */}
           {isExpanded ? (
             <>
               <p>{displayText}</p>
               {needsTruncation && (
                 <button
                   onClick={toggleExpansion}
-                  className="mt-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs" 
+                  className="mt-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[292928]" 
                   aria-expanded={isExpanded}
                 >
                   See less
@@ -249,7 +249,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
               {needsTruncation && (
                 <button
                   onClick={toggleExpansion}
-                  className="ml-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs"
+                  className="ml-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[292928]"
                   aria-expanded={isExpanded}
                 >
                   See more
@@ -262,7 +262,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
       
       {/* Comment Attachments (if any - simplified) */}
       {comment.attachments?.length > 0 && (
-      <div className="ml-10 mt-2 space-y-2">
+      <div className="ml-10 mt-2 space-y-2 !bg-[#292928]">
         {comment.attachments.map((attachment) => (
           <div key={attachment.id} className="flex items-center">
             {attachment.image != null ? (
