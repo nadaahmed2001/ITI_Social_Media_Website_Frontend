@@ -39,7 +39,7 @@ import StudentDashboard from "../pages/StudentDashboard/Dashboard";
 import PostListWithSideBar from "../components/posts/PostListWithSideBar";
 import Aichat from "../components/chat/Aichat";
 
-
+import PostDetail from "../components/notifications/PostDetail"; // Import the PostDetail component
 
 const AppRouter = () => {
         const userToken = localStorage.getItem("access_token") || sessionStorage.getItem("access_token") || null;
@@ -97,6 +97,9 @@ const AppRouter = () => {
                                         {/* Email Change */}
                                         <Route path="/email-change-success" element={<EmailChangeSuccess />} />
                                         <Route path="/email-change-failed/" element={<EmailChangeFailed />} />
+
+                                        {/* <Route path="/posts/:postId" element={<PostDetail />} /> */}
+                                        <Route path="/dashboard/posts/:postId" element={<PostDetail />} />
 
                                         {/* Default Route */}
                                         <Route path="*" element={<AuthPage />} />
