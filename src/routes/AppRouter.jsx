@@ -1,7 +1,7 @@
 //AppRouter.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProfilePage from "../pages/ProfilePage";
+// import ProfilePage from "../pages/ProfilePage";
 import SearchPage from "../pages/SearchPage";
 import NotificationsDropdown from "../pages/NotificationsDropdown";
 // Components (Optional - For Direct Rendering in Pages)
@@ -22,6 +22,8 @@ import Sidebar from "../components/profiles/Sidebar/Sidebar";
 import UserProfilePage from "../pages/UserProfilePage";
 import EmailChangeSuccess from "../pages/EmailChangeSuccess";
 import EmailChangeFailed from "../pages/EmailChangeFailed";
+
+import ProfilePageById from "../components/profiles/ProfilePageById";
 
 import { AuthProvider } from "../contexts/AuthContext";
 import PrivateRoute from './../components/PrivateRoute';
@@ -84,7 +86,7 @@ const AppRouter = () => {
 
                                         {/* Profile Components */}
                                         <Route path="/profiles/followbutton" element={<FollowButton />} />
-                                        <Route path="/profiles/:userId" element={<ProfilePage />} />
+                                        <Route path="/profiles/:profileId" element={<ProfilePageById />} />
 
                                         {/* Search Components */}
                                         <Route path="/search/filters" element={<SearchFilters />} />

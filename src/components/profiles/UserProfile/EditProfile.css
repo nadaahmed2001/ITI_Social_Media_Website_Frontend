@@ -2,6 +2,25 @@
 .edit-profile-container {
     padding: 25px;
     color: #e0e0e0; /* Light grey text */
+    width: 80%;
+}
+
+.icon{
+    background: #282828 ;
+}
+
+form{
+    background-color: inherit;
+    margin-top: 35px;
+}
+
+
+form input {
+    max-width: 80%;
+}
+
+form textarea{
+    max-width: 80%;
 }
 
 .edit-profile-container h2 {
@@ -12,6 +31,16 @@
     margin-bottom: 25px;
     border-bottom: 1px solid #444;
     padding-bottom: 15px;
+    background-color: inherit;
+    font-weight: 600;
+
+}
+
+
+.edit-profile-container h2 svg{
+    background-color: inherit;
+    width: 2.5rem;
+    height: 2.5rem;
 }
 
 .form-section {

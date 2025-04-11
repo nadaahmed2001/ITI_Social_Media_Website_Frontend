@@ -99,6 +99,11 @@ background: none; /* Override global */
     border-radius: 4px;
     transition: color 0.2s ease, background-color 0.2s ease;
 }
+
+.project-manage-actions .action-button svg {
+    background-color: inherit;
+}
+
 .project-manage-actions .action-button:hover:not(:disabled) {
     color: #fff;
 }

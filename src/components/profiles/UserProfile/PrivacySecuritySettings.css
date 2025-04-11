@@ -1,13 +1,12 @@
-/* src/components/UserProfile/PrivacySecuritySettings.css */
-
 .privacy-security-container {
-    background-color: #1e1e1e;
+    background-color: #292928;
     color: #e0e0e0;
     padding: 2.5rem;
+    margin-right: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     border: 1px solid #333;
-    /* max-width: 1000px; */
+    max-width: 76%;
     margin-left: 25px;
     transition: all 0.3s ease;
 }
@@ -20,8 +19,21 @@
     margin-bottom: 2rem;
     padding-bottom: 1.25rem;
     border-bottom: 1px solid #333;
-    /* background-color: #242425; */
+    background-color: #181819;
     margin-left: 25px;
+    max-width: 76%;
+}
+
+.privacy-header h2 {
+    background-color: inherit;
+    font-weight: 600;
+    max-width: 80%;
+
+}
+
+.privacy-header svg {
+    background-color: inherit;
+    font-size: 2rem;
 }
 
 .privacy-header-icon {
@@ -32,14 +44,7 @@
     border-radius: 50%;
 }
 
-.privacy-header-text-container {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    background-color: #242425;
-    border-radius: 5px;
 
-}
 
 .privacy-header-text {
     color: #ffffff;
@@ -47,7 +52,7 @@
     font-size: 1.75rem !important;
     letter-spacing: -0.5px;
     margin: 0 !important;
-    /* background-color: #242425; */
+    max-width: 80%;
     border-radius: 5px;
 
 }
@@ -56,6 +61,8 @@
     color: #aaa !important;
     font-weight: 400 !important;
     font-size: 0.95rem !important;
+    max-width: 80%;
+
 }
 
 /* Alert Messages */
@@ -90,6 +97,8 @@
     border-radius: 10px;
     padding: 1.5rem;
     transition: all 0.3s ease;
+    max-width: 80%;
+
 }
 
 
@@ -99,15 +108,16 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    background-color: #242425;
+    background-color: inherit;
 }
+
 
 .setting-title {
     font-weight: 600 !important;
     margin-bottom: 0 !important;
     color: #ffffff;
     font-size: 1.25rem !important;
-    background-color: #242425;
+    background-color: inherit;
 }
 
 .setting-status-badge {
@@ -134,7 +144,7 @@
     margin-bottom: 1.5rem !important;
     line-height: 1.7;
     font-size: 0.95rem;
-    background-color: #242425;
+    background-color: inherit
 }
 
 /* Row containing the switch/label/spinner */
@@ -283,4 +293,9 @@
   .toggle-text-content {
     flex-grow: 1;
     margin-left: 12px;
+  }
+
+
+  .two-f-auth-toggle-icon{
+    background-color: inherit;
   }

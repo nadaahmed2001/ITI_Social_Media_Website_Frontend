@@ -18,3 +18,7 @@ body[data-theme='dark'] { /* Or :root if dark is default, or .dark-theme class *
     --success-background: rgba(102, 255, 102, 0.1);
     /* Add any other variables you use */
 }
+
+#root {
+    background-color: #191919;
+}
