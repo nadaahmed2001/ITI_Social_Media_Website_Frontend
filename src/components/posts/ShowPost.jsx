@@ -180,30 +180,30 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest /*
       
       {/* Comment Attachments (if any - simplified) */}
       {comment.attachments?.length > 0 && (
-  <div className="ml-10 mt-2 space-y-2">
-    {comment.attachments.map((attachment) => (
-      <div key={attachment.id} className="flex items-center">
-        {attachment.image != null ? (
-          <img 
-            src={attachment.image} 
-            alt="Comment attachment" 
-            className="max-w-xs rounded-md"
-          />
-        ) : (
-          <video 
-            href={attachment.video} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline text-sm"
-          >
-            Download {attachment.name}
-          </video>
-        )}
-      </div>
+      <div className="ml-10 mt-2 space-y-2">
+        {comment.attachments.map((attachment) => (
+          <div key={attachment.id} className="flex items-center">
+            {attachment.image != null ? (
+              <img 
+                src={attachment.image} 
+                alt="Comment attachment" 
+                className="max-w-xs rounded-md"
+              />
+            ) : (
+              <video 
+                target="_blank" 
+                src={attachment.video}
+                controls
+                playsInline
+                className="w-full h-auto block max-h-[75vh] bg-black max-w-xs rounded-md" // Limit height, add bg for potential letterboxing
+                preload="metadata" // Don't preload the whole video
+              >
+              </video>
+            )}
+          </div>
         ))}
       </div>
-        )}
-
+      )}
       {/* Comment Actions (Like, Reactions - Simplified Placeholder) */}
       <div className="flex items-center space-x-4 ml-10 mt-2">
         <div className="relative">
@@ -249,30 +249,30 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
 
 
   // // Initialize Cloudinary widget
-  // useEffect(() => {
-  //   if (window.cloudinary) {
-  //     widgetRef.current = window.cloudinary.createUploadWidget(
-  //       {
-  //         cloudName: CLOUDINARY_CLOUD_NAME,
-  //         uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-  //         sources: ['local', 'url', 'camera'],
-  //         multiple: false,
-  //         resourceType: 'auto', // Accepts both images and videos
-  //         clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm', 'mkv'],
-  //         maxFileSize: 15000000 // 15MB
-  //       },
-  //       (error, result) => {
-  //         if (!error && result && result.event === "success") {
-  //           setAttachmentUrl(result.info.secure_url);
-  //           setIsUploading(false);
-  //         } else if (error) {
-  //           console.error("Upload error:", error);
-  //           setIsUploading(false);
-  //         }
-  //       }
-  //     );
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (window.cloudinary) {
+      widgetRef.current = window.cloudinary.createUploadWidget(
+        {
+          cloudName: CLOUDINARY_CLOUD_NAME,
+          uploadPreset: CLOUDINARY_UPLOAD_PRESET,
+          sources: ['local', 'url', 'camera'],
+          multiple: false,
+          resourceType: 'auto', // Accepts both images and videos
+          clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm', 'mkv', 'wmv'],
+          maxFileSize: 15000000 // 15MB
+        },
+        (error, result) => {
+          if (!error && result && result.event === "success") {
+            setAttachmentUrl(result.info.secure_url);
+            setIsUploading(false);
+          } else if (error) {
+            console.error("Upload error:", error);
+            setIsUploading(false);
+          }
+        }
+      );
+    }
+  }, []);
 
   const handleOpenUploadWidget = () => {
     setIsUploading(true);
