@@ -1,4 +1,5 @@
-*{
+
+.messageList-container{
     background: transparent !important;
 }
 .message-enter {
@@ -26,42 +27,40 @@
 }
 ::-webkit-scrollbar-thumb {
     overflow-y: hidden ;
-    background-color: yellow;
+    background-color: #ff5e5e;
     border-radius: 4px;
 }
 
 /* Add semi-transparent background to messages */
 .message-enter-active, .message-exit-active {
-    background: rgba(0, 0, 0, 0.6) !important;
+    /* background: rgba(0, 0, 0, 0.6) !important; */
     backdrop-filter: blur(2px);
   }
   
   /* Add background to input area */
   form {
-    background: rgba(0, 0, 0, 0.8) !important;
+    /* background: rgba(0, 0, 0, 0.8) ; */
     backdrop-filter: blur(5px);
   }
   
   /* Message bubbles background */
-  .bg-yellow-500, .bg-gray-800 {
-    background-color: rgba(0, 0, 0, 0.7) !important;
+  .bg-#ff5e5e-500, .bg-gray-800 {
+    background-color: rgba(199, 199, 199, 0.591) ;
     backdrop-filter: blur(3px);
   }
   
-  /* Keep existing yellow color for sender's messages */
-  .bg-yellow-500 {
-    background-color: #eab308 !important;
-  }
+  /* Keep existing ###ff5e5e color for sender's messages */
+  /* .bg-#ff5e5e-500 {
+    background-color: #ff5e5e !important;
+  } */
 
   .background-div {
-    background-image: url('../../assets/images/bg.jpg') !important;
-    background-size: cover;
-    background-position: center;
-    background-color: #000; /* Fallback color */
+    background-image: url('../../assets/images/bg.jpg') ;
+    
 }
-.message {
+/* .message {
     background: transparent !important;
-}
+} */
 /**//**/
 form {
     /* background-color: rgba(0, 0, 0, 0.6) !important; */
@@ -70,7 +69,6 @@ form {
   }
   
   input::placeholder {
-    color: #facc15; /* Soft yellow */
+    color:#ff5e5e; /* Soft ###ff5e5e */
   }
-  
   
