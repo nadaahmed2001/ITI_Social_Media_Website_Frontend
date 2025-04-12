@@ -65,12 +65,12 @@
 }
 
 .EditIcon {
-  color: #fffd02;
+  color: #7a2226;
   background: #1a1a1a;
 }
 
 .DeleteIcon {
-  color: #fffd02;
+  color: #7a2226;
   background: #1a1a1a;
 }
 
@@ -186,8 +186,8 @@
 
 /* Optional: subtle hover glow */
 .reaction-item:hover .Reaction-Post {
-  color: #fffd02;
-  filter: drop-shadow(0 0 5px #fffd02aa);
+  color: #7a2226;
+  filter: drop-shadow(0 0 5px #7a2226aa);
 }
 
 /* Post Actions */
@@ -201,7 +201,7 @@
 }
 
 .savePost-btn {
-  color: #fffd02;
+  color: #7a2226;
   border: none;
   cursor: pointer;
   font-weight: 500;
@@ -216,7 +216,7 @@
 
 .comment-section h4{
   margin: 0;
-  color: #fffd02;
+  color: #7a2226;
  
 }
 
@@ -258,7 +258,7 @@
 }
 
 .comment-submit {
-  background: #fffd02;
+  background: #7a2226;
   color: #000;
   border: none;
   padding: 8px 20px;
@@ -277,13 +277,13 @@
 }
 
 .Show-All-Reactions {
-  color: #fffd02;
+  color: #7a2226;
   cursor: pointer;
   text-decoration: none;
   background: #282828;
 }
 .Show-All-Reactions-comment{
-  color: #fffd02;
+  color: #7a2226;
   cursor: pointer;
   text-decoration: none;
 
@@ -324,7 +324,7 @@
 }
 
 .post-submit {
-  background: #fffd02;
+  background: #7a2226;
   color: #000;
   border: none;
   padding: 8px 20px;
@@ -342,7 +342,7 @@
   transform: scale(0.95);
 }
 .ImageSharpIcon{
-  color: #fffd02;
+  color: #7a2226;
   background: #282828;
 }
 /**/

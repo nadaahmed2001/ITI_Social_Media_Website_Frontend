@@ -184,18 +184,18 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
       {/* Comment Header */}
       <div className="flex items-start justify-between mb-2 !bg-[#292928]">
         <div className="flex items-center space-x-2 !bg-[#292928]">
-        <Link to={`/profiles/${comment.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
-          <img 
-            src={ comment.author_profile_picture || DEFAULT_USER_AVATAR } // Use comment author pic
-            alt={authorName} 
-            title={isCommentAuthor ?  "You" : `${authorName}`} 
-            className="w-10 h-10 rounded-full object-cover border border-gray-200"
-            onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
-          />
+          <Link to={`/profiles/${comment.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+            <img 
+              src={ comment.author_profile_picture || DEFAULT_USER_AVATAR } // Use comment author pic
+              alt={authorName} 
+              title={isCommentAuthor ?  "You" : `${authorName}`} 
+              className="w-10 h-10 rounded-full object-cover border border-gray-200"
+              onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
+            />
           </Link>
           <div className="!bg-[#292928]">
-            <Link to={`/profiles/${comment.author_id}`} className="!bg-[#292928] no-underline flex-shrink-0 block hover:opacity-80 transition-opacity"> 
-              <p className="font-bold text-sm !text-[#7a2226] mb-0 pt-2 !bg-[#292928] !no-underline ">{isCommentAuthor ?  "You" : `${authorName}`} </p>
+            <Link to={`/profiles/${comment.author_id}`} className="!no-underline !bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+              <p className="font-bold text-medium !text-[#7a2226] mb-0 pt-2 !bg-[#292928] !no-underline ">{isCommentAuthor ?  "You" : `${authorName}`} </p>
             </Link>
             <p className="text-xs text-white !bg-[#292928]">
               <TimeAgo timestamp={comment.created_on} />
@@ -331,7 +331,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
                   </div>
                 )}
               </div>
-              <p className="Show-All-Reactions-comment"
+              <p className="!bg-[#292928] text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs cursor-pointer"
               onClick={() => setShowReactionsModalforcomment(true)}
               >Show All Reactions</p>
               {showReactionsModalforcomment && 
@@ -719,24 +719,23 @@ const loadMoreComments = async () => {
       <div className="flex items-center justify-between mb-2 !bg-[#292928]">
         <div className="flex items-center space-x-3 !bg-[#292928]">
         <Link to={`/profiles/${post.author_id}`} className= "!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
-        <img 
-              src={displayAuthorAvatar} 
-              alt={avatarAltText} 
-              title={avatarTitleText} 
-              className="w-10 h-10 rounded-full object-cover border border-gray-200 [background-color:inherit]"
-              onError={(e) => { 
-                if (e.target.src !== DEFAULT_USER_AVATAR) {
-                  e.target.src = DEFAULT_USER_AVATAR; 
-                }
-              }}
-          />
+          <img 
+                src={displayAuthorAvatar} 
+                alt={avatarAltText} 
+                title={avatarTitleText} 
+                className="w-10 h-10 rounded-full object-cover border border-gray-200 [background-color:inherit]"
+                onError={(e) => { 
+                  if (e.target.src !== DEFAULT_USER_AVATAR) {
+                    e.target.src = DEFAULT_USER_AVATAR; 
+                  }
+                }}
+            />
           </Link >
 
           <div className="!no-underline !bg-[#292928]">
-            <a href={`/profiles/${post.author_id}`} className="!no-underline" >
-            <p className="font-medium text-white mb-0 mt-3 !bg-[#292928]">{avatarTitleText|| "Unknown"}</p>
-
-            </a>
+            <Link to={`/profiles/${post.author_id}`} className= "!no-underline !bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+              <p className="font-bold text-lg !text-[#7a2226] mb-0 mt-3 !bg-[#292928]">{avatarTitleText|| "Unknown"}</p>
+            </Link>
             <p className="text-xs text-gray-500 !bg-[#292928]">
               <TimeAgo timestamp={post.created_on}/>
             </p>
@@ -862,7 +861,7 @@ const loadMoreComments = async () => {
 
       {/* Post Actions */}
       <div className="post-actions !bg-[#292928] " >
-  <div className="reactions-container">
+  <div className="!bg-[#292928]">
     <div 
       className="reaction-trigger" 
       onClick={() => setShowReactions(!showReactions)}
@@ -908,7 +907,7 @@ const loadMoreComments = async () => {
 
 
       <div className="mt-4 !bg-[#292928]">
-      <h4 className="!text-xs !font-bold !text-[#7a2226] !bg-[#292928] mb-3">Comments</h4> 
+      <h4 className="!text-sm !font-bold !text-[#7a2226] !bg-[#292928] mb-3">Comments</h4> 
 
   
         {/* Error message */}
@@ -1056,7 +1055,7 @@ const loadMoreComments = async () => {
                 type="button" // Or type="submit" if this div is wrapped in a <form>
                 onClick={handleComment}
                 disabled={(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit} 
-                className={`px-3 py-1 rounded-lg text-sm font-medium !bg-[#7a2226] text-gray-900 ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
+                className={`px-3 py-1 !rounded-lg text-sm font-medium !bg-[#7a2226] text-gray-900 ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
               >
                 Comment
               </button>

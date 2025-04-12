@@ -104,15 +104,15 @@ export default function CreatePost({ onPostCreated }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200">
-      <div className="relative">
-      <div className="flex items-center space-x-3">
-          <Link to={`/profiles/${user?.id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+    <form onSubmit={handleSubmit} className="!bg-[#3e1113] rounded-lg shadow-md p-4 mb-4 border border-gray-200">
+      <div className="relative ">
+      <div className="flex items-center space-x-3 !bg-[#3e1113]">
+          <Link to={`/profiles/${user?.id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity mt-1 !bg-[#3e1113]"> 
             <img 
                   src={avatarSrc} 
                   alt= "you" 
                   title= {user?.username} 
-                  className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                  className="w-10 h-10 rounded-full object-cover border border-gray-200 !bg-[#3e1113] "
                   onError={(e) => { 
                     // Prevent infinite loop if default avatar also fails
                     if (e.target.src !== DEFAULT_USER_AVATAR) {
@@ -124,12 +124,12 @@ export default function CreatePost({ onPostCreated }) {
             value={postText}
             onChange={handleTextChange}
             placeholder={`What's on your mind? (${MAX_POST_LENGTH} characters max)`}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+            className="!bg-[#292928] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
             rows={2}
             maxLength={MAX_POST_LENGTH}
           />
       </div>
-          <div className={`absolute bottom-2 right-2 text-xs ${getCharCounterClass()}`}>
+          <div className={`!bg-[#292928] absolute bottom-2 right-2 text-xs ${getCharCounterClass()}`}>
             {postText.length}/{MAX_POST_LENGTH}
           </div>
       </div>
@@ -162,23 +162,23 @@ export default function CreatePost({ onPostCreated }) {
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center justify-between mt-3">
+      <div className="!bg-[#3e1113] flex items-center justify-between mt-3">
         <button
           type="button"
           onClick={handleOpenUploadWidget}
           disabled={isUploading}
-          className="flex items-center text-sm text-gray-600 hover:text-primary-600 disabled:opacity-50"
+          className="!bg-[#3e1113] flex items-center text-sm text-gray-400 hover:text-primary-600 disabled:opacity-50"
         >
-          <ImageSharpIcon className="w-5 h-5 mr-1" />
-          {isUploading ? "Uploading..." : `Add Attachment${attachmentUrls.length > 0 ? 's' : ''}`}
+          <ImageSharpIcon className="!bg-[#7a2226] text-size-lg w-10 h-10 ml-15" />
+          {isUploading ? "Uploading..." : `${attachmentUrls.length > 0 ? 's' : ''}`}
         </button>
         <button
           type="submit"
           disabled={(!postText.trim() && attachmentUrls.length === 0) || isUploading}
-          className={`px-4 py-2 rounded-md text-sm font-medium ${
+          className={`!bg-[#191919] px-4 py-1 !rounded-lg text-sm font-medium border border-gray-600  ${
             (!postText.trim() && attachmentUrls.length === 0) || isUploading
-              ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-              : 'bg-primary-600 text-white hover:bg-primary-700'
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed '
+              : 'bg-[#191919] text-white hover:bg-[#333333]'
           }`}
         >
           Post

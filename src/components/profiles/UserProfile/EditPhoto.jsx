@@ -235,7 +235,7 @@ return (
                     disabled={isSaving || !imageChanged}
                     // --- UPDATE SX PROP with Hardcoded Dark Theme Colors ---
                     sx = {{
-                        backgroundColor: '#fffd02', // Hardcoded YELLOW
+                        backgroundColor: '#7a2226', // Hardcoded YELLOW
                         color: '#191919',       // Hardcoded DARK TEXT
                         minWidth: '100px',
                         fontWeight: 'bold',

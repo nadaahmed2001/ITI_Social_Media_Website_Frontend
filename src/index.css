@@ -9,7 +9,7 @@ body[data-theme='dark'] { /* Or :root if dark is default, or .dark-theme class *
     --text-placeholder: #6c757d;      /* Placeholder text */
     --border-color: #444;              /* Darker border */
     --border-color-input: #444;
-    --accent-primary: #fffd02;         /* Yellow accent */
+    --accent-primary: #7a2226;         /* Yellow accent */
     --text-on-accent: #191919;         /* Text on yellow buttons (dark) */
     --danger-color: #ff6666;           /* Red for remove/error */
     --danger-background: rgba(255, 102, 102, 0.1);
