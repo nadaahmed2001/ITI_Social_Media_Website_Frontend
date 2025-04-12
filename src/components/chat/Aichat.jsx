@@ -64,18 +64,19 @@ export default function Aichat() {
                         </div>
                     ))}
                 </div>
-                <form onSubmit={handleSendMessage} className="flex">
+                <form onSubmit={handleSendMessage}  className="p-4 border-t flex items-center gap-2 backdrop-blur-sm bg-gray-800">
                     <input
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type your message..."
-                        className="flex-1 p-2 rounded bg-gray-800 text-[#7a2226]"
+                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg  text-[#7a2226] placeholder-white focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-[rgba(199,199,199,0.591)]"
                     />
                     <button
                         type="submit"
-                        className="ml-2 bg-[#7a2226] text-black px-4 py-2 rounded hover:bg-[#7a2226]"
-                    >
+                          className=" text-[#7a2226] bg-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        
+                   >
                         Send
                     </button>
                 </form>
