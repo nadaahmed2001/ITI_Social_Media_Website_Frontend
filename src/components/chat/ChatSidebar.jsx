@@ -3,6 +3,8 @@ import { fetchGroupChats, fetchPrivateChatUsers } from "../../components/service
 import { Link, useNavigate } from "react-router-dom";
 import Aichat from "./Aichat";
 import { TextField, Button, Typography } from "@mui/material";
+import Chatwellcommsg from "./Chatwellcommsg";
+import { useLocation } from "react-router-dom";
 
 const ChatSidebar = () => {
     const [groupChats, setGroupChats] = useState([]);
@@ -15,7 +17,12 @@ const ChatSidebar = () => {
     //     setShowAIChat(true);
     //     navigate('/aiChat'); // Update URL
     // };
-
+    const location = useLocation();
+    
+    const showWelcome = !(
+        location.pathname.startsWith("/messagesList/") || 
+        location.pathname === "/chat/aiChat"
+    );
     useEffect(() => {
         const fetchChatData = async () => {
             try {
@@ -54,6 +61,7 @@ const ChatSidebar = () => {
   
 
     return (
+        <div className="flex">
         <div className="h-screen flex flex-col">
             {/* Mobile Toggle */}
            {/* Mobile Toggle - Moved to right side when sidebar is open */}
@@ -179,6 +187,8 @@ const ChatSidebar = () => {
                     ))}
                 </div>
             </div>
+        </div>
+        {showWelcome && <Chatwellcommsg />}
         </div>
     );
 };

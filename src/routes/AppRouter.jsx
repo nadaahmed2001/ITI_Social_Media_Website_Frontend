@@ -35,6 +35,8 @@ import HomePage from "../pages/HomePage";
 import PostListWithSideBar from "../components/posts/PostListWithSideBar";
 import Aichat from "../components/chat/Aichat";
 
+
+
 import PostDetail from "../components/notifications/PostDetail"; // Import the PostDetail component
 
 const AppRouter = () => {
