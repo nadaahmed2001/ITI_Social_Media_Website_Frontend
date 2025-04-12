@@ -317,7 +317,7 @@ const MessagesList = ({token, isGroupChat }) => {
             <div>
             <ChatSidebar />
             </div>
-            <div className="flex-1 flex flex-col  text-yellow-400 relative">
+            <div className="flex-1 flex flex-col text-[#7a2226] relative">
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
@@ -364,6 +364,7 @@ const MessagesList = ({token, isGroupChat }) => {
                                         }}
                                     >
                                       <div className="font-semibold text-sm bg-transparent">
+                                    
                             {isMine ? "Me" : message.sender}
                         </div>
                         <div className="break-words text-sm mt-1 bg-transparent">

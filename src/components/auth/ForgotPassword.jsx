@@ -45,13 +45,13 @@ const ForgotPassword = () => {
   });
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4 py-12">
-    <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full bg-white rounded-2xl h-[600px]">
+    <div className="flex items-center justify-center min-h-screen !bg-[#292928] px-4 py-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full !bg-[#292928] rounded-2xl h-[600px]">
       {/* Left Image Section */}
       <div
         className="hidden md:block bg-cover bg-center h-full rounded-l-2xl"
         style={{
-          backgroundImage: `url(${new URL('../../assets/images/itihub.jpeg', import.meta.url)})`,
+          backgroundImage: `url(${new URL('../../assets/images/image.png', import.meta.url)})`,
         }}
       ></div>
 
@@ -63,7 +63,7 @@ const ForgotPassword = () => {
             <Typography 
               component="h1" 
               variant="h5" 
-              sx={{ fontFamily: "Poppins", color: "brown", fontWeight: 600 }}
+              sx={{ fontFamily: "Poppins", color: "#7a2226", fontWeight: 600 }}
             >
               Password Recovery
             </Typography>
@@ -98,10 +98,10 @@ const ForgotPassword = () => {
               sx={{
                 mt: 2,
                 py: 1.5,
-                backgroundColor: 'brown !important',
+                backgroundColor: '#7a2226 ',
                 color: 'white !important',
                 '&:hover': {
-                  backgroundColor: 'brown !important',
+                  backgroundColor: '#7a2226 ',
                   filter: 'brightness(90%)',
                   transform: 'translateY(-1px)'
                 },
@@ -121,10 +121,10 @@ const ForgotPassword = () => {
 
             <Typography
               variant="body2"
-              sx={{ mt: 2, textAlign: "center", color: "brown" }}
+              sx={{ mt: 2, textAlign: "center", color: "#7a2226" }}
             >
               Remember your password?{' '}
-              <Link component={RouterLink} to="/login" sx={{ color: "brown" }}>
+              <Link component={RouterLink} to="/login" sx={{ color: "#7a2226" }}>
                 Login here
               </Link>
             </Typography>

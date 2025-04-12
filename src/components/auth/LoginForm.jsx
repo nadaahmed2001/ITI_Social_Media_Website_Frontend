@@ -127,7 +127,7 @@ const LoginForm = () => {
       {/* <Avatar sx={{ width: 48, height: 48, mr: 1.5, bgcolor: 'transparent' }}> */}
         <img src={Itilogo} alt="ITI Logo" className="w-10 h-10 mr-2" />
       {/* </Avatar> */}
-      <Typography component="h1" variant="h5" sx={{ fontFamily: "Poppins", color: "brown", fontWeight: 600 }}>
+      <Typography component="h1" variant="h5" sx={{ fontFamily: "Poppins", color: "#7a2226", fontWeight: 600 }}>
         Join ITI Talents
       </Typography>
     </Box>
@@ -168,14 +168,14 @@ const LoginForm = () => {
         <Button type="submit" fullWidth variant="contained" disableRipple   sx={{
     mt: 2,
     py: 1.5,
-    backgroundColor: 'brown !important',
+    backgroundColor: '#7a2226',
     '&:hover': {
-      backgroundColor: 'brown !important',  // Darker brown for hover
+      backgroundColor: '#7a2226',  // Darker brown for hover
       opacity: 0.9
     },
     '&.Mui-disabled': {
-      backgroundColor: '#D3D3D3 !important',
-      color: 'white !important'
+      backgroundColor: '#7a2226',
+      color: 'white'
     }
   }}
   disabled={loading}>
@@ -184,7 +184,7 @@ const LoginForm = () => {
 
         <Grid container justifyContent="center" sx={{ mt: 1 }}>
           <Grid item>
-            <Link component={RouterLink} to="/signup" variant="body2" sx={{ color: "brown" }} >{"Don't have an account? Sign Up"}</Link>
+            <Link component={RouterLink} to="/signup" variant="body2" sx={{ color: "#7a2226" }} >{"Don't have an account? Sign Up"}</Link>
           </Grid>
         </Grid>
       </Box>
@@ -226,13 +226,13 @@ const LoginForm = () => {
   );
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4 py-12">
-    <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full bg-white rounded-2xl h-[600px]">
+    <div className="flex items-center justify-center min-h-screen !bg-[#292928] px-4 py-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full !bg-[#292928] rounded-2xl h-[600px]">
       {/* Left Image */}
       <div
       className="hidden md:block bg-cover bg-center h-full rounded-l-2xl"
       style={{
-        backgroundImage: `url(${new URL('../../assets/images/itihub.jpeg', import.meta.url)})`,
+        backgroundImage: `url(${new URL('../../assets/images/image.png', import.meta.url)})`,
       }}
     ></div>
   

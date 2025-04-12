@@ -60,13 +60,13 @@ const SignUpForm = () => {
 
   
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4 py-12">
-    <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full bg-white rounded-2xl  h-[600px]">
+    <div className="flex items-center justify-center min-h-screen !bg-[#292928] px-4 py-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full !bg-[#292928] rounded-2xl  h-[600px]">
       {/* Left Image */}
       <div
         className="hidden md:block bg-cover bg-center h-full rounded-l-2xl "
         style={{
-          backgroundImage: `url(${new URL('../../assets/images/itihub.jpeg', import.meta.url)})`,
+          backgroundImage: `url(${new URL('../../assets/images/image.png', import.meta.url)})`,
         }}
       ></div>
 
@@ -75,7 +75,7 @@ const SignUpForm = () => {
   <div className="mx-auto w-full max-w-sm">
     <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
       <img src={ItiLogo} alt="ITI Logo" className="w-10 h-10 mr-2" />
-      <Typography component="h1" variant="h5" sx={{ fontFamily: "Poppins", color: "brown", fontWeight: 600 }}>
+      <Typography component="h1" variant="h5" sx={{ fontFamily: "Poppins", color: "#7a2226", fontWeight: 600 }}>
         Join ITI Talents
       </Typography>
     </Box>
@@ -119,13 +119,13 @@ disableRipple
 sx={{
   mt: 2,
   py: 1.5,
-  backgroundColor: 'brown !important',
+  backgroundColor: '#7a2226',
   '&:hover': {
-    backgroundColor: 'brown !important',  // Darker brown for hover
+    backgroundColor: '#7a2226',  // Darker brown for hover
     opacity: 0.9
   },
   '&.Mui-disabled': {
-    backgroundColor: '#D3D3D3 !important',
+    backgroundColor: '#7a2226',
     color: 'white !important'
   }
 }}
@@ -133,8 +133,8 @@ disabled={loading}
 >
 {loading ? <CircularProgress size={24} style={{ color: "white" }} /> : "Register"}
 </Button>
-            <Typography variant="body2" sx={{ mt: 2, textAlign: "center" , color: "brown" }}>
-              Already have an account? <Link  sx={{ color: "brown" }} to="/login" >Log in</Link>
+            <Typography variant="body2" sx={{ mt: 2, textAlign: "center" , color: "#7a2226" }}>
+              Already have an account? <Link  sx={{ color: "#7a2226" }} to="/login" >Log in</Link>
             </Typography>
           </form>
         </div>

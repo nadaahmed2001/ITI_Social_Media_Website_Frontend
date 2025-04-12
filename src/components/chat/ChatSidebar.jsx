@@ -140,8 +140,9 @@ const ChatSidebar = () => {
                             hover:bg-gray-800 rounded cursor-pointer"
                             onClick={() => navigate(`/messagesList/private/${chat.id}`)}>
                             <div>
+                               
                                 <Typography className=" !text-[#7a2226] !font-medium">
-                                    {chat.username}
+                                  {chat.username}
                                 </Typography>
                                 <Typography variant="caption" className=" !text-white line-clamp-1">
                                     {chat.lastMessage || "No messages yet"}
@@ -162,7 +163,9 @@ const ChatSidebar = () => {
                              rounded cursor-pointer"
                             onClick={() => navigate(`/messagesList/group/${chat.id}`)}>
                             <div>
-                                <Typography className="!font-medium">
+                              
+                                <Typography className="!font-medium flex">
+                                <img src={chat.authorAvatar || "/default-avatar.png"} alt="User" className="user-avatar" />
                                     {chat.name}
                                 </Typography>
                                 <Typography style={{ color: 'white' }} variant="caption">
