@@ -24,7 +24,7 @@ export default function Chatwellcommsg() {
           component="h1"
           className="text-white font-bold tracking-wide animate-pulse"
         >
-          Welcome in chat,
+          Your conversation starts here 💬
         </Typography>
 
         <motion.p
@@ -33,7 +33,7 @@ export default function Chatwellcommsg() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1, duration: 1 }}
         >
-          Please tap to start conversation
+          Tap to Start 
         </motion.p>
       </motion.div>
     </div>
