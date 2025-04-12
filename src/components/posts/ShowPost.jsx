@@ -26,7 +26,11 @@ import {
 } from "../../components/services/api";
 
 import {
+  ThumbUpOffAlt as ThumbUpOutline, // Outline version for 'Not Liked' state
+  ThumbUpAlt as ThumbUpSolid,  
   ThumbUpSharp as ThumbUpSharpIcon,
+  ShareOutlined as ShareIcon,
+  ChatBubbleOutline as CommentIcon, // Icon for Comment button
   FavoriteSharp as FavoriteSharpIcon,
   VolunteerActivismSharp as VolunteerActivismSharpIcon,
   SentimentVerySatisfiedSharp as SentimentVerySatisfiedSharpIcon,
@@ -37,6 +41,7 @@ import {
   Delete as DeleteIcon,
   ImageSharp as ImageSharpIcon,
   Close as CloseIcon,
+  
 } from "@mui/icons-material";
 import EditPost from "./EditPost";
 import DeletePost from "./DeletePost";
@@ -78,8 +83,8 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
   // --- Check if current user is the author ---
   // Ensure your comment object from API has author_id or a similar field
   const isCommentAuthor = comment.author_id === currentUserId; 
-  console.log(comment.author_id) 
-  console.log(currentUserId)
+  // console.log(comment.author_id) 
+  // console.log(currentUserId)
   const authorName = comment.author || "User"; // Use author name from comment data
   // ---
 
@@ -133,7 +138,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
         ...prev,
         [commentId]: updated,
       }));
-    } catch (error) {
+      }catch (error) {
       console.error("Reaction error:", error);
     }
   };
@@ -231,7 +236,7 @@ function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  ,
       </div>
 
       {/* --- Comment Body with See more/less --- */}
-      <div className="text-gray-800 ml-10 mb-3 !bg-[#292928]"> {/* Margin to align with author name */}
+      <div className="!text-justify text-gray-800 ml-10 mb-3 !bg-[#292928]"> {/* Margin to align with author name */}
           {isExpanded ? (
             <>
               <p className="text-white !bg-[#292928]">{displayText}</p>
@@ -371,8 +376,9 @@ export default function ShowPost({ postData, onDeletePost, currentUserId }) {
   const widgetRef = useRef(null);
   const [isPostExpanded, setIsPostExpanded] = useState(false);
   const { user, loading: authLoading } = useContext(AuthContext); // Destructure 'user'
-  
-  console.log(currentUserId)
+
+  const hidePopoverTimer = useRef(null); 
+
 
   // const currentUserId = user?.id; // Get logged-in user's UUID string (or null)
   const currentUserAvatar = user?.profile_picture || DEFAULT_USER_AVATAR;
@@ -394,8 +400,24 @@ const [commentPagination, setCommentPagination] = useState({
 });
 
 
-// Replace your existing useEffect for fetching comments with:
 useEffect(() => {
+
+  const currentUserId = user?.id; // Get ID here too
+      if (post.id && currentUserId) { // Fetch only if IDs are available
+          fetchReactionsForPost(post.id).then((res) => {
+              console.log("Initial Fetch Reactions:", res); 
+              console.log("Initial Fetch Current User ID:", currentUserId);
+              // --- CORRECTED FILTER ---
+              const filtered = res.filter(r => r.user_id === currentUserId); // Use user_id
+              // --- END CORRECTION ---
+              console.log("Initial Fetch Filtered Reactions:", filtered);
+              setUserReactions(filtered);
+          }).catch(err => console.error("Error fetching initial post reactions", err));
+      } else {
+          setUserReactions([]); // Ensure state is empty if no post/user ID
+      }
+
+
   const loadInitialComments = async () => {
     const initialPage = 1; // Define page number
     try {
@@ -421,9 +443,8 @@ useEffect(() => {
   };
   
   loadInitialComments();
-}, [post.id]);
+}, [post.id, user?.id]);
 
-// Add this function to load more comments
 const loadMoreComments = async () => {
   if (!commentPagination.hasMore || commentPagination.isLoading) return;
   
@@ -449,7 +470,8 @@ const loadMoreComments = async () => {
     console.log(error)
   }
 };
-// // Initialize Cloudinary widget
+
+  // Initialize Cloudinary widget
   useEffect(() => {
     if (window.cloudinary) {
       widgetRef.current = window.cloudinary.createUploadWidget(
@@ -547,24 +569,76 @@ const loadMoreComments = async () => {
     });
 };
 
-  const handleAddReaction = async (reactionType) => {
-        await likePost(post.id, reactionType);
-        const updated = await fetchReactionsForPost(post.id);
-        setUserReactions(updated.filter(r => r.user.id === currentUserId));
-      };
+  // Inside ShowPost component
+
+// Add this log directly inside the component body to see state on each render
+console.log("ShowPost Rendering - userReactions state IS:", userReactions);
+
+const handleAddReaction = async (reactionType) => {
+  // Optimistic UI update (optional but good UX)
+  // setUserReactions([{ reaction_type: reactionType, user_id: user?.id }]); // Temporarily set state
+
+  try {
+    // Call API to add/update reaction
+    await likePost(post.id, reactionType); 
     
-      const hasReacted = (reactionType) => {
+    // Re-fetch all reactions to get the confirmed state
+    const updatedReactions = await fetchReactionsForPost(post.id);
+    console.log("handleAddReaction - Fetched reactions:", updatedReactions); 
+    console.log("handleAddReaction - Current User ID:", user?.id); 
+    
+    // --- CORRECTED FILTER ---
+    // Filter based on the top-level 'user_id' field from the updated serializer
+    const filteredUserReactions = updatedReactions.filter(r => r.user_id === user?.id); 
+    // --- END CORRECTION ---
+    
+    console.log("handleAddReaction - Filtered (BEFORE setting state):", filteredUserReactions);
+    setUserReactions(filteredUserReactions); // Update state with correctly filtered array
+    console.log("handleAddReaction - setUserReactions CALLED with:", filteredUserReactions); 
+
+  } catch (error) { 
+      console.error("Add Reaction Error", error); 
+      // Optionally revert optimistic update here if you implemented it
+      // Optionally show error message
+  }
+};
+
+// Handler to remove a reaction
+const handleRemoveReaction = async () => { // No need for reactionType argument here
+  // Optimistic UI update (optional)
+  // setUserReactions([]); // Temporarily clear state
+
+  try {
+    // Call API to remove reaction (only needs post id for this user)
+    await removePostReaction(post.id); 
+    
+    // Re-fetch all reactions to get the confirmed state
+    const updatedReactions = await fetchReactionsForPost(post.id);
+    console.log("handleRemoveReaction - Fetched reactions:", updatedReactions); 
+    console.log("handleRemoveReaction - Current User ID:", user?.id); 
+    
+    // --- CORRECTED FILTER ---
+    // Filter based on the top-level 'user_id' field
+    const filteredUserReactions = updatedReactions.filter(r => r.user_id === user?.id);
+     // --- END CORRECTION ---
+
+    console.log("handleRemoveReaction - Filtered (BEFORE setting state):", filteredUserReactions); // Should be []
+    setUserReactions(filteredUserReactions); // Update state (should be empty array)
+    console.log("handleRemoveReaction - setUserReactions CALLED with:", filteredUserReactions); 
+
+  } catch (error) { 
+      console.error("Remove Reaction Error", error); 
+       // Optionally revert optimistic update here if you implemented it
+       // Optionally show error message
+  }
+};
+      
+    
+    const hasReacted = (reactionType) => {
         return userReactions.some(r => r.reaction_type === reactionType);
       };
     
-      const handleRemoveReaction = async (reactionId) => {
-        try {
-          await removePostReaction(postId, reactionId); // Pass both IDs
-          setReactions(prev => prev.filter(r => r.id !== reactionId));
-        } catch (error) {
-          console.error("Removal failed:", error);
-        }
-      };
+      
     
       
       const handleEditPost = (postId, updatedContent) => {
@@ -713,6 +787,24 @@ const loadMoreComments = async () => {
   const avatarTitleText = isPostAuthor ? "You" : post.author || "User";
 
 
+  const handleMouseEnterTrigger = () => {
+    // Clear any existing timer to prevent hiding if mouse re-enters quickly
+    clearTimeout(hidePopoverTimer.current); 
+    setShowReactions(true); // Show immediately
+};
+
+const handleMouseLeaveArea = () => {
+    // Set a timer to hide the popover after a short delay (e.g., 300ms)
+    hidePopoverTimer.current = setTimeout(() => {
+        setShowReactions(false);
+    }, 300); // Adjust delay as needed
+};
+
+const handleMouseEnterPopover = () => {
+    // If mouse enters the popover itself, clear the hide timer
+    clearTimeout(hidePopoverTimer.current); 
+};
+
   return (
     <div className="!bg-[#292928] rounded-lg shadow-md p-4 mb-4 border !border-[#7a2226]">
       {/* Post Header */}
@@ -749,6 +841,8 @@ const loadMoreComments = async () => {
             <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
           </button>
           
+          {/* TODO: Add save post button */}
+
           {isPostAuthor && ( 
             <div className="relative !bg-[#292928] "> 
               {showOptions && ( 
@@ -773,7 +867,7 @@ const loadMoreComments = async () => {
       <div className="mb-3 !bg-[#292928]">
         {/* Post body */}
         {/* --- MODIFIED POST BODY DISPLAY with Conditional Line Break --- */}
-        <div className="text-gray-800  !bg-[#292928]"> {/* Keep whitespace-pre-wrap */}
+        <div className="text-gray-800 !text-justify !bg-[#292928]">
           
           {/* Conditionally render structure based on isPostExpanded state */}
           {isPostExpanded ? (
@@ -859,50 +953,92 @@ const loadMoreComments = async () => {
         )}
       </div>
 
-      {/* Post Actions */}
-      <div className="post-actions !bg-[#292928] " >
-  <div className="!bg-[#292928]">
-    <div 
-      className="reaction-trigger" 
-      onClick={() => setShowReactions(!showReactions)}
-      onMouseLeave={() => setShowReactions(false)}
-    >
-      <ThumbUpSharpIcon className="ThumbUpSharpIcon"/> 
-      <span>Like</span>
-     
-      {showReactions && (
-        <div className="reactions-popover">
-          {reactions.map((reaction) => (
-            <div
-              key={reaction.name}
-              className="reaction-item"
-              onClick={() => {
-                hasReacted(reaction.name)
-                  ? handleRemoveReaction(reaction.name)
-                  : handleAddReaction(reaction.name);
-                  setShowReactions(false);
-              }}
-            >
-              <div className="reaction-icon-container">
-                <div className="reaction-icon">
-                  {reaction.icon}
-                  <span className="reaction-name">{reaction.name}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  </div>
-</div>
+{/* ============================================================= POST REACTIONS ==================================================================*/}
 
-<p className="Show-All-Reactions"
-       onClick={() => setShowReactionsModal(true)}
-       >Show All Reactions</p>
+  <div className="post-actions flex justify-around items-center border-y border-gray-700 px-1 py-2 mt-3 !bg-[#282828]"> {/* Optional: Set specific bg */}
+      
+      {/* Like Button + Popover Wrapper Div */}
+      <div 
+          className="relative flex-1 !bg-[#282828] mx-2" // flex-1 makes buttons distribute space
+          onMouseEnter={handleMouseEnterTrigger} // Show on enter trigger area
+          onMouseLeave={handleMouseLeaveArea}  // Start timer on leave trigger ar
+      >
+          {/* Like Button Itself */}
+          <button 
+              // Use your existing handler logic. This example assumes a generic handleReaction
+              // You might need separate onClick for Like vs. Remove if logic differs greatly
+              onClick={() => userReactions.length > 0 ? handleRemoveReaction(userReactions[0]?.reaction_type) : handleAddReaction('Like') } 
+              // Dynamic classes based on whether the user has reacted
+              className={`!bg-[#181919] w-full flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium transition-all ease-in-out duration-500 ${ // Base styles + transition
+                userReactions.length > 0 
+                ? 'text-yellow-400 font-semibold' // LIKED state (use a clear distinct color)
+                : 'text-gray-400 hover:bg-gray-700 hover:text-gray-100 hover:scale-105 hover:font-semibold' // NOT LIKED state + hover
+            }`}
+          >
+              {/* Show solid icon if reacted, outline otherwise */}
+              {userReactions.length > 0 ? <ThumbUpSolid className="!bg-[#181819] w-5 h-7"/> : <ThumbUpOutline className="!bg-[#181819] w-5 h-5"/>} 
+              
+              {/* Display user's current reaction text or default 'Like' */}
+              <span className="!bg-[#181819]">{reactions.find(r => r.name === userReactions[0]?.reaction_type)?.name || 'React'}</span>
+          </button>
+          
+          {/* Reaction Popover (Conditionally Rendered) */}
+          {showReactions && ( 
+              <div 
+                // Keep popover open if mouse moves onto it
+                onMouseEnter={handleMouseEnterPopover} // Keep open if mouse enters popover
+                onMouseLeave={handleMouseLeaveArea} // Start timer on leave popover
+                // Styling for the popover box
+                className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 
+                            flex space-x-1 !bg-[#7a2226] shadow-lg rounded-full 
+                            px-3 py-1 border border-gray-500 z-20" // z-index to appear above other elements
+              > 
+                  {/* Map through your defined 'reactions' array */}
+                  {reactions.map((reaction) => ( 
+                    <button 
+                        key={reaction.name} 
+                        onClick={(e) => {
+                            e.stopPropagation(); // Prevent potential conflicts
+                            // Call your add/update reaction handler
+                            handleAddReaction(reaction.name); 
+                            setShowReactions(false); // Hide popover after selection
+                        }} 
+                        // Styling for each reaction icon button in the popover
+                        className="p-1.5 rounded-full !bg-[#7a2226] 
+                                    transition-transform transform hover:scale-110" 
+                        title={reaction.name} // Tooltip on hover
+                    > 
+                        {/* Render the icon component directly */}
+                        {React.cloneElement(reaction.icon, { className: "w-6 h-6 !bg-[#7a2226]" })} 
+                    </button> 
+                  ))} 
+              </div> 
+          )}
+      </div>
+      {/* End Like Button + Popover Wrapper */}
+
+      {/* Placeholder Comment Button */}
+      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-colors transition-all ease-in-out duration-700 hover:scale-105"> 
+          <CommentIcon className="!bg-[#181819] w-5 h-5"/> Comment 
+      </button>
+
+      {/* Placeholder Share Button */}
+      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-colors transition-all ease-in-out duration-700 hover:scale-105"> 
+          <ShareIcon className="!bg-[#181819] w-5 h-5"/> Share 
+      </button>
+
       {showReactionsModal &&
-       <ReactionsModal postId={post.id}
-        onClose={() => setShowReactionsModal(false)} />}
+    <ReactionsModal postId={post.id}
+     onClose={() => setShowReactionsModal(false)} />}
+
+  </div>
+
+
+
+
+
+
+
 
 
 
@@ -975,7 +1111,7 @@ const loadMoreComments = async () => {
             <p className="text-center text-gray-500 text-sm py-4">Loading comments...</p>
          )}
       </div>
-{/* ======================================================================= */}
+{/* ========================================================================================================================================= */}
 
         {/* --- Add Comment Section with Icon Inside Input --- */}
         <div className="mt-1 flex items-start space-x-3 border-t border-gray-100 pt-4 !bg-[#292928]">
