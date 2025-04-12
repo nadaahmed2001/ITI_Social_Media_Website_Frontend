@@ -27,7 +27,7 @@
 }
 ::-webkit-scrollbar-thumb {
     overflow-y: hidden ;
-    background-color: #ff5e5e;
+    background-color: #7a2226;
     border-radius: 4px;
 }
 
@@ -69,6 +69,6 @@ form {
   }
   
   input::placeholder {
-    color:#ff5e5e; /* Soft ###ff5e5e */
+    color:#7a2226; /* Soft ###ff5e5e */
   }
   

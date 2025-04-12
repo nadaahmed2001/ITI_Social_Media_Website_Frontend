@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchGroupChats, fetchPrivateChatUsers } from "../../components/services/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Aichat from "./Aichat";
 import { TextField, Button, Typography } from "@mui/material";
 
 const ChatSidebar = () => {
@@ -10,15 +11,18 @@ const ChatSidebar = () => {
     const [activeFilter, setActiveFilter] = useState("all");
     const navigate = useNavigate();
 
+    // const handleAIChatClick = () => {
+    //     setShowAIChat(true);
+    //     navigate('/aiChat'); // Update URL
+    // };
+
     useEffect(() => {
         const fetchChatData = async () => {
             try {
-                const [groups, privates] = await Promise.all([
-                    fetchGroupChats(),
-                    fetchPrivateChatUsers()
-                ]);
-                setGroupChats(groups.data);
-                setPrivateChats(privates.data);
+                const groupResponse = await fetchGroupChats();
+                setGroupChats(groupResponse.data);
+                const privateResponse = await fetchPrivateChatUsers();
+                setPrivateChats(privateResponse.data);
             } catch (error) {
                 console.error("Error fetching chats:", error);
             }
@@ -45,25 +49,39 @@ const ChatSidebar = () => {
         >
             {label}
         </Button>
+
     );
+  
 
     return (
         <div className="h-screen flex flex-col">
             {/* Mobile Toggle */}
-            <button
-                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-red-400 rounded-full"
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            >
-                {isSidebarOpen ? "✕" : "☰"}
-            </button>
+           {/* Mobile Toggle - Moved to right side when sidebar is open */}
+<button
+    className={`md:hidden fixed z-50 p-2 bg-[#7a2226] text-white rounded-full shadow-lg transition-all duration-300 ${
+        isSidebarOpen ? "left-[17rem] top-4" : "left-4 top-4"  // Moves button when sidebar opens
+    }`}
+    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+>
+    {isSidebarOpen ? (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+    ) : (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+    )}
+</button>
 
-            {/* Sidebar Content */}
-            <div className={`w-64  text-red-400 h-full p-4 fixed md:relative transform 
-                ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 
-                transition-transform duration-300 border-r border-red-400  bg-[rgba(50,50,50,0.42)] backdrop-blur-sm`}>
+{/* Sidebar Content - Added higher z-index */}
+<div className={`w-64 text-[#7a2226] h-full p-4 fixed md:relative transform 
+    ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
+    md:translate-x-0 transition-transform duration-300 border-r border-[#7a2226] 
+    bg-[rgba(50,50,50,0.42)] backdrop-blur-sm`}>
                 
                 {/* Header */}
-                <Typography variant="h6" className="!font-bold !mb-4 !text-red-400">
+                <Typography variant="h6" className="!font-bold !mb-4 !text-[#7a2226]">
                     Messages
                 </Typography>
 
@@ -92,8 +110,28 @@ const ChatSidebar = () => {
                     <FilterButton label="All" value="all"/>
                     <FilterButton label="Private" value="private"/>
                     <FilterButton label="Groups" value="groups"/>
+                     
                 </div>
-
+                <Button 
+                     fullWidth
+                     variant="contained"
+                    sx={{
+                        backgroundColor: '#7a2226',
+                        color: 'white',
+                        '&:hover': { backgroundColor: '#5a181b' },
+                        borderRadius: '20px',
+                        textTransform: 'none',
+                        py: 1
+                    }}
+                    onClick={() => navigate('/chat/aiChat')} // Use onClick instead of Link
+                     startIcon={
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                       </svg>
+                     }
+                >
+                    AI Chat
+                </Button>
                 {/* Chat List */}
                 <div className="space-y-4 overflow-y-auto h-[calc(100vh-220px)] pr-2">
                     {/* Private Chats */}
@@ -102,14 +140,15 @@ const ChatSidebar = () => {
                             hover:bg-gray-800 rounded cursor-pointer"
                             onClick={() => navigate(`/messagesList/private/${chat.id}`)}>
                             <div>
-                                <Typography className="!text-red-400 !font-medium">
+                                <Typography className=" !text-[#7a2226] !font-medium">
                                     {chat.username}
                                 </Typography>
-                                <Typography variant="caption" className="!text-red-400 line-clamp-1">
+                                <Typography variant="caption" className=" !text-white line-clamp-1">
                                     {chat.lastMessage || "No messages yet"}
                                 </Typography>
+                               
                             </div>
-                            <Typography variant="caption" className="!text-red-400">
+                            <Typography variant="caption" className=" !text-white ">
                                 {chat.lastActive || "4:43 PM"}
                             </Typography>
                             <hr></hr>
@@ -123,14 +162,14 @@ const ChatSidebar = () => {
                              rounded cursor-pointer"
                             onClick={() => navigate(`/messagesList/group/${chat.id}`)}>
                             <div>
-                                <Typography style={{ color: '#ff5e5e' }} className="!font-medium">
+                                <Typography className="!font-medium">
                                     {chat.name}
                                 </Typography>
-                                <Typography variant="caption">
+                                <Typography style={{ color: 'white' }} variant="caption">
                                     {chat.lastMessage || "No messages yet"}
                                 </Typography>
                             </div>
-                            <Typography variant="caption" >
+                            <Typography style={{ color: 'white' }} variant="caption" >
                                 {chat.lastActive || "9:10 AM"}
                             </Typography>
                         </div>
