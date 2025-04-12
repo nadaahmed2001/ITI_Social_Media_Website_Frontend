@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef, useContext} from "react";
 import AuthContext from '../../contexts/AuthContext'; 
 import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material"; // Import arrow icons
 import { PaperClipIcon } from '@heroicons/react/24/outline'; // or '/solid'
-import CircularProgress from '@mui/material/CircularProgress';
+import  CircularProgress from '@mui/material/CircularProgress';
 import { Link } from "react-router-dom"
-
+import Box from '@mui/material/Box';
+import CustomCircularProgress from "./CustomCircularProgress";
 
 import TimeAgo from '../TimeAgo';
 
@@ -717,7 +718,7 @@ const loadMoreComments = async () => {
       {/* Post Header */}
       <div className="flex items-center justify-between mb-2 !bg-[#292928]">
         <div className="flex items-center space-x-3 !bg-[#292928]">
-        <Link to={`/profiles/${post.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+        <Link to={`/profiles/${post.author_id}`} className= "!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
         <img 
               src={displayAuthorAvatar} 
               alt={avatarAltText} 
@@ -729,9 +730,13 @@ const loadMoreComments = async () => {
                 }
               }}
           />
-          </Link>
-          <div className="!bg-[#292928]">
+          </Link >
+
+          <div className="!no-underline !bg-[#292928]">
+            <a href={`/profiles/${post.author_id}`} className="!no-underline" >
             <p className="font-medium text-white mb-0 mt-3 !bg-[#292928]">{avatarTitleText|| "Unknown"}</p>
+
+            </a>
             <p className="text-xs text-gray-500 !bg-[#292928]">
               <TimeAgo timestamp={post.created_on}/>
             </p>
@@ -940,27 +945,14 @@ const loadMoreComments = async () => {
                     <button
                       onClick={loadMoreComments}
                       disabled={commentPagination.isLoading}
-                      className={`px-4 py-2 rounded-md text-sm font-medium flex items-center ${
+                      className={`px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 ${
                         commentPagination.isLoading 
-                          ? '!bg-[#292928] text-gray-700 cursor-not-allowed' // Adjusted disabled style
-                          : '!bg-[#292928] text-grey hover:bg-primary-700' // Check primary color definition
+                          ? '!bg-[#292928] text-gray-700 cursor-not-allowed'
+                          : '!bg-[#292928] text-grey hover:bg-primary-700'
                       }`}
                     >
                       {commentPagination.isLoading ? (
-                        <>
-                          <CircularProgress 
-                        // Set size (in pixels) - smaller for buttons usually looks better
-                        size={28} 
-                        // Option 1: Inherit color from button text (useful if text color changes)
-                        color="red" 
-                        variant="determinate" value={50}
-                        // Option 2: Use sx prop for specific styling
-                        // sx={{ 
-                        //     color: 'white', // Set color explicitly (if button text is white)
-                        //     marginRight: '8px' // Add some spacing before the text (like Tailwind mr-2)
-                        // }} 
-                      />
-                        </>
+                          <CustomCircularProgress/>
                       ) : (
                         'Load More Comments'
                       )}
