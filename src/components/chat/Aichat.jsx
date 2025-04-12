@@ -48,7 +48,7 @@ export default function Aichat() {
     return (
         <div className="flex w-full h-screen ">
             <ChatSidebar />
-            <div className="flex-1 flex flex-col bg-black text-[#7a2226] p-4 background-div ">
+            <div className="flex-1 flex flex-col bg-black text-[#7a2226] p-4 background-div">
                 <h2 className="text-xl font-bold mb-4 text-center">AI Chat</h2>
                 <div className="flex-1 overflow-y-auto mb-4">
                     {messages.map((msg, index) => (
