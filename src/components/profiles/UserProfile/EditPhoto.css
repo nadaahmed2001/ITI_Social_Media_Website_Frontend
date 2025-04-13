@@ -115,7 +115,7 @@ border-radius: 5px; padding: 8px 8px 8px 15px; min-height: 45px;
 cursor: pointer; transition: border-color 0.2s ease;
 }
 .upload-input-row-light:hover {
-border-color: #fffd02; /* Yellow border on hover */
+border-color: #7a2226; /* Yellow border on hover */
 }
 
 /* Text display inside the row */
@@ -127,7 +127,7 @@ margin-right: 10px; background: none; pointer-events: none;
 
 /* "Upload image" button inside the row (Yellow background) */
 .upload-image-button-light {
-background-color: #fffd02; /* Yellow background */
+background-color: #7a2226; /* Yellow background */
 color: #191919;       /* Dark text on yellow */
 border: none;
 padding: 8px 15px; border-radius: 4px; cursor: pointer;

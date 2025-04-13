@@ -72,7 +72,7 @@
     border: 1px solid #333; /* Subtle border */
     }
     .profile-section h3 {
-    color: #fffd02; /* Section title accent */
+    color: #7a2226; /* Section title accent */
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.2em;
@@ -138,7 +138,7 @@
     .main-skill-item {
         margin-bottom: 15px;
         padding-left: 10px;
-        border-left: 3px solid #fffd02; 
+        border-left: 3px solid #7a2226; 
         background: none; 
     }
     .main-skill-name {
@@ -234,7 +234,7 @@
         transition: background-color 0.2s ease;
     }
     .project-link-button.demo {
-        background-color: #fffd02;
+        background-color: #7a2226;
         color: #191919;
     }
     .project-link-button.demo:hover {
@@ -343,7 +343,7 @@
     
     /* Add hover effect */
     .links-list.icon-links .link-item a:hover {
-        color: #fffd02; /* Change color to accent on hover */
+        color: #7a2226; /* Change color to accent on hover */
         transform: scale(1.1); /* Slightly enlarge icon on hover */
     }
     

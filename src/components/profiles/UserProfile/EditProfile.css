@@ -51,7 +51,7 @@ form textarea{
 }
 
 .form-section h3 {
-    color: #fffd02; /* Yellow accent for headings */
+    color: #7a2226; /* Yellow accent for headings */
     margin-top: 0;
     margin-bottom: 20px;
     font-size: 1.1em;
@@ -90,7 +90,7 @@ form textarea{
 .form-group input:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #fffd02; /* Yellow border on focus */
+    border-color: #7a2226; /* Yellow border on focus */
 }
 
 
@@ -100,7 +100,7 @@ form textarea{
 }
 
 .submit-button {
-    background-color: #fffd02; /* Yellow button */
+    background-color: #7a2226; /* Yellow button */
     color: #191919; /* Dark text */
     border: none;
     padding: 12px 25px;

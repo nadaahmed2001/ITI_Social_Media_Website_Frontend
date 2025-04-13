@@ -3,7 +3,7 @@
 display: flex;
 align-items: center;
 gap: 8px;
-color: #fffd02;
+color: #7a2226;
 margin-top: 0;
 margin-bottom: 25px;
 font-size: 1.15em;
@@ -109,7 +109,7 @@ background: none; /* Override global */
 }
 .project-manage-actions .action-button.edit-button:hover:not(:disabled) {
     background-color: rgba(255, 253, 2, 0.2);
-    color: #fffd02;
+    color: #7a2226;
 }
 .project-manage-actions .action-button.delete-button:hover:not(:disabled) {
     background-color: rgba(255, 102, 102, 0.2);
@@ -161,7 +161,7 @@ background: none; /* Override global */
 }
 
 .modal-header h4 {
-    color: #fffd02;
+    color: #7a2226;
     margin: 0;
     font-size: 1.3em;
     background: none;
@@ -216,7 +216,7 @@ background: none; /* Override global */
 .modal-form input:focus,
 .modal-form textarea:focus {
     outline: none;
-    border-color: #fffd02;
+    border-color: #7a2226;
 }
 .modal-form textarea {
     resize: vertical;
@@ -257,7 +257,7 @@ background: none; /* Override global */
     background-color: #666;
 }
 .modal-actions .save-button { /* Reuses .submit-button */
-    background-color: #fffd02;
+    background-color: #7a2226;
     color: #191919;
 }
 .modal-actions .save-button:hover:not(:disabled) {
@@ -428,7 +428,7 @@ color: #ff6666; background-color: rgba(255, 102, 102, 0.1); border: 1px solid #f
     font-size: 1em;
 }
 .add-contributor-input-group input:focus {
-    outline: none; border-color: #fffd02;
+    outline: none; border-color: #7a2226;
 }
 .add-contributor-input-group input:disabled {
     background-color: #333;

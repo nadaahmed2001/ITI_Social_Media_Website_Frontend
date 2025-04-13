@@ -14,7 +14,7 @@ import './ViewPublicProfile.css';
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp';
 const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
 
-const accentColor = '#fffd02';
+const accentColor = '#7a2226';
 const primaryTextColor = '#e0e0e0';
 const parentTextColor = '#ffffff';
 

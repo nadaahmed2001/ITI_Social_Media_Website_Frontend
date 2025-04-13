@@ -9,7 +9,7 @@
   
   /* Section title */
   .skills-management-container .skills-title { /* Target specifically if needed */
-    color: var(--accent-primary, #fffd02); /* Yellow accent or fallback */
+    color: var(--accent-primary, #7a2226); /* Yellow accent or fallback */
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.15em;
@@ -45,14 +45,14 @@
   }
   .add-skill-form input:focus {
     outline: none;
-    border-color: var(--accent-primary, #fffd02);
+    border-color: var(--accent-primary, #7a2226);
   }
   .add-skill-button { /* Uses .submit-button base styles */
     display: inline-flex; align-items: center; gap: 6px;
     padding: 8px 10px; font-size: 0.95em;
     justify-content: center;
     /* Ensure button uses accent color from theme */
-    background-color: var(--accent-primary, #fffd02);
+    background-color: var(--accent-primary, #7a2226);
     color: var(--text-on-accent, #191919);
     border: none; border-radius: 4px; cursor: pointer; font-weight: bold;
     transition: filter 0.2s ease;
