@@ -85,307 +85,6 @@ const AVAILABLE_REACTIONS = [
 ];
 
 
-
-
-
-// function CommentItem({ comment, currentUserId, onEditRequest, onDeleteRequest  , post ,comments/* Add other handlers like onReaction if needed */ }) {
-  
-//   // --- State specific to THIS comment ---
-//   const [isExpanded, setIsExpanded] = useState(false);
-//   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
-//   const optionsMenuRef = useRef(null); 
-//   // --- End Component State ---
-//   const MAX_COMMENT_LENGTH = 150;
-//   // --- Calculate text display based on local state ---
-//   const fullText = comment.comment || "";
-//   const needsTruncation = fullText.length > MAX_COMMENT_LENGTH;
-//   const displayText = needsTruncation && !isExpanded 
-//                       ? fullText.slice(0, MAX_COMMENT_LENGTH) + "..." 
-//                       : fullText;
-//   // ---
-//   const [commentReactions, setCommentReactions] = useState({});
-//   const [showCommentReactions, setShowCommentReactions] = useState(null);
-//   const [showReactionsModalforcomment, setShowReactionsModalforcomment] = useState(false);
-//   // --- Check if current user is the author ---
-//   // Ensure your comment object from API has author_id or a similar field
-//   const isCommentAuthor = comment.author_id === currentUserId; 
-//   // console.log(comment.author_id) 
-//   // console.log(currentUserId)
-//   const authorName = comment.author || "User"; // Use author name from comment data
-//   // ---
-
-//   // --- Handlers specific to THIS comment ---
-//   const toggleExpansion = () => setIsExpanded(!isExpanded);
-//   const toggleOptionsMenu = () => setShowOptionsMenu(!showOptionsMenu);
-//   // ---
-
-//   // --- Effect for closing options menu ---
-//   // useEffect(() => {
-//   //   if (comments?.length) {
-//   //     const fetchAllCommentReactions = async () => {
-//   //       const reactionsMap = {};
-//   //       for (const comment of post.comments) {
-//   //         const reactions = await fetchReactionsForComment(comment.id);
-//   //         reactionsMap[comment.id] = reactions;
-//   //       }
-//   //       setCommentReactions(reactionsMap);
-//   //     };
-  
-//   //     fetchAllCommentReactions();
-//   //   }
-//   // }, [comments]);
-  
-//   const hasReacted = (reactionName) => {
-//     const userReaction = commentReactions[comment.id]?.find(r => r.user.id === currentUserId);
-//     return userReaction?.reaction_type === reactionName;
-//   };
-  
-//   const handleAddReactionForComment = async (commentId, reactionType) => {
-//     try {
-//       const existingReaction = commentReactions[commentId]?.find(
-//         r => r.user.id === currentUserId
-//       );
-  
-//       if (existingReaction) {
-//         // If the same reaction is clicked, remove it
-//         if (existingReaction.reaction_type === reactionType) {
-//           await removeCommentReaction(commentId);
-//         } else {
-//           // If a different reaction is clicked, replace it
-//           await removeCommentReaction(commentId);
-//           await likeComment(post.id, commentId, reactionType);
-//         }
-//       } else {
-//         await likeComment(post.id, commentId, reactionType);
-//       }
-  
-//       const updated = await fetchReactionsForComment(commentId);
-//       setCommentReactions(prev => ({
-//         ...prev,
-//         [commentId]: updated,
-//       }));
-//       }catch (error) {
-//       console.error("Reaction error:", error);
-//     }
-//   };
-  
-  
-//   const handleremoveCommentReaction = async (commentId) => {
-//     try {
-//       await removeCommentReaction(commentId);
-//       const updated = await fetchReactionsForComment(commentId);
-//       setCommentReactions(prev => ({
-//         ...prev,
-//         [commentId]: updated
-//       }));
-//     } catch (error) {
-//       console.error("Remove reaction error:", error);
-//     }
-//   };
-
-//   const reactions = [
-//     { name: "Like", icon: <ThumbUpSharpIcon className="Reaction-Post" /> },
-//     { name: "Love", icon: <FavoriteSharpIcon className="Reaction-Post" /> },
-//     { name: "Celebrate", icon: <CelebrationSharpIcon className="Reaction-Post" /> },
-//     { name: "funny", icon: <SentimentVerySatisfiedSharpIcon className="Reaction-Post" /> },
-//     { name: "Support", icon: <VolunteerActivismSharpIcon className="Reaction-Post" /> },
-//     { name: "Insightful", icon: <TipsAndUpdatesSharpIcon className="Reaction-Post" /> },
-//   ];
-
-//   ///////////////////////////////////////////////
-//   useEffect(() => {
-//       const handleClickOutside = (event) => {
-//           if (optionsMenuRef.current && !optionsMenuRef.current.contains(event.target)) {
-//               setShowOptionsMenu(false);
-//           }
-//       };
-//       if (showOptionsMenu) {
-//           document.addEventListener("mousedown", handleClickOutside);
-//       } else {
-//           document.removeEventListener("mousedown", handleClickOutside);
-//       }
-//       return () => {
-//           document.removeEventListener("mousedown", handleClickOutside);
-//       };
-//   }, [showOptionsMenu]);
-//   // ---
-
-//   return (
-//     <div className="mb-1 pb-4 border-b !border-[#181819] last:border-0 !bg-[#292928]">
-//       {/* Comment Header */}
-//       <div className="flex items-start justify-between mb-2 !bg-[#292928]">
-//         <div className="flex items-center space-x-2 !bg-[#292928]">
-//           <Link to={`/profiles/${comment.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
-//             <img 
-//               src={ comment.author_profile_picture || DEFAULT_USER_AVATAR } // Use comment author pic
-//               alt={authorName} 
-//               title={isCommentAuthor ?  "You" : `${authorName}`} 
-//               className="w-10 h-10 rounded-full object-cover border border-gray-200"
-//               onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
-//             />
-//           </Link>
-//           <div className="!bg-[#292928]">
-//             <Link to={`/profiles/${comment.author_id}`} className="!no-underline !bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
-//               <p className="font-bold text-medium !text-[#7a2226] mb-0 pt-2 !bg-[#292928] !no-underline ">{isCommentAuthor ?  "You" : `${authorName}`} </p>
-//             </Link>
-//             <p className="text-xs text-white !bg-[#292928]">
-//               <TimeAgo timestamp={comment.created_on} />
-//             </p>
-//           </div>
-//         </div>
-//         {/* Edit/Delete Menu */}
-//         {isCommentAuthor && (
-//           <div className="relative !bg-[#292928]" ref={optionsMenuRef}>
-//               <button onClick={toggleOptionsMenu} className="!text-[#be8a8d]] text-gray-500 hover:text-gray-700 !bg-[#292928]">
-//                 <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
-//               </button>
-//               {showOptionsMenu && (
-//                 <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20">
-//                   {/* Edit Button - Calls prop */}
-//                   <button
-//                     onClick={() => { onEditRequest(comment); setShowOptionsMenu(false); }} 
-//                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-//                   >
-//                     <EditIcon className="w-4 h-4 mr-2 text-primary-600" /> Edit
-//                   </button>
-//                   {/* Delete Button - Calls prop */}
-//                   <button
-//                     onClick={() => { onDeleteRequest(comment); setShowOptionsMenu(false); }} 
-//                     className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
-//                   >
-//                     <DeleteIcon className="w-4 h-4 mr-2" /> Delete
-//                   </button>
-//                 </div>
-//               )}
-//           </div>
-//         )}
-//       </div>
-
-//       {/* --- Comment Body with See more/less --- */}
-//       <div className="!text-justify text-gray-800 mb-3 !bg-[#292928] px-8">
-//           {isExpanded ? (
-//             <>
-//               <p className="text-white !bg-[#292928]">{displayText}</p>
-//               {needsTruncation && (
-//                 <button
-//                   onClick={toggleExpansion}
-//                   className="mt-0 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[#292928]" 
-//                   aria-expanded={isExpanded}
-//                 >
-//                   See less
-//                 </button>
-//               )}
-//             </>
-//           ) : (
-//             <>
-//               <p className="!bg-[#292928] inline text-white">{displayText}</p>
-//               {needsTruncation && (
-//                 <button
-//                   onClick={toggleExpansion}
-//                   className="ml-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[#292928]"
-//                   aria-expanded={isExpanded}
-//                 >
-//                   See more
-//                 </button>
-//               )}
-//             </>
-//           )}
-//       </div>
-//        {/* --- End Comment Body --- */}
-      
-//       {/* Comment Attachments (if any - simplified) */}
-//       {comment.attachments?.length > 0 && (
-//       <div className="ml-10 mt-2 space-y-2 !bg-[#292928]">
-//         {comment.attachments.map((attachment) => (
-//           <div key={attachment.id} className="flex items-center !bg-[#292928] mt-3">
-//             {attachment.image != null ? (
-//               <img 
-//                 src={attachment.image} 
-//                 alt="Comment attachment" 
-//                 className="max-w-xs rounded-md"
-//               />
-//             ) : (
-//               <video 
-//                 target="_blank" 
-//                 src={attachment.video}
-//                 controls
-//                 playsInline
-//                 className="w-full h-auto block max-h-[75vh] bg-black max-w-xs rounded-md" // Limit height, add bg for potential letterboxing
-//                 preload="metadata" // Don't preload the whole video
-//               >
-//               </video>
-//             )}
-//           </div>
-//         ))}
-//       </div>
-//       )}
-//       {/* Comment Actions (Like, Reactions - Simplified Placeholder) */}
-//       {/* <div className="flex items-center space-x-4 ml-10 mt-2 !bg-[#292928]">
-//       <div className="comment-actions">
-//               <div className="reactions-container">
-//                 <div className="reaction-trigger" onClick={() => setShowCommentReactions(comment.id)}>
-//                   <ThumbUpSharpIcon /> <span>Like</span>
-//                 </div>
-             
-//                 {showCommentReactions === comment.id && (
-//                   <div className="reactions-popover">
-//                     {reactions.map((reaction) => (
-//                       <div
-//                         key={reaction.name}
-//                         className="reaction-item"
-//                         onClick={() => {
-//                           // {commentReactions[comment.id]?.length > 0 && (
-//                           //   <div className="comment-reactions-summary">
-//                           //     {commentReactions[comment.id].map((reaction, index) => (
-//                           //       <span key={index}>
-//                           //         {reaction.reaction_type} by {reaction.user.username}
-//                           //       </span>
-//                           //     ))}
-//                           //   </div>
-//                           // )}
-
-//                           hasReacted(reaction.name)
-//                             ? handleremoveCommentReaction(comment.id)
-//                             : handleAddReactionForComment(comment.id, reaction.name);
-//                             setShowCommentReactions(false);
-//                         }}
-//                       >
-//                          <div className="reaction-icon-container">
-//                             <div className="reaction-icon">
-//                               {reaction.icon}
-
-//                               <span className="reaction-name">{reaction.name}</span>
-//                             </div>
-//                           </div>
-//                       </div>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-//               <p className="!bg-[#292928] text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs cursor-pointer"
-//               onClick={() => setShowReactionsModalforcomment(true)}
-//               >Show All Reactions</p>
-//               {showReactionsModalforcomment && 
-//                 <ReactionsCommentModal
-//                   commentId={comment.id}
-//                   reactions={commentReactions[comment.id]}
-//                   // reactions={commentReactions[comment.id]}
-//                   onClose={() => setShowReactionsModalforcomment(false)}
-//                 />
-//               }
-
-//             </div>
-//       </div>
-//     </div>
-//   ); */}
-
-//     </div>
-//   );
-// }
-// --- End CommentItem Component ---
-
-
-
 export default function ShowPost({ postData, onDeletePost }) {
   // const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
@@ -521,14 +220,14 @@ const loadMoreComments = async () => {
     // --- END CORRECTION ---
 
     // ... rest of success handling ...
-     const newComments = Array.isArray(response.data) ? response.data : response.data.results || [];
-     setComments(prev => [...prev, ...newComments]);
-     setCommentPagination({
-       page: nextPage,
-       hasMore: response.data.next ? true : false,
-       isLoading: false,
-       error: null
-     });
+    const newComments = Array.isArray(response.data) ? response.data : response.data.results || [];
+    setComments(prev => [...prev, ...newComments]);
+    setCommentPagination({
+      page: nextPage,
+      hasMore: response.data.next ? true : false,
+      isLoading: false,
+      error: null
+    });
   } catch (error) { 
     console.log(error)
   }
@@ -1065,24 +764,15 @@ const handleMouseEnterPopover = () => {
           {post.reaction_counts?.Insightful > 0 && <InsightfulIcon className="w-4 h-4 text-yellow-400 !bg-[#292928]" />}
           {post.reaction_counts?.Support > 0 && <SupportIcon className="w-4 h-4 text-blue-200 !bg-[#292928]" />}
           {/* Display total count if > 0 */}
-          {allPostReactions.length == 1 ? (
-              <span 
-                  className="ml-1 mt-2 hover:underline cursor-pointer !bg-[#292928]" 
-                  onClick={() => setShowReactionsModal(true)} // Make count clickable too
-                  title="See who reacted"
-              > 
-                  1 Reation
-              </span>
-          ) : (
-
+          {allPostReactions.length > 0 && (
+            
             <span 
                   className="ml-1 hover:underline cursor-pointer !bg-[#292928]" 
                   onClick={() => setShowReactionsModal(true)} // Make count clickable too
                   title="See who reacted"
               > 
-                  {allPostReactions.length} Reations
+                  {allPostReactions.length}
               </span>
-            
           )}
       </div>
       
@@ -1184,18 +874,8 @@ const handleMouseEnterPopover = () => {
 
   </div>
 
-
-
-
-
-
-
-
-
-
       <div className="mt-4 !bg-[#292928]">
       <h4 className="!text-sm !font-bold !text-[#7a2226] !bg-[#292928] mb-3">Comments</h4> 
-
   
         {/* Error message */}
         {commentPagination.error && (
@@ -1281,20 +961,19 @@ const handleMouseEnterPopover = () => {
           />
           </Link>
           <div className="flex-grow !bg-[#292928]">
-             
-            {/* --- Input Wrapper with Relative Positioning --- */}
-            <div className="relative w-full !bg-[#292928]"> 
-               <input
-                 type="text"
-                 placeholder="Write your comment..."
-                 value={commentText}
-                 onChange={(e) => setCommentText(e.target.value)}
-                 className={`!bg-[#181819] w-full pl-3 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent text-sm ${isCommentInputOverLimit ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-primary-500'}`} 
-                 aria-describedby="comment-char-count"
-               />
-               {/* --- Absolutely Positioned Icon Button --- */}
-               
-               <button
+              {/* --- Input Wrapper with Relative Positioning --- */}
+              <div className="relative w-full !bg-[#292928]"> 
+                <input
+                  type="text"
+                  placeholder="Write your comment..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  className={`!bg-[#181819] w-full pl-3 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent text-sm ${isCommentInputOverLimit ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-primary-500'}`} 
+                  aria-describedby="comment-char-count"
+                />
+                {/* --- Absolutely Positioned Icon Button --- */}
+                
+                <button
                   type="button" // Prevent form submission
                   onClick={handleOpenUploadWidget}
                   disabled={isUploading || !!attachmentUrl} 
@@ -1302,16 +981,14 @@ const handleMouseEnterPopover = () => {
                   className="!bg-[#7a2226] absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Add Photo/Video" // Accessibility
                 >
-                 <ImageSharpIcon className="w-5 h-5 !bg-[#7a2226]" /> 
-               </button>
-
-               
+                <ImageSharpIcon className="w-5 h-5 !bg-[#7a2226]" /> 
+              </button>
             </div>
 
             {/* Character Counter (Stays outside the relative wrapper) */}
-             <div id="comment-char-count" className={`text-xs mt-1 text-right !bg-[#292928] ${commentCountColorClass}`}>
-                 {currentInputLength} / {MAX_COMMENT_INPUT_LENGTH}
-             </div>
+            <div id="comment-char-count" className={`text-xs mt-1 text-right !bg-[#292928] ${commentCountColorClass}`}>
+                {currentInputLength} / {MAX_COMMENT_INPUT_LENGTH}
+            </div>
 
             {/* Attachment Preview (Keep as is) */}
             {attachmentUrl && (

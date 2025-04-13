@@ -41,6 +41,29 @@ const getReactionIconComponent = (reactionName) => {
 };
 
 
+const getReactionColorClass = (reactionType) => {
+    switch (reactionType) {
+        case "Like":
+            // Match the main button's reacted state color
+            return 'text-blue-400';
+        case "Love":
+            return 'text-red-500';
+        case "Celebrate":
+            // Choose consistent colors, e.g., from modal or define here
+            return 'text-green-500';
+        case "funny":
+            return 'text-violet-400'; // Different yellow from Like maybe?
+        case "Support":
+            return 'text-blue-500';
+        case "Insightful":
+            return 'text-yellow-200';
+        default:
+            // Fallback color for unknown reaction types
+            return 'text-gray-400';
+    }
+};
+
+
 // --- CommentItem Component ---
 function CommentItem({
     comment,
@@ -285,79 +308,90 @@ function CommentItem({
             )}
 
             <div className="ml-10 mt-2 !bg-[#292928]">
-                <div className="!bg-inherit"> {/* Simple wrapper, inherits background */}
-                    {/* 1. Reaction Summary (Appears on top) */}
+                <div className="!bg-inherit">
+                    {/* 1. Reaction Summary (Applying colors here) */}
                     <div
-                        className="!bg-[#292928] flex items-center gap-1 text-xs text-gray-400 cursor-pointer hover:underline mb-3" /* Added mb-1 for spacing below */
-                        // onClick={() => totalReactions > 0 && setShowReactionsModal(true)}
-                        onClick={openReactionsModal} // <-- Make sure this line uses the function directly
-
-                        title={totalReactions > 0 ? "See who reacted" : ""}
+                        className={`!bg-[#292928] flex items-center gap-1 text-xs mb-1 ${totalReactions > 0 ? 'cursor-pointer hover:underline text-gray-400' : 'text-gray-500'}`} // Make text gray if no reactions
+                        onClick={openReactionsModal} // Use the correct handler
+                        title={totalReactions > 0 ? "See who reacted" : "No reactions yet"}
                     >
+                        {/* Map over top reactions */}
                         {sortedTopReactions.map(([reactionName, count]) => {
                             const IconComponent = getReactionIconComponent(reactionName);
-                            return <IconComponent key={reactionName + count} className="w-4 h-4 !bg-inherit" />; // Use inherit or transparent bg
+                            // *** GET AND APPLY COLOR CLASS ***
+                            const colorClass = getReactionColorClass(reactionName);
+                            return (
+                                <IconComponent
+                                    key={reactionName + count} // Use name+count for key stability
+                                    // Apply base size/style AND the dynamic color class
+                                    className={`w-4 h-4 !bg-inherit ${colorClass}`}
+                                />
+                            );
                         })}
-                        {totalReactions == 1 ? (
-                            <span className="!bg-[#292928] ml-1">1 Reaction</span>
-                        ) : (
-                            <span className="!bg-[#292928] ml-1">{totalReactions} Reactions</span>
-                        )
-                        }
+                        {/* Display total count */}
+                        {totalReactions > 0 && (
+                             // Consistent styling for count text
+                            <span className="ml-1 text-gray-400 !bg-[#292928]">
+                                {totalReactions} 
+                            </span>
+                        )}
+                         {/* Optional: Text if zero reactions (instead of just gray text) */}
+                        {totalReactions === 0 && (
+                            <span className="text-gray-500 italic !bg-[#292928]">No reactions</span>
+                        )}
                     </div>
 
-                    {/* 2. Reaction Button & Popup (Appears below the summary) */}
+                    {/* 2. Reaction Button & Popup (No changes needed here) */}
+                    {/* ... (button with its dynamic icon/text, popup div) ... */}
                     <div
-                        className="relative !bg-inherit" // Relative container for popup positioning, inherit background
+                        className="relative !bg-inherit"
                         onMouseEnter={handleMouseEnterTrigger}
                         onMouseLeave={handleMouseLeaveArea}
                     >
                         <button
                             onClick={handleReactButtonClick}
-                            className={`!bg-[#181819] inline-flex items-center gap-1 text-xs font-medium py-1.5 px-4 rounded transition-colors duration-200 ${ // Use inline-flex if you want button width to fit content
+                            className={`!bg-[#181819] mt-2 inline-flex items-center gap-1 text-xs font-medium py-1.5 px-4 rounded transition-colors duration-200 ${
                                 currentUserReaction
-                                    ? 'text-yellow-400' // Or specific color based on reaction
+                                    ? getReactionColorClass(currentUserReaction) // Use helper for button color too!
                                     : 'text-gray-400 hover:text-gray-100 hover:bg-gray-700'
                             }`}
                         >
-                            {/* Dynamically render icon based on current reaction */}
-                            {React.createElement(getReactionIconComponent(currentUserReaction), { className: "w-4 h-4 !bg-inherit" })}
+                            {React.createElement(getReactionIconComponent(currentUserReaction), { className: "w-4 h-4 !bg-inherit " })}
                             <span className="!bg-inherit">{currentUserReaction || "React"}</span>
                         </button>
 
-                        {/* Reaction Popup (Conditionally Rendered) */}
+                         {/* Reaction Popup... */}
                         {showReactionPopup && (
                             <div
                                 onMouseEnter={handleMouseEnterPopover}
                                 onMouseLeave={handleMouseLeaveArea}
-                                // Positioning: Choose left-0 or right-0 depending on desired alignment relative to button
                                 className="absolute bottom-full left-0 mb-2 flex space-x-1 !bg-[#7a2226] shadow-lg rounded-full px-4 py-1.5 border border-gray-500 z-30"
                             >
                                 {AVAILABLE_REACTIONS.map((reaction) => {
                                     const Icon = reaction.icon;
+                                    // *** APPLY COLOR TO POPUP ICON TOO? (Optional but consistent) ***
+                                    const iconColorClass = getReactionColorClass(reaction.name);
                                     return (
                                         <button
                                             key={reaction.name}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleReactionSelect(reaction.name);
-                                            }}
+                                            onClick={(e) => { e.stopPropagation(); handleReactionSelect(reaction.name); }}
                                             className={'p-1 rounded-full !bg-[#7a2226] transition-transform transform hover:scale-125'}
                                             title={reaction.name}
                                         >
-                                            <Icon className="w-5 h-5 !bg-[#7a2226]" />
+                                            {/* Apply color class to icon inside popup button */}
+                                            <Icon className={`w-5 h-5 !bg-[#7a2226] ${iconColorClass}`} />
                                         </button>
                                     );
                                 })}
                             </div>
                         )}
-                    </div> 
+
+            
 
                 </div> 
 
-            </div>
-
-            {/* Modal for showing reactors */}
+</div>
+</div>
             {showReactionsModal && (
             <ReactionsCommentModal
                 reactions={modalReactions} // Pass the fetched data

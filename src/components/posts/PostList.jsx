@@ -81,7 +81,7 @@ export default function PostList() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-4 px-4 sm:px-6 lg:px-8 !bg-[#181819]">
+    <div className="max-w-4xl mx-auto py-4 px-4 sm:px-6 lg:px-8 !bg-[#181819]">
       <CreatePost onPostCreated={handleNewPost} />
       
       <div className="mt-6 space-y-6 !bg-[#181819]">
