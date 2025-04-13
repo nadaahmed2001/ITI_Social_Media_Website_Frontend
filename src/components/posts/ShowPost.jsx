@@ -853,12 +853,12 @@ const handleMouseEnterPopover = () => {
       {/* End Like Button + Popover Wrapper */}
 
       {/* Placeholder Comment Button */}
-      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-colors transition-all ease-in-out duration-700 hover:scale-105"> 
+      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
           <CommentIcon className="!bg-[#181819] w-5 h-5"/> Comment 
       </button>
 
       {/* Placeholder Share Button */}
-      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-colors transition-all ease-in-out duration-700 hover:scale-105"> 
+      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
           <ShareIcon className="!bg-[#181819] w-5 h-5"/> Share 
       </button>
 
@@ -1000,7 +1000,7 @@ const handleMouseEnterPopover = () => {
                   className="max-w-xs rounded-lg border border-gray-200 !bg-[#292928]" // Added border
                 />
               ) : attachmentUrl.match(/\.(mp4|mov|webm|mkv)$/) ? ( // Check for video extensions
-                <video controls className="max-w-xs rounded-lg border border-gray-200 bg-black !bg-[#292928]">
+                <video controls className="max-w-xs rounded-lg border border-gray-200 !bg-[#292928]">
                   <source src={attachmentUrl} /* Optional: add type based on extension */ />
                   Your browser does not support the video tag.
                 </video>

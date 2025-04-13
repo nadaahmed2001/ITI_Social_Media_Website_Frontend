@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { Close as CloseIcon } from "@mui/icons-material"; 
 // Optional: Import CircularProgress for loading state
 import CircularProgress from '@mui/material/CircularProgress'; 
-
+import './edit-post.css'; // Import your CSS file for any additional styles
 // Define Max Length (should match your backend Post model validator, e.g., 3000)
 const MAX_EDIT_POST_LENGTH = 3000; 
 
@@ -76,34 +76,34 @@ export default function EditPost({ isOpen, post, onClose, onConfirm }) {
     // --- Tailwind Modal Structure ---
     // Overlay
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-4 transition-opacity duration-300" 
+      className="edit-post-overlay" 
       aria-labelledby="edit-post-title" role="dialog" aria-modal="true" 
       onClick={!isSaving ? onClose : undefined} // Close on overlay click only if not saving
     >
         {/* Content Box */}
         <div 
-          className="relative bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto" // Using max-w-lg like EditComment example
+          className="edit-post" // Using max-w-lg like EditComment example
           onClick={e => e.stopPropagation()} // Prevent click inside closing modal
         > 
              {/* Header */}
-             <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200">
-                 <h3 className="text-lg font-medium text-gray-900" id="edit-post-title">Edit Post</h3>
+             <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 edit-post-title">
+                 <h3  id="edit-post-title">Edit Post</h3>
                  <button 
                     onClick={onClose} 
                     disabled={isSaving} 
-                    className="p-1 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50"
+                    className="p-1 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 CloseIcon"
                     aria-label="Close modal"
                  >
-                    <CloseIcon className="w-5 h-5" /> 
+                    <CloseIcon className="w-5 h-5 CloseIcon"/> 
                  </button>
              </div>
              {/* Body */}
-             <div className="p-5">
+             <div className="p-5 edit-post-text-aria">
                 <textarea
                     value={editedContent}
                     onChange={handleInputChange}
                     // Apply similar textarea styling, including error state border
-                    className={`w-full p-2 border rounded-md resize-y min-h-[150px] text-sm text-black-800 focus:ring-1 focus:outline-none ${isOverLimit ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500'}`} 
+                    className='edit-textarea'
                     placeholder="Edit your post..."
                     rows="6" // Adjust rows as needed for post content
                     autoFocus
@@ -116,11 +116,11 @@ export default function EditPost({ isOpen, post, onClose, onConfirm }) {
                  </div>
              </div>
              {/* Footer */}
-             <div className="flex justify-end items-center px-5 py-3 bg-gray-50 border-t border-gray-200 rounded-b-lg space-x-3">
+             <div className="edit-post-btn">
                  {/* Cancel Button */}
                  <button 
                      type="button"
-                     className="px-4 py-1.5 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50" 
+                     className="cancel-edit-post" 
                      onClick={onClose}
                      disabled={isSaving}
                  >
@@ -130,7 +130,7 @@ export default function EditPost({ isOpen, post, onClose, onConfirm }) {
                  <button 
                      type="button"
                      // Apply styling and disabled logic
-                     className={`inline-flex items-center justify-center px-4 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed min-w-[110px] ${!editedContent.trim() || isOverLimit || isSaving ? 'bg-gray-400' : 'bg-primary-600 hover:bg-primary-700'}`} 
+                     className='confirm-edit-post'
                      onClick={handleSave}
                      disabled={!editedContent.trim() || isOverLimit || isSaving} // Check empty, over limit, or saving
                  >
