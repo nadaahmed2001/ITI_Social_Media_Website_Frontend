@@ -274,7 +274,11 @@ export default function Sidebar() { // Removed isDarkMode prop
         </Typography>
         <Typography variant="body2" className="!text-sm !text-gray-400 !text-center !mb-4">
           {/* *** Use user's role/title from context (adjust field name if needed) *** */}
-          {user?.role || 'No role specified'}
+          { user.is_student? 
+          ("Student") : ("Supervisor") 
+          
+          }
+          {/* {user?.role || 'No role specified'} */}
         </Typography>
 
         <Typography variant="body2" className="!text-sm !text-gray-400 !text-center !mb-4">

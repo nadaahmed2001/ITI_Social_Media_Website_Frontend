@@ -8,6 +8,7 @@
     flex-direction: column;
     gap: 30px; /* Space between the title and sections, and between sections */
     max-width: 80%;
+    margin-top: 60px;
 
   }
   
@@ -19,7 +20,7 @@
     margin: 0 0 10px 0; /* Adjusted margin */
     border-bottom: 1px solid #444;
     padding-bottom: 15px;
-    font-size: 2em;
+    font-size: 1.5em;
     background-color: inherit;
     font-weight: 600;
   }

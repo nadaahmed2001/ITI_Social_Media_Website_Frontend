@@ -17,6 +17,8 @@ const ChatSidebar = () => {
     //     setShowAIChat(true);
     //     navigate('/aiChat'); // Update URL
     // };
+
+    const defaultGroupAvatar = '../../../src/assets/images/user-default.webp'
     const location = useLocation();
     
     const showWelcome = !(
@@ -172,9 +174,13 @@ const ChatSidebar = () => {
                              rounded cursor-pointer"
                             onClick={() => navigate(`/messagesList/group/${chat.id}`)}>
                             <div>
-                              
-                                <Typography className="!font-medium flex">
-                                <img src={chat.authorAvatar || "/default-avatar.png"} alt="User" className="user-avatar" />
+                                <Typography className="!font-medium flex items-center"> {/* Added items-center for vertical alignment */}
+                                    <img
+                                        src={ chat.authorAvatar || defaultGroupAvatar }
+                                        alt="Avatar" // Use chat name or "Group Avatar" for better alt text
+                                        // Apply Tailwind classes here instead of 'user-avatar'
+                                        className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600" // Example style
+                                    />
                                     {chat.name}
                                 </Typography>
                                 <Typography style={{ color: 'white' }} variant="caption">

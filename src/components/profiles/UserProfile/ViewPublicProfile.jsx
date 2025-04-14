@@ -14,10 +14,6 @@ import './ViewPublicProfile.css';
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp';
 const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
 
-const accentColor = '#7a2226';
-const primaryTextColor = '#e0e0e0';
-const parentTextColor = '#ffffff';
-
 const ViewPublicProfile = ({ profileId }) => {
     const [profileData, setProfileData] = useState(null);
     const [projectsData, setProjectsData] = useState([]); // Stores the *filtered* projects
