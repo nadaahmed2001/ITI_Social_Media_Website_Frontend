@@ -604,7 +604,7 @@ const handleMouseEnterPopover = () => {
 };
 
   return (
-    <div className="!bg-[#292928] rounded-lg shadow-md p-4 mb-4 border !border-[#7a2226]">
+    <div className="!bg-[#292928] rounded-lg shadow-md p-4 mb-4 border !border-[#ffffff]">
       {/* Post Header */}
       <div className="flex items-center justify-between mb-2 !bg-[#292928]">
         <div className="flex items-center space-x-3 !bg-[#292928]">

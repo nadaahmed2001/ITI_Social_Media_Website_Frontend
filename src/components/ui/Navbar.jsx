@@ -107,7 +107,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
                   ? "text-[#7B2326]"
                   : isDarkMode
                   ? "text-white group-hover:text-[#7B2326]"
-                  : "text-gray-900 group-hover:text-[#7B2326]"
+                  : "text-white group-hover:text-[#7B2326]"
               }
             />
             {activeTab === path && (

@@ -60,7 +60,7 @@ const ChatSidebar = () => {
   
 
     return (
-        <div className="flex">
+        <div className="flex mt-1">
         <div className="h-screen flex flex-col">
             {/* Mobile Toggle */}
            {/* Mobile Toggle - Moved to right side when sidebar is open */}
@@ -82,7 +82,7 @@ const ChatSidebar = () => {
 </button>
 
 {/* Sidebar Content - Added higher z-index */}
-<div className={`w-100 text-[#7a2226] h-[80vh] p-4 fixed md:relative transform mt-3 rounded-lg 
+<div className={`w-100 text-[#7a2226] h-[70vh] p-4 fixed md:relative transform mt-3 rounded-lg 
     ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
     md:translate-x-0 transition-transform duration-300 border border-[#7a2226] 
     bg-[rgba(50,50,50,0.42)] backdrop-blur-sm`}>

@@ -46,7 +46,7 @@ export default function Aichat() {
     };
 
     return (
-        <div className="flex w-full h-screen ">
+        <div className="flex w-full h-screen overflow-hidden ">
             <ChatSidebar />
             <div className="flex-1 flex flex-col bg-black text-[#7a2226] p-4 background-div">
                 <h2 className="text-xl font-bold mb-4 text-center">AI Chat</h2>
