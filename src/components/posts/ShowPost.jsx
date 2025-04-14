@@ -968,7 +968,7 @@ const handleMouseEnterPopover = () => {
                   placeholder="Write your comment..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  className={`!bg-[#181819] w-full pl-3 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent text-sm ${isCommentInputOverLimit ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-primary-500'}`} 
+                  className={`placeholder:!text-[#262727] ${commentText ? 'text-[#262727]' : ''} !bg-[#c2c2c2] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none`}
                   aria-describedby="comment-char-count"
                 />
                 {/* --- Absolutely Positioned Icon Button --- */}
