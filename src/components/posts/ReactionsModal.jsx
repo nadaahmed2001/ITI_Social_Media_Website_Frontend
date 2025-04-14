@@ -19,7 +19,7 @@ const reactionIconMap = {
     'Like': <LikeIcon sx={{ fontSize: 28 }} className="text-blue-500"/>,
     'Love': <LoveIcon sx={{ fontSize: 28 }} className="text-red-500"/>,
     'Celebrate': <CelebrateIcon sx={{ fontSize: 28 }} className="text-yellow-500"/>,
-    'funny': <FunnyIcon sx={{ fontSize: 28 }} className="text-yellow-400"/>,
+    'funny': <FunnyIcon sx={{ fontSize: 28 }} className="text-[#7B2326]"/>,
     'Insightful': <InsightfulIcon sx={{ fontSize: 28 }} className="text-purple-500"/>,
     'Support': <SupportIcon sx={{ fontSize: 28 }} className="text-green-500"/>,
 };

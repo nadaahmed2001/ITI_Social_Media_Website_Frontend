@@ -761,7 +761,7 @@ const handleMouseEnterPopover = () => {
           {post.reaction_counts?.Love > 0 && <FavoriteSharpIcon className="w-4 h-4 text-red-500 -ml-1 !bg-[#292928]" />}
           {post.reaction_counts?.funny > 0 && <EmojiEmotionsIcon className="w-4 h-4 text-violet-400 !bg-[#292928]" />}
           {post.reaction_counts?.Celebrate > 0 && <CelebrateIcon className="w-4 h-4 text-green-400 !bg-[#292928]" />}
-          {post.reaction_counts?.Insightful > 0 && <InsightfulIcon className="w-4 h-4 text-yellow-400 !bg-[#292928]" />}
+          {post.reaction_counts?.Insightful > 0 && <InsightfulIcon className="w-4 h-4 text-[#7B2326] !bg-[#292928]" />}
           {post.reaction_counts?.Support > 0 && <SupportIcon className="w-4 h-4 text-blue-200 !bg-[#292928]" />}
           {/* Display total count if > 0 */}
           {allPostReactions.length > 0 && (
@@ -806,7 +806,7 @@ const handleMouseEnterPopover = () => {
               // Dynamic classes based on whether the user has reacted
               className={`!bg-[#181919] w-full flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium transition-all ease-in-out duration-500 ${ // Base styles + transition
                 userReactions.length > 0 
-                ? 'text-yellow-400 font-semibold' // LIKED state (use a clear distinct color)
+                ? 'text-[#7B2326] font-semibold' // LIKED state (use a clear distinct color)
                 : 'text-gray-400 hover:bg-gray-700 hover:text-gray-100 hover:scale-105 hover:font-semibold' // NOT LIKED state + hover
             }`}
           >

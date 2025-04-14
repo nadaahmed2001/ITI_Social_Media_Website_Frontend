@@ -104,7 +104,7 @@ export default function CreatePost({ onPostCreated }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="!bg-[#3e1113] rounded-lg shadow-md p-4 mb-4 border border-gray-200">
+    <form onSubmit={handleSubmit} className="!bg-[#3e1113] rounded-lg shadow-md p-4 mb-4 mt-4 border border-gray-200">
       <div className="relative ">
       <div className="flex items-center space-x-3 !bg-[#3e1113]">
           <Link to={`/profiles/${user?.id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity mt-1 !bg-[#3e1113]"> 

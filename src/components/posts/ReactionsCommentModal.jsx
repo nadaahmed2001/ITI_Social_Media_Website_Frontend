@@ -32,7 +32,7 @@ const getReactionStyle = (reactionType) => {
             return { colorClass: 'text-blue-200', IconComponent: SupportIcon };
         case "Insightful":
              // Example color, adjust as needed
-            return { colorClass: 'text-yellow-400', IconComponent: InsightfulIcon };
+            return { colorClass: 'text-[#7B2326]', IconComponent: InsightfulIcon };
         default:
             // Default style for unknown types or if reactionType is null/undefined
             return { colorClass: 'text-gray-400', IconComponent: DefaultIcon };

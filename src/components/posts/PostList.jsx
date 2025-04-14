@@ -81,16 +81,16 @@ export default function PostList() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-4 px-4 sm:px-6 lg:px-8 !bg-[#181819]">
+    <div className="max-w-3xl mx-auto   !bg-[#1E1F1F]">
       <CreatePost onPostCreated={handleNewPost} />
       
-      <div className="mt-6 space-y-6 !bg-[#181819]">
+      <div className="mt-6 space-y-6 !bg-[#1E1F1F]">
         {posts.map((post, index) => (
           <ShowPost 
             key={post.id} 
             postData={post} 
             onDeletePost={handleDeletePost} 
-            currentUserId={user.id}
+            currentUserId={user.user_id}
           />
         ))}
         

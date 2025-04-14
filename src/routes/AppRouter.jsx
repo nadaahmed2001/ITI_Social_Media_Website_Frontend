@@ -54,6 +54,8 @@ const AppRouter = () => {
                                         <Route path="/forgot-password" element={<ForgotPassword />} />
                                         <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
 
+                                        
+
                                         {/* Dashboards */}
                                         <Route path="/Home" element={<HomePage />} />
 

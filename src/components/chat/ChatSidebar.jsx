@@ -21,7 +21,7 @@ const ChatSidebar = () => {
     
     const showWelcome = !(
         location.pathname.startsWith("/messagesList/") || 
-        location.pathname === "/chat/aiChat"
+        location.pathname === "/chat/aiChat" || location.pathname === "/Home" 
     );
     useEffect(() => {
         const fetchChatData = async () => {
@@ -43,7 +43,6 @@ const ChatSidebar = () => {
             size="small"
             sx={{
                 color: 'white',
-              
                 '&.MuiButton-contained': {
                     backgroundColor: 'white' ,
                     color: '#000 !important'
@@ -83,9 +82,9 @@ const ChatSidebar = () => {
 </button>
 
 {/* Sidebar Content - Added higher z-index */}
-<div className={`w-64 text-[#7a2226] h-full p-4 fixed md:relative transform 
+<div className={`w-100 text-[#7a2226] h-[80vh] p-4 fixed md:relative transform mt-3 rounded-lg 
     ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
-    md:translate-x-0 transition-transform duration-300 border-r border-[#7a2226] 
+    md:translate-x-0 transition-transform duration-300 border border-[#7a2226] 
     bg-[rgba(50,50,50,0.42)] backdrop-blur-sm`}>
                 
                 {/* Header */}
@@ -141,7 +140,9 @@ const ChatSidebar = () => {
                     AI Chat
                 </Button>
                 {/* Chat List */}
-                <div className="space-y-4 overflow-y-auto h-[calc(100vh-220px)] pr-2">
+                {/* <div className="space-y-4 overflow-y-auto h-[calc(100vh-220px)] pr-2"> */}
+                <div className="space-y-4 overflow-y-auto h-100vh pr-2">
+
                     {/* Private Chats */}
                     {(activeFilter === 'all' || activeFilter === 'private') && privateChats.map(chat => (
                         <div key={chat.id} className="flex justify-between items-center p-2 

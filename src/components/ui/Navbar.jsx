@@ -104,14 +104,14 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
               size={24}
               className={
                 activeTab === path
-                  ? "text-yellow-400"
+                  ? "text-[#7B2326]"
                   : isDarkMode
-                  ? "text-white group-hover:text-yellow-400"
-                  : "text-gray-900 group-hover:text-yellow-400"
+                  ? "text-white group-hover:text-[#7B2326]"
+                  : "text-gray-900 group-hover:text-[#7B2326]"
               }
             />
             {activeTab === path && (
-              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-yellow-400 rounded-full"></span>
+              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-[#7B2326] rounded-full"></span>
             )}
           </Link>
         ))}
@@ -161,7 +161,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
                 onClick={toggleMenu}
                 className="flex items-center gap-3 p-2 hover:bg-gray-700 rounded-lg"
               >
-                <Icon size={24} className="text-yellow-400" />
+                <Icon size={24} className="text-[#7B2326]" />
                 {label}
               </Link>
             ))}
@@ -171,41 +171,41 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
 
       {/* Theme Toggle and Avatar */}
       <div className="hidden md:flex ml-auto items-left gap-4 relative">
-        <button
+        {/* <button
           onClick={toggleTheme}
           className="p-2 rounded-full hover:bg-gray-700"
         >
           {isDarkMode ? (
-            <Sun size={24} className="text-yellow-400" />
+            <Sun size={24} className="text-[#7B2326]" />
           ) : (
             <Moon size={24} className="text-gray-900" />
           )}
-        </button>
+        </button> */}
         <div
           className={
             isDarkMode
-              ? "w-10 h-10 bg-gray-600 rounded-full cursor-pointer hover:ring-2 hover:ring-yellow-400"
-              : "w-10 h-10 bg-gray-400 rounded-full cursor-pointer hover:ring-2 hover:ring-yellow-400"
+              ? "w-10 h-10 bg-gray-600 rounded-full cursor-pointer hover:ring-2 hover:ring-[#7B2326]"
+              : "w-10 h-10 bg-gray-400 rounded-full cursor-pointer hover:ring-2 hover:ring-[#7B2326]"
           }
           onClick={toggleDropdown}
         ></div>
         {dropdownOpen && (
           <div className="absolute right-0 mt-14 w-40 bg-white text-black rounded-lg shadow-lg">
             <ul className="py-2">
-              <li className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer hover:text-yellow-400">
+              <li className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer hover:text-[#7B2326]">
                 <User size={20} />
                 <Link
                   to="/profile"
-                  className="text-black hover:text-yellow-400 no-underline"
+                  className="text-black hover:text-[#7B2326] no-underline"
                 >
                   Profile
                 </Link>
               </li>
-              <li className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer hover:text-yellow-400">
+              <li className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer hover:text-[#7B2326]">
                 <LogOut size={20} />
                 <Link
                   to="/logout"
-                  className="text-black hover:text-yellow-400 no-underline"
+                  className="text-black hover:text-[#7B2326] no-underline"
                 >
                   Logout
                 </Link>
