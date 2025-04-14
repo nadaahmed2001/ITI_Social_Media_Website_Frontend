@@ -163,7 +163,11 @@ useEffect(() => {
       
       // ... rest of the success handling ...
       const commentsData = Array.isArray(response.data) ? response.data : response.data.results || [];
-      setComments(commentsData);
+      setComments(prev => prev.map(c => 
+        c.id === selectedComment.id 
+          ? { ...res.data, author_id: selectedComment.author_id } 
+          : c
+      ));
       setCommentPagination({
         page: initialPage, // Set page number state
         hasMore: response.data.next ? true : false,
@@ -319,18 +323,40 @@ const loadMoreComments = async () => {
       });
   };
   
-  const handleConfirmDeleteComment = () => {
-    if (!selectedComment) return;
+//   const handleConfirmDeleteComment = () => {
+//     if (!selectedComment) return;
     
-    deleteComment(post.id, selectedComment.id).then(() => {
-      setComments(prev => prev.filter(comment => comment.id !== selectedComment.id));
+//     deleteComment(post.id, selectedComment.id).then(() => {
+//       // setComments(prev => prev.filter(comment => comment.id !== selectedComment.id));
+//       // Inside handleEditCommentRequest (after a successful API call)
+//         setComments(prevComments => 
+//           prevComments.map(c => 
+//             c.id === commentToEdit.id 
+//               ? { ...res.data, author_id: c.author_id }  // Merge API response with existing author_id
+//               : c
+//           )
+//         );
+//       setIsDeleteModalOpenComment(false);
+//       setSelectedComment(null);
+//     }).catch(err => {
+//       console.error("Failed to delete comment:", err);
+//     });
+// };
+const handleConfirmDeleteComment = () => {
+  if (!selectedComment) return;
+  
+  deleteComment(post.id, selectedComment.id)
+    .then(() => {
+      // Correctly filter out the deleted comment
+      setComments(prev => prev.filter(c => c.id !== selectedComment.id));
       setIsDeleteModalOpenComment(false);
       setSelectedComment(null);
-    }).catch(err => {
+    })
+    .catch(err => {
       console.error("Failed to delete comment:", err);
+      alert("Failed to delete comment. Please try again.");
     });
 };
-
   // Inside ShowPost component
 
 // Add this log directly inside the component body to see state on each render
@@ -456,35 +482,51 @@ try {
         });
       };
     
-      const handleEditCommentRequest = (commentToEdit) => {
-        setSelectedComment(commentToEdit); 
-        setIsEditModalOpenComment(true);  
-      };
+      // const handleEditCommentRequest = (commentToEdit) => {
+      //   setSelectedComment(commentToEdit); 
+      //   setIsEditModalOpenComment(true);  
+      // };
     
-      
-      const handleDeleteCommentRequest = (commentToDelete) => { // Define this handler
-          setSelectedComment(commentToDelete);
-          setIsDeleteModalOpenComment(true);
-      };
-      
-      const handleConfirmEditComment = (updatedContent) => {
-        if (!selectedComment) return;
-        console.log(`Editing comment ${selectedComment.id} for post ${post.id} with:`, updatedContent); // Debug
-        // Call the imported API function
-        editComment(post.id, selectedComment.id, { comment: updatedContent })
-          .then((res) => {
-            console.log("Edit successful, response:", res.data); // Debug
-            // Update the comment in the state array
-            setComments(prevComments =>
-              prevComments.map(c => c.id === selectedComment.id ? res.data : c)
-            );
-            setIsEditModalOpenComment(false); // Close modal
-            setSelectedComment(null);         // Clear selection
-          }).catch(err => {
-              console.error("Failed to edit comment:", err.response?.data || err); // Log detailed error
-              // Optionally show error to user
-          });
-      };
+      // --- In ShowPost.js ---
+// Edit Handler (receives comment and updated content)
+
+          const handleEditCommentRequest = (commentToEdit, updatedContent) => {
+            editComment(post.id, commentToEdit.id, { comment: updatedContent })
+              .then((res) => {
+                setComments(prev => prev.map(c => 
+                  c.id === commentToEdit.id 
+                    ? { ...res.data, author_id: commentToEdit.author_id } 
+                    : c
+                ));
+                setIsEditModalOpenComment(false);
+              })
+              .catch(err => console.error(err));
+          };
+
+          const handleDeleteCommentRequest = (commentId) => {
+            deleteComment(post.id, commentId)
+              .then(() => {
+                setComments(prev => prev.filter(c => c.id !== commentId));
+              })
+              .catch(err => console.error(err));
+          };
+    
+          const handleConfirmEditComment = (updatedContent) => {
+            if (!selectedComment) return;
+          
+            editComment(post.id, selectedComment.id, { comment: updatedContent })
+              .then((res) => {
+                // Preserve CRITICAL fields (id, author_id) from the original comment
+                setComments(prev => prev.map(c => 
+                  c.id === selectedComment.id 
+                    ? { ...res.data, id: selectedComment.id, author_id: selectedComment.author_id } 
+                    : c
+                ));
+                setIsEditModalOpenComment(false);
+                setSelectedComment(null);
+              })
+              .catch(err => console.error("Edit failed:", err));
+          };
       
 
     // Custom Next Arrow Component
@@ -895,21 +937,38 @@ const handleMouseEnterPopover = () => {
               {/* Check if comments array exists before mapping */}
               {comments && comments.length > 0 ? (
                 <>
-                  {comments.map((comment) => (
-                    <CommentItem
-                    key={comment.id}
-                    comment={comment} // Pass the full comment object (should include reaction data)
-                    currentUserId={currentUserId}
-                    onEditRequest={handleEditCommentRequest}
-                    onDeleteRequest={handleDeleteCommentRequest}
-                    // *** Pass the NEW handlers ***
-                    onReact={handleCommentReact}
-                    onUnreact={handleCommentUnreact}
-                    // Pass all reactions if needed for modal (optional, might require separate fetching)
-                    // allCommentReactions={allCommentReactionsMap[comment.id] || []}
+                  {/* {comments.map((comment) => (
+                  <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  currentUserId={currentUserId}
+                  onEditRequest={(comment) => {
+                    setSelectedComment(comment);
+                    setIsEditModalOpenComment(true);
+                  }}
+                  onDeleteRequest={handleDeleteCommentRequest}
+                  onReact={handleCommentReact}
+                  onUnreact={handleCommentUnreact}
                 />
-                  ))}
+                  ))} */}
                   
+                  {comments.map((comment) => (
+  <CommentItem
+    key={comment.id}
+    comment={comment}
+    currentUserId={currentUserId}
+    onEditRequest={(comment) => {
+      setSelectedComment(comment);
+      setIsEditModalOpenComment(true);
+    }}
+    onDeleteRequest={(comment) => { // Modified to open modal
+      setSelectedComment(comment);
+      setIsDeleteModalOpenComment(true);
+    }}
+    onReact={handleCommentReact}
+    onUnreact={handleCommentUnreact}
+  />
+))}
                   {/* Load More button */}
                   {commentPagination.hasMore && (
                   <div className="flex justify-center !bg-[#292928]">
@@ -1044,15 +1103,31 @@ const handleMouseEnterPopover = () => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleDeletePost(post.id)}
       />
-      <EditComment
+      {/* <EditComment
         isOpen={isEditModalOpenComment}
         comment={selectedComment} 
         onClose={() => {setIsEditModalOpenComment(false); setSelectedComment(null);}} 
         // ** Pass the CORRECT confirmation handler **
         onConfirm={handleConfirmEditComment} 
         
-      />
-      <DeleteComment
+      /> */}
+ <EditComment
+  isOpen={isEditModalOpenComment}
+  onClose={() => {
+    setIsEditModalOpenComment(false);
+    setSelectedComment(null); // Reset to prevent stale data
+  }}
+  onConfirm={handleConfirmEditComment}
+  comment={selectedComment}
+/>
+      {/* <DeleteComment
+        isOpen={isDeleteModalOpenComment}
+        onClose={() => {setIsDeleteModalOpenComment(false); setSelectedComment(null);}} 
+        // ** Pass the CORRECT confirmation handler **
+        onConfirm={handleConfirmDeleteComment} 
+      /> */}
+
+<DeleteComment
         isOpen={isDeleteModalOpenComment}
         onClose={() => {setIsDeleteModalOpenComment(false); setSelectedComment(null);}} 
         // ** Pass the CORRECT confirmation handler **

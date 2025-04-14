@@ -77,7 +77,7 @@ export default function ReactionsModal({ reactions = [], isLoading, onClose }) {
                                         className="flex items-center  group !no-underline "
                                         onClick={onClose} // Close modal when clicking link
                                     >
-                                        <span className="text-2xl font-semibold font-medium text-gray-700 group-hover:text-primary-600 ">
+                                        <span className="text-2xl font-medium text-gray-700 group-hover:text-primary-600 ">
                                             {reaction.user_username || 'User'}
                                         </span>
                                     </Link>
