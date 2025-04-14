@@ -353,7 +353,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
           onClick={toggleDropdown}
         >
           <img
-            src={user?.profile_photo || defaultAvatar}
+            src={user?.profile_picture || defaultAvatar}
             alt="Avatar"
             className="w-full h-full object-cover"
           />

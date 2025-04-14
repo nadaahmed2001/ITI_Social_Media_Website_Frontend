@@ -16,9 +16,7 @@ const DEFAULT_AVATAR = '../src/assets/images/user-default.webp';
 
 // New Profile Page Component
 const ProfilePageById = () => {
-    // --- Get profileId from URL ---
-    const { profileId } = useParams(); // Use react-router's hook
-    // ---
+    const { profileId } = useParams(); 
 
     const [profileData, setProfileData] = useState(null);
     const [projectsData, setProjectsData] = useState([]);
@@ -259,7 +257,7 @@ const ProfilePageById = () => {
 
     return (
         // Changed outer container class name
-        <div className="profile-page-container section-container">
+        <div className="!mt-[100px] profile-page-container section-container">
             {/* Removed H2 title from ViewPublicProfile */}
             {/* Display specific error if projects failed but profile loaded */}
             {/* {error && <p className="error-message">{error}</p>}  */}
