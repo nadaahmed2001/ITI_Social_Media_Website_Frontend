@@ -31,7 +31,7 @@ export default function ReactionsModal({ reactions = [], isLoading, onClose }) {
     return (
         // Overlay
         <div 
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60 p-4 transition-opacity duration-300" 
+            className="fixed inset-0 z-[100] flex items-center justify-center !bg-[#00000079] bg-opacity-60 p-4 transition-opacity duration-300" 
             aria-labelledby="reactions-modal-title" 
             role="dialog" 
             aria-modal="true" 
