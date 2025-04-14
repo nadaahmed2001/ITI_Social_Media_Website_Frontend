@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function Chatwellcommsg() {
   return (
-    <div className="h-full w-full flex items-center justify-center relative overflow-hidden">
+    <div className="h-full w-full flex items-center justify-center relative overflow-hidden mt-[200px]">
       {/* Animated glow background */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}

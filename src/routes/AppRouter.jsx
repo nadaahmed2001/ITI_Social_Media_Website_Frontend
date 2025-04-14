@@ -147,6 +147,7 @@ import HomePage from "../pages/HomePage";
 import Aichat from "../components/chat/Aichat";
 import PostDetail from "../components/notifications/PostDetail";
 import Navbar from "../components/ui/Navbar";
+import StartChat from "../pages/startChat";
 
 // Wrapper component to handle conditional Navbar and Routes
 const AppContent = () => {
@@ -163,11 +164,11 @@ const AppContent = () => {
   ];
 
   // Check if the current path starts with /messagesList/
-  const isMessagesListRoute = location.pathname.startsWith("/messagesList/");
+  // const isMessagesListRoute = location.pathname.startsWith("/messagesList/");
 
   // Determine if Navbar should be shown
   // Show Navbar if NOT in hideNavbarRoutes AND NOT a messagesList route
-  const showNavbar = !hideNavbarRoutes.includes(location.pathname) && !isMessagesListRoute;
+  const showNavbar = !hideNavbarRoutes.includes(location.pathname) ;
 
 
   // You might not need userToken here if PrivateRoute handles context internally
@@ -226,17 +227,7 @@ const AppContent = () => {
           path="/chat"
           element={
             <PrivateRoute>
-              {/* Pass token only if ChatSidebar strictly needs it as prop,
-                  otherwise let it use AuthContext */}
-              <ChatSidebar /* token={userToken} */ />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/Sidebar" // Test route, protect if needed
-          element={
-            <PrivateRoute>
-              <Sidebar />
+              <StartChat />
             </PrivateRoute>
           }
         />

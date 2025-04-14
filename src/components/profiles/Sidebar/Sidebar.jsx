@@ -10,7 +10,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import SearchSharpIcon from '@mui/icons-material/SearchSharp';
 import BookmarkSharpIcon from '@mui/icons-material/BookmarkSharp';
 import FeedIcon from '@mui/icons-material/Feed';
-import EmailIcon from '@mui/icons-material/Email'; // Added for Change Email/Password
+
 import "./Sidebar.css"; // Your CSS file
 
 // Define keys for sections
@@ -60,7 +60,7 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout }) {
       <SidebarOption sectionKey={SECTIONS.VIEW_PUBLIC} icon={<AccountCircleIcon className="icon" />} label="View Public Profile" />
       <SidebarOption sectionKey={SECTIONS.EDIT_PROFILE} icon={<EditIcon className="icon" />} label="Edit Profile" />
       <SidebarOption sectionKey={SECTIONS.EDIT_PHOTO} icon={<PhotoCameraIcon className="icon" />} label="Photo" />
-      <SidebarOption sectionKey={SECTIONS.CHANGE_CREDENTIALS} icon={<VpnKeyIcon className="icon" />} label="Change Email/Password" />
+      <SidebarOption sectionKey={SECTIONS.CHANGE_CREDENTIALS} icon={<VpnKeyIcon className="icon" />} label="Change Email or Password" />
       <SidebarOption sectionKey={SECTIONS.SKILLS_PROJECTS} icon={<BuildIcon className="icon" />} label="Skills & Projects" />
       <SidebarOption sectionKey={SECTIONS.PRIVACY} icon={<SecurityIcon className="icon" />} label="Privacy and Security" />
       <SidebarOption sectionKey={SECTIONS.MY_POSTS} icon={<FeedIcon className="icon" />} label="My Posts" />

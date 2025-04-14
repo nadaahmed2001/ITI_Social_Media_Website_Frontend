@@ -47,8 +47,10 @@ export default function Aichat() {
 
     return (
         <div className="flex w-full h-screen overflow-hidden ">
-            <ChatSidebar />
-            <div className="flex-1 flex flex-col bg-black text-[#7a2226] p-4 background-div">
+            <div className="mt-[112px] ml-28 mr-10">
+                <ChatSidebar />
+            </div>
+            <div className="flex-1 flex flex-col bg-black text-[#7a2226]  background-div">
                 <h2 className="text-xl font-bold mb-4 text-center">AI Chat</h2>
                 <div className="flex-1 overflow-y-auto mb-4">
                     {messages.map((msg, index) => (
@@ -74,9 +76,7 @@ export default function Aichat() {
                     />
                     <button
                         type="submit"
-                          className=" text-[#7a2226] bg-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                        
-                   >
+                        className=" text-[#7a2226] bg-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                         Send
                     </button>
                 </form>

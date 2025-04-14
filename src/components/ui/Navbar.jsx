@@ -219,8 +219,6 @@ import {
   Home,
   MessageCircle,
   User,
-  Sun,
-  Moon,
   LogOut,
   Menu,
   ChartBarDecreasing,
@@ -228,63 +226,80 @@ import {
 import NotificationsDropdown from "../../pages/NotificationsDropdown";
 import logo from "../../assets/images/logo.png";
 import AuthContext from "../../contexts/AuthContext";
-const DEFAULT_USER_AVATAR = "../../src/assets/images/user-default.webp";
+import defaultAvatar from "../../assets/images/user-default.webp";
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
   const { user, loading } = useContext(AuthContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
   const location = useLocation();
   const activeTab = location.pathname;
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
+  const isMessagesActive =
+    location.pathname === "/chat" || location.pathname === "/chat/aiChat" || location.pathname.startsWith("/messagesList/");
+
   if (loading) return null;
+
+  const navItems = [
+    { path: "/Home", Icon: Home },
+    { path: "/chat", Icon: MessageCircle, customActive: isMessagesActive },
+    { path: "/profile", Icon: User },
+    ...(user?.is_supervisor
+      ? [{ path: "/supervisor/dashboard", Icon: ChartBarDecreasing }]
+      : []),
+  ];
+
+  const mobileNavItems = [
+    { path: "/Home", label: "Dashboard", Icon: Home },
+    { path: "/chat", label: "Chat", Icon: MessageCircle },
+    { path: "/profile", label: "Profile", Icon: User },
+    ...(user?.is_supervisor
+      ? [
+          {
+            path: "/supervisor/dashboard",
+            label: "Supervisor Dashboard",
+            Icon: ChartBarDecreasing,
+          },
+        ]
+      : []),
+  ];
 
   return (
     <nav className="fixed top-0 left-0 w-full flex items-center justify-between p-3 !bg-black backdrop-blur-md z-50">
-      {/* Logo and Search */}
+      {/* Logo & Search */}
       <div className="flex items-center gap-5">
-        <div className="text-xl font-bold cursor-pointer">
-          <Link to="/Home">
-            <img src={logo} alt="Logo" className="h-12 w-12" />
-          </Link>
-        </div>
+        <Link to="/Home">
+          <img src={logo} alt="Logo" className="h-12 w-12" />
+        </Link>
         <input
           type="text"
           placeholder="#Explore"
           className={`hidden md:block ${
             isDarkMode
-              ? "bg-[#333] p-2 rounded-lg text-white focus:outline-none w-70 placeholder-gray-400 hover:bg-gray-700"
-              : "bg-gray-300 p-2 rounded-lg text-gray-900 focus:outline-none w-70 placeholder-gray-500 hover:bg-gray-400"
-          }`}
+              ? "bg-[#333] p-2 rounded-lg text-white w-70 placeholder-gray-400 hover:bg-gray-700"
+              : "bg-gray-300 p-2 rounded-lg text-gray-900 w-70 placeholder-gray-500 hover:bg-gray-400"
+          } focus:outline-none`}
         />
       </div>
 
-      {/* Desktop Navigation */}
+      {/* Center Desktop Nav */}
       <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 gap-6">
-        {[
-          { path: "/Home", Icon: Home },
-          { path: "/chat", Icon: MessageCircle },
-          { path: "/profile", Icon: User },
-          ...(user?.is_supervisor
-            ? [{ path: "/supervisor/dashboard", Icon: ChartBarDecreasing }]
-            : []),
-        ].map(({ path, Icon }) => (
+        {navItems.map(({ path, Icon, customActive }) => (
           <Link key={path} to={path} className="relative group">
             <Icon
               size={24}
               className={
-                activeTab === path
-                  ? "text-[#7B2326] group-hover:text-[#7B2326]"
+                customActive || activeTab === path
+                  ? "text-[#7B2326]"
                   : isDarkMode
                   ? "text-white group-hover:text-[#7B2326]"
                   : "text-white group-hover:text-[#7B2326]"
               }
             />
-            {activeTab === path && (
+            {(customActive || activeTab === path) && (
               <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-[#7B2326] rounded-full"></span>
             )}
           </Link>
@@ -292,18 +307,15 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
         <NotificationsDropdown />
       </div>
 
-      {/* Mobile Menu Button */}
+      {/* Mobile Hamburger Menu */}
       <button
         onClick={toggleMenu}
         className="md:hidden p-2 rounded-full hover:bg-gray-700"
       >
-        <Menu
-          size={24}
-          className={isDarkMode ? "text-white" : "text-gray-900"}
-        />
+        <Menu size={24} className={isDarkMode ? "text-white" : "text-gray-900"} />
       </button>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Drawer */}
       {menuOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
           <div className="w-64 h-full bg-gray-800 text-white p-5 flex flex-col gap-4">
@@ -313,28 +325,13 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
             >
               ✖
             </button>
-            {[
-              { path: "/Home", label: "Dashboard", Icon: Home },
-              { path: "/chat", label: "Chat", Icon: MessageCircle },
-              { path: "/profile", label: "Profile", Icon: User },
-              ...(user?.is_supervisor
-                ? [
-                    {
-                      path: "/supervisor/dashboard",
-                      label: "Dashboard",
-                      Icon: ChartBarDecreasing,
-                    },
-                  ]
-                : []),
-            ].map(({ path, label, Icon }) => (
+            {mobileNavItems.map(({ path, label, Icon }) => (
               <Link
                 key={path}
                 to={path}
                 onClick={toggleMenu}
                 className={`flex items-center gap-3 p-2 rounded-lg ${
-                  activeTab === path
-                    ? "bg-[#7B2326] text-white"
-                    : "hover:bg-gray-700"
+                  activeTab === path ? "bg-[#7B2326]" : "hover:bg-gray-700"
                 }`}
               >
                 <Icon size={24} className="text-[#7B2326]" />
@@ -345,50 +342,35 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
         </div>
       )}
 
-      {/* Theme Toggle + Avatar Dropdown */}
+      {/* Avatar & Dropdown */}
       <div className="hidden md:flex ml-auto items-left gap-4 relative">
-         {/* Uncomment if theme toggle is used: */}
-        <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-gray-700">
-          {isDarkMode ? (
-            <Sun size={24} className="text-[#7B2326]" />
-          ) : (
-            <Moon size={24} className="text-gray-900" />
-          )}
-        </button> 
-        <img
-            // Use user's profile picture, fallback to default
-            src={user?.profile_picture || DEFAULT_USER_AVATAR}
-            alt="User Avatar" // Add descriptive alt text
-            className={
-              // Keep size, shape, cursor, and hover effects. Add object-cover. Remove background colors.
-              "w-10 h-10 rounded-full object-cover cursor-pointer hover:ring-2 hover:ring-[#7B2326]"
-            }
-            onClick={toggleDropdown} // Keep the onClick handler
-            // Add onError handler to show default avatar if the user's image fails to load
-            onError={(e) => {
-              if (e.target.src !== DEFAULT_USER_AVATAR) {
-                e.target.src = DEFAULT_USER_AVATAR;
-              }
-            }}
+        <div
+          className={
+            isDarkMode
+              ? "w-10 h-10 rounded-full cursor-pointer ring-2 ring-transparent hover:ring-[#7B2326] overflow-hidden"
+              : "w-10 h-10 rounded-full cursor-pointer ring-2 ring-transparent hover:ring-[#7B2326] overflow-hidden"
+          }
+          onClick={toggleDropdown}
+        >
+          <img
+            src={user?.profile_photo || defaultAvatar}
+            alt="Avatar"
+            className="w-full h-full object-cover"
           />
+        </div>
+
         {dropdownOpen && (
-          <div className="absolute right-3 mt-12 w-35 bg-[#7B2326] text-black rounded-lg shadow-lg">
+          <div className="absolute right-0 mt-14 w-40 bg-white text-black rounded-lg shadow-lg z-50">
             <ul className="py-2">
-              <li className="py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer hover:text-[#7B2326]">
-                <User size={22} />
-                <Link
-                  to="/profile"
-                  className="text-black hover:text-[#7B2326] no-underline"
-                >
+              <li className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer hover:text-[#7B2326]">
+                <User size={20} />
+                <Link to="/profile" className="text-black hover:text-[#7B2326] no-underline">
                   Profile
                 </Link>
               </li>
-              <li className="py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer hover:text-[#7B2326]">
-                <LogOut size={22} />
-                <Link
-                  to="/logout"
-                  className="text-black hover:text-[#7B2326] no-underline"
-                >
+              <li className="px-4 py-2 flex items-center gap-2 hover:bg-gray-100 cursor-pointer hover:text-[#7B2326]">
+                <LogOut size={20} />
+                <Link to="/logout" className="text-black hover:text-[#7B2326] no-underline">
                   Logout
                 </Link>
               </li>
