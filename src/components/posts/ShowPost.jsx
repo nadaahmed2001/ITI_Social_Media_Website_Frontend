@@ -362,17 +362,32 @@ const handleConfirmDeleteComment = () => {
 // Add this log directly inside the component body to see state on each render
 console.log("ShowPost Rendering - userReactions state IS:", userReactions);
 
+// const handleAddReaction = async (reactionType) => {
+//   try {
+//     await likePost(post.id, reactionType);
+//     const updated = await fetchReactionsForPost(post.id); 
+//     const fetchedReactions = Array.isArray(updated) ? updated : [];
+//     setAllPostReactions(fetchedReactions); // Update all reactions state
+//     const filtered = fetchedReactions.filter(r => r.user_id === user?.id);
+//     setUserReactions(filtered); // Update user-specific state
+//   } catch (error) { console.error("Add Reaction Error", error); }
+// };
 const handleAddReaction = async (reactionType) => {
   try {
     await likePost(post.id, reactionType);
-    const updated = await fetchReactionsForPost(post.id); 
+    const updated = await fetchReactionsForPost(post.id);
     const fetchedReactions = Array.isArray(updated) ? updated : [];
-    setAllPostReactions(fetchedReactions); // Update all reactions state
+    
+    // Store the full reaction object
     const filtered = fetchedReactions.filter(r => r.user_id === user?.id);
-    setUserReactions(filtered); // Update user-specific state
-  } catch (error) { console.error("Add Reaction Error", error); }
+    setUserReactions(filtered);
+    
+    setAllPostReactions(fetchedReactions);
+  } catch (error) {
+    console.error("Add Reaction Error", error);
+  }
 };
-
+/////
 const handleRemoveReaction = async () => { 
   try {
     await removePostReaction(post.id);
@@ -644,7 +659,34 @@ const handleMouseEnterPopover = () => {
     // If mouse enters the popover itself, clear the hide timer
     clearTimeout(hidePopoverTimer.current); 
 };
-
+//
+const AVAILABLE_REACTIONS = [
+  { 
+    name: "Like", 
+    icon: <ThumbUpSolid className="text-[#7a2226] w-5 h-5" />
+  },
+  { 
+    name: "Love", 
+    icon: <FavoriteSharpIcon className="text-[#7a2226] w-5 h-5" />
+  },
+  { 
+    name: "Celebrate", 
+    icon: <CelebrationSharpIcon className="text-[#7a2226] w-5 h-5" />
+  },
+  { 
+    name: "funny", 
+    icon: <SentimentVerySatisfiedSharpIcon className="text-[#7a2226] w-5 h-5" />
+  },
+  { 
+    name: "Support", 
+    icon: <VolunteerActivismSharpIcon className="text-[#7a2226] w-5 h-5" />
+  },
+  { 
+    name: "Insightful", 
+    icon: <TipsAndUpdatesSharpIcon className="text-[#7a2226] w-5 h-5" />
+  },
+];
+///
   return (
     <div className="!bg-[#292928] rounded-lg shadow-md p-4 mb-4 border !border-[#ffffff]">
       {/* Post Header */}
@@ -853,12 +895,22 @@ const handleMouseEnterPopover = () => {
             }`}
           >
               {/* Show solid icon if reacted, outline otherwise */}
-              {userReactions.length > 0 ? <ThumbUpSolid className="!bg-[#181819] w-5 h-7"/> : <ThumbUpOutline className="!bg-[#181819] w-5 h-5"/>} 
-              
-              {/* Display user's current reaction text or default 'Like' */}
-              <span className="!bg-[#181819]">{reactions.find(r => r.name === userReactions[0]?.reaction_type)?.name || 'React'}</span>
-          </button>
+              {userReactions[0] ? (
+    AVAILABLE_REACTIONS.find(r => r.name === userReactions[0].reaction_type)?.icon
+  ) : (
+    <ThumbUpOutline className="!bg-[#181819] w-5 h-5"/>
+  )}
+  
+  {/* Display reaction text */}
+  <span className="!bg-[#181819]">
+    {userReactions[0]?.reaction_type || 'React'}
+  </span>
+</button>
           
+
+
+
+
           {/* Reaction Popover (Conditionally Rendered) */}
           {showReactions && ( 
               <div 
