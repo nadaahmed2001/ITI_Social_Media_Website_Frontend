@@ -151,33 +151,32 @@ useEffect(() => {
       }
 
 
-  const loadInitialComments = async () => {
-    const initialPage = 1; // Define page number
-    try {
-      setCommentPagination(prev => ({...prev, isLoading: true, error: null}));
-      console.log(`ShowPost: Calling fetchComments for initial page: ${initialPage}`); // Add log
-      
-      // --- CORRECTED CALL ---
-      const response = await fetchComments(post.id, initialPage); // Pass the number 1
-      // --- END CORRECTION ---
-      
-      // ... rest of the success handling ...
-      const commentsData = Array.isArray(response.data) ? response.data : response.data.results || [];
-      setComments(prev => prev.map(c => 
-        c.id === selectedComment.id 
-          ? { ...res.data, author_id: selectedComment.author_id } 
-          : c
-      ));
-      setCommentPagination({
-        page: initialPage, // Set page number state
-        hasMore: response.data.next ? true : false,
-        isLoading: false,
-        error: null
-      });
-    } catch (error) {
-      console.log(error)
-    }
-  };
+      const loadInitialComments = async () => {
+        const initialPage = 1;
+        try {
+          setCommentPagination(prev => ({...prev, isLoading: true, error: null}));
+          console.log(`ShowPost: Calling fetchComments for initial page: ${initialPage}`);
+    
+          const response = await fetchComments(post.id, initialPage);
+    
+          const commentsData = Array.isArray(response.data?.results) ? response.data.results : (Array.isArray(response.data) ? response.data : []);
+          console.log("Initial comments fetched:", commentsData); // Log fetched data
+    
+              setComments(commentsData); // Directly set the state with the fetched comments array
+    
+          setCommentPagination({
+            page: initialPage,
+            // Check for 'next' field in the paginated response
+            hasMore: response.data?.next ? true : false,
+            isLoading: false,
+            error: null
+          });
+        } catch (error) {
+          console.error("Failed to load initial comments:", error); // Log the actual error
+          setError("Failed to load comments."); // Set an error state if you have one
+          setCommentPagination(prev => ({...prev, isLoading: false, error: "Could not load comments."}));
+        }
+      };
   
   loadInitialComments();
 }, [post.id, user?.id]);
@@ -977,7 +976,7 @@ const AVAILABLE_REACTIONS = [
                   Error: {commentPagination.error}
                   {/* Optional: Add a retry button */}
                   <button 
-                    onClick={() => loadPosts(1)} // Reload first page on retry?
+                    onClick={() => loadMoreComments(1)} // Reload first page on retry?
                     className="ml-2 text-primary-600 hover:underline"
                   >
                     Retry
@@ -989,37 +988,23 @@ const AVAILABLE_REACTIONS = [
               {/* Check if comments array exists before mapping */}
               {comments && comments.length > 0 ? (
                 <>
-                  {/* {comments.map((comment) => (
-                  <CommentItem
-                  key={comment.id}
-                  comment={comment}
-                  currentUserId={currentUserId}
-                  onEditRequest={(comment) => {
-                    setSelectedComment(comment);
-                    setIsEditModalOpenComment(true);
-                  }}
-                  onDeleteRequest={handleDeleteCommentRequest}
-                  onReact={handleCommentReact}
-                  onUnreact={handleCommentUnreact}
-                />
-                  ))} */}
                   
                   {comments.map((comment) => (
-  <CommentItem
-    key={comment.id}
-    comment={comment}
-    currentUserId={currentUserId}
-    onEditRequest={(comment) => {
-      setSelectedComment(comment);
-      setIsEditModalOpenComment(true);
-    }}
-    onDeleteRequest={(comment) => { // Modified to open modal
-      setSelectedComment(comment);
-      setIsDeleteModalOpenComment(true);
-    }}
-    onReact={handleCommentReact}
-    onUnreact={handleCommentUnreact}
-  />
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                      currentUserId={currentUserId}
+                      onEditRequest={(comment) => {
+                        setSelectedComment(comment);
+                        setIsEditModalOpenComment(true);
+                      }}
+                      onDeleteRequest={(comment) => { // Modified to open modal
+                        setSelectedComment(comment);
+                        setIsDeleteModalOpenComment(true);
+                      }}
+                      onReact={handleCommentReact}
+                      onUnreact={handleCommentUnreact}
+                    />
 ))}
                   {/* Load More button */}
                   {commentPagination.hasMore && (
