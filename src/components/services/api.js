@@ -43,17 +43,62 @@ api2.interceptors.request.use((config) => {
 
 // ============================================================="Rahma"=========================================================================
 // Fetch all posts
-export const fetchPosts = () => api.get("/posts/");
+export const fetchPosts = (page = 1, pageSize = 10) => {
+  return api.get('/posts/', {
+    params: {
+      page,
+      page_size: pageSize
+    }
+  });
+};
+
 // Create a new post
-export const createPost = (data) => api.post("/posts/", data, {
-  headers: {
-    'Content-Type': 'multipart/form-data'
+export const createPost = (postData) => {
+  const formData = new FormData();
+  formData.append('body', postData.body);
+  
+  // Only append attachment_url if it exists
+  if (postData.attachment_url) {
+    formData.append('attachment_url', postData.attachment_url);
   }
-});
+  
+  return api.post('/posts/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+
 // Fetch comments for a post
-export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
+export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
+  console.log(`API: Fetching comments for post ${postId}, page ${page}`);
+  if (typeof page !== 'number' || isNaN(page)) {
+    console.error("API ERROR: fetchComments received invalid page number:", page);
+    console.log(page)
+    // Return a rejected promise or throw an error to stop the process
+    return Promise.reject(new Error(`Invalid page number: ${page}`)); 
+  } 
+  // Append the page query parameter to the comments endpoint URL
+  return api.get(`/posts/${postId}/comments/?page=${page}`); 
+};
+
 // Add a comment to a post
-export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`, data);
+export const addComment = (postId, commentData) => {
+  const formData = new FormData();
+  formData.append('post', postId)
+  formData.append('comment', commentData.comment);
+  if (commentData.attachment_url) {
+    formData.append('attachment_url', commentData.attachment_url);
+  }
+  
+  return api.post(`/posts/${postId}/comment/`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 // Edit a post
 export const editPost = (postId, updatedContent) => 
   api.put(`/posts/${postId}/`, updatedContent);

@@ -13,13 +13,20 @@ const api = axios.create({
 // Automatically set Authorization header before each request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token"); // Retrieve token from local storage
+    // --- ADD LOGS HERE ---
+    console.log(`API Interceptor: Requesting ${config.method?.toUpperCase()} ${config.url}`); 
+    const token = localStorage.getItem("access_token"); // Ensure 'access_token' is the correct key
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Corrected syntax
+      config.headers.Authorization = `Bearer ${token}`; 
+      console.log("API Interceptor: Token FOUND and attached."); // Log success
+    } else {
+      console.warn("API Interceptor: Token NOT FOUND in localStorage."); // Log failure
     }
+    // --- END LOGS ---
     return config;
   },
   (error) => {
+    console.error("API Interceptor: Request setup error", error); // Log errors during request setup
     return Promise.reject(error);
   }
 );
@@ -29,7 +36,15 @@ api.interceptors.request.use(
 // API functions
 // ============================================================="Rahma"=========================================================================
 // Fetch all posts
-export const fetchPosts = () => api.get("/posts/");
+export const fetchPosts = (page = 1, pageSize = 10) => {
+  return api.get('/posts/', {
+    params: {
+      page,
+      page_size: pageSize
+    }
+  });
+};
+
 // Create a new post
 export const createPost = (data) => api.post("/posts/", data, {
   headers: {
@@ -37,7 +52,17 @@ export const createPost = (data) => api.post("/posts/", data, {
   }
 });
 // Fetch comments for a post
-export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
+export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
+  console.log(`API: Fetching comments for post ${postId}, page ${page}`);
+  if (typeof page !== 'number' || isNaN(page)) {
+    console.error("API ERROR: fetchComments received invalid page number:", page);
+    // Return a rejected promise or throw an error to stop the process
+    return Promise.reject(new Error(`Invalid page number: ${page}`)); 
+  } 
+  // Append the page query parameter to the comments endpoint URL
+  return api.get(`/posts/${postId}/comments/?page=${page}`); 
+};
+
 // Add a comment to a post
 export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`, data);
 // Edit a post

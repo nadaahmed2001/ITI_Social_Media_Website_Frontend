@@ -8,10 +8,6 @@ import ChangeCredentials from '../components/profiles/UserProfile/ChangeCredenti
 import SkillsAndProjects from '../components/profiles/UserProfile/SkillsAndProjects';
 import PrivacySecuritySettings from '../components/profiles/UserProfile/PrivacySecuritySettings'; 
 
-// TODO: Implement these components later
-// import PrivacySecurity from '../components/UserProfile/PrivacySecurity';
-// import MyPosts from '../components/UserProfile/MyPosts';
-// import SavedItems from '../components/UserProfile/SavedItems';
 
 import { getAccount } from '../components/services/api';
 // --- End Path Verification ---

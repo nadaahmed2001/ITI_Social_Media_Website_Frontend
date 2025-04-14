@@ -1,52 +1,92 @@
+/* delete-comment.css */
+
+/* Overlay styles - Covers the screen */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999; /* Make sure it's above everything */
+  align-items: center; /* Vertical centering */
+  justify-content: center; /* Horizontal centering */
+  z-index: 1050; /* Ensure it's above other content, potentially higher than post modal if needed */
+  animation: fadeIn 0.2s ease-out; /* Use the same fade-in */
 }
 
+/* Modal content box styles */
 .modal-content {
- 
-  padding: 20px;
+  background-color: #2d2d2d; /* Same dark background */
+  color: hsl(0, 0%, 88%); /* Light text */
+  padding: 25px 30px;
   border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 80%;
+  max-width: 41px; /* Slightly smaller max-width maybe? Adjust as needed */
+  min-width: 40px;
+  border: 1px solid #444;
+  animation: scaleUp 0.2s ease-out; /* Use the same scale-up */
 }
 
-  .delete-post {
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    min-width: 300px;
-  }
-  
-  .delete-post-btn {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .confirm-delete-post {
-    background: red;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-  }
-  
-  .cancel-delete-post {
-    background: gray;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-  }
-  
+/* Modal paragraph style */
+.modal-content p {
+  margin-bottom: 25px; /* More space before buttons */
+  font-size: 1.5rem; /* Standard font size */
+  line-height: 1.6;
+  text-align: center;
+  background-color: #292929;
+  font-weight: 800;
+}
+
+/* Button container styles */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px; /* Space between buttons */
+  margin-top: 15px; /* Adjust if needed */
+}
+
+/* Common button styles */
+.modal-actions button {
+  padding: 9px 18px; /* Slightly adjusted padding */
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem; /* Slightly smaller font */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  outline: none;
+}
+
+/* Specific button styles */
+.confirm-btn { /* Matches class name in JSX */
+  background-color: #dc3545; /* Red for delete */
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: #c82333; /* Darker red */
+  transform: translateY(-1px);
+}
+
+.cancel-btn { /* Matches class name in JSX */
+  background-color: #6c757d; /* Gray for cancel */
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268; /* Darker gray */
+  transform: translateY(-1px);
+}
+
+/* Re-use Keyframe animations from delete-post.css (or define here if separate) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0.8; }
+  to { transform: scale(1); opacity: 1; }
+}
