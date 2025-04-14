@@ -149,6 +149,7 @@ import PostDetail from "../components/notifications/PostDetail";
 import Navbar from "../components/ui/Navbar";
 import StartChat from "../pages/startChat";
 
+
 // Wrapper component to handle conditional Navbar and Routes
 const AppContent = () => {
   const location = useLocation();
@@ -188,6 +189,9 @@ const AppContent = () => {
         <Route path="/email-change-success" element={<EmailChangeSuccess />} />
         <Route path="/email-change-failed" element={<EmailChangeFailed />} />
         <Route path="/logout" element={<Logout />} />
+
+        <Route path="/search" element={<SearchPage />} />
+
 
 
         {/* --- Protected Routes --- */}

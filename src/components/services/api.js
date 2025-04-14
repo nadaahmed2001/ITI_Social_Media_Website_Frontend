@@ -336,6 +336,21 @@ export const updateAccount = (jsonData) => api2.put('/users/account/', jsonData)
 export const updateProfilePicture = (formData) => api2.put('/users/account/', formData); // Send FormData
 export const getPublicProfile = (profileId) => api2.get(`/users/profiles/${profileId}/`);
 
+export const searchProfiles = async (query) => {
+  try {
+    // Adjust the endpoint '/search/profiles/' if needed
+    const response = await api.get(`/search/profiles/?q=${encodeURIComponent(query)}`);
+    // Assuming the backend returns data in response.data
+    // If it returns an array directly: return response.data;
+    // If it returns { results: [...] }: return response.data.results;
+    return response.data; // Adjust based on your actual API response structure
+  } catch (error) {
+    console.error("Error searching profiles:", error.response || error);
+    // Re-throw or handle error appropriately
+    throw error;
+  }
+};
+
 // ======================================================= User Credentials ==========================================================
 export const changeEmail = (data) => api2.post('/users/change-email/', data);
 export const changePassword = (data) => api2.post('/users/change-password/', data);
