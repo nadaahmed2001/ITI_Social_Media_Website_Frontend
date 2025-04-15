@@ -123,8 +123,8 @@ export default function CreatePost({ onPostCreated }) {
           <textarea
             value={postText}
             onChange={handleTextChange}
-            placeholder={`What's on your mind? (${MAX_POST_LENGTH} characters max)`}
-            className="placeholder:text-[#262727] !bg-[#c2c2c2] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+            placeholder={`What's on your mind?`}
+            className="placeholder:text-[#262727] text-black !bg-[#c2c2c2] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
             rows={2}
             maxLength={MAX_POST_LENGTH}
           />
