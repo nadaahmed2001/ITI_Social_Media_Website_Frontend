@@ -614,7 +614,7 @@ try {
 
 
   const reactions = [
-    { name: "Like", icon: <ThumbUpSharpIcon className="w-5 h-5" /> },
+    { name: "Like", icon: <ThumbUpSharpIcon className=" w-5 h-5" /> },
     { name: "Love", icon: <FavoriteSharpIcon className="w-5 h-5" /> },
     { name: "Celebrate", icon: <CelebrationSharpIcon className="w-5 h-5" /> },
     { name: "funny", icon: <SentimentVerySatisfiedSharpIcon className="w-5 h-5" /> },
@@ -662,19 +662,19 @@ const handleMouseEnterPopover = () => {
 const AVAILABLE_REACTIONS = [
   { 
     name: "Like", 
-    icon: <ThumbUpSolid className="text-[#7a2226] w-5 h-5" />
+    icon: <ThumbUpSolid className="text-blue-500 w-5 h-5" />
   },
   { 
     name: "Love", 
-    icon: <FavoriteSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <FavoriteSharpIcon className="text-red-500 w-5 h-5" />
   },
   { 
     name: "Celebrate", 
-    icon: <CelebrationSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <CelebrationSharpIcon className="text-violet-400 w-5 h-5" />
   },
   { 
     name: "funny", 
-    icon: <SentimentVerySatisfiedSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <SentimentVerySatisfiedSharpIcon className="text-green-400 w-5 h-5" />
   },
   { 
     name: "Support", 
@@ -682,7 +682,7 @@ const AVAILABLE_REACTIONS = [
   },
   { 
     name: "Insightful", 
-    icon: <TipsAndUpdatesSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <TipsAndUpdatesSharpIcon className="text-blue-200 w-5 h-5" />
   },
 ];
 ///
