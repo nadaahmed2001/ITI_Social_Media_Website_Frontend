@@ -411,7 +411,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
         </div>
 
         {dropdownOpen && (
-          <div className="absolute right-0 mt-14 w-48 bg-white text-black rounded-lg shadow-lg z-50"> {/* Increased width slightly */}
+          <div className="absolute right-4 top-14  w-48 bg-white text-black rounded-lg shadow-lg z-50"> {/* Increased width slightly */}
             <ul className="py-1"> {/* Reduced padding */}
               {/* Profile Link */}
               <li className="hover:bg-gray-100">
