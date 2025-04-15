@@ -6,17 +6,17 @@ export default function DeleteComment({ isOpen, onClose, onConfirm }) {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
-        <p>Are you sure you want to delete this comment?</p>
-        <div className="modal-actions">
-          <button className="confirm-btn" onClick={onConfirm}>
-            Delete
-          </button>
-          <button className="cancel-btn" onClick={onClose}>
-            Cancel
-          </button>
-        </div>
+    <div className="modal-content">
+      <p>Are you sure you want to delete this comment?</p>
+      <div className="modal-actions">
+        <button className="confirm-btn" onClick={onConfirm}>
+          Delete
+        </button>
+        <button className="cancel-btn" onClick={onClose}>
+          Cancel
+        </button>
       </div>
     </div>
+  </div>
   );
 }

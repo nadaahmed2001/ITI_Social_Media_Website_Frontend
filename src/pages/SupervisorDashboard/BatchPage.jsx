@@ -51,14 +51,14 @@ const BatchPage = () => {
         <Box sx={{ width: 240, p: 2, borderRight: '1px solid rgba(255,255,255,0.1)' }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: 'black' }}>Batches</Typography>
 
-          <Button variant="contained" sx={{ bgcolor: filter === 'active' ? '#fff' : 'transparent', color: 'black', mb: 2 }} onClick={() => setFilter('active')}>
+          <Button variant="contained" sx={{ bgcolor: filter === 'active' ? '#000' : 'transparent', color: 'white', mt: 5 }} onClick={() => setFilter('active')}>
             Active
           </Button>
-          <Button variant="contained" sx={{ bgcolor: filter === 'old' ? '#FFEB3B' : 'transparent', color: 'black', mb: 2 }} onClick={() => setFilter('old')}>
+          <Button variant="contained" sx={{ bgcolor: filter === 'old' ? '#7B2326' : 'transparent', color: 'white', mt: 5 }} onClick={() => setFilter('old')}>
             Old
           </Button>
 
-          <Button variant="contained" sx={{ mt: 3, bgcolor: '#FFEB3B', color: 'black', fontWeight: 'bold', '&:hover': { bgcolor: '#FDD835' } }} onClick={handleOpenNewBatch}>
+          <Button variant="contained" sx={{ mt: 3, bgcolor: '#7B2326', color: 'white', fontWeight: 'bold', '&:hover': { bgcolor: '#9B3A3D' } }} onClick={handleOpenNewBatch}>
             Start New +
           </Button>
         </Box>
@@ -91,7 +91,7 @@ const BatchPage = () => {
       </Box>
 
       <Dialog open={openNewBatchModal} onClose={handleCloseNewBatch}>
-        <DialogTitle sx={{ color: 'black' }}>Start New Batch</DialogTitle>
+        <DialogTitle sx={{ color: '#7B2326', fontWeight: 'bold', fontSize: '1.5rem' }}>Start New Batch</DialogTitle>
         <DialogContent>
           <BatchForm programId={programId} trackId={trackId} onSubmit={refreshBatches} />
         </DialogContent>

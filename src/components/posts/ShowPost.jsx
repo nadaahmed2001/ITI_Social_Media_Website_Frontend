@@ -614,7 +614,7 @@ try {
 
 
   const reactions = [
-    { name: "Like", icon: <ThumbUpSharpIcon className="w-5 h-5" /> },
+    { name: "Like", icon: <ThumbUpSharpIcon className=" w-5 h-5" /> },
     { name: "Love", icon: <FavoriteSharpIcon className="w-5 h-5" /> },
     { name: "Celebrate", icon: <CelebrationSharpIcon className="w-5 h-5" /> },
     { name: "funny", icon: <SentimentVerySatisfiedSharpIcon className="w-5 h-5" /> },
@@ -662,19 +662,19 @@ const handleMouseEnterPopover = () => {
 const AVAILABLE_REACTIONS = [
   { 
     name: "Like", 
-    icon: <ThumbUpSolid className="text-[#7a2226] w-5 h-5" />
+    icon: <ThumbUpSolid className="text-blue-500 w-5 h-5" />
   },
   { 
     name: "Love", 
-    icon: <FavoriteSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <FavoriteSharpIcon className="text-red-500 w-5 h-5" />
   },
   { 
     name: "Celebrate", 
-    icon: <CelebrationSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <CelebrationSharpIcon className="text-violet-400 w-5 h-5" />
   },
   { 
     name: "funny", 
-    icon: <SentimentVerySatisfiedSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <SentimentVerySatisfiedSharpIcon className="text-green-400 w-5 h-5" />
   },
   { 
     name: "Support", 
@@ -682,7 +682,7 @@ const AVAILABLE_REACTIONS = [
   },
   { 
     name: "Insightful", 
-    icon: <TipsAndUpdatesSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <TipsAndUpdatesSharpIcon className="text-blue-200 w-5 h-5" />
   },
 ];
 ///
@@ -1074,10 +1074,10 @@ const AVAILABLE_REACTIONS = [
                   onClick={handleOpenUploadWidget}
                   disabled={isUploading || !!attachmentUrl} 
                   // Position inside the input padding area
-                  className="!bg-[#7a2226] absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Add Photo/Video" // Accessibility
                 >
-                <ImageSharpIcon className="w-5 h-5 !bg-[#7a2226]" /> 
+                <ImageSharpIcon className="w-5 h-5" /> 
               </button>
             </div>
 
@@ -1120,7 +1120,7 @@ const AVAILABLE_REACTIONS = [
                 type="button" // Or type="submit" if this div is wrapped in a <form>
                 onClick={handleComment}
                 disabled={(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit} 
-                className={`px-3 py-1 !rounded-lg text-sm font-medium !bg-[#7a2226] text-gray-900 ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
+                className={`px-3 py-1 !rounded-lg text-sm font-medium !bg-[#7a2226] text-white ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
               >
                 Comment
               </button>
