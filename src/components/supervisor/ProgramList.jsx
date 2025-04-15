@@ -4,11 +4,11 @@ import React from 'react';
 
 const ProgramList = ({ programs, onSelectProgram }) => {
   return (
-    <div className="program-list">
-      <h3>Programs</h3>
-      <ul>
+    <div className="bg-[#7B2326] text-white pt-6 p-4 rounded-md">
+       <h3 className="text-lg font-semibold mb-4">Programs</h3>
+       <ul>
         {programs.map(program => (
-          <li key={program.id} onClick={() => onSelectProgram(program)}>
+          <li key={program.id} onClick={() => onSelectProgram(program)} className="cursor-pointer hover:underline" >
             {program.name}
           </li>
         ))}

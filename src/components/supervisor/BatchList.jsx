@@ -23,9 +23,9 @@ const BatchList = ({ trackId }) => {
   }, [trackId]);
 
   return (
-    <div className="batch-list">
-      <h3>Batches</h3>
-      <ul>
+    <div className="batch-list bg-[#7B2326] text-white pt-6 p-4 rounded-md shadow-md max-w-md">
+      <h3 className="text-lg font-semibold mb-4">Batches</h3>
+      <ul className="space-y-2">
         {batches.map(batch => (
           <li key={batch.id} onClick={() => setSelectedBatch(batch)}>
             {batch.name} - {batch.active ? 'Active' : 'Ended'}

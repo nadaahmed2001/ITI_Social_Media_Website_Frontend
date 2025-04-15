@@ -137,15 +137,18 @@ background: none; /* Override global */
     padding: 20px;
 }
 
+/* In ProjectsManagement.css */
+
 .modal-content {
-    background-color: #282828; /* Modal background */
+    background-color: #282828;
     padding: 25px 30px;
     border-radius: 8px;
     border: 1px solid #444;
     width: 100%;
-    max-width: 600px; /* Max width */
-    max-height: 90vh; /* Max height */
-    overflow-y: auto; /* Allow scrolling if content overflows */
+    max-width: 600px;
+    min-width: 500px !important; /* <-- ADD THIS LINE */
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     position: relative;
 }
@@ -154,7 +157,6 @@ background: none; /* Override global */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
     padding-bottom: 15px;
     border-bottom: 1px solid #444;
     background: none;
@@ -188,9 +190,11 @@ background: none; /* Override global */
 /* Modal Form Styling */
 .modal-form {
     background: none;
+    border: none;
 }
 .modal-form .form-group {
     margin-bottom: 18px;
+
     background: none;
 }
 .modal-form label {
@@ -261,7 +265,7 @@ background: none; /* Override global */
     color: #191919;
 }
 .modal-actions .save-button:hover:not(:disabled) {
-    background-color: #e6e400;
+    background-color: #7a2226;
 }
 .modal-actions button:disabled {
     background-color: #444 !important;
@@ -334,6 +338,7 @@ color: #ff6666; background-color: rgba(255, 102, 102, 0.1); border: 1px solid #f
 
 /* Style for the buttons next to the preview */
 .project-image-modal-buttons button {
+    margin-top: 60px;
     padding: 6px 12px;
     background-color: #555;
     color: #eee;

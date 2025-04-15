@@ -18,7 +18,7 @@ const ChatSidebar = () => {
     //     navigate('/aiChat'); // Update URL
     // };
 
-    const defaultGroupAvatar = '../../../src/assets/images/user-default.webp'
+    const defaultGroupAvatar = '../../src/assets/images/group-chat-avatar.webp'
     const location = useLocation();
     
     const showWelcome = !(
@@ -80,10 +80,10 @@ const ChatSidebar = () => {
             )}
         </button>
         {/* Sidebar Content - Added higher z-index */}
-        <div className={`w-100 text-[#7a2226] h-[70vh] p-4 fixed md:relative transform mt-3 rounded-lg 
-            ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
-            md:translate-x-0 transition-transform duration-300 border border-[#7a2226] 
-            bg-[rgba(50,50,50,0.42)] backdrop-blur-sm`}>
+        <div className={`w-72 text-[#7a2226] h-[calc(100vh-150px)] p-4 fixed md:relative transform mt-3 rounded-lg 
+    ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
+    md:translate-x-0 transition-transform duration-300 border border-[#7a2226] 
+    bg-[rgba(50,50,50,0.42)] backdrop-blur-sm overflow-hidden`}>
                 
                 {/* Header */}
                 <Typography variant="h6" className="!font-bold !mb-4 !text-[#7a2226]">
@@ -175,7 +175,8 @@ const ChatSidebar = () => {
                                         src={ chat.authorAvatar || defaultGroupAvatar }
                                         alt="Avatar" // Use chat name or "Group Avatar" for better alt text
                                         // Apply Tailwind classes here instead of 'user-avatar'
-                                        className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600" // Example style
+                                        className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
+                                        onError={(e) => { if (e.target.src !== defaultGroupAvatar) e.target.src = defaultGroupAvatar; }}
                                     />
                                     {chat.name}
                                 </Typography>
@@ -195,5 +196,4 @@ const ChatSidebar = () => {
         </div>
     );
 };
-
 export default ChatSidebar;

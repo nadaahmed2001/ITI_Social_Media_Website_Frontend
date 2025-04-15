@@ -21,6 +21,8 @@ import {
   fetchReactionsForPost,
   removePostReaction,
   removeCommentReaction,
+  savePost, 
+  unsavePost,
   // fetchReactionsForComment,
   
 } from "../../components/services/api";
@@ -50,6 +52,9 @@ import {
   Delete as DeleteIcon,
   ImageSharp as ImageSharpIcon,
   Close as CloseIcon,
+
+  BookmarkBorder as BookmarkBorderIcon, // <-- Icon for Save
+  Bookmark as BookmarkIcon,             // <-- Icon for Saved
   
 } from "@mui/icons-material";
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
@@ -110,6 +115,10 @@ export default function ShowPost({ postData, onDeletePost }) {
   const [reactionsLoading, setReactionsLoading] = useState(true); // Loading state for ALL reactions
   // const [showReactionsModal, setShowReactionsModal] = useState(false); // State for modal visibility
 
+  const [isPostSaved, setIsPostSaved] = useState(postData?.is_saved || false); // <-- STATE FOR SAVED STATUS
+  const [isSavingToggleLoading, setIsSavingToggleLoading] = useState(false); // <-- Loading state for save action
+
+
   const hidePopoverTimer = useRef(null); 
 
 
@@ -131,6 +140,11 @@ const [commentPagination, setCommentPagination] = useState({
   isLoading: false,
   error: null
 });
+
+useEffect(() => {
+  setIsPostSaved(postData?.is_saved || false);
+  setPost(postData); // Update post state if postData prop changes
+}, [postData]);
 
 
 useEffect(() => {
@@ -495,36 +509,6 @@ try {
           onDeletePost(postId);                                     
         });
       };
-    
-      // const handleEditCommentRequest = (commentToEdit) => {
-      //   setSelectedComment(commentToEdit); 
-      //   setIsEditModalOpenComment(true);  
-      // };
-    
-      // --- In ShowPost.js ---
-// Edit Handler (receives comment and updated content)
-
-          const handleEditCommentRequest = (commentToEdit, updatedContent) => {
-            editComment(post.id, commentToEdit.id, { comment: updatedContent })
-              .then((res) => {
-                setComments(prev => prev.map(c => 
-                  c.id === commentToEdit.id 
-                    ? { ...res.data, author_id: commentToEdit.author_id } 
-                    : c
-                ));
-                setIsEditModalOpenComment(false);
-              })
-              .catch(err => console.error(err));
-          };
-
-          const handleDeleteCommentRequest = (commentId) => {
-            deleteComment(post.id, commentId)
-              .then(() => {
-                setComments(prev => prev.filter(c => c.id !== commentId));
-              })
-              .catch(err => console.error(err));
-          };
-    
           const handleConfirmEditComment = (updatedContent) => {
             if (!selectedComment) return;
           
@@ -542,6 +526,36 @@ try {
               .catch(err => console.error("Edit failed:", err));
           };
       
+
+          const handleToggleSavePost = async () => {
+            if (!post?.id || isSavingToggleLoading) return; // Prevent action if no post or already loading
+        
+            setIsSavingToggleLoading(true);
+            const currentlySaved = isPostSaved; // Store current state before API call
+        
+            try {
+              if (currentlySaved) {
+                // If currently saved, call unsave API
+                await unsavePost(post.id);
+                setIsPostSaved(false); // Update state on success
+                console.log("Post unsaved");
+              } else {
+                // If not saved, call save API
+                await savePost(post.id);
+                setIsPostSaved(true); // Update state on success
+                console.log("Post saved");
+              }
+            } catch (error) {
+              console.error("Failed to toggle save status:", error);
+              // Optional: Revert state on error? Or show error message
+              // setIsPostSaved(currentlySaved); // Revert optimistic update if implemented
+              alert(`Failed to ${currentlySaved ? 'unsave' : 'save'} post.`);
+            } finally {
+              setIsSavingToggleLoading(false); // Reset loading state
+              setShowOptions(false); // Close the options menu
+            }
+          };
+        
 
     // Custom Next Arrow Component
     function SampleNextArrow(props) {
@@ -614,7 +628,7 @@ try {
 
 
   const reactions = [
-    { name: "Like", icon: <ThumbUpSharpIcon className="w-5 h-5" /> },
+    { name: "Like", icon: <ThumbUpSharpIcon className=" w-5 h-5" /> },
     { name: "Love", icon: <FavoriteSharpIcon className="w-5 h-5" /> },
     { name: "Celebrate", icon: <CelebrationSharpIcon className="w-5 h-5" /> },
     { name: "funny", icon: <SentimentVerySatisfiedSharpIcon className="w-5 h-5" /> },
@@ -662,19 +676,19 @@ const handleMouseEnterPopover = () => {
 const AVAILABLE_REACTIONS = [
   { 
     name: "Like", 
-    icon: <ThumbUpSolid className="text-[#7a2226] w-5 h-5" />
+    icon: <ThumbUpSolid className="text-blue-500 w-5 h-5" />
   },
   { 
     name: "Love", 
-    icon: <FavoriteSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <FavoriteSharpIcon className="text-red-500 w-5 h-5" />
   },
   { 
     name: "Celebrate", 
-    icon: <CelebrationSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <CelebrationSharpIcon className="text-violet-400 w-5 h-5" />
   },
   { 
     name: "funny", 
-    icon: <SentimentVerySatisfiedSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <SentimentVerySatisfiedSharpIcon className="text-green-400 w-5 h-5" />
   },
   { 
     name: "Support", 
@@ -682,7 +696,7 @@ const AVAILABLE_REACTIONS = [
   },
   { 
     name: "Insightful", 
-    icon: <TipsAndUpdatesSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <TipsAndUpdatesSharpIcon className="text-blue-200 w-5 h-5" />
   },
 ];
 ///
@@ -715,31 +729,53 @@ const AVAILABLE_REACTIONS = [
           </div>
         </div>
         <div className="relative">
-          <button 
-            onClick={() => setShowOptions(!showOptions)}
-            className="text-gray-500 hover:text-gray-700 !bg-[#292928] "
-          >
-            <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
-          </button>
+          {/* Show button for options if user is logged in (needed for save) */}
+          {user && (
+            <button
+              onClick={() => setShowOptions(!showOptions)}
+              className="text-gray-500 hover:text-gray-700 !bg-[#292928] p-1 rounded-full"
+            >
+              <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
+            </button>
+          )}
           
+
           {/* TODO: Add save post button */}
 
-          {isPostAuthor && ( 
-            <div className="relative !bg-[#292928] "> 
-              {showOptions && ( 
-                <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20"> 
-                  {/* Edit Post Button */}
-                  <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"> 
-                    <EditIcon className="w-4 h-4 mr-2 text-primary-600" /> Edit 
-                  </button> 
-                  {/* Delete Post Button */}
-                  <button onClick={() => { setIsDeleteModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-red-700 hover:bg-gray-100 w-full text-left"> 
-                    <DeleteIcon className="w-4 h-4 mr-2 " /> Delete 
-                  </button> 
-                </div> 
-              )} 
-            </div> 
-            )}
+          {/* Dropdown Menu */}
+          {showOptions && user && ( // Ensure user exists to show dropdown
+            <div className="absolute right-0 mt-2 w-48 !bg-[#3a3a3a] rounded-md shadow-lg py-1 z-20 border border-gray-600"> {/* Increased width */}
+              {/* Save/Unsave Button */}
+              <button
+                onClick={handleToggleSavePost}
+                disabled={isSavingToggleLoading} // Disable while action is in progress
+                className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isPostSaved ? (
+                    <BookmarkIcon className="w-4 h-4 mr-2 text-blue-400" /> // Icon when saved
+                ) : (
+                    <BookmarkBorderIcon className="w-4 h-4 mr-2 text-gray-400" /> // Icon when not saved
+                )}
+                {isPostSaved ? 'Unsave Post' : 'Save Post'}
+              </button>
+
+              {/* Separator if author */}
+              {isPostAuthor && <hr className="border-t border-gray-600 my-1 mx-2" />}
+
+              {/* Edit Button (Only for Author) */}
+              {isPostAuthor && (
+                <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left">
+                  <EditIcon className="w-4 h-4 mr-2 text-blue-400" /> Edit
+                </button>
+              )}
+              {/* Delete Button (Only for Author) */}
+              {isPostAuthor && (
+                <button onClick={() => { setIsDeleteModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-red-400 hover:bg-gray-600 w-full text-left">
+                  <DeleteIcon className="w-4 h-4 mr-2" /> Delete
+                </button>
+              )}
+            </div>
+          )}
           
         </div>
       </div>
@@ -1074,10 +1110,10 @@ const AVAILABLE_REACTIONS = [
                   onClick={handleOpenUploadWidget}
                   disabled={isUploading || !!attachmentUrl} 
                   // Position inside the input padding area
-                  className="!bg-[#7a2226] absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Add Photo/Video" // Accessibility
                 >
-                <ImageSharpIcon className="w-5 h-5 !bg-[#7a2226]" /> 
+                <ImageSharpIcon className="w-5 h-5" /> 
               </button>
             </div>
 
@@ -1120,7 +1156,7 @@ const AVAILABLE_REACTIONS = [
                 type="button" // Or type="submit" if this div is wrapped in a <form>
                 onClick={handleComment}
                 disabled={(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit} 
-                className={`px-3 py-1 !rounded-lg text-sm font-medium !bg-[#7a2226] text-gray-900 ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
+                className={`px-3 py-1 !rounded-lg text-sm font-medium !bg-[#7a2226] text-white ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
               >
                 Comment
               </button>
