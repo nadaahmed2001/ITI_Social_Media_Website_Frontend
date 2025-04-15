@@ -45,50 +45,59 @@ function ReactionsCommentModal({ reactions = [], isLoading, onClose }) {
     // Basic Modal Structure (using Tailwind for example)
     // Replace with your actual modal component library if using one (e.g., Material UI Modal)
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center p-4">
-            <div className="bg-[#292928] rounded-lg shadow-xl p-6 w-full max-w-md relative border border-[#7a2226]">
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-400 hover:text-gray-100 p-1 rounded-full bg-gray-700 hover:bg-gray-600"
-                    aria-label="Close reactions modal"
-                >
-                    <CloseIcon fontSize="small" />
-                </button>
+        <div 
+            className="fixed inset-0 z-[100] flex items-center justify-center !bg-[#00000079] bg-opacity-60 p-4 transition-opacity duration-300" 
+            aria-labelledby="reactions-comment-modal-title" 
+            role="dialog" 
+            aria-modal="true" 
+            onClick={onClose}
+        >
+            <div 
+                className="py-2 relative bg-white rounded-lg shadow-xl w-full max-w-md mx-auto flex flex-col max-h-[70vh]"
+                onClick={e => e.stopPropagation()}
+            >
+                {/* Header */}
+                <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 sticky top-0 bg-white rounded-t-lg z-10">
+                    <h3 className="!text-md !font-bold !text-[#7a2226]" id="reactions-comment-modal-title">All Reactions</h3>
+                    <button 
+                        onClick={onClose} 
+                        className="p-1 text-gray-400 rounded-full hover:bg-gray-100 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        aria-label="Close modal"
+                    >
+                        <CloseIcon className="w-7 h-7" />
+                    </button>
+                </div>
 
-                <h4 className="text-lg font-semibold mb-4 !text-[#7a2226] border-b border-[#7a2226] pb-2">Reactions</h4>
-
-                {/* Content Area */}
-                <div className="max-h-80 overflow-y-auto pr-2"> {/* Scrollable content */}
+                {/* Body */}
+                <div className="p-2 overflow-y-auto">
                     {isLoading ? (
-                        <div className="text-center text-gray-400">Loading reactions...</div>
-                    ) : !reactions || reactions.length === 0 ? (
-                        <div className="text-center text-gray-400">No reactions yet.</div>
-                    ) : (
+                        <div className="flex justify-center py-6 text-gray-500">Loading reactions...</div>
+                    ) : reactions.length > 0 ? (
                         <ul className="space-y-3">
-                            {/* Map over the reactions passed as props */}
                             {reactions.map((reaction) => {
-                                // Get the style based on reaction type
                                 const { colorClass, IconComponent } = getReactionStyle(reaction.reaction_type);
 
                                 return (
-                                    <li key={reaction.id || reaction.user_id} className="flex items-center justify-between bg-[#181819] p-2 rounded">
-                                        <div className="flex items-center space-x-3">
+                                    <li key={reaction.id || reaction.user_id} className="flex items-center justify-between my-2">
+                                        <div className="flex items-center space-x-3 group">
                                             <img
-                                                src={reaction.user_profile_picture || DEFAULT_USER_AVATAR} // Provide a default avatar path
+                                                src={reaction.user_profile_picture || DEFAULT_USER_AVATAR}
                                                 alt={reaction.user_username || 'User'}
-                                                className="w-8 h-8 rounded-full object-cover border border-gray-500"
-                                                onError={(e) => { e.target.src = DEFAULT_USER_AVATAR; }} // Handle broken image links
+                                                title={reaction.user_username}
+                                                className="w-12 h-12 rounded-full object-cover border border-gray-300"
+                                                onError={(e) => { e.target.src = DEFAULT_USER_AVATAR; }}
                                             />
-                                            <span className="text-lg font-semibold !text-black">
-                                                {reaction.user_username || 'Unknown User'}
+                                            <span className="text-2xl font-semibold text-gray-700 group-hover:text-primary-600">
+                                                {reaction.user_username || 'User'}
                                             </span>
                                         </div>
-                                        <IconComponent className={`w-5 h-5 ${colorClass}`} />
+                                        <IconComponent className={`w-6 h-6 ${colorClass} mr-3`} />
                                     </li>
                                 );
                             })}
                         </ul>
+                    ) : (
+                        <p className="text-center text-gray-500 text-sm py-6">No reactions yet.</p>
                     )}
                 </div>
             </div>

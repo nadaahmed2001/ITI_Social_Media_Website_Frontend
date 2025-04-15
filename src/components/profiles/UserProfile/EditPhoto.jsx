@@ -153,14 +153,13 @@ const hasCustomImage = imageUrl && imageUrl !== DEFAULT_PROFILE_PIC; // Check if
 return (
 // Use class names matching the light theme CSS
 
-    <div className='edit-photo-container-light'>
+    <div className="mt-[80px] ml-[25px] ">
     {/* Title and Subtitle */}
     <div className='photo-title-section-light'>
-        <h2><PhotoCameraOutlinedIcon />Edit Photo</h2>
+        <h2 text-sm><PhotoCameraOutlinedIcon />Edit Photo</h2>
     </div>
 
     <div className="edit-photo-container-light section-container-light">
-
         {/* Error/Success Messages */}
         {error && <p className="error-message-light">{error}</p>}
         {success && <p className="success-message-light">{success}</p>}

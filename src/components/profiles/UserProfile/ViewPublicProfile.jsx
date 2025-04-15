@@ -14,10 +14,6 @@ import './ViewPublicProfile.css';
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp';
 const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
 
-const accentColor = '#7a2226';
-const primaryTextColor = '#e0e0e0';
-const parentTextColor = '#ffffff';
-
 const ViewPublicProfile = ({ profileId }) => {
     const [profileData, setProfileData] = useState(null);
     const [projectsData, setProjectsData] = useState([]); // Stores the *filtered* projects
@@ -232,7 +228,7 @@ const ViewPublicProfile = ({ profileId }) => {
     }
 
     if (error && !profileData) { // Show error only if profile loading failed critically
-        return <div className="error-message main-error section-container">{error}</div>;
+        return <div className="error-message main-error section-container mt-[100px]">{error}</div>;
     }
 
     if (!profileData) {

@@ -1,4 +1,5 @@
 .view-public-profile-container {
+margin-top: 60px;
 padding: 25px;
 color: #e0e0e0;
 background-color: #191919;
@@ -16,7 +17,6 @@ padding-bottom: 15px;
 font-size: 2em;
 width: 80%;
 font-weight: 600;
-
 }
 
 

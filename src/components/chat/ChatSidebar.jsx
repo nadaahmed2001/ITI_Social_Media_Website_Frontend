@@ -17,6 +17,8 @@ const ChatSidebar = () => {
     //     setShowAIChat(true);
     //     navigate('/aiChat'); // Update URL
     // };
+
+    const defaultGroupAvatar = '../../src/assets/images/group-chat-avatar.webp'
     const location = useLocation();
     
     const showWelcome = !(
@@ -57,35 +59,31 @@ const ChatSidebar = () => {
         </Button>
 
     );
-  
-
     return (
         <div className="flex mt-1">
-        <div className="h-screen flex flex-col">
-            {/* Mobile Toggle */}
-           {/* Mobile Toggle - Moved to right side when sidebar is open */}
-<button
-    className={`md:hidden fixed z-50 p-2 bg-[#7a2226] text-white rounded-full shadow-lg transition-all duration-300 ${
-        isSidebarOpen ? "left-[17rem] top-4" : "left-4 top-4"  // Moves button when sidebar opens
-    }`}
-    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
->
-    {isSidebarOpen ? (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-    ) : (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-    )}
-</button>
+        <div className="flex flex-col">
 
-{/* Sidebar Content - Added higher z-index */}
-<div className={`w-100 text-[#7a2226] h-[70vh] p-4 fixed md:relative transform mt-3 rounded-lg 
+        <button
+            className={`md:hidden fixed z-50 p-2 bg-[#7a2226] text-white rounded-full shadow-lg transition-all duration-300 ${
+                isSidebarOpen ? "left-[17rem] top-4" : "left-4 top-4"  // Moves button when sidebar opens
+            }`}
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+            {isSidebarOpen ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+            )}
+        </button>
+        {/* Sidebar Content - Added higher z-index */}
+        <div className={`w-72 text-[#7a2226] h-[calc(100vh-150px)] p-4 fixed md:relative transform mt-3 rounded-lg 
     ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
     md:translate-x-0 transition-transform duration-300 border border-[#7a2226] 
-    bg-[rgba(50,50,50,0.42)] backdrop-blur-sm`}>
+    bg-[rgba(50,50,50,0.42)] backdrop-blur-sm overflow-hidden`}>
                 
                 {/* Header */}
                 <Typography variant="h6" className="!font-bold !mb-4 !text-[#7a2226]">
@@ -172,9 +170,14 @@ const ChatSidebar = () => {
                              rounded cursor-pointer"
                             onClick={() => navigate(`/messagesList/group/${chat.id}`)}>
                             <div>
-                              
-                                <Typography className="!font-medium flex">
-                                <img src={chat.authorAvatar || "/default-avatar.png"} alt="User" className="user-avatar" />
+                                <Typography className="!font-medium flex items-center"> {/* Added items-center for vertical alignment */}
+                                    <img
+                                        src={ chat.authorAvatar || defaultGroupAvatar }
+                                        alt="Avatar" // Use chat name or "Group Avatar" for better alt text
+                                        // Apply Tailwind classes here instead of 'user-avatar'
+                                        className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
+                                        onError={(e) => { if (e.target.src !== defaultGroupAvatar) e.target.src = defaultGroupAvatar; }}
+                                    />
                                     {chat.name}
                                 </Typography>
                                 <Typography style={{ color: 'white' }} variant="caption">
@@ -193,5 +196,4 @@ const ChatSidebar = () => {
         </div>
     );
 };
-
 export default ChatSidebar;

@@ -31,7 +31,7 @@ export default function ReactionsModal({ reactions = [], isLoading, onClose }) {
     return (
         // Overlay
         <div 
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-60 p-4 transition-opacity duration-300" 
+            className="fixed inset-0 z-[100] flex items-center justify-center !bg-[#00000079] bg-opacity-60 p-4 transition-opacity duration-300" 
             aria-labelledby="reactions-modal-title" 
             role="dialog" 
             aria-modal="true" 
@@ -77,7 +77,7 @@ export default function ReactionsModal({ reactions = [], isLoading, onClose }) {
                                         className="flex items-center  group !no-underline "
                                         onClick={onClose} // Close modal when clicking link
                                     >
-                                        <span className="text-2xl font-semibold font-medium text-gray-700 group-hover:text-primary-600 ">
+                                        <span className="text-2xl font-medium text-gray-700 group-hover:text-primary-600 ">
                                             {reaction.user_username || 'User'}
                                         </span>
                                     </Link>

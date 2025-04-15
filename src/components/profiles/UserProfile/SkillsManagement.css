@@ -25,6 +25,7 @@
     margin-bottom: 25px;
     border-bottom: 1px solid var(--border-color, #444); /* Separator */
     background: none;
+    /* border: none; */
   }
   .add-form-inputs {
     display: flex;
@@ -46,6 +47,7 @@
   .add-skill-form input:focus {
     outline: none;
     border-color: var(--accent-primary, #7a2226);
+    
   }
   .add-skill-button { /* Uses .submit-button base styles */
     display: inline-flex; align-items: center; gap: 6px;

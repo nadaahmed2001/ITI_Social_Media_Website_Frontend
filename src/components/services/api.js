@@ -70,6 +70,70 @@ export const createPost = (postData) => {
 };
 
 
+export const savePost = async (postId) => {
+  try {
+    // Use POST method for saving
+    const response = await api.post(`/posts/${postId}/save/`);
+    return response.data; // Should contain { status: 'saved' or 'already_saved', ... }
+  } catch (error) {
+    console.error(`Error saving post ${postId}:`, error.response || error);
+    throw error;
+  }
+};
+
+// Function to unsave a post
+export const unsavePost = async (postId) => {
+  try {
+    // Use DELETE method for unsaving
+    const response = await api.delete(`/posts/${postId}/save/`);
+    return response.data; // Should contain { status: 'unsaved' or 'not_found', ... }
+  } catch (error) {
+    console.error(`Error unsaving post ${postId}:`, error.response || error);
+    throw error;
+  }
+};
+
+
+export const fetchSavedPosts = async (page = 1) => { // Add page parameter for pagination
+  try {
+    // Call the new backend endpoint, include page query parameter
+    const response = await api.get(`/posts/saved/?page=${page}`);
+    // Assuming paginated response like { count, next, previous, results }
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching saved posts:", error.response || error);
+    throw error;
+  }
+};
+
+
+export const fetchMyPosts = async (page = 1) => {
+  try {
+    // Construct the URL with the page query parameter.
+    // Ensure '/posts/mine/' matches the actual endpoint defined in your Django urls.py
+    const url = `/posts/mine/?page=${page}`;
+    console.log(`Calling API: GET ${url}`); // Debug log
+
+    // Make the GET request using your authenticated axios instance
+    const response = await api.get(url);
+
+    // Log the successful response data for debugging
+    console.log(`Fetched my posts (page ${page}):`, response.data);
+
+    // Return the data received from the backend (expected to be paginated)
+    // e.g., { count: ..., next: ..., previous: ..., results: [...] }
+    return response.data;
+
+  } catch (error) {
+    // Log detailed error information
+    console.error(`Error fetching my posts (page ${page}):`, error.response?.data || error.message || error);
+
+
+    throw error;
+  }
+};
+
+
 // Fetch comments for a post
 export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
   console.log(`API: Fetching comments for post ${postId}, page ${page}`);
@@ -334,6 +398,21 @@ export const updateAccount = (jsonData) => api2.put('/users/account/', jsonData)
 // export const updateAccount = (profileData) => api2.put('/users/account/', profileData);
 export const updateProfilePicture = (formData) => api2.put('/users/account/', formData); // Send FormData
 export const getPublicProfile = (profileId) => api2.get(`/users/profiles/${profileId}/`);
+
+export const searchProfiles = async (query) => {
+  try {
+    // Adjust the endpoint '/search/profiles/' if needed
+    const response = await api.get(`/search/profiles/?q=${encodeURIComponent(query)}`);
+    // Assuming the backend returns data in response.data
+    // If it returns an array directly: return response.data;
+    // If it returns { results: [...] }: return response.data.results;
+    return response.data; // Adjust based on your actual API response structure
+  } catch (error) {
+    console.error("Error searching profiles:", error.response || error);
+    // Re-throw or handle error appropriately
+    throw error;
+  }
+};
 
 // ======================================================= User Credentials ==========================================================
 export const changeEmail = (data) => api2.post('/users/change-email/', data);

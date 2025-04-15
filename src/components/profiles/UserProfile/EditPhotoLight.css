@@ -3,8 +3,10 @@
 /* Base container - applies if section-container-light doesn't override */
 
 .edit-photo-container-light {
+  
+  margin-top: 95px;
   background-color: #ffffff; /* White background */
-  padding: 30px 40px;
+  /* padding: 30px 20px; */
   border: 1px solid #dee2e6; /* Light border for container */
   border-radius: 6px;
   color: #212529; /* Dark text */

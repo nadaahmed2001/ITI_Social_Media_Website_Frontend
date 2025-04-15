@@ -114,7 +114,7 @@
 // export default AppRouter;
 
 
-import React from "react";
+import {React} from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -123,39 +123,37 @@ import {
 } from "react-router-dom";
 
 // All your imports (same as before) ...
+import Logout from "../pages/Logout";
 import SearchPage from "../pages/SearchPage";
 import NotificationsDropdown from "../pages/NotificationsDropdown";
 import SignUpForm from "../components/auth/SignUpForm";
 import LoginForm from "../components/auth/LoginForm";
 import ForgotPassword from "../components/auth/ForgotPassword";
 import PasswordResetConfirm from "../components/auth/PasswordResetConfirm";
-import CreatePost from "../components/posts/CreatePost";
-import ShowPost from "../components/posts/ShowPost";
-import PostList from "../components/posts/PostList";
 import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import FollowButton from "../components/profiles/FollowButton";
 import SearchFilters from "../components/search/SearchFilters";
-import DeletePost from "../components/posts/DeletePost";
-import EditPost from "../components/posts/EditPost";
 import Sidebar from "../components/profiles/Sidebar/Sidebar";
 import UserProfilePage from "../pages/UserProfilePage";
 import EmailChangeSuccess from "../pages/EmailChangeSuccess";
 import EmailChangeFailed from "../pages/EmailChangeFailed";
 import ProfilePageById from "../components/profiles/ProfilePageById";
 import { AuthProvider } from "../contexts/AuthContext";
-import PrivateRoute from "../components/PrivateRoute";
+import PrivateRoute from "../components/PrivateRoute"; // Your PrivateRoute component
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
 import BatchPage from "../pages/SupervisorDashboard/BatchPage";
 import HomePage from "../pages/HomePage";
-import PostListWithSideBar from "../components/posts/PostListWithSideBar";
 import Aichat from "../components/chat/Aichat";
 import PostDetail from "../components/notifications/PostDetail";
 import Navbar from "../components/ui/Navbar";
+import StartChat from "../pages/startChat";
 
-// 🧠 Move the location logic into a wrapper component
+
+// Wrapper component to handle conditional Navbar and Routes
 const AppContent = () => {
   const location = useLocation();
+  // Routes where the Navbar should be hidden
   const hideNavbarRoutes = [
     "/login",
     "/signup",
@@ -163,31 +161,48 @@ const AppContent = () => {
     "/password-reset-confirm",
     "/email-change-success",
     "/email-change-failed",
-    "/chat",
-    "/aiChat",
-    
+    "/logout",
   ];
 
-  const userToken =
-    localStorage.getItem("access_token") ||
-    sessionStorage.getItem("access_token") ||
-    null;
+  // Check if the current path starts with /messagesList/
+  // const isMessagesListRoute = location.pathname.startsWith("/messagesList/");
+
+  // Determine if Navbar should be shown
+  // Show Navbar if NOT in hideNavbarRoutes AND NOT a messagesList route
+  const showNavbar = !hideNavbarRoutes.includes(location.pathname) ;
+
+
+  // You might not need userToken here if PrivateRoute handles context internally
+  // const userToken = localStorage.getItem("access_token") || sessionStorage.getItem("access_token") || null;
 
   return (
     <>
-      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      {/* Conditionally render Navbar */}
+      {showNavbar && <Navbar />}
 
       <Routes>
-        {/* Authentication */}
+        {/* --- Public Authentication Routes --- */}
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
+        <Route path="/email-change-success" element={<EmailChangeSuccess />} />
+        <Route path="/email-change-failed" element={<EmailChangeFailed />} />
+        <Route path="/logout" element={<Logout />} />
 
-        {/* Dashboards */}
-        <Route path="/Home" element={<HomePage />} />
+        <Route path="/search" element={<SearchPage />} />
 
-        {/* Supervisor */}
+
+
+        {/* --- Protected Routes --- */}
+        <Route
+          path="/Home"
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/supervisor/dashboard"
           element={
@@ -196,52 +211,89 @@ const AppContent = () => {
             </PrivateRoute>
           }
         />
-        <Route path="/batches/:programId/:trackId" element={<BatchPage />} />
-
-        {/* Profile, Search, and Chat */}
-        <Route path="/profile" element={<UserProfilePage />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/chat" element={<ChatSidebar token={userToken} />} />
-        <Route path="/Sidebar" element={<Sidebar />} />
-        <Route path="/chat/aiChat" element={<Aichat />} />
+        <Route
+          path="/batches/:programId/:trackId"
+          element={
+            <PrivateRoute> {/* Assuming batches require login */}
+              <BatchPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"  // User's own profile
+          element={
+            <PrivateRoute>
+              <UserProfilePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <PrivateRoute>
+              <StartChat />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/chat/aiChat"
+          element={
+            <PrivateRoute>
+              <Aichat />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/messagesList/group/:id"
-          element={<MessagesList token={userToken} isGroupChat={true} />}
+          element={
+            <PrivateRoute>
+              <MessagesList /* token={userToken} */ isGroupChat={true} />
+            </PrivateRoute>
+          }
         />
         <Route
           path="/messagesList/private/:id"
-          element={<MessagesList token={userToken} isGroupChat={false} />}
+          element={
+            <PrivateRoute>
+              <MessagesList /* token={userToken} */ isGroupChat={false} />
+            </PrivateRoute>
+          }
         />
+        <Route
+          path="/notifications"
+          element={
+            <PrivateRoute>
+              <NotificationsDropdown />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/posts/:postId" // Viewing specific post detail
+          element={
+            <PrivateRoute>
+              <PostDetail />
+            </PrivateRoute>
+          }
+        />
+         {/* <Route path="/profiles/followbutton" element={<PrivateRoute><FollowButton /></PrivateRoute>} /> */}
 
-        {/* Notifications */}
-        <Route path="/notifications" element={<NotificationsDropdown />} />
-
-        {/* Posts */}
-        <Route path="/posts/create" element={<CreatePost />} />
-        <Route path="/posts/show" element={<ShowPost />} />
-        <Route path="/posts/delete" element={<DeletePost />} />
-        <Route path="/posts/edit" element={<EditPost />} />
-        <Route path="/posts/list" element={<PostList />} />
-        <Route path="/dashboard/posts/:postId" element={<PostDetail />} />
-
-        {/* Profile Components */}
-        <Route path="/profiles/followbutton" element={<FollowButton />} />
+        {/* --- Potentially Public Routes --- */}
+        {/* Viewing other users' profiles might be public */}
         <Route path="/profiles/:profileId" element={<ProfilePageById />} />
-
-        {/* Search Filters */}
+        {/* Search filters might be part of a public search page */}
         <Route path="/search/filters" element={<SearchFilters />} />
+        {/* Follow button might be inside ProfilePageById and check auth there */}
+        <Route path="/profiles/followbutton" element={<FollowButton />} />
 
-        {/* Email Change */}
-        <Route path="/email-change-success" element={<EmailChangeSuccess />} />
-        <Route path="/email-change-failed" element={<EmailChangeFailed />} />
 
-        {/* Default fallback */}
+        {/* --- Default fallback --- */}
         <Route path="*" element={<LoginForm />} />
       </Routes>
     </>
   );
 };
 
+// Main Router component remains the same
 const AppRouter = () => {
   return (
     <AuthProvider>

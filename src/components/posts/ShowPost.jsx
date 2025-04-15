@@ -21,6 +21,8 @@ import {
   fetchReactionsForPost,
   removePostReaction,
   removeCommentReaction,
+  savePost, 
+  unsavePost,
   // fetchReactionsForComment,
   
 } from "../../components/services/api";
@@ -50,6 +52,9 @@ import {
   Delete as DeleteIcon,
   ImageSharp as ImageSharpIcon,
   Close as CloseIcon,
+
+  BookmarkBorder as BookmarkBorderIcon, // <-- Icon for Save
+  Bookmark as BookmarkIcon,             // <-- Icon for Saved
   
 } from "@mui/icons-material";
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
@@ -110,6 +115,10 @@ export default function ShowPost({ postData, onDeletePost }) {
   const [reactionsLoading, setReactionsLoading] = useState(true); // Loading state for ALL reactions
   // const [showReactionsModal, setShowReactionsModal] = useState(false); // State for modal visibility
 
+  const [isPostSaved, setIsPostSaved] = useState(postData?.is_saved || false); // <-- STATE FOR SAVED STATUS
+  const [isSavingToggleLoading, setIsSavingToggleLoading] = useState(false); // <-- Loading state for save action
+
+
   const hidePopoverTimer = useRef(null); 
 
 
@@ -132,6 +141,11 @@ const [commentPagination, setCommentPagination] = useState({
   error: null
 });
 
+useEffect(() => {
+  setIsPostSaved(postData?.is_saved || false);
+  setPost(postData); // Update post state if postData prop changes
+}, [postData]);
+
 
 useEffect(() => {
 
@@ -151,29 +165,32 @@ useEffect(() => {
       }
 
 
-  const loadInitialComments = async () => {
-    const initialPage = 1; // Define page number
-    try {
-      setCommentPagination(prev => ({...prev, isLoading: true, error: null}));
-      console.log(`ShowPost: Calling fetchComments for initial page: ${initialPage}`); // Add log
-      
-      // --- CORRECTED CALL ---
-      const response = await fetchComments(post.id, initialPage); // Pass the number 1
-      // --- END CORRECTION ---
-      
-      // ... rest of the success handling ...
-      const commentsData = Array.isArray(response.data) ? response.data : response.data.results || [];
-      setComments(commentsData);
-      setCommentPagination({
-        page: initialPage, // Set page number state
-        hasMore: response.data.next ? true : false,
-        isLoading: false,
-        error: null
-      });
-    } catch (error) {
-      console.log(error)
-    }
-  };
+      const loadInitialComments = async () => {
+        const initialPage = 1;
+        try {
+          setCommentPagination(prev => ({...prev, isLoading: true, error: null}));
+          console.log(`ShowPost: Calling fetchComments for initial page: ${initialPage}`);
+    
+          const response = await fetchComments(post.id, initialPage);
+    
+          const commentsData = Array.isArray(response.data?.results) ? response.data.results : (Array.isArray(response.data) ? response.data : []);
+          console.log("Initial comments fetched:", commentsData); // Log fetched data
+    
+              setComments(commentsData); // Directly set the state with the fetched comments array
+    
+          setCommentPagination({
+            page: initialPage,
+            // Check for 'next' field in the paginated response
+            hasMore: response.data?.next ? true : false,
+            isLoading: false,
+            error: null
+          });
+        } catch (error) {
+          console.error("Failed to load initial comments:", error); // Log the actual error
+          setError("Failed to load comments."); // Set an error state if you have one
+          setCommentPagination(prev => ({...prev, isLoading: false, error: "Could not load comments."}));
+        }
+      };
   
   loadInitialComments();
 }, [post.id, user?.id]);
@@ -319,34 +336,71 @@ const loadMoreComments = async () => {
       });
   };
   
-  const handleConfirmDeleteComment = () => {
-    if (!selectedComment) return;
+//   const handleConfirmDeleteComment = () => {
+//     if (!selectedComment) return;
     
-    deleteComment(post.id, selectedComment.id).then(() => {
-      setComments(prev => prev.filter(comment => comment.id !== selectedComment.id));
+//     deleteComment(post.id, selectedComment.id).then(() => {
+//       // setComments(prev => prev.filter(comment => comment.id !== selectedComment.id));
+//       // Inside handleEditCommentRequest (after a successful API call)
+//         setComments(prevComments => 
+//           prevComments.map(c => 
+//             c.id === commentToEdit.id 
+//               ? { ...res.data, author_id: c.author_id }  // Merge API response with existing author_id
+//               : c
+//           )
+//         );
+//       setIsDeleteModalOpenComment(false);
+//       setSelectedComment(null);
+//     }).catch(err => {
+//       console.error("Failed to delete comment:", err);
+//     });
+// };
+const handleConfirmDeleteComment = () => {
+  if (!selectedComment) return;
+  
+  deleteComment(post.id, selectedComment.id)
+    .then(() => {
+      // Correctly filter out the deleted comment
+      setComments(prev => prev.filter(c => c.id !== selectedComment.id));
       setIsDeleteModalOpenComment(false);
       setSelectedComment(null);
-    }).catch(err => {
+    })
+    .catch(err => {
       console.error("Failed to delete comment:", err);
+      alert("Failed to delete comment. Please try again.");
     });
 };
-
   // Inside ShowPost component
 
 // Add this log directly inside the component body to see state on each render
 console.log("ShowPost Rendering - userReactions state IS:", userReactions);
 
+// const handleAddReaction = async (reactionType) => {
+//   try {
+//     await likePost(post.id, reactionType);
+//     const updated = await fetchReactionsForPost(post.id); 
+//     const fetchedReactions = Array.isArray(updated) ? updated : [];
+//     setAllPostReactions(fetchedReactions); // Update all reactions state
+//     const filtered = fetchedReactions.filter(r => r.user_id === user?.id);
+//     setUserReactions(filtered); // Update user-specific state
+//   } catch (error) { console.error("Add Reaction Error", error); }
+// };
 const handleAddReaction = async (reactionType) => {
   try {
     await likePost(post.id, reactionType);
-    const updated = await fetchReactionsForPost(post.id); 
+    const updated = await fetchReactionsForPost(post.id);
     const fetchedReactions = Array.isArray(updated) ? updated : [];
-    setAllPostReactions(fetchedReactions); // Update all reactions state
+    
+    // Store the full reaction object
     const filtered = fetchedReactions.filter(r => r.user_id === user?.id);
-    setUserReactions(filtered); // Update user-specific state
-  } catch (error) { console.error("Add Reaction Error", error); }
+    setUserReactions(filtered);
+    
+    setAllPostReactions(fetchedReactions);
+  } catch (error) {
+    console.error("Add Reaction Error", error);
+  }
 };
-
+/////
 const handleRemoveReaction = async () => { 
   try {
     await removePostReaction(post.id);
@@ -455,37 +509,53 @@ try {
           onDeletePost(postId);                                     
         });
       };
-    
-      const handleEditCommentRequest = (commentToEdit) => {
-        setSelectedComment(commentToEdit); 
-        setIsEditModalOpenComment(true);  
-      };
-    
+          const handleConfirmEditComment = (updatedContent) => {
+            if (!selectedComment) return;
+          
+            editComment(post.id, selectedComment.id, { comment: updatedContent })
+              .then((res) => {
+                // Preserve CRITICAL fields (id, author_id) from the original comment
+                setComments(prev => prev.map(c => 
+                  c.id === selectedComment.id 
+                    ? { ...res.data, id: selectedComment.id, author_id: selectedComment.author_id } 
+                    : c
+                ));
+                setIsEditModalOpenComment(false);
+                setSelectedComment(null);
+              })
+              .catch(err => console.error("Edit failed:", err));
+          };
       
-      const handleDeleteCommentRequest = (commentToDelete) => { // Define this handler
-          setSelectedComment(commentToDelete);
-          setIsDeleteModalOpenComment(true);
-      };
-      
-      const handleConfirmEditComment = (updatedContent) => {
-        if (!selectedComment) return;
-        console.log(`Editing comment ${selectedComment.id} for post ${post.id} with:`, updatedContent); // Debug
-        // Call the imported API function
-        editComment(post.id, selectedComment.id, { comment: updatedContent })
-          .then((res) => {
-            console.log("Edit successful, response:", res.data); // Debug
-            // Update the comment in the state array
-            setComments(prevComments =>
-              prevComments.map(c => c.id === selectedComment.id ? res.data : c)
-            );
-            setIsEditModalOpenComment(false); // Close modal
-            setSelectedComment(null);         // Clear selection
-          }).catch(err => {
-              console.error("Failed to edit comment:", err.response?.data || err); // Log detailed error
-              // Optionally show error to user
-          });
-      };
-      
+
+          const handleToggleSavePost = async () => {
+            if (!post?.id || isSavingToggleLoading) return; // Prevent action if no post or already loading
+        
+            setIsSavingToggleLoading(true);
+            const currentlySaved = isPostSaved; // Store current state before API call
+        
+            try {
+              if (currentlySaved) {
+                // If currently saved, call unsave API
+                await unsavePost(post.id);
+                setIsPostSaved(false); // Update state on success
+                console.log("Post unsaved");
+              } else {
+                // If not saved, call save API
+                await savePost(post.id);
+                setIsPostSaved(true); // Update state on success
+                console.log("Post saved");
+              }
+            } catch (error) {
+              console.error("Failed to toggle save status:", error);
+              // Optional: Revert state on error? Or show error message
+              // setIsPostSaved(currentlySaved); // Revert optimistic update if implemented
+              alert(`Failed to ${currentlySaved ? 'unsave' : 'save'} post.`);
+            } finally {
+              setIsSavingToggleLoading(false); // Reset loading state
+              setShowOptions(false); // Close the options menu
+            }
+          };
+        
 
     // Custom Next Arrow Component
     function SampleNextArrow(props) {
@@ -558,7 +628,7 @@ try {
 
 
   const reactions = [
-    { name: "Like", icon: <ThumbUpSharpIcon className="w-5 h-5" /> },
+    { name: "Like", icon: <ThumbUpSharpIcon className=" w-5 h-5" /> },
     { name: "Love", icon: <FavoriteSharpIcon className="w-5 h-5" /> },
     { name: "Celebrate", icon: <CelebrationSharpIcon className="w-5 h-5" /> },
     { name: "funny", icon: <SentimentVerySatisfiedSharpIcon className="w-5 h-5" /> },
@@ -602,7 +672,34 @@ const handleMouseEnterPopover = () => {
     // If mouse enters the popover itself, clear the hide timer
     clearTimeout(hidePopoverTimer.current); 
 };
-
+//
+const AVAILABLE_REACTIONS = [
+  { 
+    name: "Like", 
+    icon: <ThumbUpSolid className="text-blue-500 w-5 h-5" />
+  },
+  { 
+    name: "Love", 
+    icon: <FavoriteSharpIcon className="text-red-500 w-5 h-5" />
+  },
+  { 
+    name: "Celebrate", 
+    icon: <CelebrationSharpIcon className="text-violet-400 w-5 h-5" />
+  },
+  { 
+    name: "funny", 
+    icon: <SentimentVerySatisfiedSharpIcon className="text-green-400 w-5 h-5" />
+  },
+  { 
+    name: "Support", 
+    icon: <VolunteerActivismSharpIcon className="text-[#7a2226] w-5 h-5" />
+  },
+  { 
+    name: "Insightful", 
+    icon: <TipsAndUpdatesSharpIcon className="text-blue-200 w-5 h-5" />
+  },
+];
+///
   return (
     <div className="!bg-[#292928] rounded-lg shadow-md p-4 mb-4 border !border-[#ffffff]">
       {/* Post Header */}
@@ -632,31 +729,53 @@ const handleMouseEnterPopover = () => {
           </div>
         </div>
         <div className="relative">
-          <button 
-            onClick={() => setShowOptions(!showOptions)}
-            className="text-gray-500 hover:text-gray-700 !bg-[#292928] "
-          >
-            <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
-          </button>
+          {/* Show button for options if user is logged in (needed for save) */}
+          {user && (
+            <button
+              onClick={() => setShowOptions(!showOptions)}
+              className="text-gray-500 hover:text-gray-700 !bg-[#292928] p-1 rounded-full"
+            >
+              <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
+            </button>
+          )}
           
+
           {/* TODO: Add save post button */}
 
-          {isPostAuthor && ( 
-            <div className="relative !bg-[#292928] "> 
-              {showOptions && ( 
-                <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20"> 
-                  {/* Edit Post Button */}
-                  <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"> 
-                    <EditIcon className="w-4 h-4 mr-2 text-primary-600" /> Edit 
-                  </button> 
-                  {/* Delete Post Button */}
-                  <button onClick={() => { setIsDeleteModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-red-700 hover:bg-gray-100 w-full text-left"> 
-                    <DeleteIcon className="w-4 h-4 mr-2 " /> Delete 
-                  </button> 
-                </div> 
-              )} 
-            </div> 
-            )}
+          {/* Dropdown Menu */}
+          {showOptions && user && ( // Ensure user exists to show dropdown
+            <div className="absolute right-0 mt-2 w-48 !bg-[#3a3a3a] rounded-md shadow-lg py-1 z-20 border border-gray-600"> {/* Increased width */}
+              {/* Save/Unsave Button */}
+              <button
+                onClick={handleToggleSavePost}
+                disabled={isSavingToggleLoading} // Disable while action is in progress
+                className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isPostSaved ? (
+                    <BookmarkIcon className="w-4 h-4 mr-2 text-blue-400" /> // Icon when saved
+                ) : (
+                    <BookmarkBorderIcon className="w-4 h-4 mr-2 text-gray-400" /> // Icon when not saved
+                )}
+                {isPostSaved ? 'Unsave Post' : 'Save Post'}
+              </button>
+
+              {/* Separator if author */}
+              {isPostAuthor && <hr className="border-t border-gray-600 my-1 mx-2" />}
+
+              {/* Edit Button (Only for Author) */}
+              {isPostAuthor && (
+                <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left">
+                  <EditIcon className="w-4 h-4 mr-2 text-blue-400" /> Edit
+                </button>
+              )}
+              {/* Delete Button (Only for Author) */}
+              {isPostAuthor && (
+                <button onClick={() => { setIsDeleteModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-red-400 hover:bg-gray-600 w-full text-left">
+                  <DeleteIcon className="w-4 h-4 mr-2" /> Delete
+                </button>
+              )}
+            </div>
+          )}
           
         </div>
       </div>
@@ -811,12 +930,22 @@ const handleMouseEnterPopover = () => {
             }`}
           >
               {/* Show solid icon if reacted, outline otherwise */}
-              {userReactions.length > 0 ? <ThumbUpSolid className="!bg-[#181819] w-5 h-7"/> : <ThumbUpOutline className="!bg-[#181819] w-5 h-5"/>} 
-              
-              {/* Display user's current reaction text or default 'Like' */}
-              <span className="!bg-[#181819]">{reactions.find(r => r.name === userReactions[0]?.reaction_type)?.name || 'React'}</span>
-          </button>
+              {userReactions[0] ? (
+    AVAILABLE_REACTIONS.find(r => r.name === userReactions[0].reaction_type)?.icon
+  ) : (
+    <ThumbUpOutline className="!bg-[#181819] w-5 h-5"/>
+  )}
+  
+  {/* Display reaction text */}
+  <span className="!bg-[#181819]">
+    {userReactions[0]?.reaction_type || 'React'}
+  </span>
+</button>
           
+
+
+
+
           {/* Reaction Popover (Conditionally Rendered) */}
           {showReactions && ( 
               <div 
@@ -853,12 +982,12 @@ const handleMouseEnterPopover = () => {
       {/* End Like Button + Popover Wrapper */}
 
       {/* Placeholder Comment Button */}
-      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-colors transition-all ease-in-out duration-700 hover:scale-105"> 
+      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
           <CommentIcon className="!bg-[#181819] w-5 h-5"/> Comment 
       </button>
 
       {/* Placeholder Share Button */}
-      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-colors transition-all ease-in-out duration-700 hover:scale-105"> 
+      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
           <ShareIcon className="!bg-[#181819] w-5 h-5"/> Share 
       </button>
 
@@ -883,7 +1012,7 @@ const handleMouseEnterPopover = () => {
                   Error: {commentPagination.error}
                   {/* Optional: Add a retry button */}
                   <button 
-                    onClick={() => loadPosts(1)} // Reload first page on retry?
+                    onClick={() => loadMoreComments(1)} // Reload first page on retry?
                     className="ml-2 text-primary-600 hover:underline"
                   >
                     Retry
@@ -895,21 +1024,24 @@ const handleMouseEnterPopover = () => {
               {/* Check if comments array exists before mapping */}
               {comments && comments.length > 0 ? (
                 <>
+                  
                   {comments.map((comment) => (
                     <CommentItem
-                    key={comment.id}
-                    comment={comment} // Pass the full comment object (should include reaction data)
-                    currentUserId={currentUserId}
-                    onEditRequest={handleEditCommentRequest}
-                    onDeleteRequest={handleDeleteCommentRequest}
-                    // *** Pass the NEW handlers ***
-                    onReact={handleCommentReact}
-                    onUnreact={handleCommentUnreact}
-                    // Pass all reactions if needed for modal (optional, might require separate fetching)
-                    // allCommentReactions={allCommentReactionsMap[comment.id] || []}
-                />
-                  ))}
-                  
+                      key={comment.id}
+                      comment={comment}
+                      currentUserId={currentUserId}
+                      onEditRequest={(comment) => {
+                        setSelectedComment(comment);
+                        setIsEditModalOpenComment(true);
+                      }}
+                      onDeleteRequest={(comment) => { // Modified to open modal
+                        setSelectedComment(comment);
+                        setIsDeleteModalOpenComment(true);
+                      }}
+                      onReact={handleCommentReact}
+                      onUnreact={handleCommentUnreact}
+                    />
+))}
                   {/* Load More button */}
                   {commentPagination.hasMore && (
                   <div className="flex justify-center !bg-[#292928]">
@@ -968,7 +1100,7 @@ const handleMouseEnterPopover = () => {
                   placeholder="Write your comment..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  className={`!bg-[#181819] w-full pl-3 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent text-sm ${isCommentInputOverLimit ? 'border-red-500 ring-red-500' : 'border-gray-300 focus:ring-primary-500'}`} 
+                  className={`placeholder:!text-[#262727] ${commentText ? 'text-[#262727]' : ''} !bg-[#c2c2c2] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none`}
                   aria-describedby="comment-char-count"
                 />
                 {/* --- Absolutely Positioned Icon Button --- */}
@@ -978,10 +1110,10 @@ const handleMouseEnterPopover = () => {
                   onClick={handleOpenUploadWidget}
                   disabled={isUploading || !!attachmentUrl} 
                   // Position inside the input padding area
-                  className="!bg-[#7a2226] absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Add Photo/Video" // Accessibility
                 >
-                <ImageSharpIcon className="w-5 h-5 !bg-[#7a2226]" /> 
+                <ImageSharpIcon className="w-5 h-5" /> 
               </button>
             </div>
 
@@ -1000,7 +1132,7 @@ const handleMouseEnterPopover = () => {
                   className="max-w-xs rounded-lg border border-gray-200 !bg-[#292928]" // Added border
                 />
               ) : attachmentUrl.match(/\.(mp4|mov|webm|mkv)$/) ? ( // Check for video extensions
-                <video controls className="max-w-xs rounded-lg border border-gray-200 bg-black !bg-[#292928]">
+                <video controls className="max-w-xs rounded-lg border border-gray-200 !bg-[#292928]">
                   <source src={attachmentUrl} /* Optional: add type based on extension */ />
                   Your browser does not support the video tag.
                 </video>
@@ -1024,7 +1156,7 @@ const handleMouseEnterPopover = () => {
                 type="button" // Or type="submit" if this div is wrapped in a <form>
                 onClick={handleComment}
                 disabled={(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit} 
-                className={`px-3 py-1 !rounded-lg text-sm font-medium !bg-[#7a2226] text-gray-900 ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
+                className={`px-3 py-1 !rounded-lg text-sm font-medium !bg-[#7a2226] text-white ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
               >
                 Comment
               </button>
@@ -1044,15 +1176,31 @@ const handleMouseEnterPopover = () => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleDeletePost(post.id)}
       />
-      <EditComment
+      {/* <EditComment
         isOpen={isEditModalOpenComment}
         comment={selectedComment} 
         onClose={() => {setIsEditModalOpenComment(false); setSelectedComment(null);}} 
         // ** Pass the CORRECT confirmation handler **
         onConfirm={handleConfirmEditComment} 
         
-      />
-      <DeleteComment
+      /> */}
+ <EditComment
+  isOpen={isEditModalOpenComment}
+  onClose={() => {
+    setIsEditModalOpenComment(false);
+    setSelectedComment(null); // Reset to prevent stale data
+  }}
+  onConfirm={handleConfirmEditComment}
+  comment={selectedComment}
+/>
+      {/* <DeleteComment
+        isOpen={isDeleteModalOpenComment}
+        onClose={() => {setIsDeleteModalOpenComment(false); setSelectedComment(null);}} 
+        // ** Pass the CORRECT confirmation handler **
+        onConfirm={handleConfirmDeleteComment} 
+      /> */}
+
+<DeleteComment
         isOpen={isDeleteModalOpenComment}
         onClose={() => {setIsDeleteModalOpenComment(false); setSelectedComment(null);}} 
         // ** Pass the CORRECT confirmation handler **
