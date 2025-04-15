@@ -58,6 +58,7 @@ const PostDetail = () => {
   const [selectedComment, setSelectedComment] = useState(null);
   const currentUserId = localStorage.getItem("user_id");
   const scrollToId = new URLSearchParams(location.search).get("scroll_to");
+  const [attachmentUrl, setAttachmentUrl] = useState(null);
 
   const hidePopoverTimer = useRef(null); 
 
@@ -71,6 +72,14 @@ const PostDetail = () => {
     { name: "Insightful", icon: <TipsAndUpdatesSharpIcon className="Reaction-Post" /> },
   ];
 
+
+  const [commentPagination, setCommentPagination] = useState({
+    page: 1,
+    hasMore: true,
+    isLoading: false,
+    error: null
+  });
+  
   // Fetch post and comments data
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -108,20 +117,53 @@ const PostDetail = () => {
 
   useEffect(() => {
     if (post && post.id) {
-      fetchComments(post.id).then((res) => setComments(res.data));
       fetchReactionsForPost(post.id).then((res) =>
-        setUserReactions(res.filter((r) => r.user.id === currentUserId))
+        setUserReactions(res.filter((r) => r.user_id === currentUserId))
       );
     }
   }, [post, currentUserId]);
 
+
+  const MAX_COMMENT_INPUT_LENGTH = 200;
+
+
   const handleComment = () => {
-    if (!commentText.trim()) return;
-    addComment(post.id, { post: post.id, comment: commentText }).then((res) => {
-      setComments((prev) => [...prev, res.data]);
-      setCommentText("");
-    });
-  };
+    const trimmedComment = commentText.trim();
+    const currentInputLength = trimmedComment.length;
+  
+    if (!trimmedComment && !attachmentUrl) {
+      alert("Please write a comment or add an attachment."); 
+      return;
+    }
+    
+    if (currentInputLength > MAX_COMMENT_INPUT_LENGTH) {
+      alert(`Comment cannot exceed ${MAX_COMMENT_INPUT_LENGTH} characters.`); 
+      return;
+    }
+  
+    const commentData = {
+      post: post.id,
+      comment: trimmedComment,
+      attachment_url: attachmentUrl
+    };
+  
+    addComment(post.id, commentData)
+      .then((res) => {
+        // setComments(prev => [res.data, ...prev]);
+        setComments(prev => Array.isArray(prev) ? [res.data, ...prev] : [res.data]);
+        setCommentText("");
+        setAttachmentUrl(null);
+        setCommentPagination(prev => ({
+            ...(prev || {}),
+          page: 1,
+          hasMore: true
+        }));
+      })
+      .catch(err => {
+        console.error("Failed to add comment:", err);
+        alert("Failed to post comment. Please try again.");
+      });
+  };  
 
   const handleEditPost = (postId, updatedContent) => {
     editPost(postId, { body: updatedContent }).then(() => {
@@ -137,11 +179,21 @@ const PostDetail = () => {
     });
   };
 
-  const handleAddReaction = async (reactionType) => {
+const handleAddReaction = async (reactionType) => {
+  try {
     await likePost(post.id, reactionType);
     const updated = await fetchReactionsForPost(post.id);
-    setUserReactions(updated.filter((r) => r.user.id === currentUserId));
-  };
+    const fetchedReactions = Array.isArray(updated) ? updated : [];
+    
+    // Store the full reaction object
+    const filtered = fetchedReactions.filter(r => r.user_id === user?.id);
+    setUserReactions(filtered);
+    
+    setAllPostReactions(fetchedReactions);
+  } catch (error) {
+    console.error("Add Reaction Error", error);
+  }
+};
 
   const hasReacted = (reactionType) => {
     return userReactions.some((r) => r.reaction_type === reactionType);
@@ -253,19 +305,18 @@ const PostDetail = () => {
             </div>
             </div>
             <div className="post-options">
-              <MoreVertIcon onClick={() =>  setShowOptionsCommentId(comment.id ,!showOptionsCommentId)} />
+              <MoreVertIcon onClick={() =>  
+                setShowOptionsCommentId(comment.id ,!showOptionsCommentId)} />
               {showOptions && (
                 <div className="options-menu">
                   <div className="option" onClick={() => { 
                         setIsEditModalOpenComment(true); 
-                        setSelectedComment(comments);  // Add this
                                
                       }}>
                         <EditIcon className="EditIcon" /> Edit
                       </div>
                       <div className="option" onClick={() => { 
                         setIsDeleteModalOpenComment(true);
-                        setSelectedComment(comments);  // Add this
                         
                       }}>
                         <DeleteIcon className="DeleteIcon" /> Delete
