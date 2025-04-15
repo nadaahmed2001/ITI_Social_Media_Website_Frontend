@@ -115,7 +115,7 @@ form textarea{
 }
 
 .submit-button:hover:not(:disabled) {
-    background-color: #e6e400; /* Slightly darker yellow on hover */
+    background-color: whitesmoke !important; /* Slightly darker yellow on hover */
 }
 
 .submit-button:disabled {
