@@ -77,7 +77,7 @@ function SearchPage() {
     // Assuming Navbar might be present above this page
     <div className="container mx-auto px-4 py-8 pt-20 text-white"> {/* Added pt-20 for fixed navbar */}
 
-      <Typography variant="h5" component="h1" className="!mb-6">
+      <Typography variant="h5" component="h1" className="!mb-6 ">
         {/* Display search term if available */}
         {query ? `Search Results for "${query}"` : "Search Profiles"}
       </Typography>
@@ -85,7 +85,7 @@ function SearchPage() {
       {isLoading && (
         <div className="text-center py-10">
           <CircularProgress color="inherit" />
-          <Typography className="!mt-2">Searching...</Typography>
+          <Typography className="!mt-2 ">Searching...</Typography>
         </div>
       )}
 
