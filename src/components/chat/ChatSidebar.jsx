@@ -80,10 +80,10 @@ const ChatSidebar = () => {
             )}
         </button>
         {/* Sidebar Content - Added higher z-index */}
-        <div className={`w-100 text-[#7a2226] h-[70vh] p-4 fixed md:relative transform mt-3 rounded-lg 
-            ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
-            md:translate-x-0 transition-transform duration-300 border border-[#7a2226] 
-            bg-[rgba(50,50,50,0.42)] backdrop-blur-sm`}>
+        <div className={`w-72 text-[#7a2226] h-[calc(100vh-150px)] p-4 fixed md:relative transform mt-3 rounded-lg 
+    ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
+    md:translate-x-0 transition-transform duration-300 border border-[#7a2226] 
+    bg-[rgba(50,50,50,0.42)] backdrop-blur-sm overflow-hidden`}>
                 
                 {/* Header */}
                 <Typography variant="h6" className="!font-bold !mb-4 !text-[#7a2226]">
