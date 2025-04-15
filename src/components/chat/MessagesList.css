@@ -71,4 +71,20 @@ form {
   input::placeholder {
     color:#7a2226; /* Soft ###ff5e5e */
   }
-  
+  /* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7a2226;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5a181b;
+}

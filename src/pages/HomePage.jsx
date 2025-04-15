@@ -63,7 +63,7 @@ export default function HomePage() {
           <PostList isDarkMode={isDarkMode} />
         </div>
 
-        <ChatSidebar isDarkMode={isDarkMode} className="md:w-64 w-full" />
+        <ChatSidebar isDarkMode={isDarkMode} className="md:w-72 w-full max-w-full" />
       </div>
     </div>
   );
