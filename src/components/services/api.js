@@ -229,26 +229,25 @@ export const createBatch = async (name, program_id, track_id) => {
   }
 };
 
-
-// Upload CSV File for Batch
 export const uploadBatchCSV = async (batchId, file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("batch_id", batchId);
-    console.log("I'm inside uploadBatchCSV function and formData is", formData); // Debugging
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("batch_id", batchId);
+  console.log("I'm inside uploadBatchCSV function and formData is", formData); // Debugging
 
-    try {
-        const response = await api.post(`supervisor/upload-national-id/`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Failed to upload CSV:", error);
-        throw error;
-    }
+  try {
+      const response = await api.post(`supervisor/upload-national-id/`, formData, {
+          headers: {
+              "Content-Type": "multipart/form-data",
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("Failed to upload CSV:", error);
+      throw error;
+  }
 };
+
 
 
 //------------------- Notifications API functions -------------------
