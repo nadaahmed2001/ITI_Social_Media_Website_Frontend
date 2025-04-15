@@ -23,8 +23,8 @@
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   width: 80%;
-  max-width: 41px; /* Slightly smaller max-width maybe? Adjust as needed */
-  min-width: 40px;
+  max-width: 500px; /* Maximum width */
+  min-width: 400px;
   border: 1px solid #444;
   animation: scaleUp 0.2s ease-out; /* Use the same scale-up */
 }
