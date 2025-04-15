@@ -169,7 +169,7 @@ export default function CreatePost({ onPostCreated }) {
           disabled={isUploading}
           className="!bg-[#282929] flex items-center text-sm text-gray-400 hover:text-primary-600 disabled:opacity-50"
         >
-          <ImageSharpIcon className="!bg-[#7a2226] text-size-lg w-10 h-10 ml-15" />
+          <ImageSharpIcon className=" text-size-lg w-10 h-10 ml-15" />
           {isUploading ? "Uploading..." : `${attachmentUrls.length > 0 ? 's' : ''}`}
         </button>
         <button
