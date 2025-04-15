@@ -228,7 +228,7 @@ const ViewPublicProfile = ({ profileId }) => {
     }
 
     if (error && !profileData) { // Show error only if profile loading failed critically
-        return <div className="error-message main-error section-container">{error}</div>;
+        return <div className="error-message main-error section-container mt-[100px]">{error}</div>;
     }
 
     if (!profileData) {

@@ -70,6 +70,43 @@ export const createPost = (postData) => {
 };
 
 
+export const savePost = async (postId) => {
+  try {
+    // Use POST method for saving
+    const response = await api.post(`/posts/${postId}/save/`);
+    return response.data; // Should contain { status: 'saved' or 'already_saved', ... }
+  } catch (error) {
+    console.error(`Error saving post ${postId}:`, error.response || error);
+    throw error;
+  }
+};
+
+// Function to unsave a post
+export const unsavePost = async (postId) => {
+  try {
+    // Use DELETE method for unsaving
+    const response = await api.delete(`/posts/${postId}/save/`);
+    return response.data; // Should contain { status: 'unsaved' or 'not_found', ... }
+  } catch (error) {
+    console.error(`Error unsaving post ${postId}:`, error.response || error);
+    throw error;
+  }
+};
+
+
+export const fetchSavedPosts = async (page = 1) => { // Add page parameter for pagination
+  try {
+    // Call the new backend endpoint, include page query parameter
+    const response = await api.get(`/posts/saved/?page=${page}`);
+    // Assuming paginated response like { count, next, previous, results }
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching saved posts:", error.response || error);
+    throw error;
+  }
+};
+
+
 // Fetch comments for a post
 export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
   console.log(`API: Fetching comments for post ${postId}, page ${page}`);

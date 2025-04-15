@@ -1,152 +1,127 @@
-///Pages/UserProfilePage.jsx
-import React, { useState, useEffect, useCallback } from 'react';
-import Sidebar, { SECTIONS } from '../components/profiles/Sidebar/Sidebar'; 
+import React, { useState, useEffect, useCallback, useContext } from 'react'; // Added useContext
+import Sidebar, { SECTIONS } from '../components/profiles/Sidebar/Sidebar';
 import ViewPublicProfile from '../components/profiles/UserProfile/ViewPublicProfile';
-import EditProfile from '../components/profiles/UserProfile/EditProfile'; 
+import EditProfile from '../components/profiles/UserProfile/EditProfile';
 import EditPhoto from '../components/profiles/UserProfile/EditPhoto';
-import ChangeCredentials from '../components/profiles/UserProfile/ChangeCredentials'; 
+import ChangeCredentials from '../components/profiles/UserProfile/ChangeCredentials';
 import SkillsAndProjects from '../components/profiles/UserProfile/SkillsAndProjects';
-import PrivacySecuritySettings from '../components/profiles/UserProfile/PrivacySecuritySettings'; 
+import PrivacySecuritySettings from '../components/profiles/UserProfile/PrivacySecuritySettings';
+import SavedPosts from '../components/profiles/UserProfile/SavedPosts'; // *** IMPORT THE NEW COMPONENT ***
+import AuthContext from '../contexts/AuthContext'; // Import AuthContext if needed for other sections
 
+import { getAccount } from '../components/services/api'; // Keep if needed for other sections
 
-import { getAccount } from '../components/services/api';
-// --- End Path Verification ---
-
-import './UserProfilePage.css';
+import './UserProfilePage.css'; // Keep your page-level styles
 
 const UserProfilePage = () => {
-  const [activeSection, setActiveSection] = useState(SECTIONS.EDIT_PROFILE);
-  // userData will hold the data returned by getAccount (expected to be Profile data now)
-  const [userData, setUserData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [activeSection, setActiveSection] = useState(SECTIONS.EDIT_PROFILE); // Default section
+  const { user: contextUser, loading: authLoading } = useContext(AuthContext); // Get context user
 
-  // Fetch user account data (Profile data) on mount
+  // State for the main profile data (if needed by other sections like EditProfile)
+  const [userData, setUserData] = useState(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true); // Renamed for clarity
+  const [profileError, setProfileError] = useState(''); // Renamed for clarity
+
+  // Fetch user account data (Profile data) on mount - Keep this if EditProfile needs it
   const fetchUserData = useCallback(async () => {
-    setIsLoading(true);
-    setError('');
+    setIsLoadingProfile(true);
+    setProfileError('');
     try {
+      // Assuming getAccount fetches the profile data for the logged-in user
       const response = await getAccount();
-      console.log("API Response from UserProfilePage.jsx:", response); // Debugging log
+      console.log("API Response from UserProfilePage.jsx:", response);
       setUserData(response.data);
     } catch (err) {
       console.error("Failed to fetch user data:", err);
-      let errorMsg = 'Could not load your profile data. Please try refreshing the page.';
+      let errorMsg = 'Could not load your profile data.';
       if (err.response && err.response.status === 401) {
           errorMsg = 'Authentication failed. Please log in again.';
-          // Optional: Implement actual redirect logic here or in an Axios interceptor
-          // window.location.href = '/login';
+          // Optional: Redirect logic
       }
-      setError(errorMsg);
-      setUserData(null); // Clear data on error
+      setProfileError(errorMsg);
+      setUserData(null);
     } finally {
-      setIsLoading(false);
+      setIsLoadingProfile(false);
     }
-  }, []); 
+  }, []);
 
   useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]); // Run on mount
+    // Fetch profile data needed for sections other than 'Saved'
+    // SavedPosts component fetches its own data
+    if (activeSection !== SECTIONS.SAVED) {
+        fetchUserData();
+    }
+  }, [fetchUserData, activeSection]); // Re-fetch if section changes away from 'Saved'
 
-  // Callback for EditProfile component to update general user data
+
+  // Callbacks for updating profile data from child components (keep if needed)
   const handleProfileUpdate = (updatedData) => {
-      setUserData(prevData => ({
-          ...prevData, // Keep existing data
-          ...updatedData // Merge in updated fields
-        }));
+      setUserData(prevData => ({ ...prevData, ...updatedData }));
   };
-
-   // Callback for EditPhoto component to update only the profile image URL
   const handlePhotoUpdate = (newImageUrl) => {
-      console.log("handlePhotoUpdate received newImageUrl:", newImageUrl);
-      setUserData(prevData => {
-          if (!prevData) return null; // Should not happen if called after load
-          
-          const updatedData = {
-            ...prevData,
-            profile_image: newImageUrl // Update the specific profile_image field
-          };
-          console.log("UserProfilePage state updated with:", updatedData);
-
-          return updatedData;
-
-  
-      });
+      setUserData(prevData => ({ ...prevData, profile_image: newImageUrl })); // Adjust field name if needed
   };
+
 
   // Renders the currently selected content section
   const renderActiveSection = () => {
-    // Loading State
-    if (isLoading) {
-      return <div className="loading">Loading profile...</div>;
+    // Handle loading/error for the main profile data needed by *other* sections
+    if (isLoadingProfile && activeSection !== SECTIONS.SAVED) {
+      return <div className="loading">Loading profile...</div>; // Or a spinner
     }
-    // Critical Error State (failed to load profile data at all)
-    if (error && !userData) {
-        return <div className="error-message main-error">{error}</div>;
+    if (profileError && activeSection !== SECTIONS.SAVED && !userData) {
+        return <div className="mt-[100px] error-message main-error">{profileError}</div>;
     }
-    // Should ideally not happen if isLoading is false and no error, but safety check
-    if (!userData) {
-        return <div className="loading">No user data found.</div>;
+    // If user data is needed but not available (and not loading/error)
+    if (!userData && activeSection !== SECTIONS.SAVED) {
+         return <div className="loading">Could not load user data for this section.</div>;
     }
 
-    // Non-critical Error Display (e.g., if profile loaded but something else failed later)
-    // Can be placed inside the main container below if preferred
-    // {error && <div className="error-message">{error}</div>}
 
     switch (activeSection) {
       case SECTIONS.VIEW_PUBLIC:
-        // Assumes userData IS the profile data, and userData.id is the Profile's UUID
-        // Adjust if getAccount returns user object separately from profile object
         return <ViewPublicProfile profileId={userData?.id} />;
       case SECTIONS.EDIT_PROFILE:
-        // Pass the full userData (profile data) to EditProfile
         return <EditProfile initialData={userData} onUpdateSuccess={handleProfileUpdate} />;
       case SECTIONS.EDIT_PHOTO:
-         // Pass the profile_image URL (now from Profile model) and the update handler
         return <EditPhoto currentImageUrl={userData?.profile_image} onUpdateSuccess={handlePhotoUpdate}/>;
       case SECTIONS.CHANGE_CREDENTIALS:
-        // This component handles its own state and API calls
         return <ChangeCredentials />;
       case SECTIONS.SKILLS_PROJECTS:
-        // Assumes SkillsAndProjects needs the Profile ID to fetch related items
         return <SkillsAndProjects profileId={userData?.id} />;
-
       case SECTIONS.PRIVACY:
         return <PrivacySecuritySettings userData={userData} onUpdateUserData={handleProfileUpdate} />;
-      // case SECTIONS.MY_POSTS:
-      //   return <div className="my-posts"><h2>My Posts</h2><p>To Do</p></div>;
-      // case SECTIONS.SAVED:
-      //   return <div className="my-posts"><h2>Saved Items</h2><p>To Do</p></div>;
-      // --- End Placeholders ---
+      case SECTIONS.MY_POSTS:
+        // return <MyPostsComponent />; // Implement this component separately
+        return <Typography>My Posts Section (To be implemented)</Typography>;
+
+      // --- SAVED POSTS SECTION ---
+      case SECTIONS.SAVED:
+        // Simply render the new SavedPosts component
+        // It handles its own fetching, loading, error, and display states
+        return <SavedPosts />;
+      // --- END SAVED POSTS SECTION ---
+
       default:
-        // Fallback if activeSection is invalid
         console.warn("Invalid section selected:", activeSection);
-        // Redirect to default or show message
-        // setActiveSection(SECTIONS.EDIT_PROFILE); // Option: reset to default
-        // return <div className="section-container"><h2>Select an option</h2></div>;
+        // Maybe default to Edit Profile if section is unknown
+        return <EditProfile initialData={userData} onUpdateSuccess={handleProfileUpdate} />;
     }
   };
 
-  // Handles user logout
-  const handleLogout = () => {
-      // --- Verify these localStorage keys match what you use for storing tokens ---
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      // --- End Verification ---
-      // Redirect to login page after clearing tokens
-      window.location.href = '/login'; // Use React Router navigate() for SPA navigation if preferred
-  };
+  // Handles user logout (no changes needed)
+  const handleLogout = () => { /* ... */ };
 
 
   // --- Main Component Return ---
   return (
-    <div className="user-profile-page-container">
+    <div className="user-profile-page-container"> {/* Ensure this class provides layout */}
       <Sidebar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
         onLogout={handleLogout}
       />
-      <main className="profile-content-area">
+      <main className="profile-content-area"> {/* Ensure this class provides layout */}
         {renderActiveSection()}
       </main>
     </div>

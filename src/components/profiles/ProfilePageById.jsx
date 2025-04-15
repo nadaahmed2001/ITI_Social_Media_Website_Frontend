@@ -248,7 +248,7 @@ const ProfilePageById = () => {
 
     // If there was an error fetching the profile, or if data is null after loading
     if (error || !profileData) {
-        return <div className="error-message main-error profile-page-container section-container">{error || 'Profile data not found.'}</div>;
+        return <div className="mt[100px] error-message main-error profile-page-container section-container">{error || 'Profile data not found.'}</div>;
     }
 
     // Profile data loaded successfully, render the profile
