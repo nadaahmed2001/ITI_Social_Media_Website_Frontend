@@ -18,7 +18,7 @@ const ChatSidebar = () => {
     //     navigate('/aiChat'); // Update URL
     // };
 
-    const defaultGroupAvatar = '../../../src/assets/images/user-default.webp'
+    const defaultGroupAvatar = '../../src/assets/images/group-chat-avatar.webp'
     const location = useLocation();
     
     const showWelcome = !(
@@ -175,7 +175,8 @@ const ChatSidebar = () => {
                                         src={ chat.authorAvatar || defaultGroupAvatar }
                                         alt="Avatar" // Use chat name or "Group Avatar" for better alt text
                                         // Apply Tailwind classes here instead of 'user-avatar'
-                                        className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600" // Example style
+                                        className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
+                                        onError={(e) => { if (e.target.src !== defaultGroupAvatar) e.target.src = defaultGroupAvatar; }}
                                     />
                                     {chat.name}
                                 </Typography>
@@ -195,5 +196,4 @@ const ChatSidebar = () => {
         </div>
     );
 };
-
 export default ChatSidebar;

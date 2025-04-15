@@ -107,6 +107,33 @@ export const fetchSavedPosts = async (page = 1) => { // Add page parameter for p
 };
 
 
+export const fetchMyPosts = async (page = 1) => {
+  try {
+    // Construct the URL with the page query parameter.
+    // Ensure '/posts/mine/' matches the actual endpoint defined in your Django urls.py
+    const url = `/posts/mine/?page=${page}`;
+    console.log(`Calling API: GET ${url}`); // Debug log
+
+    // Make the GET request using your authenticated axios instance
+    const response = await api.get(url);
+
+    // Log the successful response data for debugging
+    console.log(`Fetched my posts (page ${page}):`, response.data);
+
+    // Return the data received from the backend (expected to be paginated)
+    // e.g., { count: ..., next: ..., previous: ..., results: [...] }
+    return response.data;
+
+  } catch (error) {
+    // Log detailed error information
+    console.error(`Error fetching my posts (page ${page}):`, error.response?.data || error.message || error);
+
+
+    throw error;
+  }
+};
+
+
 // Fetch comments for a post
 export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
   console.log(`API: Fetching comments for post ${postId}, page ${page}`);
