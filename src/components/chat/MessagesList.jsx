@@ -18,7 +18,7 @@ const MessagesList = ({token, isGroupChat }) => {
     const messagesEndRef = useRef(null);
     const socketRef = useRef(null); // WebSocket reference
     const nodeRefs = useRef({}); // Store refs for each message
-
+    token = localStorage.getItem("access_token"); 
     // Temporary hardcoded token
     //  token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTY4NjU4LCJpYXQiOjE3NDM4ODIyNTgsImp0aSI6IjNmZDEzN2RhMTVkNTRjZGE5ZTM3MGY2YjAxMTRmNmE3IiwidXNlcl9pZCI6NH0.attP3etscne7JkqU2zPSv-4t5VVpXeFiZum69LM90BY";
     if (!token) {

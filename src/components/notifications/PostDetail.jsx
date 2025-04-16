@@ -1,16 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams, useLocation , Link} from "react-router-dom";
 import axios from "axios";
-// import ThumbUpSharpIcon from "@mui/icons-material/ThumbUpSharp";
-// import FavoriteSharpIcon from "@mui/icons-material/FavoriteSharp";
-// import VolunteerActivismSharpIcon from "@mui/icons-material/VolunteerActivismSharp";
-// import SentimentVerySatisfiedSharpIcon from "@mui/icons-material/SentimentVerySatisfiedSharp";
-// import CelebrationSharpIcon from "@mui/icons-material/CelebrationSharp";
-// import TipsAndUpdatesSharpIcon from "@mui/icons-material/TipsAndUpdatesSharp";
-// import ImageSharpIcon from "@mui/icons-material/ImageSharp";
-// import MoreVertIcon from "@mui/icons-material/MoreVert";
-// import EditIcon from "@mui/icons-material/Edit";
-// import DeleteIcon from "@mui/icons-material/Delete";
 import Navbar from "../ui/Navbar";
 import EditPost from "../posts/EditPost";
 import DeletePost from "../posts/DeletePost";
@@ -83,11 +73,13 @@ const PostDetail = () => {
   const [showReactionsModalForComment, setShowReactionsModalForComment] = useState(false);
   const [commentReactions, setCommentReactions] = useState({});
   const [selectedComment, setSelectedComment] = useState(null);
-  const currentUserId = localStorage.getItem("user_id");
-  const scrollToId = new URLSearchParams(location.search).get("scroll_to");
-  const [attachmentUrl, setAttachmentUrl] = useState(null);
   const [allPostReactions, setAllPostReactions] = useState([]);
   const { user, loading: authLoading } = useContext(AuthContext); // Destructure 'user'
+
+  // const currentUserId = localStorage.getItem("user_id");
+  const currentUserId = user?.id; // Get user ID from context
+  const scrollToId = new URLSearchParams(location.search).get("scroll_to");
+  const [attachmentUrl, setAttachmentUrl] = useState(null);
 
   const currentUserAvatar = user?.profile_picture || DEFAULT_USER_AVATAR;
   const [isUploading, setIsUploading] = useState(false);
@@ -485,12 +477,23 @@ const handleAddReaction = async (reactionType) => {
     clearTimeout(hidePopoverTimer.current); 
   };
 
-  const isPostAuthor = post?.author_id === currentUserId; 
+
+
+  // const isPostAuthor = post?.author?.id?.toString() === currentUserId?.toString();
+  const isPostAuthor = 
+  post?.author_id?.toString().trim() === currentUserId?.toString().trim();
+  // const isPostAuthor = post?.author_id === currentUserId; 
   const displayAuthorAvatar = post?.author_profile_picture || DEFAULT_USER_AVATAR; 
   const avatarAltText = isPostAuthor ? "You" : `${post?.author || "User"}'s avatar`;
   const avatarTitleText = isPostAuthor ? "You" : post?.author || "User";
-
-
+  // const isPostAuthor = post?.author_id?.toString() === currentUserId?.toString();
+  
+  
+  
+//   console.log("Post Author ID:", post?.author_id);
+// console.log("Current User ID:", currentUserId);
+// console.log("Is Post Author:", post?.author_id === currentUserId);
+  
   const AVAILABLE_REACTIONS = [
     { 
       name: "Like", 
@@ -555,34 +558,44 @@ const handleAddReaction = async (reactionType) => {
             </p>
           </div>
         </div>
-        <div className="relative">
-          <button 
-            onClick={() => setShowOptions(!showOptions)}
-            className="text-gray-500 hover:text-gray-700 !bg-[#292928] "
-          >
-            <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
-          </button>
-          
-          {/* TODO: Add save post button */}
+        
+<div className="relative">
 
-          {isPostAuthor && ( 
-            <div className="relative !bg-[#292928] "> 
-              {showOptions && ( 
-                <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20"> 
-                  {/* Edit Post Button */}
-                  <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"> 
-                    <EditIcon className="w-4 h-4 mr-2 text-primary-600" /> Edit 
-                  </button> 
-                  {/* Delete Post Button */}
-                  <button onClick={() => { setIsDeleteModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-red-700 hover:bg-gray-100 w-full text-left"> 
-                    <DeleteIcon className="w-4 h-4 mr-2 " /> Delete 
-                  </button> 
-                </div> 
-              )} 
-            </div> 
-            )}
-          
-        </div>
+  <button 
+    onClick={() => setShowOptions(!showOptions)}
+    className="text-gray-500 hover:text-gray-700 !bg-[#292928]"
+  >
+    <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
+  </button>
+  
+  {showOptions && ( 
+    <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20">
+      {isPostAuthor && (
+        <>
+          <button 
+            onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} 
+            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+          > 
+            <EditIcon className="w-4 h-4 mr-2 text-primary-600" /> Edit 
+          </button> 
+          <button 
+            onClick={() => { setIsDeleteModalOpen(true); setShowOptions(false); }} 
+            className="flex items-center px-4 py-2 text-sm text-red-700 hover:bg-gray-100 w-full text-left"
+          > 
+            <DeleteIcon className="w-4 h-4 mr-2" /> Delete 
+          </button>
+        </>
+      )}
+      
+      <button 
+        onClick={() => { /* Handle share logic */ setShowOptions(false); }}
+        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+      >
+        <ShareIcon className="w-4 h-4 mr-2" /> Share
+      </button>
+    </div> 
+  )}
+</div>
       </div>
 
           <div className="mb-4">
@@ -665,8 +678,6 @@ const handleAddReaction = async (reactionType) => {
   </span>
 </button>
           
-
-
 
 
           {/* Reaction Popover (Conditionally Rendered) */}
