@@ -1,4 +1,4 @@
-// src/components/Sidebar/Sidebar.js
+// src/components/Profiles//Sidebar/Sidebar.js
 import React from "react";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EditIcon from "@mui/icons-material/Edit";

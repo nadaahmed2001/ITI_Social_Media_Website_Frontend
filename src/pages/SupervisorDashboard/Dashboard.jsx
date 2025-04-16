@@ -43,27 +43,10 @@ const Dashboard = () => {
       {/* <Navbar /> */}
       <Box sx={{ display: 'flex', height: '100vh', bgcolor: '#1E1E1E', color: 'black' }}>
         {/* Sidebar */}
-        <Box sx={{ width: 240, p: 2, borderRight: '1px solid rgba(255,255,255,0.1)' }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>Programs</Typography>
-          <List>
-            {programs.map((program) => (
-              <ListItem
-                key={program.id}
-                onClick={() => handleProgramSelect(program)}
-                sx={{
-                  mb: 1,
-                  bgcolor: selectedProgram?.id === program.id ? '#FFEB3B' : 'transparent',
-                  color: selectedProgram?.id === program.id ? 'black' : 'black',
-                  borderRadius: 1,
-                  cursor: 'pointer',
-                  px: 2
-                }}
-              >
-                <ListItemText primary={program.name} />
-              </ListItem>
-            ))}
-          </List>
+        <Box>
+          <ProgramList programs={programs} onSelectProgram={handleProgramSelect} />
         </Box>
+
 
         {/* Main Content */}
         <Box sx={{ flex: 1, p: 3, overflowY: 'auto' }}>
