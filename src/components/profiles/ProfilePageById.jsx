@@ -357,7 +357,7 @@
 
 
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getProfileById ,  getMyProjects} from '../../components/services/api';
 import FollowButton from './FollowButton';
 import AuthContext from '../../contexts/AuthContext'; // Adjust path as needed
@@ -366,6 +366,8 @@ import { FaGithub, FaLinkedin, FaGlobe, FaHackerrank } from 'react-icons/fa';
 import { SiLeetcode } from 'react-icons/si';
 import LanguageIcon from '@mui/icons-material/Language';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'; // <-- Import Message Icon
+
 import './ProfilePageById.css';
 
 
@@ -378,6 +380,8 @@ function ProfilePageById() {
     const { profileId } = useParams();
     // Get user AND loading state from AuthContext
     const { user: loggedInUser, loading: authLoading } = useContext(AuthContext);
+    const navigate = useNavigate();
+
 
     const [profileData, setProfileData] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // Loading state for *this profile's* data
@@ -683,22 +687,41 @@ function ProfilePageById() {
                         </Box>
 
                         {/* Follow/Edit Button Area */}
-                        <Box sx={{ mt: 1 }}>
+                        <Box sx={{ mt: 1, display: 'flex', gap: 1, alignItems: 'center', justifyContent: { xs: 'center', sm: 'flex-start'} }}>
                             {isOwnProfile ? (
+                                // Show Edit button if own profile
                                 <Button variant="outlined" component={Link} to="/profile" size="small" sx={{ borderColor: '#7a2226', color: '#7a2226', '&:hover': { borderColor: '#9a2d31', backgroundColor: 'rgba(122, 34, 38, 0.1)' } }}>
                                     Edit Profile Settings
                                 </Button>
                             ) : (
-                                // Render FollowButton only if NOT own profile and user IS logged in
-                                loggedInUser && profileData.id ? ( // Check loggedInUser exists
-                                    <FollowButton
-                                        profileId={profileData.id}
-                                        isInitiallyFollowing={profileData.is_following}
-                                        onFollowToggle={handleFollowUpdate}
-                                    />
+                                // Show Follow and Message buttons if not own profile and logged in
+                                loggedInUser && profileData.id && profileData.user ? ( // Check profileData.user exists for messaging
+                                    <>
+                                        <FollowButton
+                                            profileId={profileData.id}
+                                            isInitiallyFollowing={profileData.is_following}
+                                            onFollowToggle={handleFollowUpdate}
+                                        />
+                                        {/* Message Button */}
+                                        <Button
+                                            variant="contained"
+                                            size="small"
+                                            startIcon={<ChatBubbleOutlineIcon />}
+                                            onClick={() => navigate(`/messagesList/private/${profileData.user}`)} // Navigate using USER ID
+                                            sx={{
+                                                backgroundColor: '#555', // Example secondary action color
+                                                color: 'white',
+                                                textTransform: 'none',
+                                                fontWeight: 'bold',
+                                                '&:hover': { backgroundColor: '#666' }
+                                            }}
+                                        >
+                                            Message
+                                        </Button>
+                                    </>
                                 ) : (
-                                    // Optional: Show something if user is not logged in
-                                    !loggedInUser && <Button component={Link} to="/login" size="small" variant="contained" color="primary">Login to follow</Button>
+                                    // Optional: Show Login button if not logged in
+                                    !loggedInUser && <Button component={Link} to="/login" size="small" variant="contained" color="primary">Login to interact</Button>
                                 )
                             )}
                         </Box>
