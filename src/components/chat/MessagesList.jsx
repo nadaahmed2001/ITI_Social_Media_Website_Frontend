@@ -317,7 +317,7 @@ const MessagesList = ({token, isGroupChat }) => {
             <div className="bg-[#181819] text-white mt-28 ml-28 pr-10">
                 <ChatSidebar/>
             </div>
-            <div className="flex-1 flex flex-col text-[#7a2226] relative background-div">
+            <div className="flex-1 flex flex-col text-[#7a2226] relative background-div mt-20">
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
