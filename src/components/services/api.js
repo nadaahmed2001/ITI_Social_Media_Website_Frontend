@@ -134,6 +134,81 @@ export const fetchMyPosts = async (page = 1) => {
 };
 
 
+export const followUser = async (profileId) => {
+  // Validate input
+  if (!profileId) {
+      console.error("followUser called without profileId");
+      throw new Error("Profile ID is required to follow.");
+  }
+
+  try {
+    // Construct the endpoint URL
+    const url = `/users/profiles/${profileId}/follow/`;
+    console.log(`Calling API: POST ${url}`); // Log the action
+
+    // Make the POST request (backend creates the Follow record)
+    const response = await api2.post(url);
+
+    console.log(`Follow response for ${profileId}:`, response.data);
+    // Return the response data (e.g., { status: 'followed', message: '...' })
+    return response.data;
+
+  } catch (error) {
+    // Log detailed error information
+    console.error(`Error following profile ${profileId}:`, error.response?.data || error.message || error);
+    // Re-throw the error for the calling component (FollowButton) to handle
+    throw error;
+  }
+};
+
+/**
+ * Unfollow a user by their profile ID.
+ * Sends a DELETE request to the follow/unfollow endpoint.
+ * @param {string} profileId - The UUID string of the profile to unfollow.
+ * @returns {Promise<object>} Promise resolving to the API response data.
+ * @throws Will throw an error if the API call fails or profileId is missing.
+ */
+export const unfollowUser = async (profileId) => {
+  // Validate input
+  if (!profileId) {
+    console.error("unfollowUser called without profileId");
+    throw new Error("Profile ID is required to unfollow.");
+  }
+
+  try {
+    // Construct the endpoint URL
+    const url = `/users/profiles/${profileId}/follow/`;
+    console.log(`Calling API: DELETE ${url}`); // Log the action
+
+    // Make the DELETE request (backend deletes the Follow record)
+    const response = await api2.delete(url);
+
+    console.log(`Unfollow response for ${profileId}:`, response.data);
+     // Return the response data (e.g., { status: 'unfollowed', message: '...' })
+    return response.data;
+
+  } catch (error) {
+     // Log detailed error information
+    console.error(`Error unfollowing profile ${profileId}:`, error.response?.data || error.message || error);
+    // Re-throw the error for the calling component (FollowButton) to handle
+    throw error;
+  }
+};
+
+
+export const getProfileById = async (profileId) => {
+  if (!profileId) throw new Error("Profile ID required");
+  try {
+      const response = await api2.get(`/users/profiles/${profileId}/`);
+      return response; // Return the whole response or just response.data
+  } catch (error) {
+      console.error(`Error fetching profile ${profileId}:`, error.response || error);
+      throw error;
+  }
+};
+
+
+
 // Fetch comments for a post
 export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
   console.log(`API: Fetching comments for post ${postId}, page ${page}`);

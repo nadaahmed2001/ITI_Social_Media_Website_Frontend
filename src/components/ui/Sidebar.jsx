@@ -248,7 +248,7 @@ export default function Sidebar() { // Removed isDarkMode prop
             </Typography>
             <Typography variant="subtitle1" className="!font-bold !text-white">
               {/* Placeholder - follower count likely needs separate fetch/prop */}
-              {user?.follower_count || 0}
+              {user?.followers_count || 0}
             </Typography>
           </div>
           <img

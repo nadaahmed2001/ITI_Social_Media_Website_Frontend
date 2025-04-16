@@ -8,6 +8,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import { FaGithub, FaLinkedin, FaGlobe, FaHackerrank } from 'react-icons/fa';
 import { SiLeetcode } from 'react-icons/si';
 import { Link } from 'react-router-dom'; // For internal links
+import { Box, Typography } from '@mui/material';
 
 import './ViewPublicProfile.css';
 
@@ -259,17 +260,26 @@ const ViewPublicProfile = ({ profileId }) => {
                     <p className="profile-username">@{profileData.username}</p>
                     {profileData.headline && <p className="profile-headline">{profileData.headline}</p>}
                     {profileData.location && <p className="profile-location">{profileData.location}</p>}
+                    <Box display="flex" flexGrow={1} flexWrap="wrap" gap={{ xs: 2, sm: 3 }} mb={1}> {/* Wrap on small screens */}
+                    {/* Make counts clickable later if needed */}
+                        <Typography variant="body2" sx={{ color: 'grey.300', cursor: 'pointer', '&:hover': { color: 'white'} }}>
+                            <strong className="text-white">{profileData.followers_count ?? 0}</strong> Followers
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'grey.300', cursor: 'pointer', '&:hover': { color: 'white'} }}>
+                            <strong className="text-white">{profileData.following_count ?? 0}</strong> Following
+                        </Typography>
+                    </Box>
                 </div>
                 {/* Optional: Add Follow/Message buttons (disabled/hidden for own profile) */}
                 {/* <div className="profile-actions"> <button disabled>Follow</button> </div> */}
-            </div>
+                {/* --- Follow/Message buttons can be added here if needed --- */}  
+                </div>
 
 
             {/* New section for ITI status / history */}
             {profileData.is_student && profileData.iti_history?.length > 0 && (
                 <div className="profile-section iti-history-section">
                     <h3>History/Status with ITI</h3>
-   
                         {profileData.iti_history.map((entry, index) => (
                             <div key={index} className="iti-history-box">
                                 <p><strong>Program:</strong> {entry.program}</p>
