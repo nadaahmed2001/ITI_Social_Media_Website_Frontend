@@ -230,6 +230,8 @@ export default function Sidebar() { // Removed isDarkMode prop
 }
 
 
+  
+
   return (
     // Apply similar container styling from ChatSidebar
     // Adjusted width (e.g., w-72), height (e.g., h-full or fit content), removed dark mode conditions
@@ -246,7 +248,7 @@ export default function Sidebar() { // Removed isDarkMode prop
             </Typography>
             <Typography variant="subtitle1" className="!font-bold !text-white">
               {/* Placeholder - follower count likely needs separate fetch/prop */}
-              {user?.follower_count || 0}
+              {user?.followers_count || 0}
             </Typography>
           </div>
           <img
@@ -282,8 +284,35 @@ export default function Sidebar() { // Removed isDarkMode prop
         </Typography>
 
         <Typography variant="body2" className="!text-sm !text-gray-400 !text-center !mb-4">
-          {/* *** Use user's role/title from context (adjust field name if needed) *** */}
-          Joined: {user?.created_at || "October 2025"}
+          Joined: {
+            (() => {
+              // Check if user.created exists
+              if (!user?.created) {
+                return "October 2024"; // Your fallback text
+              }
+              try {
+                // Create a Date object from the string
+                const date = new Date(user.created);
+
+                // Check if the date object is valid
+                if (isNaN(date.getTime())) {
+                    console.warn("Invalid date format received for user.created:", user.created);
+                    return "October 2024"; // Fallback for invalid date format
+                }
+
+                // Format the date to "Month Year" (e.g., "April 2025")
+                // 'long' gives the full month name. Use 'short' for abbreviated (e.g., "Apr").
+                return date.toLocaleDateString(undefined, { // 'undefined' uses the user's default locale
+                  year: 'numeric',
+                  month: 'long',
+                });
+              } catch (error) {
+                // Fallback in case of any unexpected error during parsing/formatting
+                console.error("Error formatting join date:", error);
+                return "October 2024";
+              }
+            })() // Immediately invoke the function expression
+          }
         </Typography>
 
         
