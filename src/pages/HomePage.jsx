@@ -44,10 +44,19 @@ import Sidebar from "../components/ui/Sidebar";
 import PostList from "../components/posts/PostList";
 import ChatSidebar from "../components/chat/ChatSidebar";
 
+import { useNavigate } from "react-router-dom";
+
 export default function HomePage() {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const navigate = useNavigate('login')
+
+  if (!localStorage.getItem("access_token")) {
+    navigate("/login");
+    return null; // Prevent rendering if not authenticated
+  }
 
   return (
+    
     <div
       className={
         isDarkMode

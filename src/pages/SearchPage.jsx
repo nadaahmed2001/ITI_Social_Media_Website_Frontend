@@ -10,7 +10,7 @@ const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
 const ProfileSearchResult = ({ profile }) => (
   <Link
     to={`/profiles/${profile.id}`} // Link to the profile page
-    className="flex items-center p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors duration-150 no-underline w-full"
+    className="flex items-center p-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors duration-150 !no-underline w-full"
   >
     <Avatar
       src={profile.profile_picture || DEFAULT_USER_AVATAR}
@@ -21,8 +21,8 @@ const ProfileSearchResult = ({ profile }) => (
       }}
     />
     <div>
-      <Typography variant="subtitle1" className="!font-medium !text-white">
-        {profile.username || 'Unknown User'}
+      <Typography variant="subtitle1" className="!font-bold !text-black !text-xl">
+        { profile.username || "Unknown user"}
       </Typography>
       {profile.role && ( // Display role if available
         <Typography variant="body2" className="!text-gray-400">
@@ -108,7 +108,7 @@ function SearchPage() {
             </Typography>
           ) : (
             // Display results in a list or grid
-            <div className="space-y-3 max-w-2xl mx-auto"> {/* Example list layout */}
+            <div className="space-y-3 max-w-2xl mx-auto !bg-[#ffffff0d] !rounded-lg"> {/* Example list layout */}
               {results.map((profile) => (
                 // Render each profile using the helper component
                 <ProfileSearchResult key={profile.id} profile={profile} />
