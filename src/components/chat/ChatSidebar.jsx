@@ -19,6 +19,8 @@ const ChatSidebar = () => {
     // };
 
     const defaultGroupAvatar = '../../src/assets/images/group-chat-avatar.webp'
+    const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp'
+
     const location = useLocation();
     
     const showWelcome = !(
@@ -115,11 +117,10 @@ const ChatSidebar = () => {
                     <FilterButton label="All" value="all"/>
                     <FilterButton label="Private" value="private"/>
                     <FilterButton label="Groups" value="groups"/>
-                     
                 </div>
                 <Button 
-                     fullWidth
-                     variant="contained"
+                    fullWidth
+                    variant="contained"
                     sx={{
                         backgroundColor: '#7a2226',
                         color: 'white',
@@ -129,11 +130,11 @@ const ChatSidebar = () => {
                         py: 1
                     }}
                     onClick={() => navigate('/chat/aiChat')} // Use onClick instead of Link
-                     startIcon={
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                       </svg>
-                     }
+                        startIcon={
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        }
                 >
                     AI Chat
                 </Button>
@@ -147,34 +148,36 @@ const ChatSidebar = () => {
                             hover:bg-gray-800 rounded cursor-pointer"
                             onClick={() => navigate(`/messagesList/private/${chat.id}`)}>
                             <div>
-                               
+                                <img
+                                    src={ chat.authorAvatar || DEFAULT_USER_AVATAR }
+                                    alt="Avatar" // Use chat name or "Group Avatar" for better alt text
+                                    // Apply Tailwind classes here instead of 'user-avatar'
+                                    className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
+                                    onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
+                                />
                                 <Typography className=" !text-[#7a2226] !font-medium">
-                                  {chat.username}
+                                    {chat.username}
                                 </Typography>
                                 <Typography variant="caption" className=" !text-white line-clamp-1">
                                     {chat.lastMessage || "No messages yet"}
                                 </Typography>
-                               
                             </div>
                             <Typography variant="caption" className=" !text-white ">
                                 {chat.lastActive || "4:43 PM"}
                             </Typography>
                             <hr></hr>
                         </div>
-                         
                     ))}
-
                     {/* Group Chats */}
                     {(activeFilter === 'all' || activeFilter === 'groups') && groupChats.map(chat => (
                         <div key={chat.id} className="flex justify-between items-center p-2 
-                             rounded cursor-pointer"
+                            rounded cursor-pointer"
                             onClick={() => navigate(`/messagesList/group/${chat.id}`)}>
                             <div>
-                                <Typography className="!font-medium flex items-center"> {/* Added items-center for vertical alignment */}
+                                <Typography className="!font-medium flex items-center"> 
                                     <img
                                         src={ chat.authorAvatar || defaultGroupAvatar }
-                                        alt="Avatar" // Use chat name or "Group Avatar" for better alt text
-                                        // Apply Tailwind classes here instead of 'user-avatar'
+                                        alt="Avatar"
                                         className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
                                         onError={(e) => { if (e.target.src !== defaultGroupAvatar) e.target.src = defaultGroupAvatar; }}
                                     />
