@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { React, useEffect, useState, useRef } from "react";
 import { BellIcon, Mail, Bell, Users, Heart, MessageCircle } from "lucide-react";
 import { 
   fetchNotifications, 
@@ -7,6 +7,8 @@ import {
   markAllNotificationsAsRead, 
   clearAllNotifications 
 } from "../components/services/api"; 
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; 
 
 const NotificationsDropdown = () => {
   const [notifications, setNotifications] = useState([]);
@@ -14,13 +16,33 @@ const NotificationsDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+
+  // const token = localStorage.getItem("access_token");
+
+  // // Axios default setup to include the token in headers
+  // const axiosInstance = axios.create({
+  //   headers: {
+  //     Authorization: token ? `Bearer ${token}` : "", // Add token to Authorization header if it exists
+  //   },
+  // });
+ 
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     fetchNotificationsData();
+  //   }
+  // }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen) {
-      fetchNotificationsData();
-    }
-  }, [isOpen]);
-
+    fetchNotificationsData(); // once on mount
+  
+    const interval = setInterval(() => {
+      fetchNotificationsData(); // every 30s
+    }, 30000);
+  
+    return () => clearInterval(interval);
+  }, []);
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -109,6 +131,41 @@ const NotificationsDropdown = () => {
         return <Bell className="w-4 h-4 text-gray-400" />;
     }
   };
+  // const handleOpenLink = (id, link, highlightedReactionId) => {
+  //   handleMarkAsRead(id);
+
+  //   const commentMatch = link.match(/\/posts\/(\d+)\/comment\/(\d+)/);
+  //   const reactionMatch = link.match(/\/posts\/(\d+)\/reactions/);
+  
+  //   const privateChatMatch = link.match(/\/dashboard\/chat\/private\/(\d+)/);  // Match private chat
+  //   const groupChatMatch = link.match(/\/dashboard\/chat\/groups\/(\d+)/);  // Match group chat
+    
+  //   if (commentMatch) {
+  //     const postId = commentMatch[1];
+  //     const commentId = commentMatch[2];
+  //     navigate(`/posts/${postId}?highlightComment=${commentId}`);
+  //     return;
+  //   }
+  
+  //   if (reactionMatch) {
+  //     const postId = reactionMatch[1];
+  //     navigate(`/posts/${postId}?highlightReactionId=${highlightedReactionId}`);
+  //     return;
+  //   }
+  
+  //   if (privateChatMatch) {
+  //     const chatId = privateChatMatch[1];  // Extract chat ID from the link
+  //     navigate(`/dashboard/chat/private/${chatId}`);  // Navigate to the private chat
+  //     return;
+  //   }
+  
+  //   if (groupChatMatch) {
+  //     const chatId = groupChatMatch[1];  // Extract chat ID from the link
+  //     navigate(`/dashboard/chat/groups/${chatId}`);  // Navigate to the group chat
+  //     return;
+  //   }
+  //   navigate(link);
+  // };
 
   return (
     <div className="relative">

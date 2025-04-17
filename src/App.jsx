@@ -1,6 +1,6 @@
 import React from 'react';
 import AppRouter from "./routes/AppRouter";
-import NotificationDropdown from "./components/NotificationDropdown";
+// import NotificationDropdown from "./components/NotificationDropdown";
 import { js } from '@eslint/js';
 function App() {
   return (
