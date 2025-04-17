@@ -139,6 +139,7 @@ import UserProfilePage from "../pages/UserProfilePage";
 import EmailChangeSuccess from "../pages/EmailChangeSuccess";
 import EmailChangeFailed from "../pages/EmailChangeFailed";
 import ProfilePageById from "../components/profiles/ProfilePageById";
+import ViewPublicProfileWrapper from "../components/profiles/UserProfile/ViewPublicProfileWrapper";
 import { AuthProvider } from "../contexts/AuthContext";
 import PrivateRoute from "../components/PrivateRoute"; // Your PrivateRoute component
 import Dashboard from "../pages/SupervisorDashboard/Dashboard";
@@ -289,6 +290,13 @@ const AppContent = () => {
        element={
         <PrivateRoute>
           <MessagesList isGroupChat={true} />
+        </PrivateRoute>
+      }
+    />
+    <Route path="/dashboard/profiles/:profileId"
+       element={
+        <PrivateRoute>
+          <ViewPublicProfileWrapper />
         </PrivateRoute>
       }
     />
