@@ -5,6 +5,15 @@ import Aichat from "./Aichat";
 import { TextField, Button, Typography } from "@mui/material";
 import Chatwellcommsg from "./Chatwellcommsg";
 import { useLocation } from "react-router-dom";
+import axios from 'axios';
+
+const token = localStorage.getItem("access_token");
+
+const axiosInstance = axios.create({
+  headers: {
+    Authorization: token ? `Bearer ${token}` : "",
+  },
+});
 
 const ChatSidebar = () => {
     const [groupChats, setGroupChats] = useState([]);
@@ -12,6 +21,8 @@ const ChatSidebar = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [activeFilter, setActiveFilter] = useState("all");
     const navigate = useNavigate();
+
+    const [unreadChatNotifications, setUnreadChatNotifications] = useState([]);
 
     // const handleAIChatClick = () => {
     //     setShowAIChat(true);
@@ -27,6 +38,38 @@ const ChatSidebar = () => {
         location.pathname.startsWith("/messagesList/") || 
         location.pathname === "/chat/aiChat" || location.pathname === "/Home" 
     );
+
+//---------------------------------------------FOR COUNT UNREAD NOTIFICATIONS ( PRIVATE AND GROUP )-----------------------------------
+    const getUnreadCountForChat = (chatId, type = "chat") => {
+        return unreadChatNotifications.filter(
+            (n) =>
+                n.notification_type === type &&
+                n.notification_link.includes(`/private/${chatId}`)
+        ).length;
+    };
+    
+    const getUnreadCountForGroup = (groupId) => {
+        return unreadChatNotifications.filter(
+            (n) =>
+                n.notification_type === "group_chat" &&
+                n.notification_link.includes(`/groups/${groupId}`)
+        ).length;
+    };
+    
+   
+  useEffect(() => {
+    const fetchUnreadNotifications = async () => {
+      try {
+        const response = await axiosInstance.get('http://127.0.0.1:8000/api/notifications/chat/unread/');
+        setUnreadChatNotifications(response.data);
+      } catch (error) {
+        console.error("Error fetching unread chat notifications:", error);
+      }
+    };
+
+    fetchUnreadNotifications();
+  }, []);
+
     useEffect(() => {
         const fetchChatData = async () => {
             try {
@@ -165,6 +208,13 @@ const ChatSidebar = () => {
                             <Typography variant="caption" className=" !text-white ">
                                 {chat.lastActive || "4:43 PM"}
                             </Typography>
+                            <div className="text-white text-sm">
+                                {getUnreadCountForChat(chat.id) > 0 && (
+                                    <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
+                                        {getUnreadCountForChat(chat.id)}
+                                    </span>
+                                )}
+                            </div>
                             <hr></hr>
                         </div>
                     ))}
@@ -190,6 +240,13 @@ const ChatSidebar = () => {
                             <Typography style={{ color: 'white' }} variant="caption" >
                                 {chat.lastActive || "9:10 AM"}
                             </Typography>
+                            <div className="text-white text-sm">
+                                {getUnreadCountForGroup(chat.id) > 0 && (
+                                    <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
+                                        {getUnreadCountForGroup(chat.id)}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     ))}
                 </div>

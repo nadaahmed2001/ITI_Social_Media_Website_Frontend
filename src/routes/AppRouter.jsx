@@ -149,6 +149,8 @@ import PostDetail from "../components/notifications/PostDetail";
 import Navbar from "../components/ui/Navbar";
 import StartChat from "../pages/startChat";
 
+// ✅ IMPORT ChatNotificationProvider
+import { ChatNotificationProvider } from "../contexts/ChatNotificationContext";
 
 // Wrapper component to handle conditional Navbar and Routes
 const AppContent = () => {
@@ -275,6 +277,21 @@ const AppContent = () => {
             </PrivateRoute>
           }
         />
+
+         <Route path="/dashboard/chat/private/:id"
+         element={
+          <PrivateRoute>
+            <MessagesList isGroupChat={false} />
+          </PrivateRoute>
+        }
+      />
+       <Route path="/dashboard/chat/groups/:id"
+       element={
+        <PrivateRoute>
+          <MessagesList isGroupChat={true} />
+        </PrivateRoute>
+      }
+    />
          {/* <Route path="/profiles/followbutton" element={<PrivateRoute><FollowButton /></PrivateRoute>} /> */}
 
         {/* --- Potentially Public Routes --- */}
@@ -297,9 +314,11 @@ const AppContent = () => {
 const AppRouter = () => {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <ChatNotificationProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </ChatNotificationProvider>
     </AuthProvider>
   );
 };

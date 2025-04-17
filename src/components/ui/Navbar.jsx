@@ -13,6 +13,8 @@ import NotificationsDropdown from "../../pages/NotificationsDropdown";
 import logo from "../../assets/images/logo.png";
 import AuthContext from "../../contexts/AuthContext";
 import defaultAvatar from "../../assets/images/user-default.webp";
+import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/outline";
+import { useChatNotification } from "../../contexts/ChatNotificationContext";
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
   const { user, loading } = useContext(AuthContext);
@@ -22,7 +24,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
   const location = useLocation();
   const navigate = useNavigate(); // *** Hook for navigation ***
   const activeTab = location.pathname;
-
+  const { unreadCount } = useChatNotification();
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -122,6 +124,12 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
             {(customActive || activeTab === path) && (
               <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-[#7B2326] rounded-full"></span>
             )}
+
+            {path === "/chat" && unreadCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
           </Link>
         ))}
         <NotificationsDropdown />
