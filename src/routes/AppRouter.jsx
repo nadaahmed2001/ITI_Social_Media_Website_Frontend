@@ -293,13 +293,7 @@ const AppContent = () => {
         </PrivateRoute>
       }
     />
-    <Route path="/dashboard/profiles/:profileId"
-       element={
-        <PrivateRoute>
-          <ViewPublicProfileWrapper />
-        </PrivateRoute>
-      }
-    />
+    
          {/* <Route path="/profiles/followbutton" element={<PrivateRoute><FollowButton /></PrivateRoute>} /> */}
 
         {/* --- Potentially Public Routes --- */}

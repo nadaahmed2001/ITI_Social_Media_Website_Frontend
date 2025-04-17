@@ -27,6 +27,8 @@ import {
   removePostReaction,
   removeCommentReaction,
   fetchReactionsForComment,
+  savePost, 
+  unsavePost,
 } from "../services/api";
 
 import {
@@ -44,6 +46,8 @@ import {
   Delete as DeleteIcon,
   ImageSharp as ImageSharpIcon,
   Close as CloseIcon,
+  BookmarkBorder as BookmarkBorderIcon, // <-- Icon for Save
+  Bookmark as BookmarkIcon, 
 } from "@mui/icons-material";
 
 
@@ -53,10 +57,9 @@ const CLOUDINARY_CLOUD_NAME =  "dsaznefnt";
 const CLOUDINARY_UPLOAD_PRESET = "ITIHub_profile_pics";
 
 
-const PostDetail = () => {
+const PostDetail = (postData) => {
   const { postId } = useParams();
   const location = useLocation();
-  const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -75,6 +78,7 @@ const PostDetail = () => {
   const [selectedComment, setSelectedComment] = useState(null);
   const [allPostReactions, setAllPostReactions] = useState([]);
   const { user, loading: authLoading } = useContext(AuthContext); // Destructure 'user'
+  const [post, setPost] = useState(postData);
 
   // const currentUserId = localStorage.getItem("user_id");
   const currentUserId = user?.id; // Get user ID from context
@@ -85,6 +89,17 @@ const PostDetail = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [reactionsLoading, setReactionsLoading] = useState(true); // Loading state for ALL reactions
   const widgetRef = useRef(null);
+
+  const [isPostSaved, setIsPostSaved] = useState(postData?.is_saved || false); // <-- STATE FOR SAVED STATUS
+  const [isSavingToggleLoading, setIsSavingToggleLoading] = useState(false); // <-- Loading state for save action
+  
+
+  useEffect(() => {
+    setIsPostSaved(postData?.is_saved || false);
+    setPost(postData); // Update post state if postData prop changes
+  }, [postData]);
+
+  
 
   const hidePopoverTimer = useRef(null); 
 
@@ -521,6 +536,34 @@ const handleAddReaction = async (reactionType) => {
     },
   ];
 
+  const handleToggleSavePost = async () => {
+      if (!post?.id || isSavingToggleLoading) return; // Prevent action if no post or already loading
+  
+      setIsSavingToggleLoading(true);
+      const currentlySaved = isPostSaved; // Store current state before API call
+  
+      try {
+        if (currentlySaved) {
+          // If currently saved, call unsave API
+          await unsavePost(post.id);
+          setIsPostSaved(false); // Update state on success
+          console.log("Post unsaved");
+        } else {
+          // If not saved, call save API
+          await savePost(post.id);
+          setIsPostSaved(true); // Update state on success
+          console.log("Post saved");
+        }
+      } catch (error) {
+        console.error("Failed to toggle save status:", error);
+        // Optional: Revert state on error? Or show error message
+        // setIsPostSaved(currentlySaved); // Revert optimistic update if implemented
+        alert(`Failed to ${currentlySaved ? 'unsave' : 'save'} post.`);
+      } finally {
+        setIsSavingToggleLoading(false); // Reset loading state
+        setShowOptions(false); // Close the options menu
+      }
+  };
 
   // Return a loading state if post is not yet loaded
   if (!post) return <div>Loading...</div>;
@@ -570,6 +613,21 @@ const handleAddReaction = async (reactionType) => {
   
   {showOptions && ( 
     <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20">
+      {/* Save/Unsave Button */}
+      <button
+        onClick={handleToggleSavePost}
+        disabled={isSavingToggleLoading} // Disable while action is in progress
+        className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isPostSaved ? (
+            <BookmarkIcon className="w-4 h-4 mr-2 text-blue-400" /> // Icon when saved
+        ) : (
+            <BookmarkBorderIcon className="w-4 h-4 mr-2 text-gray-400" /> // Icon when not saved
+        )}
+        {isPostSaved ? 'Unsave Post' : 'Save Post'}
+      </button>
+
+      
       {isPostAuthor && (
         <>
           <button 
@@ -911,21 +969,21 @@ const handleAddReaction = async (reactionType) => {
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleDeletePost(post.id)}
       />
-         <EditComment
-           isOpen={isEditModalOpenComment}
-           onClose={() => {
-             setIsEditModalOpenComment(false);
-             setSelectedComment(null); // Reset to prevent stale data
-           }}
-           onConfirm={handleConfirmEditComment}
-           comment={selectedComment}
-         />
-        <DeleteComment
-                isOpen={isDeleteModalOpenComment}
-                onClose={() => {setIsDeleteModalOpenComment(false); setSelectedComment(null);}} 
-                // ** Pass the CORRECT confirmation handler **
-                onConfirm={handleConfirmDeleteComment} 
-              />
+      <EditComment
+        isOpen={isEditModalOpenComment}
+        onClose={() => {
+          setIsEditModalOpenComment(false);
+          setSelectedComment(null); // Reset to prevent stale data
+        }}
+        onConfirm={handleConfirmEditComment}
+        comment={selectedComment}
+      />
+      <DeleteComment
+              isOpen={isDeleteModalOpenComment}
+              onClose={() => {setIsDeleteModalOpenComment(false); setSelectedComment(null);}} 
+              // ** Pass the CORRECT confirmation handler **
+              onConfirm={handleConfirmDeleteComment} 
+            />
         </div>
       </div>
     </div>
