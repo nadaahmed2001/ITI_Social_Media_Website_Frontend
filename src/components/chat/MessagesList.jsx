@@ -201,7 +201,7 @@ const MessagesList = ({token, isGroupChat }) => {
 
         const interval = setInterval(() => {
             fetchNewMessages(); // Fetch new messages periodically
-        }, 5000); // Fetch every 5 seconds
+        }, 2000); // Fetch every 2 seconds
 
         return () => clearInterval(interval); // Cleanup interval on unmount
     }, [id, isGroupChat]);

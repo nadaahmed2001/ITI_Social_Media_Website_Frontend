@@ -37,8 +37,8 @@ const NotificationsDropdown = () => {
     fetchNotificationsData(); // once on mount
   
     const interval = setInterval(() => {
-      fetchNotificationsData(); // every 30s
-    }, 30000);
+      fetchNotificationsData(); // every 2s
+    }, 15000);
   
     return () => clearInterval(interval);
   }, []);

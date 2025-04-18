@@ -11,7 +11,7 @@ import ReactionsCommentModal from "../posts/ReactionsCommentModal";
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import { CommentItem } from "../posts/CommentItem"; // *** IMPORT CommentItem ***
 import AuthContext from '../../contexts/AuthContext'; 
-import TimeAgo from '../TimeAgo';
+import TimeAgo from "../TimeAgo";
 import CustomCircularProgress from "../posts/CustomCircularProgress";
 
 import {
@@ -175,8 +175,6 @@ const PostDetail = (postData) => {
       }
     }
   }, [comments, scrollToId]); 
-  
-  
   
 
   useEffect(() => {
@@ -597,7 +595,10 @@ const handleAddReaction = async (reactionType) => {
               <p className="font-bold text-lg !text-[#7a2226] mb-0 mt-3 !bg-[#292928]">{avatarTitleText|| "Unknown"}</p>
             </Link>
             <p className="text-xs text-gray-500 !bg-[#292928]">
-              <TimeAgo timestamp={post.created_on}/>
+              {post.created_on && (
+                <TimeAgo timestamp={new Date(post.created_on)} />
+              )}
+
             </p>
           </div>
         </div>

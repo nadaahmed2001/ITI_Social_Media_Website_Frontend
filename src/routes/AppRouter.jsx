@@ -279,7 +279,7 @@ const AppContent = () => {
           }
         />
 
-         <Route path="/dashboard/chat/private/:id"
+         {/* <Route path="/dashboard/chat/private/:id"
          element={
           <PrivateRoute>
             <MessagesList isGroupChat={false} />
@@ -292,7 +292,7 @@ const AppContent = () => {
           <MessagesList isGroupChat={true} />
         </PrivateRoute>
       }
-    />
+    /> */}
     
          {/* <Route path="/profiles/followbutton" element={<PrivateRoute><FollowButton /></PrivateRoute>} /> */}
 
