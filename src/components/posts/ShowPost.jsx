@@ -89,6 +89,27 @@ const AVAILABLE_REACTIONS = [
   { name: "Insightful", icon: InsightfulIcon },
 ];
 
+const getReactionColorClass = (reactionType) => {
+  switch (reactionType) {
+      case "Like":
+          // Match the main button's reacted state color
+          return 'text-blue-400';
+      case "Love":
+          return 'text-red-500';
+      case "Celebrate":
+          // Choose consistent colors, e.g., from modal or define here
+          return 'text-green-500';
+      case "funny":
+          return 'text-violet-400'; // Different yellow from Like maybe?
+      case "Support":
+          return 'text-blue-500';
+      case "Insightful":
+          return 'text-yellow-200';
+      default:
+          // Fallback color for unknown reaction types
+          return 'text-gray-400';
+  }
+};
 
 export default function ShowPost({ postData, onDeletePost }) {
   // const [comments, setComments] = useState([]);
@@ -701,16 +722,16 @@ const AVAILABLE_REACTIONS = [
 ];
 ///
   return (
-    <div className="!bg-[#292928] rounded-lg shadow-md p-4 mb-4 border !border-[#ffffff]">
+    <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-4 border-2 border-[#7a2226]/20 transition-all duration-300 hover:shadow-xl">
       {/* Post Header */}
-      <div className="flex items-center justify-between mb-2 !bg-[#292928]">
-        <div className="flex items-center space-x-3 !bg-[#292928]">
-        <Link to={`/profiles/${post.author_id}`} className= "!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-3">
+        <Link to={`/profiles/${post.author_id}`} className= "group flex-shrink-0 hover:opacity-80 transition-opacity"> 
           <img 
                 src={displayAuthorAvatar} 
                 alt={avatarAltText} 
                 title={avatarTitleText} 
-                className="w-10 h-10 rounded-full object-cover border border-gray-200 [background-color:inherit]"
+                className="w-10 h-10 rounded-full object-cover border-2 border-[#7a2226]/20 group-hover:border-[#7a2226]/40 transition-all"
                 onError={(e) => { 
                   if (e.target.src !== DEFAULT_USER_AVATAR) {
                     e.target.src = DEFAULT_USER_AVATAR; 
@@ -719,37 +740,30 @@ const AVAILABLE_REACTIONS = [
             />
           </Link >
 
-          <div className="!no-underline !bg-[#292928]">
-            <Link to={`/profiles/${post.author_id}`} className= "!no-underline !bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
-              <p className="font-bold text-lg !text-[#7a2226] mb-0 mt-3 !bg-[#292928]">{avatarTitleText|| "Unknown"}</p>
+          <div>
+            <Link to={`/profiles/${post.author_id}`} className= "hover:opacity-80 transition-opacity"> 
+              <p className="font-bold text-lg bg-gradient-to-r from-[#7a2226] to-[#a53d3d] bg-clip-text text-transparent">{avatarTitleText|| "Unknown"}</p>
             </Link>
-            <p className="text-xs text-gray-500 !bg-[#292928]">
+            <p className="text-xs text-[#4a5568]">
               <TimeAgo timestamp={post.created_on}/>
             </p>
           </div>
         </div>
         <div className="relative">
-          {/* Show button for options if user is logged in (needed for save) */}
           {user && (
             <button
               onClick={() => setShowOptions(!showOptions)}
-              className="text-gray-500 hover:text-gray-700 !bg-[#292928] p-1 rounded-full"
+              className="text-[#7a2226] hover:text-[#5a181b] transition-colors"
             >
-              <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
+              <MoreVertIcon className="w-6 h-6"/>
             </button>
           )}
-          
-
-          {/* TODO: Add save post button */}
-
-          {/* Dropdown Menu */}
-          {showOptions && user && ( // Ensure user exists to show dropdown
-            <div className="absolute right-0 mt-2 w-48 !bg-[#3a3a3a] rounded-md shadow-lg py-1 z-20 border border-gray-600"> {/* Increased width */}
-              {/* Save/Unsave Button */}
+          {showOptions && user && (
+            <div  className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-20 border border-[#7a2226]/20"> 
               <button
                 onClick={handleToggleSavePost}
-                disabled={isSavingToggleLoading} // Disable while action is in progress
-                className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isSavingToggleLoading} 
+                className="flex items-center w-full px-4 py-2 text-sm text-[#7a2226] hover:bg-[#7a2226]/10 transition-colors"
               >
                 {isPostSaved ? (
                     <BookmarkIcon className="w-4 h-4 mr-2 text-blue-400" /> // Icon when saved
@@ -781,22 +795,22 @@ const AVAILABLE_REACTIONS = [
       </div>
 
       {/* Post Content */}
-      <div className="mb-3 !bg-[#292928]">
+      <div className="mb-">
         {/* Post body */}
         {/* --- MODIFIED POST BODY DISPLAY with Conditional Line Break --- */}
-        <div className="text-gray-800 !text-justify !bg-[#292928] px-8">
+        <div className="text-[#2d3748] text-justify">
           
           {/* Conditionally render structure based on isPostExpanded state */}
           {isPostExpanded ? (
             // --- Expanded View ---
             <>
               {/* Full text in a block-level paragraph */}
-              <p className="text-white !bg-[#292928]">{postdisplayText}</p> 
+              <p className="mb-2">{postdisplayText}</p> 
               {/* Button appears after the block paragraph, naturally on new line */}
               {postneedsTruncation && ( // Only show button if text was actually long enough
                 <button
                   onClick={postToggleExpansion}
-                  className="text-[#A52B2B] hover:underline focus:outline-none font-medium text-sm !bg-[#292928]" 
+                 className="ml-1 text-[#7a2226] hover:underline font-medium text-sm"
                   aria-expanded={isPostExpanded}
                 >
                   See less
@@ -807,13 +821,13 @@ const AVAILABLE_REACTIONS = [
             // --- Collapsed View ---
             <>
               {/* Truncated text in an INLINE paragraph */}
-              <p className="inline text-white !bg-[#292928]">{postdisplayText}</p>
+              <p className="inline text-white ">{postdisplayText}</p>
               {/* "See more" button appears immediately after inline text */}
               {postneedsTruncation && (
                 <button
                   onClick={postToggleExpansion}
                    // Style button: brown color, add left margin for spacing
-                  className="ml-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-sm !bg-[#292928]"
+                 className="ml-1 text-[#7a2226] hover:underline font-medium text-sm"
                   aria-expanded={isPostExpanded}
                 >
                   See more
@@ -824,25 +838,25 @@ const AVAILABLE_REACTIONS = [
         </div>
         {/* Post attachments */}
         {post.attachments?.length > 0 && (
-          <div className="mt-2 !bg-[#292928]">
+          <div className="mt-4">
             {/* --- SLIDESHOW ATTACHMENT DISPLAY --- */}
         {numAttachments > 0 && (
           // Apply a wrapper for styling context if needed, e.g., for arrow/dot position
           // The border/rounded can apply here or on the slider itself
-          <div className="!bg-[#292928] mt-2 slick-slider-container relative border border-gray-800 rounded-lg overflow-hidden"> 
+          <div className=" mt-2 slick-slider-container relative border border-gray-800 rounded-lg overflow-hidden"> 
             {/* 3. Use Slider component with settings */}
             <Slider {...sliderSettings}>
               
               {/* Map over ALL attachments */}
               {attachments.map((attachment, index) => (
                 // Each child of Slider is a slide
-                <div key={attachment.id || index} className="slide-item !bg-[#292928] "> {/* Added bg */}
+                <div key={attachment.id || index} className="relative group"> {/* Added bg */}
                   {attachment.image ? (
                     <img
                       src={attachment.image}
                       alt={`Post attachment ${index + 1}`}
                       // Style image to fit well within the slide
-                      className="w-full h-auto object-contain mx-auto block max-h-[75vh] !bg-[#292928]" // Use object-contain, limit max height
+                      className="w-full h-auto object-contain rounded-xl border border-[#7a2226]/10"
                     />
                   ) : attachment.video ? (
                     <video
@@ -850,14 +864,14 @@ const AVAILABLE_REACTIONS = [
                       controls
                       playsInline
                       // Style video to fit well
-                      className="w-full h-auto block max-h-[75vh] !bg-[#292928]" // Limit height, add bg for potential letterboxing
+                      className="w-full h-auto rounded-xl border border-[#7a2226]/10" // Limit height, add bg for potential letterboxing
                       preload="metadata" // Don't preload the whole video
                     >
                       Your browser does not support the video tag.
                     </video>
                   ) : (
                      // Fallback for unknown type
-                    <div className="!bg-[#292928] aspect-video flex items-center justify-center text-gray-400 text-xs p-1">
+                    <div  className="aspect-video flex items-center justify-center text-[#7a2226]">
                       Unsupported Attachment Type
                     </div>
                   )}
@@ -872,21 +886,21 @@ const AVAILABLE_REACTIONS = [
 
 {/* ============================================================= POST REACTIONS ==================================================================*/}
 
-<div className="px-4 pt-1 pb-2 flex justify-between items-center text-xs !bg-[#292928]"> 
+<div className="px-4 pt-1 pb-2 flex justify-between items-center text-xs "> 
       {/* Left Side: Reaction Summary Icons (Optional) */}
-      <div className="flex items-center gap-1 text-gray-400 !bg-[#292928]">
+      <div className="flex items-center gap-1 text-gray-400 ">
           {/* For example, if you have reaction counts: */}
-          {post.reaction_counts?.Like > 0 && <ThumbUpSolid className="w-4 h-4 text-blue-500 !bg-[#292928]"/>}
-          {post.reaction_counts?.Love > 0 && <FavoriteSharpIcon className="w-4 h-4 text-red-500 -ml-1 !bg-[#292928]" />}
-          {post.reaction_counts?.funny > 0 && <EmojiEmotionsIcon className="w-4 h-4 text-violet-400 !bg-[#292928]" />}
-          {post.reaction_counts?.Celebrate > 0 && <CelebrateIcon className="w-4 h-4 text-green-400 !bg-[#292928]" />}
-          {post.reaction_counts?.Insightful > 0 && <InsightfulIcon className="w-4 h-4 text-[#7B2326] !bg-[#292928]" />}
-          {post.reaction_counts?.Support > 0 && <SupportIcon className="w-4 h-4 text-blue-200 !bg-[#292928]" />}
+          {post.reaction_counts?.Like > 0 && <ThumbUpSolid className="w-4 h-4 text-blue-500 "/>}
+          {post.reaction_counts?.Love > 0 && <FavoriteSharpIcon className="w-4 h-4 text-red-500 -ml-1" />}
+          {post.reaction_counts?.funny > 0 && <EmojiEmotionsIcon className="w-4 h-4 text-violet-400 " />}
+          {post.reaction_counts?.Celebrate > 0 && <CelebrateIcon className="w-4 h-4 text-green-400 " />}
+          {post.reaction_counts?.Insightful > 0 && <InsightfulIcon className="w-4 h-4 text-[#7B2326] " />}
+          {post.reaction_counts?.Support > 0 && <SupportIcon className="w-4 h-4 text-blue-200 " />}
           {/* Display total count if > 0 */}
           {allPostReactions.length > 0 && (
             
             <span 
-                  className="ml-1 hover:underline cursor-pointer !bg-[#292928]" 
+                  className="ml-1 hover:underline cursor-pointer " 
                   onClick={() => setShowReactionsModal(true)} // Make count clickable too
                   title="See who reacted"
               > 
@@ -899,21 +913,21 @@ const AVAILABLE_REACTIONS = [
       <div className="flex items-center gap-4"> {/* Increased gap */}
           {/* Comment Count (Optional: make clickable to scroll to comments) */}
           {comments.length == 1 ? (
-              <span className="text-gray-400 hover:underline cursor-pointer !bg-[#292928]">
+              <span className="text-gray-400 hover:underline cursor-pointer ">
                   1 Comment
               </span>):
               (
-              <span className="text-gray-400 hover:underline cursor-pointer !bg-[#292928]">
+              <span className="text-gray-400 hover:underline cursor-pointer ">
                 {comments?.length || 0} Comments
               </span>
               )}
       </div>
   </div>
 
-  <div className="post-actions flex justify-around items-center border-y border-gray-700 px-1 py-2 mt-1 !bg-[#282828]"> {/* Optional: Set specific bg */}
+  <div className="post-actions flex justify-around items-center border-y border-gray-700 px-1 py-2 mt-1 "> {/* Optional: Set specific bg */}
       {/* Like Button + Popover Wrapper Div */}
       <div 
-          className="relative flex-1 !bg-[#282828] mx-2" // flex-1 makes buttons distribute space
+          className="relative flex-1  mx-2" // flex-1 makes buttons distribute space
           onMouseEnter={handleMouseEnterTrigger} // Show on enter trigger area
           onMouseLeave={handleMouseLeaveArea}  // Start timer on leave trigger ar
       >
@@ -923,9 +937,9 @@ const AVAILABLE_REACTIONS = [
               // You might need separate onClick for Like vs. Remove if logic differs greatly
               onClick={() => userReactions.length > 0 ? handleRemoveReaction(userReactions[0]?.reaction_type) : handleAddReaction('Like') } 
               // Dynamic classes based on whether the user has reacted
-              className={`!bg-[#181919] w-full flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium transition-all ease-in-out duration-500 ${ // Base styles + transition
+              className={`!bg-[#7a2226] w-full flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium transition-all ease-in-out duration-500 ${ // Base styles + transition
                 userReactions.length > 0 
-                ? 'text-[#7B2326] font-semibold' // LIKED state (use a clear distinct color)
+                ? 'text-white font-semibold bg-transparent' // LIKED state (use a clear distinct color)
                 : 'text-gray-400 hover:bg-gray-700 hover:text-gray-100 hover:scale-105 hover:font-semibold' // NOT LIKED state + hover
             }`}
           >
@@ -933,11 +947,11 @@ const AVAILABLE_REACTIONS = [
               {userReactions[0] ? (
     AVAILABLE_REACTIONS.find(r => r.name === userReactions[0].reaction_type)?.icon
   ) : (
-    <ThumbUpOutline className="!bg-[#181819] w-5 h-5"/>
+    <ThumbUpOutline className="!w-5 h-5"/>
   )}
   
   {/* Display reaction text */}
-  <span className="!bg-[#181819]">
+  <span className="">
     {userReactions[0]?.reaction_type || 'React'}
   </span>
 </button>
@@ -982,13 +996,13 @@ const AVAILABLE_REACTIONS = [
       {/* End Like Button + Popover Wrapper */}
 
       {/* Placeholder Comment Button */}
-      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
-          <CommentIcon className="!bg-[#181819] w-5 h-5"/> Comment 
+      <button className="!bg-[#7a2226] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
+          <CommentIcon className="!bg-[#7a2226] w-5 h-5"/> Comment 
       </button>
 
       {/* Placeholder Share Button */}
-      <button className="!bg-[#181819] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
-          <ShareIcon className="!bg-[#181819] w-5 h-5"/> Share 
+      <button className="!bg-[#7a2226] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
+          <ShareIcon className="!bg-[#7a2226] w-5 h-5"/> Share 
       </button>
 
       {/* --- Render Reactions Modal --- */}
@@ -1003,8 +1017,8 @@ const AVAILABLE_REACTIONS = [
 
   </div>
 
-      <div className="mt-4 !bg-[#292928]">
-      <h4 className="!text-sm !font-bold !text-[#7a2226] !bg-[#292928] mb-3">Comments</h4> 
+      <div className="mt-4 ">
+      <h4 className="!text-sm !font-bold !text-[#7a2226]  mb-3">Comments</h4> 
   
         {/* Error message */}
         {commentPagination.error && (
@@ -1044,14 +1058,14 @@ const AVAILABLE_REACTIONS = [
 ))}
                   {/* Load More button */}
                   {commentPagination.hasMore && (
-                  <div className="flex justify-center !bg-[#292928]">
+                  <div className="flex justify-center ">
                     <button
                       onClick={loadMoreComments}
                       disabled={commentPagination.isLoading}
                       className={`px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 ${
                         commentPagination.isLoading 
-                          ? '!bg-[#292928] text-gray-700 cursor-not-allowed'
-                          : '!bg-[#292928] text-grey hover:bg-primary-700'
+                          ? ' text-gray-700 cursor-not-allowed'
+                          : ' text-grey hover:bg-primary-700'
                       }`}
                     >
                       {commentPagination.isLoading ? (
@@ -1065,13 +1079,13 @@ const AVAILABLE_REACTIONS = [
                   
             {/* End of comments message */}
              {!commentPagination.hasMore && !commentPagination.isLoading && (
-                 <p className="!bg-[#292928] text-center !text-[#7a2226] text-xs italic mt-4">No more comments</p>
+                 <p className=" text-center !text-[#7a2226] text-xs italic mt-4">No more comments</p>
              )}
           </>
         ) : (
           // Show 'No comments' only if not loading and no error
           !commentPagination.isLoading && !commentPagination.error && (
-            <p className="text-gray-500 text-sm italic !bg-[#292928]">No comments yet.</p>
+            <p className="text-gray-500 text-sm italic ">No comments yet.</p>
           )
         )}
          {/* Initial loading indicator for comments */}
@@ -1082,25 +1096,25 @@ const AVAILABLE_REACTIONS = [
 {/* ========================================================================================================================================= */}
 
         {/* --- Add Comment Section with Icon Inside Input --- */}
-        <div className="mt-1 flex items-start space-x-3 border-t border-gray-100 pt-4 !bg-[#292928]">
-        <Link to={`/profiles/${post.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity"> 
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-4 mb-4 mt-4 border-2 border-[#7a2226]/20 transition-all duration-300 hover:shadow-xl hover:border-[#7a2226]/30">
+        <Link to={`/profiles/${post.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity mt-1 group"> 
         <img 
             src={ currentUserAvatar } // Use derived avatar
             alt={ user?.username || "You" }
             title={ user?.username || "You" }
-            className="w-8 h-8 rounded-full object-cover border border-gray-200 flex-shrink-0"
+            className="w-10 h-10 rounded-full object-cover border-2 border-[#7a2226]/20 group-hover:border-[#7a2226]/40 transition-all shadow-sm"
             onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
           />
           </Link>
-          <div className="flex-grow !bg-[#292928]">
+          <div className="flex-grow">
               {/* --- Input Wrapper with Relative Positioning --- */}
-              <div className="relative w-full !bg-[#292928]"> 
+              <div className="relative w-full "> 
                 <input
                   type="text"
                   placeholder="Write your comment..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  className={`placeholder:!text-[#262727] ${commentText ? 'text-[#262727]' : ''} !bg-[#c2c2c2] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none`}
+                  className={`placeholder:text-[#7a2226]/60 text-[#2d3748] w-full px-3 py-2 border-2 border-[#7a2226]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7a2226]/40 focus:border-transparent resize-none bg-white/80 transition-all duration-300 hover:border-[#7a2226]/30 ${commentText ? 'text-[#262727]' : ''} !bg-[#c2c2c2] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none`}
                   aria-describedby="comment-char-count"
                 />
                 {/* --- Absolutely Positioned Icon Button --- */}
@@ -1118,31 +1132,31 @@ const AVAILABLE_REACTIONS = [
             </div>
 
             {/* Character Counter (Stays outside the relative wrapper) */}
-            <div id="comment-char-count" className={`text-xs mt-1 text-right !bg-[#292928] ${commentCountColorClass}`}>
+            <div id="comment-char-count" className={`text-xs mt-1 text-right text-[#7a2226] ${commentCountColorClass}`}>
                 {currentInputLength} / {MAX_COMMENT_INPUT_LENGTH}
             </div>
 
             {/* Attachment Preview (Keep as is) */}
             {attachmentUrl && (
-              <div className="mt-2 relative !bg-[#292928] mr-35">
+              <div className="mt-2 relative mr-35">
               {attachmentUrl.match(/\.(jpeg|jpg|gif|png)$/) ? (
                 <img 
                   src={attachmentUrl} 
                   alt="Preview" 
-                  className="max-w-xs rounded-lg border border-gray-200 !bg-[#292928]" // Added border
+                  className="max-w-xs rounded-lg border border-gray-200 " // Added border
                 />
               ) : attachmentUrl.match(/\.(mp4|mov|webm|mkv)$/) ? ( // Check for video extensions
-                <video controls className="max-w-xs rounded-lg border border-gray-200 !bg-[#292928]">
+                <video controls className="max-w-xs rounded-lg border border-gray-200 ">
                   <source src={attachmentUrl} /* Optional: add type based on extension */ />
                   Your browser does not support the video tag.
                 </video>
               ): (
-                <p className="!bg-[#292928] text-xs text-gray-500 italic">Attachment added (preview not available)</p>
+                <p className=" text-xs text-gray-500 italic">Attachment added (preview not available)</p>
               )}
               {/* Close button for preview */}
                 <button
                   onClick={() => setAttachmentUrl(null)}
-                  className="absolute -top-1 right-5 !bg-[#292928] hover:bg-red-500 text-white rounded-full p-0.5  leading-none" 
+                  className="absolute -top-1 right-5  hover:bg-red-500 text-white rounded-full p-0.5  leading-none" 
                   aria-label="Remove attachment"
                 >
                   <CloseIcon style={{ fontSize: '1.2rem', backgroundColor:'#292928', color:'#7a2226'}} /> {/* Smaller icon */}
@@ -1151,7 +1165,7 @@ const AVAILABLE_REACTIONS = [
             )}
 
             {/* Action Buttons (Only Post button remains here) */}
-            <div className="flex items-center justify-end mt-2 !bg-[#292928] rounded-lg"> 
+            <div className="flex items-center justify-end mt-2 rounded-lg"> 
               <button
                 type="button" // Or type="submit" if this div is wrapped in a <form>
                 onClick={handleComment}
@@ -1176,14 +1190,6 @@ const AVAILABLE_REACTIONS = [
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={() => handleDeletePost(post.id)}
       />
-      {/* <EditComment
-        isOpen={isEditModalOpenComment}
-        comment={selectedComment} 
-        onClose={() => {setIsEditModalOpenComment(false); setSelectedComment(null);}} 
-        // ** Pass the CORRECT confirmation handler **
-        onConfirm={handleConfirmEditComment} 
-        
-      /> */}
  <EditComment
   isOpen={isEditModalOpenComment}
   onClose={() => {
@@ -1193,23 +1199,12 @@ const AVAILABLE_REACTIONS = [
   onConfirm={handleConfirmEditComment}
   comment={selectedComment}
 />
-      {/* <DeleteComment
-        isOpen={isDeleteModalOpenComment}
-        onClose={() => {setIsDeleteModalOpenComment(false); setSelectedComment(null);}} 
-        // ** Pass the CORRECT confirmation handler **
-        onConfirm={handleConfirmDeleteComment} 
-      /> */}
-
 <DeleteComment
         isOpen={isDeleteModalOpenComment}
         onClose={() => {setIsDeleteModalOpenComment(false); setSelectedComment(null);}} 
         // ** Pass the CORRECT confirmation handler **
         onConfirm={handleConfirmDeleteComment} 
       />
-      {/* <ReactionsModal 
-        postId={post.id}
-        onClose={() => setShowReactionsModal(false)} 
-      /> */}
     </div>
   );
 }

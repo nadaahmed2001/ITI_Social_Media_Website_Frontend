@@ -3,6 +3,7 @@ import { fetchPosts } from '../../services/api';
 import CreatePost from './CreatePost';
 import ShowPost from './ShowPost';
 import AuthContext from '../../contexts/AuthContext';
+import { CircularProgress } from '@mui/material';
 
 export default function PostList() {
   const [posts, setPosts] = useState([]);
@@ -76,11 +77,11 @@ export default function PostList() {
   if (authLoading) return null; 
 
   return (
-    <div className="max-w-3xl mx-auto !bg-[#1E1F1F]">
+    <div className="max-w-3xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
       <CreatePost onPostCreated={handleNewPost} />
 
       {user && (
-        <div className="mt-6 space-y-6 !bg-[#1E1F1F]">
+        <div className="mt-6 space-y-6">
           {posts.map((post, index) => (
             <ShowPost
               key={post.id}
@@ -94,14 +95,23 @@ export default function PostList() {
 
           {loading && (
             <div className="flex justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+              <CircularProgress 
+                size={32}
+                sx={{
+                  color: '#7a2226',
+                  animationDuration: '800ms',
+                  '&.MuiCircularProgress-root': {
+                    animation: 'pulse 1.5s ease-in-out infinite'
+                  }
+                }}
+              />
             </div>
           )}
 
           {!hasMore && !loading && (
-            <p className="text-center text-gray-500 py-4">
-              You've reached the end of the feed
-            </p>
+             <p className="text-center text-[#7a2226]/80 py-4 font-medium">
+             You've reached the end of the feed 🌟
+           </p>
           )}
         </div>
       )}

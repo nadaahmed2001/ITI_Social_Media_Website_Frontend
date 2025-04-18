@@ -184,7 +184,7 @@ import React, {useContext} from "react";
 import { Button, Select, MenuItem, Typography, InputLabel, FormControl } from "@mui/material";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import AuthContext from '../../contexts/AuthContext'; // *** IMPORT AuthContext (Adjust path if needed) ***
-
+import { motion } from 'framer-motion';
 
 // Default avatar if needed
 const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
@@ -235,54 +235,51 @@ export default function Sidebar() { // Removed isDarkMode prop
   return (
     // Apply similar container styling from ChatSidebar
     // Adjusted width (e.g., w-72), height (e.g., h-full or fit content), removed dark mode conditions
-    <div className="w-80 text-[#e0e0e0] h-full p-4 mt-4 rounded-lg border border-[#7a2226] bg-[rgba(50,50,50,0.42)] backdrop-blur-sm flex flex-col gap-6">
-
-      {/* First Section (Personal Information) */}
-      {/* Use consistent padding/rounding, remove conditional background */}
-      <div className="p-4 rounded-lg bg-[rgba(60,60,60,0.5)]"> {/* Slightly different bg for section */}
-        {/* Image and Followers / Following */}
-        <div className="flex justify-around items-center mb-4 text-center">
-          <div className="flex-1">
-            <Typography variant="body2" className="!text-sm !text-gray-300">
-              Followers
-            </Typography>
-            <Typography variant="subtitle1" className="!font-bold !text-white">
-              {/* Placeholder - follower count likely needs separate fetch/prop */}
-              {user?.followers_count || 0}
-            </Typography>
-          </div>
+    <div className="w-80 h-full p-6 rounded-2xl border-2 border-[#7a2226]/20 bg-white/90 backdrop-blur-lg flex flex-col gap-6 shadow-xl shadow-[#7a2226]/10 hover:shadow-[#7a2226]/15 transition-all duration-300">
+    <div className="p-6 rounded-xl bg-gradient-to-br from-white to-[#fafafa] hover:shadow-md transition-shadow duration-300">
+    <div className="flex justify-around items-center mb-4 text-center">
+    <div>
+        <Typography variant="caption" className="!block !text-[#718096] !font-medium text-center">
+          Followers
+        </Typography>
+        <Typography variant="h6" className="!text-2xl !text-[#7a2226] !font-bold !text-center">
+          {user?.followers_count || 0}
+        </Typography>
+      </div>
+      <div className="relative group mx-2">
           <img
             // *** Use user's profile picture from context ***
             src={user?.profile_picture || DEFAULT_USER_AVATAR}
             alt="Profile"
-            className="rounded-full w-20 h-20 object-cover mx-2 border-2 border-[#7a2226]"
+            className="rounded-full w-24 h-24 object-cover border-4 border-[#7a2226]/10 hover:border-[#7a2226]/30 transition-all duration-300 shadow-sm "
             onError={(e) => { e.target.src = DEFAULT_USER_AVATAR; }}
           />
+        </div>
           <div className="flex-1">
-            <Typography variant="body2" className="!text-sm !text-gray-300">
+            <Typography variant="caption" className="!block !text-[#718096] !font-medium text-center">
               Following
             </Typography>
-            <Typography variant="subtitle1" className="!font-bold !text-white">
-               {/* Placeholder - following count likely needs separate fetch/prop */}
+            <Typography variant="h6" className="!text-2xl !text-[#7a2226] !font-bold !text-center">
               {user?.following_count || 0}
             </Typography>
           </div>
-        </div>
+      </div>
 
         {/* Name and Role */}
-        <Typography variant="h6" className="!text-xl !font-semibold !text-white !text-center !mb-1">
+        <div className="space-y-2 mb-6">
+        <Typography variant="h5" className="!text-2xl !font-bold !text-[#2d3748] !text-center">
           {/* *** Use user's name from context *** */}
           {user?.username || 'Guest User'}
         </Typography>
-        <Typography variant="body2" className="!text-sm !text-gray-400 !text-center !mb-4">
-          {/* *** Use user's role/title from context (adjust field name if needed) *** */}
+        <div className="flex items-center justify-center space-x-2">
+        <span className={`w-3 h-3 rounded-full ${user?.is_student ? 'bg-[#7a2226]' : 'bg-[#c53030]'} animate-pulse`} />
+        <Typography variant="body2" className="!!text-sm !text-[#718096] !font-medium">
           { user.is_student? 
           ("Student") : ("Supervisor") 
-          
           }
-          {/* {user?.role || 'No role specified'} */}
         </Typography>
-
+       </div>
+    </div>
         <Typography variant="body2" className="!text-sm !text-gray-400 !text-center !mb-4">
           Joined: {
             (() => {
@@ -323,23 +320,29 @@ export default function Sidebar() { // Removed isDarkMode prop
           fullWidth
           variant="contained"
           sx={{
-            backgroundColor: '#7a2226', // Primary action color
+            background: 'linear-gradient(135deg, #7a2226 0%, #a53d3d 100%)',
             color: 'white',
-            '&:hover': { backgroundColor: '#5a181b' }, // Darker hover
-            borderRadius: '20px', // Consistent rounding
-            textTransform: 'none', // Consistent text transform
-            py: 0.8 // Adjusted padding
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: '0 5px 15px rgba(122, 34, 38, 0.2)'
+            },
+            borderRadius: '12px',
+            py: 1.5,
+            fontSize: '1rem',
+            fontWeight: 600,
+            textTransform: 'none',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
-          onClick={() => navigate('/profile')} // Use navigate for internal links
+          onClick={() => navigate('/profile')} 
         >
-          Profile
+          View Profile
         </Button>
       </div>
 
-      {/* Second Section (Filter Section) */}
-      <div className="p-4 rounded-lg bg-[rgba(60,60,60,0.5)]"> {/* Section background */}
-        <Typography variant="subtitle1" className="!text-center !font-semibold !text-white !mb-4">
-          Filter
+    
+      <div className="p-6 rounded-xl bg-gradient-to-br from-white to-[#fafafa] hover:shadow-md transition-shadow duration-300"> 
+        <Typography variant="h6" className="!text-center !font-bold !text-[#7a2226] !mb-6 !text-xl">
+          Filter Options
         </Typography>
 
         {/* Branch Dropdown - Using MUI Select */}
@@ -354,35 +357,38 @@ export default function Sidebar() { // Removed isDarkMode prop
             // label="Branch" // Uncomment if using InputLabel
             displayEmpty // Allows showing placeholder text
             sx={{
-                color: 'white',
-                borderRadius: '8px', // Consistent rounding
-                '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#666', // Border color
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#888',
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#7a2226', // Accent color on focus
-                },
-                '& .MuiSvgIcon-root': { // Icon color
-                    color: '#a0a0a0',
-                },
-                '.MuiSelect-select': {
-                    // Background matches ChatSidebar TextField, adjust if needed
-                    backgroundColor: 'rgba(24, 25, 25, 0.5)', // Darker input background
+              '& .MuiSelect-select': {
+                py: 1.5,
+                borderRadius: '12px',
+                background: 'rgba(122, 34, 38, 0.05)',
+                border: '1px solid rgba(122, 34, 38, 0.1)',
+                color: '#2d3748',
+                '&:hover': {
+                  borderColor: '#7a2226'
                 }
+              },
+              '& .MuiSvgIcon-root': {
+                color: '#7a2226'
+              }
             }}
             MenuProps={{ // Style the dropdown menu
                 PaperProps: {
                   sx: {
-                    backgroundColor: '#333', // Dark menu background
-                    color: 'white',
+                    background: '#ffffff',
+              borderRadius: '12px',
+              marginTop: '8px',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+              '& .MuiMenuItem-root': {
+                color: '#2d3748',
+                '&:hover': {
+                  background: 'rgba(122, 34, 38, 0.05)'
+                }
+              }
                   },
                 },
               }}
           >
-            {/* Placeholder Item */}
+          
             <MenuItem disabled value="all" sx={{ fontStyle: 'italic', color: '#a0a0a0' }}>
               Branch :
             </MenuItem>
@@ -443,16 +449,23 @@ export default function Sidebar() { // Removed isDarkMode prop
       {/* Action Buttons */}
       <div className="flex gap-3 mt-auto pt-4"> {/* Push buttons towards bottom if container has flex-col */}
         {/* Search Button - Example secondary style */}
+        <div className="flex gap-4 mt-6">
          <Button
             fullWidth
             variant="contained" // Or outlined
             sx={{
-                backgroundColor: '#4a4a4a', // Secondary color
-                color: 'white',
-                '&:hover': { backgroundColor: '#5a5a5a' },
-                borderRadius: '20px',
-                textTransform: 'none',
-                py: 0.8
+              background: 'rgba(122, 34, 38, 0.9)',
+              color: 'white',
+              '&:hover': {
+                background: 'rgba(122, 34, 38, 1)',
+                transform: 'translateY(-2px)'
+              },
+               flex: 1,
+          py: 1.5,
+          borderRadius: '12px',
+          textTransform: 'none',
+          fontWeight: 600,
+          transition: 'all 0.3s ease'
             }}
             // onClick={handleSearch} // Add relevant handler
         >
@@ -462,22 +475,26 @@ export default function Sidebar() { // Removed isDarkMode prop
         <Button
             fullWidth
             variant="outlined" // Or contained with red bg
-             sx={{
-                borderColor: '#6c757d', // Gray border
-                color: '#adb5bd', // Gray text
-                '&:hover': {
-                    backgroundColor: 'rgba(108, 117, 125, 0.1)', // Subtle hover
-                    borderColor: '#adb5bd'
-                 },
-                borderRadius: '20px',
-                textTransform: 'none',
-                py: 0.8
+            sx={{
+              borderColor: '#e2e8f0',
+              color: '#718096',
+              '&:hover': {
+                borderColor: '#cbd5e0',
+                background: 'rgba(203, 213, 224, 0.05)'
+              },
+              flex: 1,
+              py: 1.5,
+              borderRadius: '12px',
+              textTransform: 'none',
+              fontWeight: 600,
+              transition: 'all 0.3s ease'
             }}
             // onClick={handleClear} // Add relevant handler
         >
             Clear
         </Button>
       </div>
+    </div>
     </div>
   );
 }

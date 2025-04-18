@@ -202,47 +202,47 @@ function CommentItem({
 
     return (
         // Reuse background color from ShowPost post item for consistency
-        <div className="mb-1 pb-4 border-b !border-[#181819] last:border-0 !bg-[#292928]">
+        <div className="mb-4 pb-4 border-b border-[#f0f0f0] last:border-0 bg-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
             {/* Comment Header */}
-            <div className="flex items-start justify-between mb-2 !bg-[#292928]">
-                <div className="flex items-center space-x-2 !bg-[#292928]">
-                    <Link to={`/profiles/${comment.author_id}`} className="!bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity">
+            <div className="flex items-start justify-between mb-2">
+                <div className="flex items-center space-x-3">
+                    <Link to={`/profiles/${comment.author_id}`} className="shrink-0 block hover:opacity-80 transition-opacity">
                         <img
                             src={comment.author_profile_picture || DEFAULT_USER_AVATAR}
                             alt={authorName}
                             title={isCommentAuthor ? "You" : `${authorName}`}
-                            className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                            className="w-12 h-12 rounded-full object-cover border-2 border-[#7a2226] p-0.5"
                             onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
                         />
                     </Link>
-                    <div className="!bg-[#292928]">
-                        <Link to={`/profiles/${comment.author_id}`} className="!no-underline !bg-[#292928] flex-shrink-0 block hover:opacity-80 transition-opacity">
-                            <p className="font-bold text-medium !text-[#7a2226] mb-0 pt-2 !bg-[#292928] !no-underline ">{isCommentAuthor ? "You" : `${authorName}`}</p>
+                    <div className="">
+                        <Link to={`/profiles/${comment.author_id}`} className="!no-underline  flex-shrink-0 block hover:opacity-80 transition-opacity">
+                            <p className="font-semibold text-[#7a2226] hover:text-[#5a181a] transition-colors">{isCommentAuthor ? "You" : `${authorName}`}</p>
                         </Link>
-                        <p className="text-xs text-white !bg-[#292928]">
+                        <p className="text-xs text-gray-500 ">
                             <TimeAgo timestamp={comment.created_on} />
                         </p>
                     </div>
                 </div>
                 {/* Edit/Delete Menu */}
                 {isCommentAuthor && (
-                    <div className="relative !bg-[#292928]" ref={optionsMenuRef}>
-                        <button onClick={toggleOptionsMenu} className="!text-[#be8a8d]] text-gray-500 hover:text-gray-700 !bg-[#292928]">
-                            <MoreVertIcon className="w-5 h-5 !bg-[#292928] !text-[#7a2226]" />
+                    <div className="relative" ref={optionsMenuRef}>
+                        <button onClick={toggleOptionsMenu} className="text-gray-500 hover:text-[#7a2226] p-1 rounded-full hover:bg-[#f8dada] transition-colors">
+                            <MoreVertIcon className="w-6 h-6 "/>
                         </button>
                         {showOptionsMenu && (
-                            <div className="absolute right-0 mt-2 w-40 !bg-[#292928] rounded-md shadow-lg py-1 z-20">
+                            <div className="absolute right-0 mt-1 w-40 bg-white rounded-lg shadow-xl border border-[#f0f0f0] py-2 z-20">
                                 <button
                                     onClick={() => { onEditRequest(comment); setShowOptionsMenu(false); }}
-                                    className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                                   className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-[#f8dada] w-full"
                                 >
-                                    <EditIcon className="w-4 h-4 mr-2 text-primary-600" /> Edit
+                                    <EditIcon className="w-4 h-4 mr-2 text-[#7a2226]"/> Edit
                                 </button>
                                 <button
                                     onClick={() => { onDeleteRequest(comment); setShowOptionsMenu(false); }}
-                                    className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
+                                   className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-[#f8dada] w-full"
                                 >
-                                    <DeleteIcon className="w-4 h-4 mr-2" /> Delete
+                                    <DeleteIcon className="w-4 h-4 mr-2 text-red-600" /> Delete
                                 </button>
                             </div>
                         )}
@@ -251,14 +251,15 @@ function CommentItem({
             </div>
 
             {/* Comment Body with See more/less */}
-            <div className="!text-justify text-gray-800 mb-3 !bg-[#292928] px-8">
+            <div className="text-gray-800 mb-3 pl-2">
+              <div className="text-gray-700 leading-relaxed">
                 {isExpanded ? (
                     <>
-                        <p className="text-white !bg-[#292928]">{displayText}</p>
+                        <p className="inline">{displayText}</p>
                         {needsTruncation && (
                             <button
                                 onClick={toggleExpansion}
-                                className="mt-0 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[#292928]"
+                                className="ml-2 text-[#7a2226] hover:text-[#5a181a] font-medium text-sm"
                                 aria-expanded={isExpanded}
                             >
                                 See less
@@ -267,11 +268,11 @@ function CommentItem({
                     </>
                 ) : (
                     <>
-                        <p className="!bg-[#292928] inline text-white">{displayText}</p>
+                        <p className="inline">{displayText}</p>
                         {needsTruncation && (
                             <button
                                 onClick={toggleExpansion}
-                                className="ml-1 text-[#A52B2B] hover:underline focus:outline-none font-medium text-xs !bg-[#292928]"
+                                 className="ml-2 text-[#7a2226] hover:text-[#5a181a] font-medium text-sm"
                                 aria-expanded={isExpanded}
                             >
                                 See more
@@ -280,24 +281,24 @@ function CommentItem({
                     </>
                 )}
             </div>
-
+        </div>
             {/* Comment Attachments */}
             {comment.attachments?.length > 0 && (
-                <div className="ml-10 mt-2 space-y-2 !bg-[#292928]">
+                <div className="ml-10 mt-2 space-y-2 ">
                     {comment.attachments.map((attachment) => (
-                        <div key={attachment.id} className="flex items-center !bg-[#292928] mt-3">
+                        <div key={attachment.id} className="relative group">
                             {attachment.image ? (
                                 <img
                                     src={attachment.image}
                                     alt="Comment attachment"
-                                    className="max-w-xs rounded-md"
+                                    className="max-w-xs rounded-xl border border-[#f0f0f0] shadow-sm"
                                 />
                             ) : attachment.video ? ( // Check for video
                                 <video
                                     src={attachment.video}
                                     controls
                                     playsInline
-                                    className="w-full h-auto block max-h-[75vh] bg-black max-w-xs rounded-md"
+                                    className="max-w-xs rounded-xl border border-[#f0f0f0] shadow-sm"
                                     preload="metadata"
                                 >
                                 </video>
@@ -307,11 +308,11 @@ function CommentItem({
                 </div>
             )}
 
-            <div className="ml-10 mt-2 !bg-[#292928]">
-                <div className="!bg-inherit">
+            <div className="ml-4 mt-3">
+                <div className="flex items-center gap-3">
                     {/* 1. Reaction Summary (Applying colors here) */}
                     <div
-                        className={`!bg-[#292928] flex items-center gap-1 text-xs mb-1 ${totalReactions > 0 ? 'cursor-pointer hover:underline text-gray-400' : 'text-gray-500'}`} // Make text gray if no reactions
+                        className={`flex items-center gap-1 text-sm${totalReactions > 0 ? 'cursor-pointer hover:underline text-gray-400' : 'text-gray-500'}`} // Make text gray if no reactions
                         onClick={openReactionsModal} // Use the correct handler
                         title={totalReactions > 0 ? "See who reacted" : "No reactions yet"}
                     >
@@ -324,40 +325,42 @@ function CommentItem({
                                 <IconComponent
                                     key={reactionName + count} // Use name+count for key stability
                                     // Apply base size/style AND the dynamic color class
-                                    className={`w-4 h-4 !bg-inherit ${colorClass}`}
+                                    className={`w-5 h-5 text-[#7a2226]${colorClass}`}
                                 />
                             );
                         })}
+                       
                         {/* Display total count */}
                         {totalReactions > 0 && (
                              // Consistent styling for count text
-                            <span className="ml-1 text-gray-400 !bg-[#292928]">
+                            <div className="ml-1 text-gray-400 ">
                                 {totalReactions} 
-                            </span>
+                            </div>
                         )}
+                        
                          {/* Optional: Text if zero reactions (instead of just gray text) */}
                         {totalReactions === 0 && (
-                            <span className="text-gray-500 italic !bg-[#292928]">No reactions</span>
+                            <div className="text-gray-600 ml-1">No reactions</div>
                         )}
                     </div>
 
                     {/* 2. Reaction Button & Popup (No changes needed here) */}
                     {/* ... (button with its dynamic icon/text, popup div) ... */}
                     <div
-                        className="relative !bg-inherit"
+                        className="relative "
                         onMouseEnter={handleMouseEnterTrigger}
                         onMouseLeave={handleMouseLeaveArea}
                     >
                         <button
                             onClick={handleReactButtonClick}
-                            className={`!bg-[#181819] mt-2 inline-flex items-center gap-1 text-xs font-medium py-1.5 px-4 rounded transition-colors duration-200 ${
+                            className={`flex items-center gap-1 text-gray-600 hover:text-[#7a2226] transition-colors ${
                                 currentUserReaction
                                     ? getReactionColorClass(currentUserReaction) // Use helper for button color too!
-                                    : 'text-gray-400 hover:text-gray-100 hover:bg-gray-700'
+                                    : 'text-gray-700'
                             }`}
                         >
                             {React.createElement(getReactionIconComponent(currentUserReaction), { className: "w-4 h-4 !bg-inherit " })}
-                            <span className="!bg-inherit">{currentUserReaction || "React"}</span>
+                            <span className="text-sm font-medium">{currentUserReaction || "React"}</span>
                         </button>
 
                          {/* Reaction Popup... */}

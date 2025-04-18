@@ -1,4 +1,4 @@
-/* src/pages/ProfilePageById.css */
+
 .view-public-profile-container {
     padding: 25px;
     color: #e0e0e0;
@@ -22,7 +22,7 @@
     gap: 25px;
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #333; /* Separator */
+    border-bottom: 1px solid #333;
     background: none;
     }
     
@@ -33,7 +33,7 @@
     object-fit: cover;
     border: 3px solid #444;
     background-color: #333; 
-    flex-shrink: 0; /* Prevent image shrinking */
+    flex-shrink: 0;
     }
     
     .profile-info {
@@ -59,20 +59,20 @@
     color: #ccc;
     font-size: 1.1em;
     margin: 0;
-        background: none; /* Override global */
+        background: none; 
         font-style: italic;
     }
     
-    /* Profile Sections (Common Styling) */
+
     .profile-section {
     margin-bottom: 30px;
     padding: 20px;
     background-color: #282828;
     border-radius: 8px;
-    border: 1px solid #333; /* Subtle border */
+    border: 1px solid #333; 
     }
     .profile-section h3 {
-    color: #7a2226; /* Section title accent */
+    color: #7a2226;
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.2em;
@@ -92,7 +92,7 @@
         background: none; 
     }
     
-    /* Links Section */
+
     .links-list {
         display: flex;
         flex-wrap: wrap;
@@ -113,14 +113,14 @@
         background-color: #444;
         color: #fff;
     }
-    .link-item svg { /* Icon styling */
+    .link-item svg {
         font-size: 1.2em;
     }
     .link-item span {
         background: none;
     }
     
-    /* Skills Section */
+   
     .skills-section h4 {
         color: #ccc;
         margin-top: 15px;
@@ -168,25 +168,25 @@
         background-color: #444;
         color: #ddd;
         padding: 5px 10px;
-        border-radius: 15px; /* Pill shape */
+        border-radius: 15px; 
         font-size: 0.9em;
     }
     
-    /* Projects Section */
+    
     .projects-list {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
         gap: 20px;
     }
     
     .project-item-card {
-        background-color: #303030; /* Card background */
+        background-color: #303030; 
         padding: 15px;
         border-radius: 6px;
         border: 1px solid #444;
         display: flex;
         flex-direction: column;
-        gap: 10px; /* Space between elements inside card */
+        gap: 10px;
     }
     .project-item-card h4 {
         color: #eee;
