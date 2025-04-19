@@ -8,7 +8,8 @@ import {
   Alert, Paper, Grid, Box, Avatar, Link,
 } from "@mui/material";
 import { verifyOtp } from '../../components/services/api'; // Adjust path if needed
-import Itilogo from '../../assets/images/logo.png'; // Corrected import name
+import Itipg from '../../assets/images/logo.png'; // Corrected import name
+import Itilogo from '../../assets/images/itihub.jpeg';
 // Removed unused useContext import if loginUser handles navigation
 import AuthContext from "../../../src/contexts/AuthContext"; // Adjust path if needed
 import "../auth/auth.css"; // Ensure path is correct
@@ -136,7 +137,7 @@ const LoginForm = () => {
 
   const renderLogoHeader = () => (  /* ... JSX unchanged ... */
      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-       <img src={Itilogo} alt="ITI Logo" className="w-10 h-10 mr-2" />
+       <img src={Itipg} alt="ITI Logo" className="w-10 h-10 mr-2" />
        <Typography component="h1" variant="h5" sx={{ fontFamily: "Poppins", color: "#7a2226", fontWeight: 600 }}>
          Join ITI Talents
        </Typography>
@@ -227,8 +228,8 @@ const LoginForm = () => {
 
 
   return ( /* ... Outer JSX structure unchanged ... */
-    <div className="flex items-center justify-center min-h-screen !bg-[#292928] px-4 py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full !bg-[#292928] rounded-2xl shadow-xl overflow-hidden min-h-[600px]"> {/* Added shadow, overflow, min-h */}
+    <div className="flex items-center justify-center min-h-screen !bg-white px-4 py-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full !bg-white rounded-2xl overflow-hidden min-h-[600px]"> {/* Added shadow, overflow, min-h */}
         {/* Left Image */}
         <div
 className="hidden md:block bg-contain bg-center bg-no-repeat h-full rounded-l-2xl"

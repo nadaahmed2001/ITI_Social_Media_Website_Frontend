@@ -60,19 +60,23 @@ const SignUpForm = () => {
 
   
   return (
-    <div className="flex items-center justify-center min-h-screen !bg-[#292928] px-4 py-12">
-    <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full !bg-[#292928] rounded-2xl  h-[600px]">
-      {/* Left Image */}
+    <div className="flex items-center justify-center min-h-screen bg-white px-4 py-12">
+  <div className="flex flex-col md:flex-row items-center gap-8 max-w-5xl w-full">
+      
+   
       <div
-        className="hidden md:block bg-cover bg-center h-full rounded-l-2xl "
-        style={{
-          backgroundImage: `url(${new URL('../../assets/images/image.png', import.meta.url)})`,
-        }}
-      ></div>
+       className="hidden md:block w-[500px] h-[600px]">
+        <img 
+        src={new URL('../../assets/images/itihub.jpeg', import.meta.url)}
+        alt="IT Hub"
+        className="w-full h-full object-contain rounded-lg" // object-contain maintains aspect ratio
+      />
+      </div>
 
-      {/* Right Form Section */}
-      <div className="flex flex-col justify-center px-8 py-12 lg:px-12 flex-1">
-  <div className="mx-auto w-full max-w-sm">
+
+      <div className="w-full max-w-md bg-white rounded-2xl">
+      <div className="flex flex-col justify-center">
+        <div className="mx-auto w-full max-w-sm">
     <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
       <img src={ItiLogo} alt="ITI Logo" className="w-10 h-10 mr-2" />
       <Typography component="h1" variant="h5" sx={{ fontFamily: "Poppins", color: "#7a2226", fontWeight: 600 }}>
@@ -81,7 +85,7 @@ const SignUpForm = () => {
     </Box>
         </div>
 
-        <div className="mt-8 w-full">
+        <div className="w-full">
           {errorMessage && (
             <Typography color="error" sx={{ mb: 2 }}>{errorMessage}</Typography>
           )}
@@ -121,7 +125,7 @@ sx={{
   py: 1.5,
   backgroundColor: '#7a2226',
   '&:hover': {
-    backgroundColor: '#7a2226',  // Darker brown for hover
+    backgroundColor: '#7a2226', 
     opacity: 0.9
   },
   '&.Mui-disabled': {
@@ -139,6 +143,8 @@ disabled={loading}
           </form>
         </div>
       </div>
+
+</div>
     </div>
   </div>
   );

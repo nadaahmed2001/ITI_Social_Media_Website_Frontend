@@ -45,13 +45,13 @@ const ForgotPassword = () => {
   });
 
   return (
-    <div className="flex items-center justify-center min-h-screen !bg-[#292928] px-4 py-12">
-    <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full !bg-[#292928] rounded-2xl h-[600px]">
+    <div className="flex items-center justify-center min-h-screen !bg-white px-4 py-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl w-full !bg-white rounded-2xl overflow-hidden min-h-[600px]"> {/* Added shadow, overflow, min-h */}
       {/* Left Image Section */}
       <div
-        className="hidden md:block bg-cover bg-center h-full rounded-l-2xl"
+        className="hidden md:block bg-contain bg-center bg-no-repeat h-full rounded-l-2xl"
         style={{
-          backgroundImage: `url(${new URL('../../assets/images/image.png', import.meta.url)})`,
+          backgroundImage: `url(${new URL('../../assets/images/itihub.jpeg', import.meta.url)})`,
         }}
       ></div>
 

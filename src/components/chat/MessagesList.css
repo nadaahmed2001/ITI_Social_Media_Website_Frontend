@@ -51,6 +51,7 @@
 
   .background-div {
     background-image: url('../../assets/images/bg.jpg');
+    /* background-color: #e3e0e0; */
     
 }
 
@@ -79,4 +80,8 @@ form {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #5a181b;
+}
+
+.send-msg-btn{
+  border-radius: 50%;
 }

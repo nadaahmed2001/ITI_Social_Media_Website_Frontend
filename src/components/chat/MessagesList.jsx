@@ -7,6 +7,10 @@ import ChatSidebar from './ChatSidebar';
 
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './MessagesList.css';
+import SendIcon from '@mui/icons-material/Send';
+import CircularProgress from '@mui/material/CircularProgress';
+
+
 
 const MessagesList = ({token, isGroupChat }) => {
     // console.log( )
@@ -314,14 +318,14 @@ const MessagesList = ({token, isGroupChat }) => {
 
     return (
         <div className="flex h-screen">
-            <div className="bg-[#181819] text-white mt-28 ml-28 pr-10">
+            <div className=" text-white ">
                 <ChatSidebar/>
             </div>
-            <div className="flex-1 flex flex-col text-[#7a2226] relative background-div mt-20">
+            <div className="flex-1 flex flex-col relative background-div mt-20">
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
-                    className=" text-white rounded-lg absolute top-1 right-4 z-10 " //need to add some padding
+                    className=" text-black rounded-lg absolute top-1 right-100 z-10 " //need to add some padding
                 >
                     Clear All Messages
                 </button>
@@ -380,20 +384,28 @@ const MessagesList = ({token, isGroupChat }) => {
                     </TransitionGroup>
                     <div ref={messagesEndRef} /> 
                 </div>
-                <form onSubmit={handleSendMessage} className="p-4 border-t flex items-center gap-2 backdrop-blur-sm bg-gray-800">
+                <form onSubmit={handleSendMessage} 
+                className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm ">
                     <input
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
-                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg  text-[#7a2226] placeholder-white focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-[rgba(199,199,199,0.591)]"
+                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
                     />
                     <button
                         type="submit"
-                        className=" text-[#7a2226] bg-white font-semibold px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center justify-center w-10 h-10 text-white bg-[#7a2226] rounded-lg transition-all duration-200 hover:bg-[#5a181b] disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={isSending} // Disable the button while sending
                     >
-                        {isSending ? "Sending..." : "Send"}
+                          {isSending ? (
+      <CircularProgress 
+        size={20} 
+        sx={{ color: 'white' }} 
+      />
+    ) : (
+      <SendIcon className="transition-transform duration-200 hover:scale-110 send-msg-btn" />
+    )}
                     </button>
                 </form>
             </div>
