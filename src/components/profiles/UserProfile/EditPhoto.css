@@ -1,174 +1,147 @@
-/* Base container */
-.edit-photo-container-light { /* Keep class name from JSX or remove '-light' suffix everywhere */
-background-color: inherit; /* Main dark background */
-padding: 30px 40px;
-border: none;
-border-radius: 6px;
-color: #e0e0e0; /* Primary light text */
-margin-left: 0%;
-}
-/* Ensure section has correct dark bg if parent isn't #191919 */
-.section-container-light {
-    background-color: #282828;
+/* EditPhoto.css - Light Theme */
+.edit-photo-container-light {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    color: #333333;
+    margin-left: 0;
+  }
+  
+  .section-container-light {
+    background-color: #f8f9fa;
     max-width: 80%;
-}
-
-/* Title Section */
-.photo-title-section-light {
-padding-bottom: 15px;
-/* border-bottom: 1px solid #444; Dark border */
-background-color: #191919;
-max-width: 80%;
-
-}
-.photo-title-section-light h2 {
-display: flex; align-items: center; gap: 8px;
-color: #ffffff; /* White heading */
-margin: 0 0 5px 0; padding: 0; border: none;
-padding-bottom: 10px;
-font-size: 2rem; font-weight: 500;
-background-color: inherit;
-border-bottom: 1px solid #444;
-font-weight: 600;
-
-
-
-}
-
-.photo-title-section-light svg {
-    background-color: inherit;
-}
-
-.photo-title-section-light p {
-color: #aaa; /* Secondary grey text */
-margin: 0; font-size: 0.95em; background: inherit;
-}
-
-/* Error/Success Messages (Dark Theme) */
-.error-message-light, .success-message-light {
-padding: 12px 15px; border-radius: 4px; margin: 0 0 20px 0;
-font-size: 0.95em; text-align: left; border: 1px solid;
-}
-.error-message-light {
-color: #ff6666; /* Light Red */
-background-color: rgba(255, 102, 102, 0.1);
-border-color: #ff6666;
-}
-.success-message-light {
-color: #66ff66; /* Light Green */
-background-color: rgba(102, 255, 102, 0.1);
-border-color: #66ff66;
-}
-
-/* Image Preview Area */
-.photo-preview-area-light {
-margin-bottom: 25px; padding-bottom: 20px;
-border-bottom: 1px solid #444; /* Dark separator */
-background: none;
-}
-.photo-preview-area-light h4 {
-color: #aaa; /* Secondary grey heading */
-margin-bottom: 15px; font-size: 1.1em; font-weight: 600; background: none;
-}
-
-.image-placeholder-light {
-width: 150px; height: 150px;
-background-color: #333; /* Dark placeholder background */
-border-radius: 8px; display: flex; align-items: center; justify-content: center;
-overflow: hidden; border: 1px solid #444; /* Dark border */
-margin-bottom: 10px;
-}
-
-.profile-image-preview-light {
-width: 100%; height: 100%; object-fit: cover; display: block;
-}
-
-.placeholder-icon-light {
-font-size: 60px !important; color: #666; /* Dark theme placeholder icon color */
-}
-
-/* Remove photo text button style */
-.text-button.remove-link-light {
-background: none; border: none; color: #ff6666; /* Red text */
-cursor: pointer; padding: 5px 0; font-size: 0.85em; text-align: left;
-display: block; width: fit-content; margin-top: 5px;
-}
-.text-button.remove-link-light:hover:not(:disabled) { text-decoration: underline; }
-.text-button.remove-link-light:disabled { color: #666; cursor: not-allowed; text-decoration: none; }
-.image-cleared-text {
-font-size: 0.85em; color: #aaa; font-style: italic; margin-top: 5px; background: none;
-}
-
-
-/* Upload Control Area */
-.photo-upload-control-light { margin-bottom: 25px; background: none; }
-.photo-upload-control-light h4 {
-color: #aaa; margin-bottom: 10px; font-size: 1.1em; font-weight: 600; background: none;
-}
-
-/* The row styled like an input */
-.upload-input-row-light {
-display: flex; align-items: center; justify-content: space-between;
-background-color: #1f1f1f; /* Dark input background */
-border: 1px solid #444; /* Dark border */
-border-radius: 5px; padding: 8px 8px 8px 15px; min-height: 45px;
-cursor: pointer; transition: border-color 0.2s ease;
-}
-.upload-input-row-light:hover {
-border-color: #7a2226; /* Yellow border on hover */
-}
-
-/* Text display inside the row */
-.file-name-display-light {
-flex-grow: 1; color: #aaa; /* Grey text */
-font-size: 0.95em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-margin-right: 10px; background: none; pointer-events: none;
-}
-
-/* "Upload image" button inside the row (Yellow background) */
-.upload-image-button-light {
-background-color: #7a2226; /* Yellow background */
-color: #191919;       /* Dark text on yellow */
-border: none;
-padding: 8px 15px; border-radius: 4px; cursor: pointer;
-font-size: 0.9em; font-weight: bold;
-transition: filter 0.2s ease;
-flex-shrink: 0; text-transform: uppercase;
-}
-.upload-image-button-light:hover:not(:disabled) { 
-    filter: brightness(90%); 
-    background-color: whitesmoke !important; 
-} 
-
-.upload-image-button-light:disabled {
-    background-color: #555 !important; 
-    color: #888 !important; 
-    cursor: not-allowed; opacity: 0.7;
-}
-
-.save-action-area-light > button:hover{
-    background-color: whitesmoke !important; 
-
-}
-
-/* Save Action Area */
-.save-action-area-light {
-margin-top: 20px; padding-top: 20px;
-border-top: 1px solid #444; /* Dark separator */
-text-align: right; background: none;
-}
-
-/* Save Button (Primarily styled via sx prop below, class for minor overrides) */
-.save-button-light {
-    /* text-transform: uppercase; */ /* Handled in sx now */
-    font-weight: bold; /* Handled in sx now */
-}
-
-/* Spinner animation (keep if needed) */
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.spinner.small {
-    border: 2px solid #555; border-top: 2px solid #aaa; /* Dark theme spinner */
-    border-radius: 50%; width: 14px; height: 14px;
-    animation: spin 1s linear infinite; display: inline-block; background: none;
-}
-.spinner.small.red { border-color: rgba(255, 102, 102, 0.4); border-top-color: #ff6666; } /* Red */
+  }
+  
+  .photo-title-section-light {
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e0e0e0;
+    max-width: 80%;
+  }
+  
+  .photo-title-section-light h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #2d3748;
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+  
+  .error-message-light, .success-message-light {
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin: 0 0 20px 0;
+    font-size: 0.95em;
+    border: 1px solid transparent;
+  }
+  
+  .error-message-light {
+    color: #dc2626;
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+  }
+  
+  .success-message-light {
+    color: #059669;
+    background-color: #d1fae5;
+    border-color: #6ee7b7;
+  }
+  
+  .photo-preview-area-light {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .image-placeholder-light {
+    width: 150px;
+    height: 150px;
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .profile-image-preview-light {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  
+  .placeholder-icon-light {
+    color: #cbd5e1;
+    font-size: 3.5rem !important;
+  }
+  
+  .text-button.remove-link-light {
+    color: #ef4444;
+    font-size: 0.9em;
+    padding: 8px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .text-button.remove-link-light:hover {
+    text-decoration: underline;
+  }
+  
+  .upload-input-row-light {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .upload-input-row-light:hover {
+    border-color: #7a2226;
+    background-color: #f8fafc;
+  }
+  
+  .file-name-display-light {
+    color: #64748b;
+    font-size: 0.95em;
+    flex-grow: 1;
+    padding-right: 15px;
+  }
+  
+  .upload-image-button-light {
+    background-color: #7a2226;
+    color: white !important;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .upload-image-button-light:hover {
+    background-color: #5a181b;
+  }
+  
+  .save-action-area-light {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid #e0e0e0;
+    text-align: right;
+  }
+  
+  @media (max-width: 768px) {
+    .edit-photo-container-light {
+      padding: 20px;
+      margin: 10px;
+    }
+    
+    .photo-title-section-light h2 {
+      font-size: 1.4rem;
+    }
+  }

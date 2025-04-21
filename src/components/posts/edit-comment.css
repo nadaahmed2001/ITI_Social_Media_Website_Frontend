@@ -4,7 +4,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,66 +15,85 @@
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   min-width: 300px;
-  background-color: #333;
+  background-color: #fff;
 }
-.edit-comment-title h3 {
-  color: white;
-  background-color: inherit; /* Ensures h3 background matches parent */
-  padding: 10px;
-}
+
 .edit-comment-title {
   margin-bottom: 10px;
   font-size: 1.5em;
-  background-color: #333;
+  background-color: #fff;
 }
-#edit-comment-title-id{
-  color: white;
+
+.edit-comment-title h3 {
+  color: #1f2937; /* Tailwind gray-800 */
+  background-color: inherit;
+  padding: 10px;
 }
+
+#edit-comment-title-id {
+  color: #1f2937;
+}
+
 .edit-comment-text-area {
-  background-color: #333;
+  background-color: #fff;
 }
 
 .edit-textarea {
   width: 100%;
   height: 100px;
   margin-bottom: 10px;
-  padding: 5px;
-  border: 1px solid #ccc;
+  padding: 10px;
+  border: 1px solid #d1d5db; /* Tailwind gray-300 */
   border-radius: 4px;
-  background-color: #33333366;
-  color: white;
+  background-color: #f9fafb; /* Tailwind gray-50 */
+  color: #111827; /* Tailwind gray-900 */
+  resize: vertical;
 }
 
 .comment-char-count {
-  color: white;
-  background-color: #333;
+  color: #6b7280; /* Tailwind gray-500 */
+  background-color: #fff;
+  text-align: right;
+  font-size: 0.875rem;
+  margin-top: 4px;
 }
 
 .edit-comment-btn {
   display: flex;
   justify-content: center;
   gap: 10px;
-  background-color: #333;
+  background-color: #fff;
+  padding-top: 10px;
 }
 
 .confirm-edit-comment {
-  background: green;
+  background: #10b981; /* Tailwind green-500 */
   color: white;
   border: none;
   padding: 8px 16px;
   cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .cancel-edit-comment {
-  background: gray;
+  background: #9ca3af; /* Tailwind gray-400 */
   color: white;
   border: none;
   padding: 8px 16px;
   cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .CloseIcon {
-  background-color: #333;
+  background-color: transparent;
+  color: #6b7280;
+}
+
+.CloseIcon:hover {
+  background-color: #f3f4f6;
+  color: #374151;
 }

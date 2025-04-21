@@ -1,41 +1,26 @@
-// src/components/posts/EditPost.jsx
-// Styled with Tailwind CSS, similar to EditComment
-
 import React, { useState, useEffect } from 'react';
-// Import Close Icon from MUI (ensure @mui/icons-material is installed)
 import { Close as CloseIcon } from "@mui/icons-material"; 
-// Optional: Import CircularProgress for loading state
 import CircularProgress from '@mui/material/CircularProgress'; 
-import "./edit-post.css"; // Import your CSS file for custom styles
-// Define Max Length (should match your backend Post model validator, e.g., 3000)
+import "./edit-post.css"; 
 const MAX_EDIT_POST_LENGTH = 3000; 
-
 export default function EditPost({ isOpen, post, onClose, onConfirm }) { 
   const [editedContent, setEditedContent] = useState('');
-  const [isSaving, setIsSaving] = useState(false); // State for loading indicator
-
-  // Effect to set initial content when modal opens or post data changes
+  const [isSaving, setIsSaving] = useState(false); 
   useEffect(() => {
-    // Only update state if the modal is open and post data is available
     if (isOpen && post) {
-      setEditedContent(post.body || ''); // Pre-fill with current post body
-      setIsSaving(false); // Reset saving state when opening/post changes
+      setEditedContent(post.body || ''); 
+      setIsSaving(false); 
     }
     // Reset when closing (optional)
     // if (!isOpen) {
     //   setEditedContent(''); 
     // }
-  }, [isOpen, post]); // Re-run if isOpen or post changes
-
-  // Handler for textarea changes
+  }, [isOpen, post]); 
   const handleInputChange = (e) => {
       setEditedContent(e.target.value);
   };
-
-  // Handle Save button click
   const handleSave = async () => {
       const trimmedContent = editedContent.trim();
-      // Validation
       if (!trimmedContent) {
          alert("Post content cannot be empty.");
          return; 
@@ -45,45 +30,30 @@ export default function EditPost({ isOpen, post, onClose, onConfirm }) {
          return;
       }
       
-      setIsSaving(true); // Indicate loading
+      setIsSaving(true);
       try {
-          // Call the onConfirm prop (passed from ShowPost) which handles the API call
           await onConfirm(post.id, trimmedContent); 
-          // Success: Parent component (ShowPost) should handle closing the modal 
-          // by setting its state based on the promise resolution of onConfirm.
-          // We don't call onClose() directly here.
       } catch (error) {
           console.error("Error saving post edit:", error);
           alert("Failed to save post changes. Please try again.");
-          setIsSaving(false); // Turn off loading indicator on error
+          setIsSaving(false); 
       } 
-      // No finally block needed to set isSaving false if parent closes modal on success.
-      // If parent doesn't close modal automatically, add finally: finally { setIsSaving(false); }
   };
-
-  // --- Character Count Logic ---
   const currentLength = editedContent.length;
   const isOverLimit = currentLength > MAX_EDIT_POST_LENGTH;
-  // Use Tailwind classes for conditional coloring
   const countColorClass = isOverLimit ? 'text-red-600 font-medium' 
                           : 'text-gray-500'; 
-  // ---
-
-  // Don't render anything if the modal isn't open or if post data is missing
   if (!isOpen || !post) return null; 
 
   return (
-    // --- Tailwind Modal Structure ---
-    // Overlay
     <div 
       className="edit-post-overlay" 
       aria-labelledby="edit-post-title" role="dialog" aria-modal="true" 
-      onClick={!isSaving ? onClose : undefined} // Close on overlay click only if not saving
+      onClick={!isSaving ? onClose : undefined} 
     >
-        {/* Content Box */}
         <div 
-          className="edit-post" // Using max-w-lg like EditComment example
-          onClick={e => e.stopPropagation()} // Prevent click inside closing modal
+          className="edit-post"
+          onClick={e => e.stopPropagation()} 
         > 
              {/* Header */}
              <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 edit-post-title">
@@ -102,13 +72,13 @@ export default function EditPost({ isOpen, post, onClose, onConfirm }) {
                 <textarea
                     value={editedContent}
                     onChange={handleInputChange}
-                    // Apply similar textarea styling, including error state border
+                    
                     className="edit-textarea"
                     placeholder="Edit your post..."
-                    rows="6" // Adjust rows as needed for post content
+                    rows="6" 
                     autoFocus
                     disabled={isSaving}
-                    aria-describedby="post-char-count" // Accessibility link
+                    aria-describedby="post-char-count"
                 />
                  {/* Character Count Indicator */}
                  <div id="post-char-count" className={`text-xs mt-1 text-right ${countColorClass}`}>
@@ -129,12 +99,11 @@ export default function EditPost({ isOpen, post, onClose, onConfirm }) {
                  {/* Confirm Button */}
                  <button 
                      type="button"
-                     // Apply styling and disabled logic
                      className="confirm-edit-post"
                      onClick={handleSave}
-                     disabled={!editedContent.trim() || isOverLimit || isSaving} // Check empty, over limit, or saving
+                     disabled={!editedContent.trim() || isOverLimit || isSaving} 
                  >
-                     {isSaving ? ( // Show spinner if saving
+                     {isSaving ? (
                        <>
                          {/* Using MUI spinner */}
                          <CircularProgress size={16} sx={{ color: 'white', marginRight: '8px' }} /> 
@@ -145,9 +114,7 @@ export default function EditPost({ isOpen, post, onClose, onConfirm }) {
                      )} 
                  </button>
              </div>
-             {/* Removed animation style block - add to global CSS or Tailwind config if needed */}
          </div>
      </div>
-     // --- End Tailwind Modal Structure ---
   );
 }

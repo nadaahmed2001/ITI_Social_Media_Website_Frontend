@@ -57,24 +57,27 @@ export default function HomePage() {
 
   return (
     
-    <div
-      className={
-        isDarkMode
-          ? "min-h-screen bg-[#1E1E1E] text-white"
-          : "min-h-screen bg-gray-100 text-gray-900"
-      }
-    >
-      {/* Main Content (Navbar is handled globally in AppRouter) */}
-      <div className="flex flex-col md:flex-row min-h-[calc(100vh-64px)] pt-28 w-[90%] mx-auto">
-        <Sidebar isDarkMode={isDarkMode} className="md:w-64 w-full" />
+    // <div
+    //   className={
+    //     isDarkMode
+    //       ? "min-h-screen bg-[#1E1E1E] text-white"
+    //       : "min-h-screen bg-gray-100 text-gray-900"
+    //   }
+    // >
+     <>
+      {/* <div className="flex flex-col md:flex-row min-h-[calc(100vh-64px)] pt-28 w-[90%] mx-auto"> */}4
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50 text-gray-900">
+      <div className="flex flex-col md:flex-row min-h-[calc(100vh-64px)] pt-28 w-[90%] mx-auto gap-6">
+        <Sidebar className="md:w-64 w-full" />
 
         <div className="flex-1">
-          <PostList isDarkMode={isDarkMode} />
+          <PostList />
         </div>
 
-        <ChatSidebar isDarkMode={isDarkMode} className="md:w-72 w-full max-w-full" />
+        <ChatSidebar className="md:w-72 w-full max-w-full" />
       </div>
     </div>
+    </>
   );
 }
 

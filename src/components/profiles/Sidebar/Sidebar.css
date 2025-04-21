@@ -1,70 +1,67 @@
-
 .sidebar-container {
-    width: 300px;
-    background: #282828;
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    height: min-content;
-    margin-top: 100px;
-    margin-left: 20px;
-    min-height: 85vh;
-    margin-left: 100px;
-  }
-  
-  .search-bar {
-    display: flex;
-    align-items: center;
-    background: #333;
-    padding: 8px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    background: #282828;
-  }
-  
-  .search-bar .search-icon {
-    color: #aaa;
-    margin-right: 8px;
-    background: #282828 ;
-  }
-  
-  .search-bar input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: white;
-    width: 100%;
-  }
-  
-  .sidebar-option {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    cursor: pointer;
-    background: #282828 ;
-  }
-  .sidebar-option span{
-    background: #282828 ;
-  }  
-  .sidebar-option .icon {
-    margin-right: 10px;
-    background: #282828 ;
-  }
-  
-  .sidebar-option:hover {
-    color: #333;
-    background: #7a2226 ;
-    transition: all 0.5s ease;
-  }
-
-  .logout {
-    border-top: 1px solid gray;
-    margin-top: 10px;
-    padding-top: 10px;
-  }
-  .sidebar-option:hover .icon,
-  .sidebar-option:hover span {
-    background: none; 
+  width: 300px;
+  background: #f9f9f9; /* light background */
+  color: #333; /* dark text */
+  padding: 10px;
+  border-radius: 8px;
+  height: min-content;
+  margin-top: 100px;
+  margin-left: 100px;
+  min-height: 85vh;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #e0e0e0; /* soft gray background */
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
 
+.search-bar .search-icon {
+  color: #666;
+  margin-right: 8px;
+}
+
+.search-bar input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #333;
+  width: 100%;
+}
+
+.sidebar-option {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  cursor: pointer;
+  color: #333;
+  border-radius: 6px;
+}
+
+.sidebar-option .icon {
+  margin-right: 10px;
+  color: #555;
+  background-color: #f9f9f9; /* light background */
+}
+
+.sidebar-option:hover {
+  background: #ffe5e5; /* light red hover */
+  color: #7a2226; /* brand color */
+  transition: all 0.3s ease;
+}
+
+.sidebar-option:hover .icon,
+.sidebar-option:hover span {
+  background: none;
+  color: #7a2226;
+}
+
+.logout {
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+  padding-top: 10px;
+}

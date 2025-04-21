@@ -1,86 +1,77 @@
-/* delete-comment.css */
-
-/* Overlay styles - Covers the screen */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
-  align-items: center; /* Vertical centering */
-  justify-content: center; /* Horizontal centering */
-  z-index: 1050; /* Ensure it's above other content, potentially higher than post modal if needed */
-  animation: fadeIn 0.2s ease-out; /* Use the same fade-in */
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  animation: fadeIn 0.2s ease-out;
 }
 
-/* Modal content box styles */
 .modal-content {
-  background-color: #2d2d2d; /* Same dark background */
-  color: hsl(0, 0%, 88%); /* Light text */
+  background-color: #ffffff;
+  color: #1f2937;
   padding: 25px 30px;
   border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   width: 80%;
-  max-width: 500px; /* Maximum width */
+  max-width: 500px;
   min-width: 400px;
-  border: 1px solid #444;
-  animation: scaleUp 0.2s ease-out; /* Use the same scale-up */
+  border: 1px solid #e5e7eb;
+  animation: scaleUp 0.2s ease-out;
 }
 
-/* Modal paragraph style */
 .modal-content p {
-  margin-bottom: 25px; /* More space before buttons */
-  font-size: 1.5rem; /* Standard font size */
+  margin-bottom: 25px;
+  font-size: 1.5rem;
   line-height: 1.6;
   text-align: center;
-  background-color: #292929;
+  background-color: #ffffff;
   font-weight: 800;
 }
 
-/* Button container styles */
 .modal-actions {
   display: flex;
-  justify-content: flex-end; /* Align buttons to the right */
-  gap: 10px; /* Space between buttons */
-  margin-top: 15px; /* Adjust if needed */
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-/* Common button styles */
 .modal-actions button {
-  padding: 9px 18px; /* Slightly adjusted padding */
+  padding: 9px 18px;
   border: none;
   border-radius: 5px;
-  font-size: 0.9rem; /* Slightly smaller font */
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
   outline: none;
 }
 
-/* Specific button styles */
-.confirm-btn { /* Matches class name in JSX */
-  background-color: #dc3545; /* Red for delete */
+.confirm-btn {
+  background-color: #ef4444;
   color: white;
 }
 
 .confirm-btn:hover {
-  background-color: #c82333; /* Darker red */
+  background-color: #b91c1c;
   transform: translateY(-1px);
 }
 
-.cancel-btn { /* Matches class name in JSX */
-  background-color: #6c757d; /* Gray for cancel */
+.cancel-btn {
+  background-color: #9ca3af;
   color: white;
 }
 
 .cancel-btn:hover {
-  background-color: #5a6268; /* Darker gray */
+  background-color: #6b7280;
   transform: translateY(-1px);
 }
 
-/* Re-use Keyframe animations from delete-post.css (or define here if separate) */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }

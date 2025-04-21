@@ -169,10 +169,10 @@ const NotificationsDropdown = () => {
 
   return (
     <div className="relative">
-      <button onClick={() => setIsOpen(!isOpen)} className="relative">
+      <button onClick={() => setIsOpen(!isOpen)} className="relative focus:outline-none">
         <BellIcon className="w-6 h-6 text-gray-800 dark:text-white" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1.5 py-0.5 shadow-sm">
             {unreadCount}
           </span>
         )}
@@ -183,11 +183,11 @@ const NotificationsDropdown = () => {
           ref={dropdownRef}
           className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 shadow-lg rounded-xl z-50"
         >
-          <div className="p-2 max-h-96 overflow-y-auto">
+          <div className="p-4 max-h-96 overflow-y-auto custom-scrollbar space-y-2">
             {loading ? (
-              <div className="text-center">Loading...</div>
+              <div className="text-center text-gray-500 dark:text-gray-400">Loading...</div>
             ) : notifications.length === 0 ? (
-              <p className="text-center text-gray-500">No notifications</p>
+              <p className="text-center text-gray-500 dark:text-gray-400">No notifications</p>
             ) : (
               notifications.map((notif) => (
                 <div
@@ -199,36 +199,36 @@ const NotificationsDropdown = () => {
                       window.location.assign(notif.notification_link); // Use assign for redirection
                     }
                   }}
-                  className={`p-2 rounded-md mb-1 text-sm cursor-pointer transition-all duration-300 flex items-start gap-2 ${
+                  className={`group p-3 rounded-md text-sm cursor-pointer transition-all duration-300 flex items-start gap-3 ${
                     notif.status === "unread"
-                      ? "bg-blue-100 dark:bg-blue-900 font-semibold"
-                      : "bg-gray-100 dark:bg-gray-700"
-                  } hover:bg-blue-200 dark:hover:bg-blue-800`}
+                      ? "bg-blue-50 dark:bg-blue-950 font-semibold"
+                      : "bg-gray-50 dark:bg-gray-800"
+                  } hover:bg-blue-100 dark:hover:bg-blue-800`}
                 >
-                  <div>{getIcon(notif.notification_type)}</div>
-                  <div className="flex-1">{notif.notification_text}</div>
+                  <div className="mt-0.5" >{getIcon(notif.notification_type)}</div>
+                  <div className="flex-1 text-gray-800 dark:text-gray-100">{notif.notification_text}</div>
                   <button
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent redirect
                       handleClearNotification(notif.id);
                     }}
-                    className="text-xs text-red-600 hover:underline ml-2"
+                    className="text-xs text-red-500 hover:underline opacity-70 group-hover:opacity-100 transition"
                   >
                     Delete
                   </button>
                 </div>
               ))
             )}
-            <div className="mt-2 flex justify-between">
+            <div className="pt-2 border-t border-gray-200 dark:border-gray-700 flex justify-between">
               <button
                 onClick={handleMarkAllAsRead}
-                className="text-sm text-green-600 hover:underline"
+                className="text-sm text-green-600 dark:text-green-400 hover:underline"
               >
                 Mark all as read
               </button>
               <button
                 onClick={handleClearAllNotifications}
-                className="text-sm text-red-600 hover:underline"
+                className="text-sm text-red-600 dark:text-red-400 hover:underline"
               >
                 Clear all
               </button>

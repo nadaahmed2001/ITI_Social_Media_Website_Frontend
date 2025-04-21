@@ -1,41 +1,44 @@
 /* src/components/UserProfile/SkillsAndProjects.css */
+/* Light Mode Styles */
 
 .skills-projects-container {
-    padding: 25px;
-    color: #e0e0e0;
-    background-color: #191919; /* Base background */
-    display: flex;
-    flex-direction: column;
-    gap: 30px; /* Space between the title and sections, and between sections */
-    max-width: 80%;
-    margin-top: 60px;
+  padding: 25px;
+  color: #333; /* Dark text for light mode */
+  background-color: #f9f9f9; /* Light background */
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 80%;
+  margin-top: 60px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-  }
-  
-  .skills-projects-container h2 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: white;
-    margin: 0 0 10px 0; /* Adjusted margin */
-    border-bottom: 1px solid #444;
-    padding-bottom: 15px;
-    font-size: 1.5em;
-    background-color: inherit;
-    font-weight: 600;
-  }
+/* Header */
+.skills-projects-container h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #222;
+  margin: 0 0 10px 0;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 15px;
+  font-size: 1.5em;
+  font-weight: 600;
+  background-color: inherit;
+}
 
-  .skills-projects-container h2 svg {
-    background-color: inherit;
-  }
-  
-  /* Ensure sub-components (.form-section) have the correct context */
-  .skills-projects-container .form-section {
-      /* Styles for SkillsManagement and ProjectsManagement containers */
-      background-color: #282828;
-      padding: 25px;
-      border-radius: 8px;
-      border: 1px solid #333;
-      /* Overwrite margins if needed, or rely on the gap from the container */
-      margin-bottom: 0; /* Remove bottom margin if gap is used */
-  }
+/* MUI icon inherits background */
+.skills-projects-container h2 svg {
+  background-color: inherit;
+  color: #b22222; /* Match your red accent */
+}
+
+/* Section styles for SkillsManagement and ProjectsManagement */
+.skills-projects-container .form-section {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}

@@ -1,3 +1,4 @@
+
 import React, { useState, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import {
@@ -83,50 +84,39 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
 
 
   return (
-    <nav className="fixed top-0 left-0 w-full flex items-center justify-between p-3 !bg-black backdrop-blur-md z-50">
-      {/* Logo & Search */}
+    <nav className="fixed top-0 left-0 w-full flex items-center justify-between px-4 py-3 bg-red-900/80 backdrop-blur-md shadow-md z-50">
       <div className="flex items-center gap-5">
         <Link to="/Home">
-          <img src={logo} alt="Logo" className="h-12 w-12" />
+          <img src={logo} alt="Logo" className="h-12 w-12 rounded-full shadow-md" />
         </Link>
-        {/* --- Updated Search Input --- */}
+      
         <input
           type="text"
-          placeholder="#Explore Profiles..." // Updated placeholder
-          value={searchQuery} // Controlled input
-          onChange={handleSearchChange} // Update state on change
-          onKeyDown={handleSearchSubmit} // Handle Enter key press
-          className={`hidden md:block ${ // Keep existing styles
-            isDarkMode // You might want to remove isDarkMode logic if theme is consistent
-              ? "bg-[#333] p-2 rounded-lg text-white w-70 placeholder-gray-400 hover:bg-gray-700"
-              : "bg-gray-300 p-2 rounded-lg text-gray-900 w-70 placeholder-gray-500 hover:bg-gray-400"
-          } focus:outline-none`}
-          aria-label="Search profiles" // Accessibility
+          placeholder="#Explore Profiles..."
+          value={searchQuery} 
+          onChange={handleSearchChange} 
+          onKeyDown={handleSearchSubmit} 
+          className="hidden md:block bg-white/20 hover:bg-white/30 text-white placeholder-white/70 px-3 py-2 rounded-lg w-72 transition focus:outline-none focus:ring-2 focus:ring-white/50"
+          aria-label="Search profiles"
         />
-        {/* Optional: Add a search button here if desired */}
-        {/* <button onClick={() => handleSearchSubmit({ key: 'Enter' })} className="p-2 text-white ..."> <Search size={20}/> </button> */}
       </div>
-
-      {/* Center Desktop Nav (no changes) */}
-      {/* ... */}
        <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 gap-6">
         {navItems.map(({ path, Icon, customActive }) => (
           <Link key={path} to={path} className="relative group">
             <Icon
               size={24}
-              className={
+              className={`transition ${
                 customActive || activeTab === path
-                  ? "text-[#7B2326]"
-                  // Simpler text color logic if dark mode isn't used here
-                  : "text-white group-hover:text-[#7B2326]"
-              }
+                  ? "text-white"
+                  : "text-white/60 group-hover:text-white"
+              }`}
             />
             {(customActive || activeTab === path) && (
-              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-[#7B2326] rounded-full"></span>
+              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full"></span>
             )}
 
             {path === "/chat" && unreadCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
