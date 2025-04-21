@@ -741,10 +741,10 @@ const AVAILABLE_REACTIONS = [
           </Link >
 
           <div>
-            <Link to={`/profiles/${post.author_id}`} className= "hover:opacity-80 transition-opacity"> 
-              <p className="font-bold text-lg bg-gradient-to-r from-[#7a2226] to-[#a53d3d] bg-clip-text text-transparent">{avatarTitleText|| "Unknown"}</p>
+            <Link to={`/profiles/${post.author_id}`} className= "hover:opacity-80 transition-opacity !no-underline"> 
+              <p className="mb-0 mt-2 font-bold text-lg bg-gradient-to-r from-[#7a2226] to-[#a53d3d] bg-clip-text text-transparent">{avatarTitleText|| "Unknown"}</p>
             </Link>
-            <p className="text-xs text-[#4a5568]">
+            <p className="text-xs text-[#4a5568] !bg-[#FFFEFE]">
               <TimeAgo timestamp={post.created_on}/>
             </p>
           </div>
