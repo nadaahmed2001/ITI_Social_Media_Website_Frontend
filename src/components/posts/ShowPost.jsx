@@ -821,7 +821,7 @@ const AVAILABLE_REACTIONS = [
             // --- Collapsed View ---
             <>
               {/* Truncated text in an INLINE paragraph */}
-              <p className="inline text-white ">{postdisplayText}</p>
+              <p className="inline text-gray-900 ">{postdisplayText}</p>
               {/* "See more" button appears immediately after inline text */}
               {postneedsTruncation && (
                 <button

@@ -391,7 +391,7 @@ const MessagesList = ({token, isGroupChat }) => {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
-                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
+                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-gray-900 placeholder-gray-900 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
                     />
                     <button
                         type="submit"
