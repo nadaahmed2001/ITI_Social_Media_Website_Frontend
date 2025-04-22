@@ -321,15 +321,15 @@ const MessagesList = ({token, isGroupChat }) => {
             <div className=" text-white mt-20 ">
                 <ChatSidebar/>
             </div>
-            <div className="flex-1 flex flex-col relative background-div mt-20">
+            <div className="flex-1 flex flex-col relative background-div">
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
-                    className=" text-black rounded-lg absolute top-1 right-100 z-10 " //need to add some padding
+                    className="absolute top-4 right-4 bg-[#7a2226] text-white px-3 py-1 rounded-md shadow-md hover:bg-[#5a181b] transition-colors z-10"
                 >
                     Clear All Messages
                 </button>
-                <div className="flex-1 overflow-x-hidden p-4 overflow-y-auto background-div">
+                <div className="flex-1 overflow-y-auto p-4 background-div">
                     {/* Messages List */}
                     <TransitionGroup className="flex flex-col gap-2">
                         {messages.map((message, index) => {
@@ -391,7 +391,7 @@ const MessagesList = ({token, isGroupChat }) => {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
-                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
+                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-gray-900 placeholder-gray-900 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
                     />
                     <button
                         type="submit"

@@ -145,7 +145,7 @@ const ChatSidebar = () => {
         };
 
     return (
-        <div className="flex !bg-[#F8FAFD]">
+        <div className="flex mt-20 !bg-[#F8FAFD]">
         <div className="flex flex-col">
 
         <button
