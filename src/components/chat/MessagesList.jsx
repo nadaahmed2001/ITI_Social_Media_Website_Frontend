@@ -317,15 +317,15 @@ const MessagesList = ({token, isGroupChat }) => {
     };
 
     return (
-        <div className="flex h-screen overflow-hidden">
-            <div className="h-full">
-                <ChatSidebar />
+        <div className="flex h-screen">
+            <div className=" text-white ">
+                <ChatSidebar/>
             </div>
-            <div className="flex-1 flex flex-col relative background-div">
+            <div className="flex-1 flex flex-col relative mt-15 background-div">
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
-                    className="absolute top-4 right-4 bg-[#7a2226] text-white px-3 py-1 rounded-md shadow-md hover:bg-[#5a181b] transition-colors z-10"
+                    className="absolute top-4 right-4 text-gray-900 px-3 py-1 rounded-md shadow-md hover:bg-[#5a181b] transition-colors z-10 "
                 >
                     Clear All Messages
                 </button>
@@ -391,7 +391,7 @@ const MessagesList = ({token, isGroupChat }) => {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
-                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
+                        className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-gray-900 placeholder-gray-900 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
                     />
                     <button
                         type="submit"

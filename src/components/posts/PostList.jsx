@@ -77,7 +77,7 @@ export default function PostList() {
   if (authLoading) return null; 
 
   return (
-    <div className="max-w-3xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+    <div className="max-w-2xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
       <CreatePost onPostCreated={handleNewPost} />
 
       {user && (

@@ -57,20 +57,20 @@ export default function Aichat() {
 
     return (
         <div className="flex w-full h-screen overflow-hidden ">
-            <div className="">
+            <div>
                 <ChatSidebar />
             </div>
-            <div className="flex-1 flex flex-col  text-[#7a2226]  background-div">
+            <div className="flex-1 flex flex-col  text-[#7a2226] mt-10  background-div">
                 <h2 className="text-xl font-bold mb-4 text-center">AI Chat</h2>
                 <div className="flex-1 overflow-y-auto mb-4">
                     {messages.map((msg, index) => (
                         <div
                             key={index}
-                            className={`mb-2 p-2 rounded ${
+                            className={`max-w-[80%] sm:max-w-md p-3 rounded-xl shadow-md transition-all duration-300 ${
                                 msg.sender === "You"
-                                    ? "bg-[#7a2226] text-black self-end"
-                                    : "bg-gray-800 text-[#7a2226] self-start"
-                            }`}
+                                    ? "ml-auto bg-[#7a2226] text-white text-right"
+                                    : "mr-auto bg-gray-800 text-[#7a2226] text-left"
+                            } max-w-full sm:max-w-md`}
                         >
                             <strong>{msg.sender}:</strong> {msg.content}
                         </div>
@@ -82,7 +82,7 @@ export default function Aichat() {
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type your message..."
-                      className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
+                      className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-gray-900 placeholder-gray-900 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
                     />
                     <button
                         type="submit"
