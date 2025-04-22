@@ -317,19 +317,19 @@ const MessagesList = ({token, isGroupChat }) => {
     };
 
     return (
-        <div className="flex h-screen">
-            <div className=" text-white ">
-                <ChatSidebar/>
+        <div className="flex h-screen overflow-hidden">
+            <div className="h-full">
+                <ChatSidebar />
             </div>
-            <div className="flex-1 flex flex-col relative background-div mt-20">
+            <div className="flex-1 flex flex-col relative background-div">
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
-                    className=" text-black rounded-lg absolute top-1 right-100 z-10 " //need to add some padding
+                    className="absolute top-4 right-4 bg-[#7a2226] text-white px-3 py-1 rounded-md shadow-md hover:bg-[#5a181b] transition-colors z-10"
                 >
                     Clear All Messages
                 </button>
-                <div className="flex-1 overflow-x-hidden p-4 overflow-y-auto background-div">
+                <div className="flex-1 overflow-y-auto p-4 background-div">
                     {/* Messages List */}
                     <TransitionGroup className="flex flex-col gap-2">
                         {messages.map((message, index) => {
