@@ -1,7 +1,7 @@
 /* src/pages/UserProfilePage.css */
 .user-profile-page-container {
 display: flex;
-/* background-color: #191919; */
+background-color: #F9FBFC !important;
 color: white;
 min-height: 100vh; /* Ensure it takes full viewport height */
 padding: 20px; /* Add some padding around the page */

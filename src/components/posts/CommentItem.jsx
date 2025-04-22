@@ -217,7 +217,7 @@ function CommentItem({
                     </Link>
                     <div className="">
                         <Link to={`/profiles/${comment.author_id}`} className="!no-underline  flex-shrink-0 block hover:opacity-80 transition-opacity">
-                            <p className="font-semibold text-[#7a2226] hover:text-[#5a181a] transition-colors">{isCommentAuthor ? "You" : `${authorName}`}</p>
+                            <p className="font-semibold text-[#7a2226] hover:text-[#5a181a] transition-colors mb-0 mt-3">{isCommentAuthor ? "You" : `${authorName}`}</p>
                         </Link>
                         <p className="text-xs text-gray-500 ">
                             <TimeAgo timestamp={comment.created_on} />

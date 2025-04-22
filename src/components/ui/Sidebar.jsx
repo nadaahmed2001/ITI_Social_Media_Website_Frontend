@@ -235,7 +235,7 @@ export default function Sidebar() { // Removed isDarkMode prop
   return (
     // Apply similar container styling from ChatSidebar
     // Adjusted width (e.g., w-72), height (e.g., h-full or fit content), removed dark mode conditions
-    <div className="w-80 h-full p-6 rounded-2xl border-2 border-[#7a2226]/20 bg-white/90 backdrop-blur-lg flex flex-col gap-6 shadow-xl shadow-[#7a2226]/10 hover:shadow-[#7a2226]/15 transition-all duration-300">
+    <div className="w-78 h-full p-6 rounded-lg border-2 border-[#7a2226]/20 bg-white/90 backdrop-blur-lg flex flex-col gap-6 shadow-xl shadow-[#7a2226]/10 hover:shadow-[#7a2226]/15 transition-all duration-300">
     <div className="p-6 rounded-xl bg-gradient-to-br from-white to-[#fafafa] hover:shadow-md transition-shadow duration-300">
     <div className="flex justify-around items-center mb-4 text-center">
     <div>

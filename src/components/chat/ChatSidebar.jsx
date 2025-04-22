@@ -128,25 +128,24 @@ const ChatSidebar = () => {
         );
     
         try {
-          await Promise.all(
+            await Promise.all(
             relatedNotifications.map((n) =>
-              axiosInstance.patch(`http://127.0.0.1:8000/api/notifications/${n.id}/mark-as-read/`)
+                axiosInstance.patch(`http://127.0.0.1:8000/api/notifications/${n.id}/mark-as-read/`)
             )
-          );
-      
-          setUnreadChatNotifications((prevNotifications) => 
+            );
+        
+            setUnreadChatNotifications((prevNotifications) => 
             prevNotifications.filter(
                 (n) => !relatedNotifications.some((r) => String(r.id) === String(n.id))
             )
-        );
-          
+        );    
         } catch (error) {
-          console.error("Error marking notifications as read:", error);
-        }
-      };
+            console.error("Error marking notifications as read:", error);
+            }
+        };
 
     return (
-        <div className="flex mt-1">
+        <div className="flex !bg-[#F8FAFD]">
         <div className="flex flex-col">
 
         <button
@@ -166,7 +165,7 @@ const ChatSidebar = () => {
             )}
         </button>
         {/* Sidebar Content - Added higher z-index */}
-        <div className={`w-72 text-[#7a2226] h-[calc(100vh-150px)] p-4 fixed md:relative transform mt-3 rounded-lg 
+        <div className={`w-78 text-[#7a2226] h-[calc(100vh-150px)] p-4 fixed md:relative transform  rounded-lg 
     ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
             md:translate-x-0 transition-transform duration-300 border-2 border-[#7a2226]/20 
             bg-white/90 backdrop-blur-lg overflow-hidden shadow-xl`}>
@@ -260,7 +259,7 @@ const ChatSidebar = () => {
                 {/* <div className="space-y-4 overflow-y-auto h-[calc(100vh-220px)] pr-2"> */}
                 <div className="space-y-4 overflow-y-auto h-100vh pr-2 mt-4">
 
-                    {/* Private Chats */}
+                    {/* Private Chats
                     {(activeFilter === 'all' || activeFilter === 'private') && privateChats.map(chat => (
                         <div key={chat.id} className="flex justify-between items-center p-2 
                             hover:bg-gray-300 rounded cursor-pointer"
@@ -274,7 +273,7 @@ const ChatSidebar = () => {
                                     className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
                                     onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
                                 />
-                                    {chat.username}
+                                {chat.username}
                                 </Typography>
                                 <Typography variant="caption" className=" !text-[#585858]">
                                     {chat.lastMessage || "No messages yet"}
@@ -292,8 +291,51 @@ const ChatSidebar = () => {
                             </div>
                             <hr></hr>
                         </div>
+                    ))} */}
+
+                    {/* Private Chats */}
+                    {(activeFilter === 'all' || activeFilter === 'private') && privateChats.map(chat => (
+                    <div
+                        key={chat.id}
+                        className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
+                        onClick={() => navigate(`/messagesList/private/${chat.id}`)}
+                    >
+                        {/* Left Side: Avatar and Chat Info */}
+                        <div className="flex items-center gap-2">
+                        <img
+                            src={chat.authorAvatar || DEFAULT_USER_AVATAR}
+                            alt={`${chat.username} Avatar`}
+                            className="w-8 h-8 rounded-full object-cover border border-gray-600 bg-white"
+                            onError={(e) => {
+                            if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR;
+                            }}
+                        />
+                        <div className="flex flex-col">
+                            <Typography className="!text-[#7a2226] !font-medium">
+                            {chat.username}
+                            </Typography>
+                            <Typography variant="caption" className="!text-[#585858]">
+                            {chat.lastMessage || "No messages yet"}
+                            </Typography>
+                        </div>
+                        </div>
+
+                        {/* Right Side: Time and Unread Count */}
+                        <div className="flex flex-col items-end gap-1">
+                        <Typography variant="caption" className="!text-[#585858]">
+                            {chat.lastActive || "4:43 PM"}
+                        </Typography>
+                        {getUnreadCountForChat(chat.id) > 0 && (
+                            <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
+                            {getUnreadCountForChat(chat.id)}
+                            </span>
+                        )}
+                        </div>
+                    </div>
                     ))}
-                    {/* Group Chats */}
+
+
+                    {/* Group Chats
                     {(activeFilter === 'all' || activeFilter === 'groups') && groupChats.map(chat => (
                         <div key={chat.id} className="flex justify-between items-center p-2 
                             hover:bg-gray-300 rounded cursor-pointer"
@@ -324,7 +366,48 @@ const ChatSidebar = () => {
                             </div>
                             <hr></hr>
                         </div>
+                    ))} */}
+                    {/* Group Chats */}
+                    {(activeFilter === 'all' || activeFilter === 'groups') && groupChats.map(chat => (
+                    <div
+                        key={chat.id}
+                        className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
+                        onClick={() => navigate(`/messagesList/group/${chat.id}`)}
+                    >
+                        {/* Left Side: Avatar and Chat Info */}
+                        <div className="flex items-center gap-2">
+                        <img
+                            src={chat.authorAvatar || defaultGroupAvatar}
+                            alt={`${chat.name} Avatar`}
+                            className="w-8 h-8 rounded-full object-cover border border-gray-600 bg-white"
+                            onError={(e) => {
+                            if (e.target.src !== defaultGroupAvatar) e.target.src = defaultGroupAvatar;
+                            }}
+                        />
+                        <div className="flex flex-col">
+                            <Typography className="!font-medium !text-[#7a2226]">
+                            {chat.name}
+                            </Typography>
+                            <Typography className="!text-[#585858]" variant="caption">
+                            {chat.lastMessage || "No messages yet"}
+                            </Typography>
+                        </div>
+                        </div>
+
+                        {/* Right Side: Time and Unread Count */}
+                        <div className="flex flex-col items-end gap-1">
+                        <Typography className="!text-[#585858]" variant="caption">
+                            {chat.lastActive || "9:10 AM"}
+                        </Typography>
+                        {getUnreadCountForGroup(chat.id) > 0 && (
+                            <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
+                            {getUnreadCountForGroup(chat.id)}
+                            </span>
+                        )}
+                        </div>
+                    </div>
                     ))}
+
                 </div>
             </div>
         </div>

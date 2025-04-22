@@ -1,5 +1,5 @@
 .edit-profile-container {
-  margin-top: 60px;
+  margin-top: 70px;
   padding: 25px;
   color: #222; /* Dark text */
   width: 80%;
@@ -21,6 +21,7 @@ form {
 form input,
 form textarea {
   max-width: 80%;
+  
 }
 
 .edit-profile-container h2 {
@@ -64,7 +65,8 @@ form textarea {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #333;
+  color: #333 !important;
+  font-weight: 600 !important;
 }
 
 .form-group input[type="text"],

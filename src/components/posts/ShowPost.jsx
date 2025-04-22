@@ -1095,88 +1095,102 @@ const AVAILABLE_REACTIONS = [
       </div>
 {/* ========================================================================================================================================= */}
 
-        {/* --- Add Comment Section with Icon Inside Input --- */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-4 mb-4 mt-4 border-2 border-[#7a2226]/20 transition-all duration-300 hover:shadow-xl hover:border-[#7a2226]/30">
-        <Link to={`/profiles/${post.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity mt-1 group"> 
-        <img 
-            src={ currentUserAvatar } // Use derived avatar
-            alt={ user?.username || "You" }
-            title={ user?.username || "You" }
-            className="w-10 h-10 rounded-full object-cover border-2 border-[#7a2226]/20 group-hover:border-[#7a2226]/40 transition-all shadow-sm"
-            onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
-          />
+                {/* --- Add Comment Section with Icon Inside Input --- */}
+        {/* Apply flexbox to this container */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-4 mb-4 mt-4 border-2 border-[#7a2226]/20 transition-all duration-300 hover:shadow-xl hover:border-[#7a2226]/30 flex items-start space-x-3"> {/* <-- Added flex items-start space-x-3 */}
+
+          {/* Avatar Link (Flex Item 1) */}
+          <Link to={`/profiles/${post.author_id}`} className="flex-shrink-0 block hover:opacity-80 transition-opacity group"> {/* Removed mt-1 */}
+            <img
+                src={ currentUserAvatar } // Use derived avatar
+                alt={ user?.username || "You" }
+                title={ user?.username || "You" }
+                className="w-10 h-10 rounded-full object-cover border-2 border-[#7a2226]/20 group-hover:border-[#7a2226]/40 transition-all shadow-sm"
+                onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
+            />
           </Link>
-          <div className="flex-grow">
-              {/* --- Input Wrapper with Relative Positioning --- */}
-              <div className="relative w-full "> 
+
+          {/* Input Area Container (Flex Item 2) */}
+          <div className="flex-grow"> {/* Takes remaining space */}
+              {/* Input Wrapper */}
+              <div className="relative w-full">
                 <input
                   type="text"
                   placeholder="Write your comment..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  className={`placeholder:text-[#7a2226]/60 text-[#2d3748] w-full px-3 py-2 border-2 border-[#7a2226]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7a2226]/40 focus:border-transparent resize-none bg-white/80 transition-all duration-300 hover:border-[#7a2226]/30 ${commentText ? 'text-[#262727]' : ''} !bg-[#c2c2c2] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none`}
+                  // Combined and cleaned up classes
+                  className={`placeholder:text-[#7a2226]/60 text-black w-full px-3 py-2 border-2 border-[#7a2226]/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7a2226]/40 focus:border-transparent resize-none bg-white/80 transition-all duration-300 hover:border-[#7a2226]/30`}
                   aria-describedby="comment-char-count"
                 />
-                {/* --- Absolutely Positioned Icon Button --- */}
-                
+                {/* Attachment Button */}
                 <button
-                  type="button" // Prevent form submission
+                  type="button"
                   onClick={handleOpenUploadWidget}
-                  disabled={isUploading || !!attachmentUrl} 
-                  // Position inside the input padding area
-                  className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500 hover:text-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Add Photo/Video" // Accessibility
+                  disabled={isUploading || !!attachmentUrl}
+                  // Adjusted styling for better alignment and look
+                  className="absolute top-1/2 right-2.5 transform -translate-y-1/2 text-gray-500 hover:text-[#7a2226] disabled:opacity-50 disabled:cursor-not-allowed p-1" // Adjusted padding/position
+                  aria-label="Add Photo/Video"
                 >
-                <ImageSharpIcon className="w-5 h-5" /> 
-              </button>
+                  {/* Conditionally show spinner or icon */}
+                  {isUploading ? <CircularProgress size={20} color="inherit"/> : <ImageSharpIcon className="w-5 h-5" />}
+                </button>
             </div>
 
-            {/* Character Counter (Stays outside the relative wrapper) */}
-            <div id="comment-char-count" className={`text-xs mt-1 text-right text-[#7a2226] ${commentCountColorClass}`}>
+            {/* Character Counter */}
+            {/* Removed redundant color class if commentCountColorClass handles it */}
+            <div id="comment-char-count" className={`text-xs mt-1 text-right ${commentCountColorClass}`}>
                 {currentInputLength} / {MAX_COMMENT_INPUT_LENGTH}
             </div>
 
-            {/* Attachment Preview (Keep as is) */}
+            {/* Attachment Preview */}
             {attachmentUrl && (
-              <div className="mt-2 relative mr-35">
-              {attachmentUrl.match(/\.(jpeg|jpg|gif|png)$/) ? (
-                <img 
-                  src={attachmentUrl} 
-                  alt="Preview" 
-                  className="max-w-xs rounded-lg border border-gray-200 " // Added border
-                />
-              ) : attachmentUrl.match(/\.(mp4|mov|webm|mkv)$/) ? ( // Check for video extensions
-                <video controls className="max-w-xs rounded-lg border border-gray-200 ">
-                  <source src={attachmentUrl} /* Optional: add type based on extension */ />
-                  Your browser does not support the video tag.
-                </video>
-              ): (
-                <p className=" text-xs text-gray-500 italic">Attachment added (preview not available)</p>
-              )}
-              {/* Close button for preview */}
-                <button
-                  onClick={() => setAttachmentUrl(null)}
-                  className="absolute -top-1 right-5  hover:bg-red-500 text-white rounded-full p-0.5  leading-none" 
-                  aria-label="Remove attachment"
-                >
-                  <CloseIcon style={{ fontSize: '1.2rem', backgroundColor:'#292928', color:'#7a2226'}} /> {/* Smaller icon */}
-                </button>
-            </div>
+              // Use w-fit to make container only as wide as needed
+              <div className="mt-2 relative w-fit">
+                  {attachmentUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? ( // Added webp, case-insensitive
+                      <img
+                          src={attachmentUrl}
+                          alt="Preview"
+                          // Added max-h for consistency
+                          className="max-w-xs max-h-40 rounded-lg border border-gray-600"
+                      />
+                  ) : attachmentUrl.match(/\.(mp4|mov|webm|mkv|avi)$/i) ? ( // Added avi, case-insensitive
+                      <video controls className="max-w-xs max-h-40 rounded-lg border border-gray-600 bg-black">
+                          <source src={attachmentUrl} /> Your browser does not support the video tag.
+                      </video>
+                  ) : (
+                      <p className="text-xs text-gray-500 italic border border-dashed border-gray-600 p-2 rounded">Attachment added (preview not available)</p>
+                  )}
+                  {/* Close button */}
+                  <button
+                      onClick={() => setAttachmentUrl(null)}
+                      // Improved styling for close button
+                      className="absolute -top-2 -right-2 bg-gray-700 hover:bg-red-600 text-white rounded-full p-0.5 leading-none shadow-md transition-colors"
+                      aria-label="Remove attachment"
+                  >
+                      <CloseIcon style={{ fontSize: '1rem'}} /> {/* Slightly smaller */}
+                  </button>
+              </div>
             )}
 
-            {/* Action Buttons (Only Post button remains here) */}
-            <div className="flex items-center justify-end mt-2 rounded-lg"> 
+            {/* Comment Button */}
+            <div className="flex items-center justify-end mt-2"> {/* Removed rounded-lg here */}
               <button
-                type="button" // Or type="submit" if this div is wrapped in a <form>
+                type="button"
                 onClick={handleComment}
-                disabled={(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit} 
-                className={`px-3 py-1 !rounded-lg text-sm font-medium !bg-[#7a2226] text-white ${(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit ? 'bg-[#be8a8d] text-gray-900 cursor-not-allowed rounded-md' : 'rounded-md !bg-[#7a2226] text-gray-900 hover:bg-primary-700'}`} 
+                disabled={(!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit}
+                // Simplified and consistent button styling
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    (!commentText.trim() && !attachmentUrl) || isUploading || isCommentInputOverLimit
+                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed' // Disabled state
+                    : 'bg-[#7a2226] text-white hover:bg-[#5a181b]' // Active state
+                }`}
               >
                 Comment
               </button>
             </div>
-          </div>
-        </div>
+          </div> {/* End Input Area Container */}
+        </div> 
         
       {/* Modals */}
       <EditPost
