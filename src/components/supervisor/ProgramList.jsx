@@ -1,24 +1,30 @@
-// components/supervisor/ProgramList.js
-
+//ProgramList.js
 import React from 'react';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
 
 const ProgramList = ({ programs, onSelectProgram }) => {
   const containerStyle = {
-    background: '#282828',
+    background: '#fbfbfb',
     color: 'white',
     paddingTop: '24px',
     padding: '16px',
-    borderRadius: '8px',
-    width: '300px',
+    width: '70%',
+    // height: '50%',
     marginLeft: '100px',
-    minHeight: '85vh',
-    marginTop: '100px',
+    minHeight: '75vh',
+    marginTop: '20px',
+    border: '1px solid #e8d9db',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: '13px',
+
   };
 
   const titleStyle = {
-    fontSize: '1.125rem', // text-lg
+    fontSize: '2.125rem', // text-lg
     fontWeight: '600', // font-semibold
     marginBottom: '16px',
+    color: '#464646',
   };
 
   const listItemStyle = {
@@ -27,12 +33,15 @@ const ProgramList = ({ programs, onSelectProgram }) => {
     display: 'flex',
     alignItems: 'center',
     transition: 'all 0.5s ease',
-    background: '#282828',
+    background: '#f9f9f9',
+    color: '#464646',
+    fontSize: '1.125rem',
+    fontWeight: '300',
   };
 
   const hoverStyle = {
-    color: '#333',
-    background: '#7a2226',
+    color: '#7a2226',
+    background: '#ffe5e5',
   };
 
   return (
@@ -48,6 +57,7 @@ const ProgramList = ({ programs, onSelectProgram }) => {
             onMouseLeave={(e) => Object.assign(e.currentTarget.style, listItemStyle)}
           >
             {program.name}
+            <ArrowForwardIcon sx={{ color: '#464646', marginLeft: '50px' }} />
           </li>
         ))}
       </ul>
