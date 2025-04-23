@@ -105,7 +105,7 @@ export default function Aichat() {
 
     return (
         <div className="flex w-full h-screen overflow-hidden ">
-            <div className="">
+            <div>
                 <ChatSidebar />
             </div>
             <div className="flex-1 flex flex-col text-[#7a2226] background-div">

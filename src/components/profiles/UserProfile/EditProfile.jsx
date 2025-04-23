@@ -115,7 +115,7 @@ const EditProfile = ({ initialData, onUpdateSuccess }) => {
            {/* Add other links like twitter_url, stackoverflow_url if needed */}
         </div>
 
-        <button type="submit" className="submit-button" disabled={isLoading}>
+        <button type="submit" className="bg-red-900 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled={isLoading}>
           {isLoading ? 'Saving...' : 'Update Profile'}
         </button>
       </form>

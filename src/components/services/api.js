@@ -387,6 +387,16 @@ export const uploadBatchCSV = async (batchId, file) => {
   }
 };
 
+export const updateBatch = async (batchId, data) => {
+  try {
+    const response = await api.patch(`supervisor/batches/${batchId}/`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update batch:", error);
+    throw error;
+  }
+};
+
 
 
 //------------------- Notifications API functions -------------------

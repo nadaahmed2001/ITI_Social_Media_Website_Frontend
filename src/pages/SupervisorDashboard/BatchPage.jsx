@@ -1,54 +1,53 @@
+// pages/supervisor/BatchPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  Box, Typography, List, ListItem, ListItemText, Button, Paper, Dialog, DialogTitle, DialogContent, DialogActions
+  Box, Typography, List, ListItem, ListItemText, Button, Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 import Navbar from '../../components/ui/Navbar';
 import BatchForm from './../../components/supervisor/BatchForm';
 import { fetchBatches } from '../../components/services/api';
+import BatchPopup from '../../components/supervisor/BatchPopup';
 
 const BatchPage = () => {
-  const { programId,trackId } = useParams();
+  const { programId, trackId } = useParams();
   const [batches, setBatches] = useState([]);
   const [selectedBatch, setSelectedBatch] = useState(null);
-  const [filter, setFilter] = useState('active'); 
+  const [filter, setFilter] = useState('active');
   const [openNewBatchModal, setOpenNewBatchModal] = useState(false);
 
-  useEffect(() => {
-    async function loadBatches() {
-      try {
-        const batchData = await fetchBatches(trackId);
-        setBatches(batchData);
-      } catch (error) {
-        console.error('Failed to fetch batches', error);
-      }
+  const loadBatches = async () => {
+    try {
+      const batchData = await fetchBatches(trackId);
+      setBatches(batchData);
+    } catch (error) {
+      console.error('Failed to fetch batches', error);
     }
+  };
+
+  useEffect(() => {
     loadBatches();
   }, [trackId]);
 
-  const filteredBatches = batches.filter(batch => 
+  const filteredBatches = batches.filter(batch =>
     filter === 'active' ? batch.active : !batch.active
   );
-
-  const handleOpenNewBatch = () => {
-    setOpenNewBatchModal(true);
-  };
-
-  const handleCloseNewBatch = () => {
-    setOpenNewBatchModal(false);
-  };
-
-  const refreshBatches = async () => {
-    const batchData = await fetchBatches(trackId);
-    setBatches(batchData);
-    handleCloseNewBatch();
-  };
 
   return (
     <>
       <Navbar />
-      <Box sx={{ display: 'flex', height: '100vh', bgcolor: '#1E1E1E', color: 'black' }}>
-        <Box sx={{ width: 240, p: 2, borderRight: '1px solid rgba(255,255,255,0.1)' }}>
+      <Box sx={{ display: 'flex', height: '100vh', bgcolor: '#f8fafc', color: 'black' }}>
+        <Box sx={{
+          background: '#fbfbfb',
+          padding: '16px',
+          marginLeft: '100px',
+          minHeight: '75vh',
+          marginTop: '20px',
+          border: '1px solid #e8d9db',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          borderRadius: '13px',
+        }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, color: 'black' }}>Batches</Typography>
 
           <Button variant="contained" sx={{ bgcolor: filter === 'active' ? '#000' : 'transparent', color: 'white', mt: 5 }} onClick={() => setFilter('active')}>
@@ -58,7 +57,7 @@ const BatchPage = () => {
             Old
           </Button>
 
-          <Button variant="contained" sx={{ mt: 3, bgcolor: '#7B2326', color: 'white', fontWeight: 'bold', '&:hover': { bgcolor: '#9B3A3D' } }} onClick={handleOpenNewBatch}>
+          <Button variant="contained" sx={{ mt: 3, bgcolor: '#7B2326', color: 'white', fontWeight: 'bold', '&:hover': { bgcolor: '#9B3A3D' } }} onClick={() => setOpenNewBatchModal(true)}>
             Start New +
           </Button>
         </Box>
@@ -70,33 +69,48 @@ const BatchPage = () => {
 
           <List>
             {filteredBatches.map((batch) => (
-              <ListItem key={batch.id} onClick={() => setSelectedBatch(batch)} sx={{ bgcolor: 'rgba(255,255,255,0.1)', mb: 2, borderRadius: 1, cursor: 'pointer' }}>
-                <ListItemText primary={batch.name} sx={{ color: 'black' }} />
+              <ListItem
+                key={batch.id}
+                onClick={() => setSelectedBatch(batch)}
+                sx={{
+                  bgcolor: '#ffffff',
+                  mb: 2,
+                  borderRadius: '13px',
+                  cursor: 'pointer',
+                  border: '1px solid #e8d9db',
+                  boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                  '&:hover': {
+                    backgroundColor: '#ffe5e5',
+                  },
+                }}
+              >
+                <ListItemText primary={batch.name} sx={{ color: '#464646', fontWeight: 500 }} />
               </ListItem>
             ))}
           </List>
 
-          {/* {selectedBatch && (
-            <Paper sx={{ p: 3, mt: 2, bgcolor: '#333', color: 'black' }}>
-              <Typography variant="h6" sx={{ color: 'black' }}>{selectedBatch.name}</Typography>
-              <Typography sx={{ color: 'black' }}>Started: {selectedBatch.startDate}</Typography>
-              <Typography sx={{ color: 'black' }}>Ends: {selectedBatch.endDate}</Typography>
-
-              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="outlined" sx={{ color: 'black', borderColor: 'black' }}>Download students' National-IDs</Button>
-              </Box>
-            </Paper>
-          )} */}
+          {selectedBatch && (
+            <BatchPopup
+              batch={selectedBatch}
+              onClose={() => {
+                setSelectedBatch(null);
+                loadBatches(); // 🔄 Refresh on close
+              }}
+            />
+          )}
         </Box>
       </Box>
 
-      <Dialog open={openNewBatchModal} onClose={handleCloseNewBatch}>
+      <Dialog open={openNewBatchModal} onClose={() => setOpenNewBatchModal(false)}>
         <DialogTitle sx={{ color: '#7B2326', fontWeight: 'bold', fontSize: '1.5rem' }}>Start New Batch</DialogTitle>
         <DialogContent>
-          <BatchForm programId={programId} trackId={trackId} onSubmit={refreshBatches} />
+          <BatchForm programId={programId} trackId={trackId} onSubmit={async () => {
+            await loadBatches();
+            setOpenNewBatchModal(false);
+          }} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseNewBatch} sx={{ color: 'black' }}>Cancel</Button>
+          <Button onClick={() => setOpenNewBatchModal(false)} sx={{ color: 'black' }}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </>

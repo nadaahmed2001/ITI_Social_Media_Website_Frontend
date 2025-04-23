@@ -2,7 +2,7 @@
 margin-top: 60px;
 padding: 25px;
 color: #e0e0e0;
-background-color: #191919;
+background-color: #f9f9f9;
 }
 
 .view-public-profile-container h2 {
@@ -32,10 +32,6 @@ font-weight: 600;
     background: inherit;
 }
 
-.icon{
-    background: #282828 ;
-}
-
 .profile-header {
 display: flex;
 align-items: center;
@@ -45,7 +41,7 @@ padding-bottom: 20px;
 border-bottom: 1px solid #333; /* Separator */
 background: none;
 width: 80%;
-
+background-color: #f9f9f9;
 }
 
 .profile-avatar {
@@ -60,11 +56,11 @@ flex-shrink: 0; /* Prevent image shrinking */
 
 .profile-info {
 flex-grow: 1;
-background: none; 
+background: #f9f9f9; 
 }
 
 .profile-fullname {
-color: #fff;
+color: rgb(28, 27, 27);
 font-size: 1.5em;
 margin: 0 0 2px 0;
 background: none; 
@@ -147,7 +143,7 @@ padding-bottom: 10px;
 }
 
 /* Skills Section */
-.skills-section h4 {
+/* .skills-section h4 {
     color: #ccc;
     margin-top: 15px;
     margin-bottom: 10px;
@@ -156,7 +152,7 @@ padding-bottom: 10px;
 }
 .skills-section .skills-subsection:first-child h4 {
     margin-top: 0; 
-}
+} */
 
 .main-skills-list {
     background: none; 
@@ -207,24 +203,22 @@ padding-bottom: 10px;
 }
 
 .project-item-card {
-    background-color: #303030; /* Card background */
+    background-color: #303030;
     padding: 15px;
     border-radius: 6px;
     border: 1px solid #444;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Space between elements inside card */
+    gap: 10px; 
     width: 300px;
 
 }
 .project-item-card h4 {
-    color: #eee;
     margin: 0 0 5px 0;
     font-size: 1.1em;
     background: none;
 }
 .project-description {
-    color: #ccc;
     font-size: 0.95em;
     flex-grow: 1; /* Allow description to take available space */
     margin-bottom: 10px; /* Space before tags/links */
@@ -269,7 +263,7 @@ padding-bottom: 10px;
     color: #191919;
 }
 .project-link-button.demo:hover {
-    background-color: whitesmoke !important;
+    background-color: #932329 !important;
 }
 .project-link-button.source {
     background-color: #555;
@@ -617,31 +611,31 @@ padding-top: 10px; /* Space above links */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.supervisor-department {
+/* .supervisor-department {
     margin-bottom: 10px;
-}
+} */
 
-.badge {
+/* .badge {
     display: inline-block;
     padding: 4px 8px;
     background-color: #444;
     color: #eee;
     border-radius: 3px;
     font-size: 1em;
-}
-
+} */
+/* 
 .supervised-tracks-box {
     padding: 10px;
     background-color: #333;
     border-radius: 4px;
-}
+} */
 
-.supervised-tracks-box h4 {
+/* .supervised-tracks-box h4 {
     margin-top: 0;
     margin-bottom: 10px;
     color: #eee;
     font-size: 1.1em;
-}
+} */
 
 .supervised-tracks-list {
     margin: 0;
@@ -653,3 +647,5 @@ padding-top: 10px; /* Space above links */
 .supervised-tracks-list li {
     margin-bottom: 5px;
 }
+
+
