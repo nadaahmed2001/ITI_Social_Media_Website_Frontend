@@ -321,7 +321,7 @@ const MessagesList = ({token, isGroupChat }) => {
             <div className="h-full">
                 <ChatSidebar />
             </div>
-            <div className="flex-1 flex flex-col relative background-div">
+            <div className="flex-1 flex flex-col relative background-div mt-18">
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
@@ -329,7 +329,7 @@ const MessagesList = ({token, isGroupChat }) => {
                 >
                     Clear All Messages
                 </button>
-                <div className="flex-1 overflow-y-auto p-4 background-div">
+                <div className="flex-1 overflow-y-auto p-4 pb-16 background-div">
                     {/* Messages List */}
                     <TransitionGroup className="flex flex-col gap-2">
                         {messages.map((message, index) => {
@@ -350,7 +350,7 @@ const MessagesList = ({token, isGroupChat }) => {
                                             message.sender === currentUser
                                                 ? "ml-auto bg-[#7a2226] text-white text-right"
                                                 : "mr-auto bg-gray-800 text-[#7a2226] text-left"
-                                        } max-w-full sm:max-w-md`} // Full width on small screens, limited width on larger screens
+                                        } max-w-full sm:max-w-md z-0`}
                                         onContextMenu={(e) => {
                                             e.preventDefault(); // Prevent default right-click menu
                                             if (message.sender === currentUser) {
@@ -385,7 +385,7 @@ const MessagesList = ({token, isGroupChat }) => {
                     <div ref={messagesEndRef} /> 
                 </div>
                 <form onSubmit={handleSendMessage} 
-                className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm ">
+                className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm sticky bottom-0 z-10">
                     <input
                         type="text"
                         value={newMessage}
