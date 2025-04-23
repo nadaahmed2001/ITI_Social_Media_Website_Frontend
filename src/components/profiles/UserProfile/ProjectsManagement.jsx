@@ -351,7 +351,7 @@ const ProjectsManagement = ({ profileId }) => {
     return (
         <div className="projects-management-container form-section">
             <h3>My Projects</h3>
-            <button className="submit-button add-button" style={{ marginBottom: '25px' }} onClick={openModalForAdd} disabled={isLoading || !!deletingProjectId || isSavingProject}>
+            <button className="submit-button add-button bg-red-900 hover:!bg-red-800 text-white font-semibold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors" style={{ marginBottom: '25px' }} onClick={openModalForAdd} disabled={isLoading || !!deletingProjectId || isSavingProject}>
                 Add Project
             </button>
             {error && projects.length > 0 && <p className="error-message">{error}</p>}

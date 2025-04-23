@@ -95,7 +95,7 @@ const SkillsManagement = ({ profileId }) => { // profileId might not be strictly
           />
           
         </div>
-        <button type="submit" className="submit-button add-skill-button" disabled={isAdding}>
+        <button type="submit" className="submit-button add-skill-button bg-red-900 hover:!bg-red-800 text-white font-semibold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled={isAdding}>
           {isAdding ? 'Adding...' : 'Add Skill'}
         </button>
       </form>
