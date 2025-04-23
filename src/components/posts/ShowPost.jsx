@@ -713,11 +713,11 @@ const AVAILABLE_REACTIONS = [
   },
   { 
     name: "Support", 
-    icon: <VolunteerActivismSharpIcon className="text-[#7a2226] w-5 h-5" />
+    icon: <VolunteerActivismSharpIcon className="text-blue-600 w-5 h-5" />
   },
   { 
     name: "Insightful", 
-    icon: <TipsAndUpdatesSharpIcon className="text-blue-200 w-5 h-5" />
+    icon: <TipsAndUpdatesSharpIcon className="text-yellow-200 w-5 h-5" />
   },
 ];
 ///
