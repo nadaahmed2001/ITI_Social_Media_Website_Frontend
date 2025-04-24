@@ -53,22 +53,29 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout }) {
 
   return (
     <>
-      {/* Mobile Menu Toggle */}
-      <div className="md:hidden flex justify-between items-center px-4 py-3 border-b bg-white shadow-sm sticky top-0 z-10">
-        <span className="font-semibold text-gray-700 text-lg">Settings</span>
-        <button onClick={() => setMobileOpen(!mobileOpen)}>
-          {mobileOpen ? <CloseIcon /> : <MenuIcon />}
+      {/* Mobile Menu Button */}
+      <div className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-full shadow">
+        <button onClick={() => setMobileOpen(true)}>
+          <MenuIcon />
         </button>
       </div>
 
-      {/* Sidebar Container */}
+      {/* Sidebar (Overlay on Mobile) */}
       <div
-        className={`${
-          mobileOpen ? "block" : "hidden"
-        } md:block w-full md:w-[300px] bg-gray-50 text-gray-800 rounded-lg shadow-md p-4 md:mt-[100px] md:ml-[100px] min-h-[85vh] space-y-4`}
+        className={`fixed top-0 left-0 z-40 h-full w-64 bg-gray-50 shadow-lg transform transition-transform duration-300 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 md:relative md:top-auto md:left-auto md:block md:w-[300px] md:mt-[100px] md:ml-[100px] md:min-h-[85vh] p-4 rounded-lg`}
       >
+      <div className="md:hidden flex justify-between items-center mb-4">
+  <span className="text-lg font-semibold text-gray-700">Settings</span>
+  <button className="text-gray-900" onClick={() => setMobileOpen(false)}>
+    <CloseIcon />
+  </button>
+</div>
+
+
         {/* Search Bar */}
-        <div className="flex items-center bg-gray-200 rounded-md px-3 py-2">
+        <div className="flex items-center bg-gray-200 rounded-md px-3 py-2 mb-4">
           <SearchSharpIcon className="text-gray-600 mr-2" />
           <input
             type="text"
@@ -79,46 +86,14 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout }) {
 
         {/* Sidebar Options */}
         <div className="space-y-1">
-          <SidebarOption
-            sectionKey={SECTIONS.VIEW_PUBLIC}
-            icon={<AccountCircleIcon />}
-            label="View Public Profile"
-          />
-          <SidebarOption
-            sectionKey={SECTIONS.EDIT_PROFILE}
-            icon={<EditIcon />}
-            label="Edit Profile"
-          />
-          <SidebarOption
-            sectionKey={SECTIONS.EDIT_PHOTO}
-            icon={<PhotoCameraIcon />}
-            label="Photo"
-          />
-          <SidebarOption
-            sectionKey={SECTIONS.CHANGE_CREDENTIALS}
-            icon={<VpnKeyIcon />}
-            label="Change Email or Password"
-          />
-          <SidebarOption
-            sectionKey={SECTIONS.SKILLS_PROJECTS}
-            icon={<BuildIcon />}
-            label="Skills & Projects"
-          />
-          <SidebarOption
-            sectionKey={SECTIONS.PRIVACY}
-            icon={<SecurityIcon />}
-            label="Privacy and Security"
-          />
-          <SidebarOption
-            sectionKey={SECTIONS.MY_POSTS}
-            icon={<FeedIcon />}
-            label="My Posts"
-          />
-          <SidebarOption
-            sectionKey={SECTIONS.SAVED}
-            icon={<BookmarkSharpIcon />}
-            label="Saved"
-          />
+          <SidebarOption sectionKey={SECTIONS.VIEW_PUBLIC} icon={<AccountCircleIcon />} label="View Public Profile" />
+          <SidebarOption sectionKey={SECTIONS.EDIT_PROFILE} icon={<EditIcon />} label="Edit Profile" />
+          <SidebarOption sectionKey={SECTIONS.EDIT_PHOTO} icon={<PhotoCameraIcon />} label="Photo" />
+          <SidebarOption sectionKey={SECTIONS.CHANGE_CREDENTIALS} icon={<VpnKeyIcon />} label="Change Email or Password" />
+          <SidebarOption sectionKey={SECTIONS.SKILLS_PROJECTS} icon={<BuildIcon />} label="Skills & Projects" />
+          <SidebarOption sectionKey={SECTIONS.PRIVACY} icon={<SecurityIcon />} label="Privacy and Security" />
+          <SidebarOption sectionKey={SECTIONS.MY_POSTS} icon={<FeedIcon />} label="My Posts" />
+          <SidebarOption sectionKey={SECTIONS.SAVED} icon={<BookmarkSharpIcon />} label="Saved" />
         </div>
 
         {/* Logout */}
