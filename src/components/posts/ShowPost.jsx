@@ -779,7 +779,7 @@ const AVAILABLE_REACTIONS = [
               {/* Edit Button (Only for Author) */}
               {isPostAuthor && (
                 <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left">
-                  <EditIcon className="w-4 h-4 mr-2 text-blue-400" /> Edit
+                  <EditIcon className="w-4 h-4 mr-2 text-blue-400" /><span className="text-gray-900">Edit</span> 
                 </button>
               )}
               {/* Delete Button (Only for Author) */}

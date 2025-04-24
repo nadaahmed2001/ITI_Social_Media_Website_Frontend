@@ -21,201 +21,130 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
   const { user, loading } = useContext(AuthContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(""); // *** State for search input ***
+  const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
-  const navigate = useNavigate(); // *** Hook for navigation ***
-  const activeTab = location.pathname;
+  const navigate = useNavigate();
   const { unreadCount } = useChatNotification();
+  const activeTab = location.pathname;
+
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
-  const isMessagesActive =
-    location.pathname === "/chat" ||
-    location.pathname === "/chat/aiChat" ||
-    location.pathname.startsWith("/messagesList/");
-
-  // *** Handler for search input change ***
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  // *** Handler for submitting search (on Enter key) ***
-  const handleSearchSubmit = (event) => {
-    // Check if Enter key was pressed and query is not just whitespace
-    if (event.key === 'Enter' && searchQuery.trim()) {
-      // Navigate to the search results page with the query parameter
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-      // Optional: Clear the search input after submission
-      // setSearchQuery('');
-       // Optional: Close mobile menu if open
-      if (menuOpen) {
-          setMenuOpen(false);
-      }
+      setMenuOpen(false);
     }
   };
 
-  if (loading) return null; // Or a loading skeleton
+  if (loading) return null;
 
-  // --- Nav items definitions (no changes) ---
   const navItems = [
-    { path: "/Home", Icon: Home },
-    { path: "/chat", Icon: MessageCircle, customActive: isMessagesActive },
-    { path: "/profile", Icon: User },
-    ...(user?.is_supervisor
-      ? [{ path: "/supervisor/dashboard", Icon: ChartBarDecreasing }]
-      : []),
-  ];
-
-  const mobileNavItems = [
     { path: "/Home", label: "Dashboard", Icon: Home },
-    { path: "/chat", label: "Chat", Icon: MessageCircle },
+    { path: "/chat", label: "Chat", Icon: MessageCircle, customActive: location.pathname.startsWith("/chat") },
     { path: "/profile", label: "Profile", Icon: User },
-    ...(user?.is_supervisor
-      ? [
-          {
-            path: "/supervisor/dashboard",
-            label: "Supervisor Dashboard",
-            Icon: ChartBarDecreasing,
-          },
-        ]
-      : []),
+    
+    ...(user?.is_supervisor ? [{ path: "/supervisor/dashboard", label: "Supervisor", Icon: ChartBarDecreasing }] : [])
   ];
-  // --- End Nav items definitions ---
-
 
   return (
-    <nav className="fixed top-0 left-0 w-full flex items-center justify-between px-4 py-3 bg-red-900/80 backdrop-blur-md shadow-md z-50">
-      <div className="flex items-center gap-5">
-        <Link to="/Home">
-          <img src={logo} alt="Logo" className="h-12 w-12 rounded-full shadow-md" />
-        </Link>
-      
-        <input
-          type="text"
-          placeholder="#Explore Profiles..."
-          value={searchQuery} 
-          onChange={handleSearchChange} 
-          onKeyDown={handleSearchSubmit} 
-          className="hidden md:block bg-white/20 hover:bg-white/30 text-white placeholder-white/70 px-3 py-2 rounded-lg w-72 transition focus:outline-none focus:ring-2 focus:ring-white/50"
-          aria-label="Search profiles"
-        />
-      </div>
-       <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 gap-6">
-        {navItems.map(({ path, Icon, customActive }) => (
-          <Link key={path} to={path} className="relative group">
-            <Icon
-              size={24}
-              className={`transition ${
-                customActive || activeTab === path
-                  ? "text-white"
-                  : "text-white/60 group-hover:text-white"
-              }`}
-            />
-            {(customActive || activeTab === path) && (
-              <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full"></span>
-            )}
-
-            {path === "/chat" && unreadCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
+    <>
+      <nav className="fixed top-0 left-0 w-full z-50 bg-red-900/80 backdrop-blur-md shadow-md px-4 py-3 flex items-center justify-around">
+        <div className="flex items-center gap-4">
+          <Link to="/Home">
+            <img src={logo} alt="Logo" className="h-10 w-10 rounded-full" />
           </Link>
-        ))}
-        <NotificationsDropdown />
-      </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearchSubmit}
+            placeholder="#Explore Profiles..."
+            className="hidden md:block bg-white/20 text-white px-3 py-2 rounded-lg placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 w-72"
+          />
+        </div>
+        
+        <div className="hidden md:flex gap-6">
+          {navItems.map(({ path, Icon, customActive }) => (
+            <Link key={path} to={path} className="relative group">
+              <Icon size={24} className={`transition ${customActive || activeTab === path ? "text-white" : "text-white/60 group-hover:text-white"}`} />
+              {(customActive || activeTab === path) && (
+                <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white rounded-full"></span>
+              )}
+              {path === "/chat" && unreadCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </Link>
+          ))}
+          <NotificationsDropdown />
+        </div>
 
-
-      {/* Mobile Hamburger Menu (no changes) */}
-      {/* ... */}
-       <button
-        onClick={toggleMenu}
-        className="md:hidden p-2 rounded-full hover:bg-gray-700"
-      >
-         {/* Simpler text color logic if dark mode isn't used here */}
-        <Menu size={24} className={"text-white"} />
-      </button>
-
-
-      {/* Mobile Menu Drawer (Consider adding search here too) */}
-      {menuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-          <div className="w-64 h-full bg-gray-800 text-white p-5 flex flex-col gap-4">
-            <button
-              onClick={toggleMenu}
-              className="self-end text-gray-400 hover:text-white"
-            >
-              ✖
-            </button>
-            {/* Optional: Add a search input inside mobile menu */}
-             <input
-                type="text"
-                placeholder="Search Profiles..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onKeyDown={handleSearchSubmit}
-                className="bg-[#333] p-2 rounded-lg text-white placeholder-gray-400 focus:outline-none mb-4"
-                aria-label="Search profiles"
+        {/* Profile Avatar */}
+        <div className="hidden md:flex items-center gap-4 relative">
+          <div onClick={toggleDropdown} className="w-10 h-10 rounded-full ring-2 hover:ring-[#7B2326] cursor-pointer overflow-hidden">
+            <img
+              src={user?.profile_picture || defaultAvatar}
+              alt="Avatar"
+              className="w-full h-full object-cover"
+              onError={(e) => { if (e.target.src !== defaultAvatar) e.target.src = defaultAvatar; }}
             />
-            {/* --- Mobile Nav Items --- */}
-            {mobileNavItems.map(({ path, label, Icon }) => (
+          </div>
+          {dropdownOpen && (
+            <div className="absolute right-0 top-14 bg-white text-black rounded-lg shadow-lg w-48 z-50">
+              <ul className="py-1">
+                <li className="hover:bg-gray-100">
+                  <Link to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2">
+                    <User size={18} /> Profile
+                  </Link>
+                </li>
+                <li className="hover:bg-gray-100">
+                  <Link to="/logout" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2">
+                    <LogOut size={18} /> Logout
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Hamburger */}
+        <button onClick={toggleMenu} className="md:hidden">
+          <Menu size={24} className="text-white" />
+        </button>
+      </nav>
+
+      {/* Mobile menu drawer */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 bg-black bg-opacity-50 flex justify-end mt-15">
+          <div className="bg-white w-3/4 max-w-xs p-6 flex flex-col gap-4 shadow-lg">
+            <button onClick={toggleMenu} className="self-end text-gray-500">✖</button>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchSubmit}
+              placeholder="#Explore Profiles..."
+              className="bg-gray-100 text-black px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+            />
+            {navItems.map(({ path, label, Icon }) => (
               <Link
+               style={{ textDecoration: "none" }}
                 key={path}
                 to={path}
-                onClick={toggleMenu} // Close menu on navigation
-                className={`flex items-center gap-3 p-2 rounded-lg ${
-                  activeTab === path ? "bg-[#7B2326]" : "hover:bg-gray-700"
+                onClick={toggleMenu}
+                className={`flex items-center gap-3 p-2 rounded-lg !text-gray-800 hover:bg-gray-200 ${
+                  activeTab === path ? "bg-gray-300 font-semibold" : ""
                 }`}
               >
-                <Icon size={24} className="text-[#7B2326]" />
+                <Icon size={22} className="text-[#7B2326]" />
                 {label}
               </Link>
             ))}
           </div>
         </div>
       )}
-
-      {/* Avatar & Dropdown (no changes) */}
-      {/* ... */}
-       <div className="hidden md:flex ml-auto items-center gap-4 relative"> {/* Changed items-left to items-center */}
-        <div
-          className={
-            // Simpler class if dark mode isn't used here
-            "w-10 h-10 rounded-full cursor-pointer ring-2 ring-transparent hover:ring-[#7B2326] overflow-hidden"
-          }
-          onClick={toggleDropdown}
-        >
-          <img
-            src={user?.profile_picture || defaultAvatar}
-            alt="Avatar"
-            className="w-full h-full object-cover"
-             onError={(e) => { if (e.target.src !== defaultAvatar) e.target.src = defaultAvatar; }}
-          />
-        </div>
-
-        {dropdownOpen && (
-          <div className="absolute right-4 top-14  w-48 bg-white text-black rounded-lg shadow-lg z-50"> {/* Increased width slightly */}
-            <ul className="py-1"> {/* Reduced padding */}
-              {/* Profile Link */}
-              <li className="hover:bg-gray-100">
-                <Link to="/profile" onClick={() => setDropdownOpen(false)} className="px-4 py-2 flex items-center gap-2 text-black hover:text-[#7B2326] no-underline w-full">
-                  <User size={18} /> {/* Slightly smaller icon */}
-                  Profile
-                </Link>
-              </li>
-              {/* Logout Link/Button */}
-               <li className="hover:bg-gray-100">
-                 {/* Assuming /logout triggers logout logic via context or route component */}
-                <Link to="/logout" onClick={() => setDropdownOpen(false)} className="px-4 py-2 flex items-center gap-2 text-black hover:text-[#7B2326] no-underline w-full">
-                  <LogOut size={18} />
-                  Logout
-                </Link>
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
-
-    </nav>
+    </>
   );
 }
