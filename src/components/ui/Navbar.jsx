@@ -95,13 +95,13 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
             <div className="absolute right-0 top-14 bg-white text-black rounded-lg shadow-lg w-48 z-50">
               <ul className="py-1">
                 <li className="hover:bg-gray-100">
-                  <Link to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2">
-                    <User size={18} /> Profile
+                  <Link style={{ textDecoration: 'none' }} to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2 no-underline">
+                    <User className="text-[#7B2326]" size={18}  /> <span className="text-gray-900">Profile</span>
                   </Link>
                 </li>
                 <li className="hover:bg-gray-100">
-                  <Link to="/logout" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2">
-                    <LogOut size={18} /> Logout
+                  <Link style={{ textDecoration: 'none' }} to="/logout" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2">
+                    <LogOut className="text-[#7B2326]" size={18} /> <span className="text-gray-900">Logout</span>
                   </Link>
                 </li>
               </ul>

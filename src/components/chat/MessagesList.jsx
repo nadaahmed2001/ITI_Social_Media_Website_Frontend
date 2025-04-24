@@ -325,7 +325,7 @@ const MessagesList = ({token, isGroupChat }) => {
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
-                    className="absolute top-4 right-4 text-gray-900 px-3 py-1 rounded-md shadow-md hover:bg-[#5a181b] transition-colors z-10 "
+                    className="absolute top-1 right-190 text-gray-900 px-3 py-1 hover:bg-gray-300 rounded-xl shadow-md transition-colors z-10 "
                 >
                     Clear All Messages
                 </button>
@@ -346,7 +346,7 @@ const MessagesList = ({token, isGroupChat }) => {
                                 >
                                     <div
                                         ref={nodeRefs.current[index]}
-                                        className={`max-w-[80%] sm:max-w-md p-3 rounded-xl shadow-md transition-all duration-300 ${
+                                        className={`max-w-[80%] sm:max-w-md p-3 rounded-xl shadow-md transition-all duration-300  ${
                                             message.sender === currentUser
                                                 ? "ml-auto bg-[#7a2226] text-white text-right"
                                                 : "mr-auto bg-gray-800 text-[#7a2226] text-left"

@@ -104,13 +104,14 @@ export default function Aichat() {
     };
 
     return (
-        <div className="flex w-full h-screen overflow-hidden ">
-            <div>
+        <div className="flex h-screen">
+            <div className="text-white">
                 <ChatSidebar />
             </div>
-            <div className="flex-1 flex flex-col text-[#7a2226] background-div">
-                <h2 className="text-xl font-bold mb-4 text-center">AI Chat</h2>
-                <div className="flex-1 overflow-y-auto mb-4 p-4">
+            <div className="flex-1 flex flex-col relative background-div mt-18">
+                {/* <h2 className="text-xl font-bold mb-4 text-center">AI Chat</h2> */}
+               
+                <div className="flex-1 overflow-y-auto p-4 pb-16 background-div">
                     {isLoading ? (
                         <div className="flex justify-center items-center h-full">
                             <CircularProgress sx={{ color: '#7a2226' }} />
@@ -121,16 +122,21 @@ export default function Aichat() {
                             No previous messages. Start a conversation!
                         </div>
                     ) : (
+                        // <TransitionGroup className="flex flex-col gap-2">
+                     
                         messages.map((msg, index) => (
                             <div
                                 key={index}
-                                className={`mb-2 p-2 rounded-lg ${
+                                className={`w-fit max-w-[80%] p-3 rounded-xl shadow-md transition-all duration-300 break-words whitespace-pre-wrap  ${
+
                                     msg.sender === "You"
-                                        ? "bg-[#7a2226] text-white ml-auto max-w-[80%]"
-                                        : "bg-gray-200 text-[#7a2226] mr-auto max-w-[80%]"
-                                }`}
+                                    
+                                    ? "ml-auto bg-[#7a2226] text-white text-right"
+                                    : "mr-auto bg-gray-800 text-[#7a2226] text-left"
+                            } max-w-full sm:max-w-md z-0`}
                             >
-                                <strong>{msg.sender}:</strong> {msg.content}
+                                
+                                <strong>{msg.sender}:</strong> <br></br> {msg.content}
                             </div>
                         ))
                     )}
