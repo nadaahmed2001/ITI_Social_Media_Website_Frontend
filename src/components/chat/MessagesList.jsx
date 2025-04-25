@@ -321,7 +321,7 @@ const MessagesList = ({token, isGroupChat }) => {
             <div className=" text-white mt-20 ">
                 <ChatSidebar/>
             </div>
-            <div className="flex-1 flex flex-col relative background-div">
+            <div className="flex-1 flex flex-col relative background-div mt-[80px]">
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
@@ -329,9 +329,9 @@ const MessagesList = ({token, isGroupChat }) => {
                 >
                     Clear All Messages
                 </button>
-                <div className="flex-1 overflow-y-auto p-4 background-div">
+                <div className="flex-1 overflow-y-auto p-4 background-div mt-[100px]">
                     {/* Messages List */}
-                    <TransitionGroup className="flex flex-col gap-2">
+                    <TransitionGroup className="flex flex-col gap-2 ">
                         {messages.map((message, index) => {
                             if (!nodeRefs.current[index]) {
                                 nodeRefs.current[index] = React.createRef();
