@@ -240,7 +240,7 @@ const ViewPublicProfile = ({ profileId }) => {
     console.log(profileData.profile_picture)
 
     return (
-        <div className="view-public-profile-container section-container !bg-[#ededed] rounded-xl shadow-md">
+        <div className="view-public-profile-container section-container !bg-[#ededed] rounded-xl shadow-md !mt-[70px] max-w-[80%]">
             <h2 >
                 <AccountCircleIcon className="icon" />
                 <span className='text-gray-900'>View Public Profile</span>

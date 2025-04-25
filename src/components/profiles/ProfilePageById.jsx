@@ -366,7 +366,7 @@ import { FaGithub, FaLinkedin, FaGlobe, FaHackerrank } from 'react-icons/fa';
 import { SiLeetcode } from 'react-icons/si';
 import LanguageIcon from '@mui/icons-material/Language';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'; // <-- Import Message Icon
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 import './ProfilePageById.css';
 
@@ -658,8 +658,8 @@ function ProfilePageById() {
 
 
     return (
-        <Box sx={{ maxWidth: '1000px', margin: 'auto', marginTop: '80px' , p: 2, pt: { xs: 12, md: 6 } }}>
-            <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, backgroundColor: '#292928', color: 'white', borderRadius: '12px' }}>
+        <Box sx={{ maxWidth: '1000px', margin: 'auto', marginTop: '70px' , p: 2, pt: { xs: 12, md: 6 } }}>
+            <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, backgroundColor: '#ECEDEC', color: '#191918', borderRadius: '12px' }}>
                 {/* Profile Header */}
                 <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} alignItems={{xs: 'center', sm: 'flex-start'}} mb={2}>
                    {/* Avatar */}
@@ -673,16 +673,16 @@ function ProfilePageById() {
                     <Box flexGrow={1} sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
                         {/* Name, Headline, Location */}
                         <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', mb: 0.5 }}> {profileData.username || 'User'} </Typography>
-                        <Typography variant="body1" sx={{ color: 'grey.400', mb: 1 }}> {profileData.headline || 'No headline'} </Typography>
-                        <Typography variant="body2" sx={{ color: 'grey.500', mb: 2 }}> {profileData.location || 'Location not specified'} </Typography>
+                        <Typography variant="body1" sx={{ color: 'grey.700', mb: 1 }}> {profileData.headline || 'No headline'} </Typography>
+                        <Typography variant="body2" sx={{ color: 'grey.700', mb: 2 }}> {profileData.location || 'Location not specified'} </Typography>
 
                         {/* Follow Counts */}
                         <Box display="flex" flexWrap="wrap" gap={{ xs: 2, sm: 3 }} mb={2}>
-                            <Typography variant="body2" sx={{ color: 'grey.300', cursor: 'pointer', '&:hover': { color: 'white'} }}>
-                                <strong className="text-white">{profileData.followers_count ?? 0}</strong> Followers
+                            <Typography variant="body2" sx={{ color: 'grey.600', cursor: 'pointer', '&:hover': { color: 'black'} }}>
+                                <strong className="!text-[#191918]">{profileData.followers_count ?? 0}</strong> Followers
                             </Typography>
-                            <Typography variant="body2" sx={{ color: 'grey.300', cursor: 'pointer', '&:hover': { color: 'white'} }}>
-                                <strong className="text-white">{profileData.following_count ?? 0}</strong> Following
+                            <Typography variant="body2" sx={{ color: 'grey.600', cursor: 'pointer', '&:hover': { color: 'black'} }}>
+                                <strong className="!text-[#191918]">{profileData.following_count ?? 0}</strong> Following
                             </Typography>
                         </Box>
 

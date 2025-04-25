@@ -82,8 +82,9 @@
     }
     .profile-section p {
         background: none; 
-        color: #ddd;
+        color: #191919;
         line-height: 1.6;
+        justify-content: space-between;
     }
     .profile-section ul {
         list-style: none;
@@ -97,12 +98,13 @@
         display: flex;
         flex-wrap: wrap;
         gap: 15px;
+
     }
     .link-item a {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        color: #ccc;
+        color: #7B2227 !important;
         text-decoration: none;
         padding: 8px 12px;
         border-radius: 5px;
@@ -359,13 +361,14 @@
     }
     
     .project-item-card {
-    background-color: #303030;
-    border-radius: 8px; /* Slightly more rounded */
-    border: 1px solid #444;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Contain image corners */
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        background-color: #EDEDED !important;
+        border-radius: 8px; /* Slightly more rounded */
+        border: 1px solid #444;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Contain image corners */
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        color: #191919 !important; /* Text color */
     }
     .project-item-card:hover {
     transform: translateY(-3px);
@@ -381,6 +384,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden; /* Hide overflow */
+    
     }
     .project-image {
     width: 100%;
@@ -404,6 +408,7 @@
     flex-grow: 1; /* Make content area fill remaining space */
     gap: 12px; /* Space between elements */
     background: none;
+
     }
     
     .project-details-content h4 { /* Project Title */
@@ -412,10 +417,16 @@
     font-size: 1.15em;
     font-weight: 600;
     background: none;
+    color: #191919 !important; /* Text color */
+
+    .bio-section {
+        color: #191919 !important; /* Text color */
+    }
+
     }
     .project-description {
-    color: #ccc;
-    font-size: 0.95em;
+        color: #191919 !important; /* Text color */
+        font-size: 0.95em;
     flex-grow: 1; /* Allow description to push links down */
     margin: 0; /* Reset margin */
     line-height: 1.5;
@@ -533,7 +544,7 @@
     width: 100%;
     margin-bottom: 20px;
     padding: 15px;
-    background-color: #2a2a2a;
+    background-color: #EDEDED !important;
     border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
