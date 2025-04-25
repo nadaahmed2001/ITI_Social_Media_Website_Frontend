@@ -1796,8 +1796,8 @@ const handleRemoveReaction = async () => {
               </button>
               {isPostAuthor && <hr className="border-t border-gray-200 my-1" />}
               {isPostAuthor && (
-                <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#7a2226] transition-colors">
-                  <EditIcon className="w-4 h-4 mr-2" /> Edit
+                <button onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left">
+                  <EditIcon className="w-4 h-4 mr-2 text-blue-400" /><span className="text-gray-900">Edit</span> 
                 </button>
               )}
               {isPostAuthor && (

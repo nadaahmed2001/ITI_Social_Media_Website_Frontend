@@ -1,8 +1,8 @@
 // components/supervisor/BatchList.js
-
 import React, { useEffect, useState } from 'react';
 import { fetchBatchesForTrack } from '../services/api';
 import BatchPopup from './BatchPopup';
+import { Box, Typography, Paper, List, ListItem, ListItemText } from '@mui/material';
 
 const BatchList = ({ trackId }) => {
   const [batches, setBatches] = useState([]);
@@ -17,23 +17,47 @@ const BatchList = ({ trackId }) => {
         console.error('Failed to fetch batches:', error);
       }
     }
+
     if (trackId) {
       loadBatches();
     }
   }, [trackId]);
 
   return (
-    <div className="batch-list bg-[#7B2326] text-white pt-6 p-4 rounded-md shadow-md max-w-md">
-      <h3 className="text-lg font-semibold mb-4">Batches</h3>
-      <ul className="space-y-2">
+    <Box sx={{
+      background: '#fbfbfb',
+      padding: '16px',
+      marginLeft: '100px',
+      marginTop: '20px',
+      borderRadius: '13px',
+      border: '1px solid #e8d9db',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+      maxWidth: '500px'
+    }}>
+      <Typography variant="h5" sx={{ fontWeight: 600, color: '#464646', mb: 2 }}>Batches</Typography>
+      <List>
         {batches.map(batch => (
-          <li key={batch.id} onClick={() => setSelectedBatch(batch)}>
-            {batch.name} - {batch.active ? 'Active' : 'Ended'}
-          </li>
+          <ListItem
+            key={batch.id}
+            onClick={() => setSelectedBatch(batch)}
+            sx={{
+              bgcolor: '#ffffff',
+              mb: 1,
+              borderRadius: '13px',
+              border: '1px solid #e8d9db',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.06)',
+              cursor: 'pointer',
+              '&:hover': { backgroundColor: '#ffe5e5' }
+            }}
+          >
+            <ListItemText primary={batch.name} secondary={batch.active ? 'Active' : 'Ended'} />
+          </ListItem>
         ))}
-      </ul>
-      {selectedBatch && <BatchPopup batch={selectedBatch} />}
-    </div>
+      </List>
+      {selectedBatch && (
+        <BatchPopup batch={selectedBatch} onClose={() => setSelectedBatch(null)} />
+      )}
+    </Box>
   );
 };
 

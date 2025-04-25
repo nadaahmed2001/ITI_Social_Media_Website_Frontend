@@ -318,14 +318,14 @@ const MessagesList = ({token, isGroupChat }) => {
 
     return (
         <div className="flex h-screen">
-            <div className=" text-white mt-20 ">
+            <div className=" text-white mt-15">
                 <ChatSidebar/>
             </div>
             <div className="flex-1 flex flex-col relative background-div mt-[80px]">
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
-                    className="absolute top-4 right-4 bg-[#7a2226] text-white px-3 py-1 rounded-md shadow-md hover:bg-[#5a181b] transition-colors z-10"
+                    className="absolute top-1 right-190 text-gray-900 px-3 py-1 hover:bg-gray-300 rounded-xl shadow-md transition-colors z-10 "
                 >
                     Clear All Messages
                 </button>
@@ -346,11 +346,11 @@ const MessagesList = ({token, isGroupChat }) => {
                                 >
                                     <div
                                         ref={nodeRefs.current[index]}
-                                        className={`max-w-[80%] sm:max-w-md p-3 rounded-xl shadow-md transition-all duration-300 ${
+                                        className={`max-w-[80%] sm:max-w-md p-3 rounded-xl shadow-md transition-all duration-300  ${
                                             message.sender === currentUser
                                                 ? "ml-auto bg-[#7a2226] text-white text-right"
                                                 : "mr-auto bg-gray-800 text-[#7a2226] text-left"
-                                        } max-w-full sm:max-w-md`} // Full width on small screens, limited width on larger screens
+                                        } max-w-full sm:max-w-md z-0`}
                                         onContextMenu={(e) => {
                                             e.preventDefault(); // Prevent default right-click menu
                                             if (message.sender === currentUser) {
@@ -385,7 +385,7 @@ const MessagesList = ({token, isGroupChat }) => {
                     <div ref={messagesEndRef} /> 
                 </div>
                 <form onSubmit={handleSendMessage} 
-                className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm ">
+                className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm sticky bottom-0 z-10">
                     <input
                         type="text"
                         value={newMessage}

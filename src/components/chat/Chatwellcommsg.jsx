@@ -28,7 +28,7 @@ export default function Chatwellcommsg() {
             repeat: Infinity,
             delay: i * 0.2,
           }}
-          className="absolute w-1 h-1 bg-white rounded-full"
+          className="absolute w-1 h-1 rounded-full"
           style={{
             top: `${Math.random() * 100}%`,
             left: `${Math.random() * 100}%`,
@@ -52,7 +52,7 @@ export default function Chatwellcommsg() {
           <Typography
             variant="h3"
             component="h1"
-            className="text-white font-bold tracking-wide text-6xl bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent"
+            className="!text-gray-900 font-bold tracking-wide text-6xl bg-gradient-to-r from-red-600 to-red-900 bg-clip-text"
           >
             Your conversation starts here 💬
           </Typography>
@@ -65,7 +65,7 @@ export default function Chatwellcommsg() {
           transition={{ delay: 0.5, type: "spring", stiffness: 100 }}
         >
           <motion.p
-            className="text-gray-300 text-lg font-medium cursor-pointer relative"
+            className="text-gray-900 text-lg font-medium cursor-pointer relative"
             whileHover={{ color: "#f87171" }}
             animate={{
               y: [-5, 5, -5],
