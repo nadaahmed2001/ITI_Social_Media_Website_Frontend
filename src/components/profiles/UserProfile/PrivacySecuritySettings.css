@@ -33,7 +33,7 @@
 }
 
 .privacy-header-icon {
-    color: #7a2226;
+    color: #7a2226 !important;
     font-size: 2rem !important;
     background: rgba(122, 34, 38, 0.1);
     padding: 12px;

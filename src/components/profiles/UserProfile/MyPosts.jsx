@@ -66,22 +66,21 @@ function MyPosts() {
                 component="h2"
                 gutterBottom
                 sx={{
-                    color: '#ffffff',
+                    color: '#2C3648',
                     ml: 4,
                     pb: 1,
                     mb: 3,
                     mt: 10,
-                    position: 'relative',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    width: 'auto',
-                    '&::after': { // Optional: reuse border style from Saved Posts
-                        content: '""', position: 'absolute', bottom: 0,
-                        left: 0, width: '80%', height: '1px', backgroundColor: '#444',
-                    }
+                    position: 'relative', // Needed for absolute positioning of pseudo-element
+                    display: 'inline-flex', // Use inline-flex to size container to content + icon
+                    alignItems: 'center', // Vertically align icon and text
+                    width: '55%', // Allow container to size naturally
+                    borderBottom: '1px solid #444',
+                    fontWeight: 600,
+                    
                 }}
             >
-                <FeedIcon sx={{ mr: 1, fontSize: '1.1em' }} /> {/* My Posts Icon */}
+                <FeedIcon sx={{ mr: 1, fontSize: '1.1em' , color: '#B22323'}} /> {/* My Posts Icon */}
                 My Posts
             </Typography>
 

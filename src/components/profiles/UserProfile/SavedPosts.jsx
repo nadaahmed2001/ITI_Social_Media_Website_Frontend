@@ -67,7 +67,7 @@ function SavedPosts() {
                 component="h2"
                 gutterBottom // Adds margin-bottom based on variant
                 sx={{
-                    color: '#ffffff',
+                    color: '#2C3648',
                     // borderBottom: '1px solid #444', // REMOVED direct border
                     ml: 4,
                     pb: 1, // Keep padding for space below text before the pseudo-border
@@ -78,10 +78,11 @@ function SavedPosts() {
                     alignItems: 'center', // Vertically align icon and text
                     width: '55%', // Allow container to size naturally
                     borderBottom: '1px solid #444',
+                    fontWeight: 600,
                 }}
             >
                 {/* Icon added before the text */}
-                <BookmarkIcon sx={{ mr: 1, fontSize: '1.1em' }} /> {/* Adjust margin and size */}
+                <BookmarkIcon sx={{ mr: 1, fontSize: '1.1em', color: '#B22323' }} /> {/* Adjust margin and size */}
                 Saved Posts
             </Typography>
             {/* --- End Updated Typography --- */}

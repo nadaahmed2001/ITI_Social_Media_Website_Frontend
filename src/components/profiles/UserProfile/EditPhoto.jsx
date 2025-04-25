@@ -153,7 +153,7 @@ const hasCustomImage = imageUrl && imageUrl !== DEFAULT_PROFILE_PIC; // Check if
 return (
 // Use class names matching the light theme CSS
 
-    <div className="mt-[80px] ml-[25px] !bg-[#ededed] p-6 rounded-xl shadow-md">
+    <div className="mt-[70px] !bg-[#F0F0F0] p-6 rounded-xl shadow-md max-w-[80%]">
     {/* Title and Subtitle */}
     <div className='photo-title-section-light'>
         <h2 text-sm><PhotoCameraOutlinedIcon className='text-[#7a2226]'/>Edit Photo</h2>
