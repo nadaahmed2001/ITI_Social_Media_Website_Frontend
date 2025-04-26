@@ -196,6 +196,50 @@ export const unfollowUser = async (profileId) => {
 };
 
 
+export const getFollowers = async (profileId, page = 1) => {
+  if (!profileId) {
+       console.error("getFollowers called without profileId");
+       throw new Error("Profile ID is required to get followers.");
+  }
+  try {
+   // Construct URL with pagination parameter
+   const url = `users/profiles/${profileId}/followers/?page=${page}`;
+   console.log(`Calling API: GET ${url}`);
+
+   const response = await api2.get(url);
+   console.log(`Followers list response for ${profileId} (page ${page}):`, response.data);
+
+   // Return the full paginated response data
+   return response.data;
+
+ } catch (error) {
+   console.error(`Error getting followers for profile ${profileId}:`, error.response?.data || error.message || error);
+   throw error;
+ }
+};
+
+export const getFollowing = async (profileId, page = 1) => {
+  if (!profileId) {
+       console.error("getFollowing called without profileId");
+       throw new Error("Profile ID is required to get following list.");
+   }
+  try {
+   // Construct URL with pagination parameter
+   const url = `users/profiles/${profileId}/following/?page=${page}`;
+   console.log(`Calling API: GET ${url}`);
+
+   const response = await api2.get(url);
+   console.log(`Following list response for ${profileId} (page ${page}):`, response.data);
+
+   // Return the full paginated response data
+   return response.data;
+
+ } catch (error) {
+   console.error(`Error getting following list for profile ${profileId}:`, error.response?.data || error.message || error);
+   throw error;
+ }
+};
+
 export const getProfileById = async (profileId) => {
   if (!profileId) throw new Error("Profile ID required");
   try {

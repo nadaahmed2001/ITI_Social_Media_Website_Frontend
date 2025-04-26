@@ -1,361 +1,3 @@
-// import React, { useState, useEffect, useCallback } from 'react';
-// import { useParams, Link } from 'react-router-dom'; // Import useParams and Link
-// import { getPublicProfile, getMyProjects } from '../services/api'; // Adjust path to your api.js
-// import AuthContext from '../../contexts/AuthContext'; // To get the current user
-
-// // Import Icons (adjust paths/sources if needed)
-// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-// import GitHubIcon from '@mui/icons-material/GitHub'; // Keep if used in renderProjects
-// import LanguageIcon from '@mui/icons-material/Language'; // Keep if used in renderProjects
-// import { FaGithub, FaLinkedin, FaGlobe, FaHackerrank } from 'react-icons/fa';
-// import { SiLeetcode } from 'react-icons/si';
-
-// import './ProfilePageById.css';
-
-// const DEFAULT_PROJECT_IMAGE = '../src/assets/images/user-default.webp';
-// const DEFAULT_AVATAR = '../src/assets/images/user-default.webp';
-
-// // New Profile Page Component
-// const ProfilePageById = () => {
-//     const { profileId } = useParams(); 
-
-//     const [profileData, setProfileData] = useState(null);
-//     const [projectsData, setProjectsData] = useState([]);
-//     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
-//     const [isLoadingProjects, setIsLoadingProjects] = useState(true);
-//     const [error, setError] = useState('');
-
-//     // Fetch Profile Data based on URL ID
-//     const fetchProfile = useCallback(async () => {
-//         // Removed check for prop, now relies on useParams
-//         if (!profileId) {
-//             setError("Profile ID not found in URL.");
-//             setIsLoadingProfile(false);
-//             setIsLoadingProjects(false);
-//             return;
-//         }
-//         setIsLoadingProfile(true);
-//         setError('');
-//         try {
-//             // Use getPublicProfile with ID from URL params
-//             const response = await getPublicProfile(profileId);
-//             setProfileData(response.data);
-//         } catch (err) {
-//             console.error(`Failed to fetch public profile for ID ${profileId}:`, err);
-//             if (err.response?.status === 404) {
-//                 setError('Profile not found.');
-//             } else {
-//                 setError('Could not load profile data.');
-//             }
-//             setProfileData(null); // Ensure profile data is cleared on error
-//         } finally {
-//             setIsLoadingProfile(false);
-//         }
-//     }, [profileId]); // Dependency is the ID from the URL
-
-//     // Fetch Projects associated with the viewed profile ID
-//     const fetchProjects = useCallback(async () => {
-//         if (!profileId) {
-//             // Don't try to load projects if there's no profile ID
-//             setIsLoadingProjects(false);
-//             return;
-//         }
-//         setIsLoadingProjects(true);
-//         // Clear specific project errors if re-fetching profile
-//         // setError(''); // Might clear profile error, be careful
-//         try {
-//             // Use getMyProjects (which takes owner ID) with the profileId from URL params
-//             const response = await getMyProjects(profileId);
-//             setProjectsData(response.data || []);
-//         } catch (err) {
-//             console.error(`Failed to fetch projects for profile ID ${profileId}:`, err);
-//             // Set a specific error or just log it, don't overwrite profile error potentially
-//             // setError('Could not load projects.'); 
-//             setProjectsData([]);
-//         } finally {
-//             setIsLoadingProjects(false);
-//         }
-//     }, [profileId]); // Dependency is the ID from the URL
-
-
-//     // Trigger fetches when profileId from URL changes
-//     useEffect(() => {
-//         fetchProfile();
-//         fetchProjects();
-//     }, [fetchProfile, fetchProjects]); // fetchProfile/fetchProjects depend on profileId
-
-
-//     // --- Rendering Functions (Copied from ViewPublicProfile, check for needed data) ---
-    
-
-//     const renderLinks = () => {
-//         if (!profileData) return null;
-//         // Ensure profileData has the link fields (github_url, leetcode_username, etc.)
-//         const links = [
-//             { url: profileData.github_url, icon: <FaGithub />, label: 'GitHub Profile' },
-//             { url: profileData.leetcode_username ? `https://leetcode.com/${profileData.leetcode_username}` : null, icon: <SiLeetcode />, label: 'LeetCode Profile' },
-//             { url: profileData.hackerrank_username ? `https://www.hackerrank.com/${profileData.hackerrank_username}` : null, icon: <FaHackerrank />, label: 'HackerRank Profile' },
-//             { url: profileData.linkedin_url, icon: <FaLinkedin />, label: 'LinkedIn Profile' },
-//             { url: profileData.website_url, icon: <FaGlobe />, label: 'Personal Website/Portfolio' },
-//         ].filter(link => link.url);
-
-//         if (links.length === 0) return null;
-
-//         return (
-//             <div className="profile-section links-section">
-//                 <h3>Links</h3>
-//                 {/* Using icon-links class from your CSS */}
-//                 <ul className="links-list icon-links">
-//                     {links.map((link, index) => (
-//                         <li key={index} className="link-item">
-//                             <a href={link.url} target="_blank" rel="noopener noreferrer" title={link.label}>
-//                                 {link.icon}
-//                             </a>
-//                         </li>
-//                     ))}
-//                 </ul>
-//             </div>
-//         );
-//     };
-
-//     const renderSkills = () => {
-//         if (!profileData || (!profileData.main_skills?.length && !profileData.other_skills?.length)) {
-//             return null;
-//         }
-
-//         return (
-//             <div className="profile-section skills-section">
-//                 <h3>Skills</h3>
-//                 {profileData.main_skills?.length > 0 && (
-
-//                     <div className="skills-subsection">
-//                         <ul className="other-skills-list">
-
-//                             {profileData.main_skills.map(skill => (
-//                                 <li key={skill.id} className="other-skill-item">
-//                                     <span className="main-skill-name">{skill.name}</span>
-//                                     {skill.description && <p className="main-skill-description">{skill.description}</p>}
-//                                 </li>
-//                             ))}
-
-//                             {profileData.other_skills.map(skill => (
-//                                 <li key={skill.id} className="other-skill-item">{skill.name}</li>
-//                             ))}
-
-//                         </ul>
-//                     </div>
-//                 )}
-//             </div>
-//         );
-//     };
-
-//     const renderProjects = () => {
-//         // Use loading state specific to projects
-//         if (isLoadingProjects && projectsData.length === 0) {
-//             return (
-//                 <div className="profile-section projects-section">
-//                     <h3>Projects</h3>
-//                     <p className='loading-text small'>Loading projects...</p>
-//                 </div>
-//             );
-//         }
-
-//         // Don't render the section if there are no projects after loading
-//         if (!isLoadingProjects && projectsData.length === 0) {
-//             // return null; 
-//             return (
-//                 <div className="profile-section projects-section">
-//                     <h3>Projects</h3>
-//                     <p className="no-data-text">No projects to display yet.</p>
-//                 </div>
-//             );
-//         }
-
-//         // If projects exist, render the list
-//         return (
-//             <div className="profile-section projects-section">
-//                 <h3>Projects</h3>
-//                 <ul className="projects-list">
-//                     {projectsData.map(project => (
-//                         // Use project ID for the list item key
-//                         <li key={project.id} className="project-item-card">
-
-//                             {/* Project Image */}
-//                             <div className="project-image-container">
-//                                 <img
-//                                     src={project.featured_image || DEFAULT_PROJECT_IMAGE}
-//                                     alt={`${project.title} preview`}
-//                                     className="project-image"
-//                                     onError={(e) => { if (e.target.src !== DEFAULT_PROJECT_IMAGE) e.target.src = DEFAULT_PROJECT_IMAGE; }}
-//                                 />
-//                             </div>
-
-//                             {/* Project Text Content */}
-//                             <div className="project-details-content">
-//                                 {/* Title */}
-//                                 <h4>{project.title || 'Untitled Project'}</h4>
-
-//                                 {/* Description */}
-//                                 {project.description && (
-//                                     <p className="project-description">{project.description}</p>
-//                                 )}
-
-//                                 {/* Tags - Map directly over nested tag objects */}
-//                                 {Array.isArray(project.tags) && project.tags.length > 0 && (
-//                                     <div className="project-tags">
-//                                         {project.tags.map(tag => (
-//                                             // Use tag.id for key and tag.name for display
-//                                             <span key={tag.id} className="project-tag">{tag.name}</span>
-//                                         ))}
-//                                     </div>
-//                                 )}
-
-//                                 {/* Contributors - Map over nested contributor objects */}
-//                                 {Array.isArray(project.contributors) && project.contributors.length > 0 && (
-//                                     <div className="project-contributors">
-//                                         <h5>Contributors:</h5>
-//                                         <ul className="contributors-list">
-//                                             {project.contributors.map(contributor => (
-//                                                 <li key={contributor.id} className="contributor-item"><Link to={`/profiles/${contributor.id}`} title={`View ${contributor.username}'s profile`}><img src={contributor.profile_picture || DEFAULT_AVATAR} alt={contributor.username} title={contributor.username} className="contributor-avatar small" onError={(e) => { if (e.target.src !== DEFAULT_AVATAR) e.target.src = DEFAULT_AVATAR; }} /></Link></li>))}</ul></div>
-//                                 )}
-
-//                                 {/* Project Links */}
-//                                 <div className="project-links">
-//                                     {project.demo_link && (
-//                                         <a href={project.demo_link} target="_blank" rel="noopener noreferrer" className="project-link-button demo">
-//                                             <LanguageIcon fontSize="small" /> Demo
-//                                         </a>
-//                                     )}
-//                                     {project.source_link && (
-//                                         <a href={project.source_link} target="_blank" rel="noopener noreferrer" className="project-link-button source">
-//                                             <GitHubIcon fontSize="small" /> Source
-//                                         </a>
-//                                     )}
-//                                 </div>
-//                             </div>
-//                         </li>
-//                     ))}
-//                 </ul>
-//             </div>
-//         );
-//     };
-//     // --- End Rendering Functions ---
-
-
-//     // --- Main Return Logic ---
-//     if (isLoadingProfile) {
-//         // Consistent loading state
-//         return <div className="loading-text profile-page-container section-container">Loading profile...</div>;
-//     }
-
-//     // If there was an error fetching the profile, or if data is null after loading
-//     if (error || !profileData) {
-//         return <div className="mt[100px] error-message main-error profile-page-container section-container">{error || 'Profile data not found.'}</div>;
-//     }
-
-//     // Profile data loaded successfully, render the profile
-//     // Construct full name, handle cases where one might be missing
-//     const fullName = [profileData.first_name, profileData.last_name].filter(Boolean).join(' ') || profileData.username;
-
-//     return (
-//         // Changed outer container class name
-//         <div className="!mt-[100px] profile-page-container section-container">
-//             {/* Removed H2 title from ViewPublicProfile */}
-//             {/* Display specific error if projects failed but profile loaded */}
-//             {/* {error && <p className="error-message">{error}</p>}  */}
-
-//             {/* --- Profile Header (same structure as ViewPublicProfile) --- */}
-//             <div className="profile-header">
-//                 <img
-//                     src={profileData.profile_picture || DEFAULT_AVATAR}
-//                     alt={`${fullName}'s profile`}
-//                     className="profile-avatar"
-//                     onError={(e) => { if (e.target.src !== DEFAULT_AVATAR) e.target.src = DEFAULT_AVATAR; }}
-//                 />
-//                 <div className="profile-info">
-//                     <h3 className="profile-fullname">{fullName}</h3>
-//                     <p className="profile-username">@{profileData.username}</p>
-//                     {profileData.headline && <p className="profile-headline">{profileData.headline}</p>}
-//                     {profileData.location && <p className="profile-location">{profileData.location}</p>}
-//                 </div>
-
-
-//                 {/* TODO: Add Follow/Message button here, check if profileId !== loggedInUserId */}
-//                 {/* <div className="profile-actions"> <FollowButton targetUserId={profileId} /> </div> */}
-            
-//             </div>
-
-
-//             {/* New section for ITI status / history */}
-//             {profileData.is_student && profileData.iti_history?.length > 0 && (
-//                 <div className="profile-section iti-history-section">
-//                     <h3>History/Status with ITI</h3>
-
-//                     {profileData.iti_history.map((entry, index) => (
-//                         <div key={index} className="iti-history-box">
-//                             <p><strong>Program:</strong> {entry.program}</p>
-//                             <p><strong>Track:</strong> {entry.track || 'N/A'}</p>
-//                             <p><strong>Start Date:</strong> {entry.start_date}</p>
-//                             <p><strong>Status:</strong> {entry.status}</p>
-//                         </div>
-//                     ))}
-
-//                 </div>
-//             )}
-
-//             {profileData.is_supervisor && (
-//                 <div className="profile-section supervisor-info-section">
-//                     <h3>Supervisor Role</h3>
-//                     {profileData.department && (
-//                         <div className="supervisor-department">
-//                             <span className="badge">Department: {profileData.department}</span>
-//                         </div>
-//                     )}
-//                     {profileData.supervised_tracks?.length > 0 && (
-//                         <div className="supervised-tracks-box">
-//                             <h4>Supervising Tracks</h4>
-//                             <ul className="supervised-tracks-list">
-//                                 {profileData.supervised_tracks.map((track, idx) => (
-//                                     <li key={idx}>{track}</li>
-//                                 ))}
-//                             </ul>
-//                         </div>
-//                     )}
-//                 </div>
-//             )}
-
-
-//             {/* --- Bio --- */}
-//             {profileData.bio && (
-//                 <div className="profile-section bio-section">
-//                     <h3>Bio</h3>
-//                     <p>{profileData.bio}</p>
-//                 </div>
-//             )}
-
-//             {/* --- Links --- */}
-//             {renderLinks()}
-
-//             {/* --- Skills --- */}
-//             {renderSkills()}
-
-//             {/* --- Projects --- */}
-//             {renderProjects()}
-
-//         </div> // End profile-page-container
-//     );
-// };
-
-// export default ProfilePageById;
-
-
-
-// ==================================================================================================================
-// ==================================================================================================================
-// ==================================================================================================================
-
-
-
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getProfileById ,  getMyProjects} from '../../components/services/api';
@@ -672,18 +314,46 @@ function ProfilePageById() {
                     {/* Info Box */}
                     <Box flexGrow={1} sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
                         {/* Name, Headline, Location */}
-                        <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', mb: 0.5 }}> {profileData.username || 'User'} </Typography>
-                        <Typography variant="body1" sx={{ color: 'grey.700', mb: 1 }}> {profileData.headline || 'No headline'} </Typography>
-                        <Typography variant="body2" sx={{ color: 'grey.700', mb: 2 }}> {profileData.location || 'Location not specified'} </Typography>
+                        { profileData.first_name && profileData.last_name ? (
+                            <>
+                                <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold', mb: 0.5 }}> { profileData.first_name + ' ' + profileData.last_name } </Typography>
+                                <Typography variant="body1" component="h6" sx={{  mb: 0.5 }}> @{ profileData.username  } </Typography>
+                            </>
+                        ) : (
+                            <Typography variant="h5" component="h2" sx={{ fontWeight: 'bold', mb: 0.5 }}> { profileData.username || 'User' } </Typography>
+                        )}
+
+                        { !profileData.first_name && !profileData.last_name && (
+                            <Typography variant="caption" component="h6" sx={{ fontWeight: '500', color: 'grey.600', mb: 1 }}> @{profileData.username} </Typography>     
+                        )}
+
+                        {profileData.headline && (
+                            <Typography variant="body1" sx={{ color: 'grey.800', mb: 1 }}> {profileData.headline} </Typography>
+                        )}
+                        {profileData.location && (
+                            <Typography variant="body2" sx={{ color: 'grey.700', mb: 2 }}> {profileData.location || 'Location not specified'} </Typography>
+                        )}
+                        
 
                         {/* Follow Counts */}
                         <Box display="flex" flexWrap="wrap" gap={{ xs: 2, sm: 3 }} mb={2}>
                             <Typography variant="body2" sx={{ color: 'grey.600', cursor: 'pointer', '&:hover': { color: 'black'} }}>
-                                <strong className="!text-[#191918]">{profileData.followers_count ?? 0}</strong> Followers
+                                <Link
+                                    to={profileData.id ? `/profiles/${profileData.id}/followers` : '#'} // Link only if ID exists
+                                    className="flex-1 no-underline text-center !text-gray-900"
+                                    style={{ textDecoration: 'none' }}
+                                >
+                                    <strong className="!text-[#7B2227]">{profileData.followers_count ?? 0}</strong> Followers
+                                </Link>                               
                             </Typography>
-                            <Typography variant="body2" sx={{ color: 'grey.600', cursor: 'pointer', '&:hover': { color: 'black'} }}>
-                                <strong className="!text-[#191918]">{profileData.following_count ?? 0}</strong> Following
-                            </Typography>
+                            
+                            <Link
+                                to={profileData.id ? `/profiles/${profileData.id}/following` : '#'} // Link only if ID exists
+                                className="flex-1 no-underline !text-gray-900"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <strong className="!text-[#7B2227]">{profileData.following_count ?? 0}</strong> Following
+                            </Link>
                         </Box>
 
                         {/* Follow/Edit Button Area */}

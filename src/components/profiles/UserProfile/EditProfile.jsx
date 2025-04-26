@@ -52,7 +52,7 @@ const EditProfile = ({ initialData, onUpdateSuccess }) => {
       const response = await updateAccount(formData);
       setSuccess('Profile updated successfully!');
       if (onUpdateSuccess) {
-        onUpdateSuccess(response.data); // Pass updated data back to parent
+        onUpdateSuccess(response.data); 
       }
     } catch (err) {
       console.error("Profile update error:", err.response?.data || err.message);
@@ -83,8 +83,11 @@ const EditProfile = ({ initialData, onUpdateSuccess }) => {
         <EditIcon className='icon'/>Edit Profile
       </h2>
       <form onSubmit={handleSubmit}>
-        {error && <p className="error-message">{error}</p>}
-        {success && <p className="success-message">{success}</p>}
+
+        <div className="flex items-center justify-center">
+          {success && <p className="success-message">{success}</p>}
+          {error && <p className="error-message">{error}</p>}
+        </div>
 
         <div className="form-section">
           <h3>Basic Info</h3>

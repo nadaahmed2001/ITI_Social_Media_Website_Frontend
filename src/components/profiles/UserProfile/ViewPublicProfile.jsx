@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'; // For internal links
 import { Box, Typography } from '@mui/material';
 import './ViewPublicProfile.css';
 
+
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp';
 const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
 
@@ -261,10 +262,24 @@ const ViewPublicProfile = ({ profileId }) => {
                     {profileData.location && <p className="!text-gray-900">{profileData.location}</p>}
                     <Box display="flex" flexGrow={1} flexWrap="wrap" gap={{ xs: 2, sm: 3 }} mb={1}> 
                         <Typography variant="body2" sx={{ color: 'grey.900', cursor: 'pointer', '&:hover': { color: 'white'} }}>
-                            <strong className="!text-gray-900">{profileData.followers_count ?? 0}</strong> Followers
+                            <Link
+                                to={profileData.id ? `/profiles/${profileData.id}/followers` : '#'} // Link only if ID exists
+                                className="flex-1 no-underline text-center !text-gray-900"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <strong className="!text-[#7B2227]">{profileData.followers_count ?? 0}</strong> Followers
+                            </Link>         
                         </Typography>
+
                         <Typography variant="body2" sx={{ color: 'grey.900', cursor: 'pointer', '&:hover': { color: 'white'} }}>
-                            <strong className="!text-gray-900">{profileData.following_count ?? 0}</strong> Following
+                            <Link
+                                to={profileData.id ? `/profiles/${profileData.id}/following` : '#'} // Link only if ID exists
+                                className="flex-1 no-underline text-center !text-gray-900"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <strong className="!text-[#7B2227]">{profileData.following_count ?? 0}</strong> Following
+                            </Link>
+                        
                         </Typography>
                     </Box>
                 </div>
@@ -283,7 +298,6 @@ const ViewPublicProfile = ({ profileId }) => {
                                 <p><strong>Status:</strong> {entry.status}</p>
                             </div>
                         ))}
-                 
                 </div>
             )}
 
