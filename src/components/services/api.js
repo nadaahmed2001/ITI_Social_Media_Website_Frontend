@@ -464,6 +464,17 @@ export const getProgram= async(programId)=>{
   }
 }
 
+export const createTrack= async (trackData) => {
+  try {
+    const response = await api.post("supervisor/tracks/", trackData);
+    console.log("Created Track:", response.data); // Debugging
+    return response.data;  // Return the newly created track data
+  } catch (error) {
+    console.error('Failed to create track:', error);
+    throw error; // Make sure to propagate error for frontend handling
+  }
+};
+
 //------------------- Notifications API functions -------------------
 export const fetchNotifications = () => api.get("/notifications/");
 export const markNotificationAsRead = (notificationId) =>

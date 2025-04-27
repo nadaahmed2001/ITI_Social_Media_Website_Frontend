@@ -11,7 +11,7 @@ import BatchPopup from '../../components/supervisor/BatchPopup';
 
 const BatchPage = () => {
   const { programId, trackId } = useParams();
-  console.log("programId:", programId, "trackId:", trackId);
+  //console.log("programId:", programId, "trackId:", trackId);
   const [batches, setBatches] = useState([]);
   const [selectedBatch, setSelectedBatch] = useState(null);
   const [filter, setFilter] = useState('active');
@@ -24,7 +24,7 @@ const BatchPage = () => {
     try {
       const trackData = await getTrack(trackId);
       setTrack(trackData);
-      console.log('Track Details:', trackData);
+      //console.log('Track Details:', trackData);
     } catch (error) {
       console.error('Failed to fetch track', error);
     }

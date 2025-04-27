@@ -167,7 +167,7 @@ const UserProfilePage = () => {
     setProfileError('');
     try {
       const response = await getAccount();
-      console.log("API Response from UserProfilePage.jsx:", response);
+      // console.log("API Response from UserProfilePage.jsx:", response);
       setUserData(response.data);
     } catch (err) {
       console.error("Failed to fetch user data:", err);
