@@ -8,7 +8,6 @@ import {
 import LayoutWithNavbar from "../layouts/LayoutWithNavbar";
 import LayoutWithoutNavbar from "../layouts/LayoutWithoutNavbar";
 
-// All your imports (same as before) ...
 import Logout from "../pages/Logout";
 import SearchPage from "../pages/SearchPage";
 import NotificationsDropdown from "../pages/NotificationsDropdown";
@@ -16,11 +15,8 @@ import SignUpForm from "../components/auth/SignUpForm";
 import LoginForm from "../components/auth/LoginForm";
 import ForgotPassword from "../components/auth/ForgotPassword";
 import PasswordResetConfirm from "../components/auth/PasswordResetConfirm";
-import ChatSidebar from "../components/chat/ChatSidebar";
 import MessagesList from "../components/chat/MessagesList";
 import FollowButton from "../components/profiles/FollowButton";
-import SearchFilters from "../components/search/SearchFilters";
-import Sidebar from "../components/profiles/Sidebar/Sidebar";
 import UserProfilePage from "../pages/UserProfilePage";
 import EmailChangeSuccess from "../pages/EmailChangeSuccess";
 import EmailChangeFailed from "../pages/EmailChangeFailed";
@@ -33,7 +29,6 @@ import BatchPage from "../pages/SupervisorDashboard/BatchPage";
 import HomePage from "../pages/HomePage";
 import Aichat from "../components/chat/Aichat";
 import PostDetail from "../components/notifications/PostDetail";
-import Navbar from "../components/ui/Navbar";
 import StartChat from "../pages/startChat";
 import FollowerListPage from "../pages/FollowerListPage"; 
 import FollowingListPage from "../pages/FollowingListPage"; 
@@ -60,9 +55,18 @@ const AppContent = () => {
 
         {/* --- Routes with Navbar --- */}
         <Route element={<LayoutWithNavbar />}>
+          
           {/* --- Protected Routes --- */}
           <Route
             path="/Home"
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/home"
             element={
               <PrivateRoute>
                 <HomePage />
@@ -191,9 +195,7 @@ const AppContent = () => {
               </PrivateRoute>
             }
           />
-
-
-          <Route path="/search/filters" element={<SearchFilters />} />
+          <Route path="/search" element={<SearchPage />} />
           {/* Follow button might be inside ProfilePageById and check auth there */}
           <Route path="/profiles/followbutton" element={<FollowButton />} />
         </Route>
