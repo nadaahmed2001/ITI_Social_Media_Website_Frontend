@@ -92,7 +92,7 @@ const AppContent = () => {
           <Route
             path="/batches/:programId/:trackId"
             element={
-              <PrivateRoute> {/* Assuming batches require login */}
+              <PrivateRoute>
                 <BatchPage />
               </PrivateRoute>
             }

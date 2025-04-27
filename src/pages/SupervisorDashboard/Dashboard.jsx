@@ -72,7 +72,7 @@ const Dashboard = () => {
     <>
       {/* <Navbar /> */}
       <Box sx={{ display: 'flex', height: '100vh', bgcolor: '#f8fafc', color: 'black' }}>
-        {/* Sidebar */}
+        {/* Sidebar and department box */}
         <Box>
           {department && (
             <div style={departmentBoxStyle}>

@@ -6,6 +6,7 @@ import React from "react";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
+  
 
   if (loading) return null;
   // console.log(user);

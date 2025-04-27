@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
           // 2. Call getAccount() API to fetch full user details
           const response = await getAccount(); 
           setUser(response.data); // 3. Set user state with the FULL data from API
-          console.log("Full user data set in AuthContext:", response.data);
+          // console.log("Full user data set in AuthContext:", response.data);
         } catch (error) {
           // This likely means the token is invalid/expired OR API failed
           console.error("Failed to fetch user account data:", error);
