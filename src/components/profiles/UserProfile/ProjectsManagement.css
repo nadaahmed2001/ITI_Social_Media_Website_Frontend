@@ -64,8 +64,9 @@ background: none; /* Override global */
 
 .project-manage-title {
     font-weight: 500;
-    color: #f0f0f0;
+    color: #191919;
     font-size: 1.05em;
+    font-weight: 600;
     display: block; /* Ensure title takes its line */
     margin-bottom: 3px;
     background: none;
@@ -104,17 +105,14 @@ background: none; /* Override global */
     background-color: inherit;
 }
 
+.project-manage-actions .action-button svg:hover {
+    color: #7a2226;
+}
+
 .project-manage-actions .action-button:hover:not(:disabled) {
     color: #fff;
 }
-.project-manage-actions .action-button.edit-button:hover:not(:disabled) {
-    background-color: rgba(255, 253, 2, 0.2);
-    color: #7a2226;
-}
-.project-manage-actions .action-button.delete-button:hover:not(:disabled) {
-    background-color: rgba(255, 102, 102, 0.2);
-    color: #ff6666;
-}
+
 .project-manage-actions .action-button:disabled {
     color: #666;
     cursor: not-allowed;
@@ -167,12 +165,14 @@ background: none; /* Override global */
     margin: 0;
     font-size: 1.3em;
     background: none;
+    font-weight: 600;
+
 }
 
 .modal-close-button {
     background: none;
     border: none;
-    color: #aaa;
+    color: #7a2226;
     font-size: 1.8rem;
     font-weight: bold;
     cursor: pointer;
@@ -180,7 +180,7 @@ background: none; /* Override global */
     line-height: 1;
 }
 .modal-close-button:hover {
-    color: #fff;
+    color: #ff6666;
 }
 .modal-close-button:disabled {
     color: #666; cursor: not-allowed;
@@ -426,8 +426,8 @@ color: #ff6666; background-color: rgba(255, 102, 102, 0.1); border: 1px solid #f
     flex-grow: 1; /* Input takes available space */
     /* Reuse general modal input styles */
     padding: 10px 12px;
-    background-color: #1f1f1f;
-    border: 1px solid #444;
+    background-color: #EDECEC;
+    border: 1px solid #191919;
     border-radius: 5px;
     color: #e0e0e0;
     font-size: 1em;
@@ -474,15 +474,15 @@ color: #ff6666; background-color: rgba(255, 102, 102, 0.1); border: 1px solid #f
 /* Current Contributors Section Styling */
 .current-contributors-section {
     background: none;
-     margin-top: 15px; /* Space above the list */
+    margin-top: 15px; /* Space above the list */
 }
 .current-contributors-section h5 {
-    color: #ccc;
+    color: #191919;
     margin-bottom: 10px;
     font-size: 1em;
-    font-weight: 500;
+    font-weight: 600;
     background: none;
-    padding-bottom: 5px;
+    padding-bottom: 15px;
     border-bottom: 1px solid #444; /* Separator for heading */
 }
 
@@ -541,7 +541,8 @@ color: #ff6666; background-color: rgba(255, 102, 102, 0.1); border: 1px solid #f
 
 .contributor-modal-username {
     flex-grow: 1; /* Allow username to take space */
-    color: #ddd;
+    color: #191919;
+    font-weight: 600;
     font-size: 0.95em;
     margin-right: 10px; /* Space before button */
     background: none;

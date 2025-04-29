@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import {Link} from 'react-router-dom';
 import {
     getMyProjects,
     addProject,    
@@ -34,7 +35,7 @@ const initialProjectFormState = {
 };
 
 // Define default paths (ADJUST THESE PATHS)
-const DEFAULT_AVATAR = '/images/profiles/user-default.png';
+const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
 const DEFAULT_PROJECT_IMAGE = '/images/projects/default.jpg';
 
 // --- CLOUDINARY CONFIG (Use Environment Variables!) ---
@@ -444,7 +445,10 @@ const ProjectsManagement = ({ profileId }) => {
                                         return (
                                             <li key={c.id || c.username} className={`contributor-modal-item ${isRemovingThis ? 'removing' : ''}`}>
                                                 <img src={c.profile_picture || DEFAULT_AVATAR} alt={c.username} className="contributor-avatar small" onError={(e) => { if(e.target.src !== DEFAULT_AVATAR) e.target.src = DEFAULT_AVATAR; }}/>
-                                                <span className='contributor-modal-username'>{c.username}</span>
+                                                <Link to={`/profiles/${c.id}`} className="contributor-modal-username hover:opacity-80 transition-opacity !no-underline">
+                                                    <span >{c.username}</span>
+                                                </Link>
+                                                
                                                 <button className='remove-contributor-button' onClick={() => handleRemoveContributor(c.username)} disabled={isRemovingThis || isAddingContributor || (isRemovingContributorUsername && !isRemovingThis)} title={`Remove ${c.username}`} >
                                                 {isRemovingThis ? <span className="spinner small red"></span> : <PersonRemoveIcon fontSize="small"/>}
                                                 </button>
