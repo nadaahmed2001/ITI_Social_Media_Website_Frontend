@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { fetchGroupMessages, fetchPrivateMessages, fetchUser, 
     sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage,
     clearGroupMessages, clearPrivateMessages, editGroupChat } from "../../components/services/api";
@@ -19,19 +19,32 @@ const MessagesList = ({token, isGroupChat }) => {
     const [isSending, setIsSending] = useState(false);
     const [isConnecting, setIsConnecting] = useState(false);
     const [connectionError, setConnectionError] = useState(null);
+    const [reconnectCount, setReconnectCount] = useState(0);
     const messagesEndRef = useRef(null);
     const wsManager = useRef(null); // WebSocket manager reference
     const nodeRefs = useRef({}); // Store refs for each message
     
     // Get auth token from localStorage
-    token = localStorage.getItem("access_token"); 
-    if (!token) {
-        console.error("No token passed to MessagesList component!");
+    const authToken = token || localStorage.getItem("access_token"); 
+    if (!authToken) {
+        console.error("No token found for MessagesList component!");
     }
 
     // Initialize the WebSocketManager once
     useEffect(() => {
         wsManager.current = new WebSocketManager();
+        
+        // Initialize WebSocket configuration
+        const initWebSocket = async () => {
+            try {
+                await wsManager.current.fetchConfig();
+            } catch (error) {
+                console.error("Failed to fetch WebSocket configuration:", error);
+                setConnectionError("Failed to load chat configuration");
+            }
+        };
+        
+        initWebSocket();
 
         // Clean up WebSocket connection
         return () => {
@@ -41,83 +54,6 @@ const MessagesList = ({token, isGroupChat }) => {
         };
     }, []);
 
-    // Set up WebSocket event listeners and connect
-    useEffect(() => {
-        if (!wsManager.current || !token || !id) return;
-        
-        setIsConnecting(true);
-        setConnectionError(null);
-        
-        // Path format for WebSocket connection
-        const wsPath = isGroupChat 
-            ? `chat/group/${id}/` 
-            : `chat/private/${id}/`;
-        
-        // Set up message event listener
-        const handleMessage = (data) => {
-            console.log("WebSocket message received:", data);
-            
-            if (data.type === "chat_message") {
-                const normalizedMessage = {
-                    id: data.message.id || Date.now(),
-                    content: isGroupChat ? data.message.content : data.message.message,
-                    timestamp: data.message.timestamp,
-                    sender: data.message.sender,
-                    receiver: isGroupChat ? undefined : data.message.receiver,
-                };
-
-                setMessages((prevMessages) => {
-                    const updatedMessages = [...prevMessages, normalizedMessage];
-                    return updatedMessages.sort(
-                        (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-                    );
-                });
-            } else if (data.type === "edit_message") {
-                setMessages((prevMessages) =>
-                    prevMessages.map((msg) =>
-                        msg.id === data.message.id
-                            ? { ...msg, content: data.message.content }
-                            : msg
-                    )
-                );
-            }
-        };
-        
-        // Connection status handlers
-        const handleOpen = () => {
-            console.log("WebSocket connected successfully");
-            setIsConnecting(false);
-            setConnectionError(null);
-        };
-        
-        const handleError = (error) => {
-            console.error("WebSocket error:", error);
-            setConnectionError("Failed to connect to chat server");
-        };
-        
-        const handleReconnecting = (data) => {
-            setIsConnecting(true);
-            console.log(`Reconnecting to WebSocket (Attempt ${data.attempt}/${data.maxAttempts})`);
-        };
-        
-        // Register event listeners
-        wsManager.current.addEventListener('message', handleMessage);
-        wsManager.current.addEventListener('open', handleOpen);
-        wsManager.current.addEventListener('error', handleError);
-        wsManager.current.addEventListener('reconnecting', handleReconnecting);
-        
-        // Connect to WebSocket
-        wsManager.current.connect(wsPath, token);
-        
-        // Clean up event listeners when component unmounts or chat changes
-        return () => {
-            wsManager.current.removeEventListener('message', handleMessage);
-            wsManager.current.removeEventListener('open', handleOpen);
-            wsManager.current.removeEventListener('error', handleError);
-            wsManager.current.removeEventListener('reconnecting', handleReconnecting);
-        };
-    }, [id, isGroupChat, token]);
-    
     // Fetch the current user's username
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -132,6 +68,28 @@ const MessagesList = ({token, isGroupChat }) => {
         fetchCurrentUser();
     }, []);
 
+    // Memoize the normalizeMessage function to prevent unnecessary re-renders
+    const normalizeMessage = useCallback((message, fromWebSocket = false) => {
+        // Handle different message structures based on chat type and source
+        if (isGroupChat) {
+            return {
+                id: message.id || Date.now(),
+                content: message.content || '',
+                timestamp: message.timestamp || new Date().toISOString(),
+                sender: message.sender || currentUser,
+            };
+        } else {
+            // Private chat messages have a different structure
+            return {
+                id: message.id || Date.now(),
+                content: fromWebSocket ? (message.content || message.message) : message.message,
+                timestamp: message.timestamp || new Date().toISOString(),
+                sender: message.sender || currentUser,
+                receiver: message.receiver
+            };
+        }
+    }, [isGroupChat, currentUser]); // Add dependencies here
+
     // Fetch initial messages
     useEffect(() => {
         const fetchMessages = async () => {
@@ -140,25 +98,10 @@ const MessagesList = ({token, isGroupChat }) => {
                     ? await fetchGroupMessages(id) 
                     : await fetchPrivateMessages(id);
 
-                // Normalize the response data
-                const normalizedMessages = response.data.map((message) => {
-                    if (isGroupChat) {
-                        return {
-                            id: message.id,
-                            content: message.content,
-                            timestamp: message.timestamp,
-                            sender: message.sender,
-                        };
-                    } else {
-                        return {
-                            id: message.id,
-                            content: message.message,
-                            timestamp: message.timestamp,
-                            sender: message.sender,
-                            receiver: message.receiver,
-                        };
-                    }
-                });
+                // Normalize the response data using our helper
+                const normalizedMessages = response.data.map(message => 
+                    normalizeMessage(message)
+                );
 
                 // Sort messages by timestamp
                 const sortedMessages = normalizedMessages.sort(
@@ -171,8 +114,10 @@ const MessagesList = ({token, isGroupChat }) => {
             }
         };
 
-        fetchMessages();
-    }, [id, isGroupChat]);
+        if (id) {
+            fetchMessages();
+        }
+    }, [id, isGroupChat, normalizeMessage]); // Add normalizeMessage to dependencies
 
     // Scroll to bottom when new messages arrive
     useEffect(() => {
@@ -191,7 +136,7 @@ const MessagesList = ({token, isGroupChat }) => {
         }
 
         if (!wsManager.current || !wsManager.current.isConnected) {
-            console.error("WebSocket is not connected");
+            setConnectionError("Not connected to chat server. Please wait or refresh the page.");
             return;
         }
 
@@ -204,10 +149,18 @@ const MessagesList = ({token, isGroupChat }) => {
             timestamp: new Date().toISOString(),
         };
 
-        // Send message via WebSocket
+        // Send message via WebSocket with proper format
         wsManager.current.send({
             type: "chat_message",
-            message: messageData,
+            message: isGroupChat ? {
+                content: newMessage,
+                sender: currentUser,
+                group_id: id
+            } : {
+                message: newMessage,
+                sender: currentUser,
+                receiver: id
+            }
         });
 
         // Save message to database
@@ -289,6 +242,131 @@ const MessagesList = ({token, isGroupChat }) => {
         }
     };
 
+    // Set up WebSocket event listeners and connect
+    useEffect(() => {
+        if (!wsManager.current || !authToken || !id) return;
+        
+        setIsConnecting(true);
+        setConnectionError(null);
+        
+        // Path format for WebSocket connection
+        const wsPath = isGroupChat 
+            ? `chat/group/${id}/` 
+            : `chat/private/${id}/`;
+        
+        // Set up message event listener
+        const handleMessage = (data) => {
+            console.log("WebSocket message received:", data);
+            
+            if (data.type === "chat_message") {
+                const normalizedMessage = normalizeMessage(
+                    isGroupChat ? data.message : data.message,
+                    true
+                );
+
+                setMessages((prevMessages) => {
+                    // Check if message already exists to avoid duplicates
+                    if (prevMessages.some(msg => msg.id === normalizedMessage.id)) {
+                        return prevMessages;
+                    }
+                    const updatedMessages = [...prevMessages, normalizedMessage];
+                    return updatedMessages.sort(
+                        (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+                    );
+                });
+            } else if (data.type === "edit_message") {
+                setMessages((prevMessages) =>
+                    prevMessages.map((msg) =>
+                        msg.id === data.message.id
+                            ? { ...msg, content: data.message.content }
+                            : msg
+                    )
+                );
+            }
+        };
+        
+        const handleError = (error) => {
+            console.error("WebSocket error:", error);
+            
+            // Handle specific error types
+            if (error.type === 'auth_error') {
+                setConnectionError("Authentication failed. Please log in again.");
+                
+                // Try to get a fresh token and reconnect
+                const freshToken = localStorage.getItem('access_token');
+                if (freshToken && freshToken !== authToken) {
+                    console.log("Attempting reconnect with fresh token");
+                    setTimeout(() => {
+                        wsManager.current.connect(wsPath, freshToken);
+                    }, 2000);
+                }
+            } else if (error.type === 'websockets_disabled') {
+                setConnectionError("Chat service is currently unavailable. Please try again later.");
+            } else {
+                setConnectionError("Failed to connect to chat server. Please check your connection.");
+            }
+        };
+        
+        // Connection status handlers
+        const handleOpen = () => {
+            console.log("WebSocket connected successfully");
+            setIsConnecting(false);
+            setReconnectCount(0); // Reset reconnect count on successful connection
+            setConnectionError(null);
+        };
+        
+        const handleReconnecting = (data) => {
+            setIsConnecting(true);
+            setReconnectCount(data.attempt);
+            console.log(`Reconnecting to WebSocket server (Attempt ${data.attempt}/${data.maxAttempts})`);
+        };
+        
+        const handleReconnectFailed = () => {
+            setConnectionError(`Unable to connect to chat server after multiple attempts. Please refresh the page.`);
+            setIsConnecting(false);
+        };
+        
+        // Register event listeners
+        wsManager.current.addEventListener('message', handleMessage);
+        wsManager.current.addEventListener('open', handleOpen);
+        wsManager.current.addEventListener('error', handleError);
+        wsManager.current.addEventListener('reconnecting', handleReconnecting);
+        wsManager.current.addEventListener('reconnectFailed', handleReconnectFailed);
+        
+        // Check token validity before connecting
+        const validateAndConnect = async () => {
+            // Validate token first if we have the method
+            if (wsManager.current.validateToken) {
+                const validation = wsManager.current.validateToken(authToken);
+                console.log('Token validation before connect:', validation);
+                
+                // If token appears to be expired, try to get a fresh one
+                if (!validation.valid && validation.reason === 'Token is expired') {
+                    const freshToken = localStorage.getItem('access_token');
+                    if (freshToken && freshToken !== authToken) {
+                        console.log("Using fresh token from localStorage");
+                        wsManager.current.connect(wsPath, freshToken);
+                        return;
+                    }
+                }
+            }
+            
+            // Connect with provided token
+            wsManager.current.connect(wsPath, authToken);
+        };
+        
+        validateAndConnect();
+        
+        // Clean up event listeners when component unmounts or chat changes
+        return () => {
+            wsManager.current.removeEventListener('message', handleMessage);
+            wsManager.current.removeEventListener('open', handleOpen);
+            wsManager.current.removeEventListener('error', handleError);
+            wsManager.current.removeEventListener('reconnecting', handleReconnecting);
+            wsManager.current.removeEventListener('reconnectFailed', handleReconnectFailed);
+        };
+    }, [id, isGroupChat, authToken, currentUser, normalizeMessage]); // Add normalizeMessage to dependencies
+
     return (
         <div className="flex h-screen">
             <div className="text-white mt-15">
@@ -298,7 +376,9 @@ const MessagesList = ({token, isGroupChat }) => {
                 {/* Connection Status */}
                 {isConnecting && (
                     <div className="bg-yellow-100 p-2 text-center text-yellow-800">
-                        Connecting to chat server...
+                        {reconnectCount > 0 
+                            ? `Reconnecting to chat server (Attempt ${reconnectCount})...` 
+                            : "Connecting to chat server..."}
                     </div>
                 )}
                 {connectionError && (
