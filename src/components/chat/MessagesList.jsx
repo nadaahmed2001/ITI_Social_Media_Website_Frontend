@@ -21,6 +21,7 @@ const MessagesList = ({token, isGroupChat }) => {
     const [isSending, setIsSending] = useState(false);
     const messagesEndRef = useRef(null);
     const socketRef = useRef(null); // WebSocket reference
+    const reconnectAttempts = useRef(0); // Track reconnection attempts
     const nodeRefs = useRef({}); // Store refs for each message
     token = localStorage.getItem("access_token"); 
     // Temporary hardcoded token
@@ -28,62 +29,151 @@ const MessagesList = ({token, isGroupChat }) => {
     if (!token) {
         console.error("No token passed to MessagesList component!");
     }
-    // Memoize the WebSocket connection function
-    const connect_to_group_chat = useCallback(() => {
-        const socketUrl = isGroupChat
- 
-        ? `ws://127.0.0.1:8000/ws/chat/group/${id}/?token=${token}` // Group chat WebSocket URL
-        : `ws://127.0.0.1:8000/ws/chat/private/${id}/?token=${token}`; // Private chat WebSocket URL
-
-        socketRef.current = new WebSocket(socketUrl);
-
-        // Log WebSocket events for debugging
-        socketRef.current.onopen = () => {
-            console.log("WebSocket connection established.");
-        };
-
-        socketRef.current.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                if (data.type === "chat_message") {
-                    const normalizedMessage = {
-                        id: data.message.id || Date.now(),
-                        content: isGroupChat ? data.message.content : data.message.message,
-                        timestamp: data.message.timestamp,
-                        sender: data.message.sender,
-                        receiver: isGroupChat ? undefined : data.message.receiver,
-                    };
-
-                    setMessages((prevMessages) => {
-                        const updatedMessages = [...prevMessages, normalizedMessage];
-                        return updatedMessages.sort(
-                            (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-                        );
-                    });
-                } else if (data.type === "edit_message") {
-                    // Handle real-time message editing
-                    setMessages((prevMessages) =>
-                        prevMessages.map((msg) =>
-                            msg.id === data.message.id
-                                ? { ...msg, content: data.message.content }
-                                : msg
-                        )
-                    );
-                }
-            } catch (error) {
-                console.error("Error parsing WebSocket message:", error);
+    
+    // Add state to store WebSocket configuration
+    const [wsConfig, setWsConfig] = useState(null);
+    
+    // Function to fetch WebSocket configuration from the API
+    const fetchWebSocketConfig = useCallback(async () => {
+        try {
+            // Determine the base URL for API calls
+            const baseUrl = "https://itisocialmediawebsitebackend-production.up.railway.app/"
+            const response = await fetch(`${baseUrl}api/websocket-config/`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch WebSocket config: ${response.status}`);
             }
-        };
+            
+            const config = await response.json();
+            console.log("WebSocket configuration received:", config);
+            setWsConfig(config);
+            return config;
+        } catch (error) {
+            console.error("Error fetching WebSocket config:", error);
+            return null;
+        }
+    }, []);
+    
+    // Memoize the WebSocket connection function
+    const connect_to_group_chat = useCallback(async () => {
+        try {
+            // Try to get the configuration from API first
+            const config = wsConfig || await fetchWebSocketConfig();
+            
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+            
+            // Determine WebSocket host from API response or fallback to auto-detection
+            let wsHost;
+            
+            if (config && config.wsHost) {
+                wsHost = config.wsHost;
+                console.log('Using API-provided WebSocket host:', wsHost);
+            } else {
+                // Fallback to auto-detection
+                const isProduction = !window.location.hostname.includes('localhost') && 
+                                    window.location.hostname !== '127.0.0.1';
+                
+                wsHost = isProduction ? window.location.host : 'localhost:8000';
+                console.log('Using auto-detected WebSocket host:', wsHost);
+            }
+            
+            // Add special handling for Railway deployment Redis issues
+            const isRailwayDeployment = wsHost.includes('railway.app');
+            if (isRailwayDeployment) {
+                console.log('Railway deployment detected, taking extra precautions for WebSocket connection');
+            }
+            
+            const socketUrl = isGroupChat
+                ? `${wsProtocol}//${wsHost}/ws/chat/group/${id}/?token=${token}`
+                : `${wsProtocol}//${wsHost}/ws/chat/private/${id}/?token=${token}`;
+            
+            console.log(`Attempting WebSocket connection to: ${socketUrl}`);
+            
+            // Close existing connection if it exists
+            if (socketRef.current && socketRef.current.readyState !== WebSocket.CLOSED) {
+                socketRef.current.close();
+            }
 
-        socketRef.current.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
+            // Set a connection timeout
+            const connectionTimeoutMs = 5000; // 5 seconds
+            const connectionTimeout = setTimeout(() => {
+                console.error(`WebSocket connection timed out after ${connectionTimeoutMs}ms`);
+                if (socketRef.current && socketRef.current.readyState === WebSocket.CONNECTING) {
+                    socketRef.current.close();
+                }
+            }, connectionTimeoutMs);
 
-        socketRef.current.onclose = () => {
-            console.log("WebSocket connection closed. Reconnecting...");
-            setTimeout(() => connect_to_group_chat(), 1000); // Reconnect after 1 second
-        };
-    }, [id, isGroupChat, token]);
+            socketRef.current = new WebSocket(socketUrl);
+            
+            socketRef.current.onopen = () => {
+                clearTimeout(connectionTimeout); // Clear the timeout when connected
+                console.log("WebSocket connection established successfully.");
+                // Reset reconnection attempts on successful connection
+                reconnectAttempts.current = 0;
+            };
+            
+            socketRef.current.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === "chat_message") {
+                        // ...existing code for handling chat messages...
+                        const normalizedMessage = {
+                            id: data.message.id || Date.now(),
+                            content: isGroupChat ? data.message.content : data.message.message,
+                            timestamp: data.message.timestamp,
+                            sender: data.message.sender,
+                            receiver: isGroupChat ? undefined : data.message.receiver,
+                        };
+
+                        setMessages((prevMessages) => {
+                            const updatedMessages = [...prevMessages, normalizedMessage];
+                            return updatedMessages.sort(
+                                (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+                            );
+                        });
+                    } else if (data.type === "edit_message") {
+                        // ...existing code for handling message edits...
+                        setMessages((prevMessages) =>
+                            prevMessages.map((msg) =>
+                                msg.id === data.message.id
+                                    ? { ...msg, content: data.message.content }
+                                    : msg
+                            )
+                        );
+                    }
+                } catch (error) {
+                    console.error("Error parsing WebSocket message:", error);
+                }
+            };
+
+            socketRef.current.onerror = (error) => {
+                console.error("WebSocket error:", error);
+            };
+
+            const maxReconnectAttempts = 10;
+            
+            socketRef.current.onclose = (event) => {
+                console.log(`WebSocket connection closed (code: ${event.code}). Reconnecting...`);
+                
+                // Implement exponential backoff for reconnection
+                const reconnectDelay = Math.min(1000 * (2 ** reconnectAttempts.current), 30000);
+                reconnectAttempts.current += 1;
+                
+                if (reconnectAttempts.current <= maxReconnectAttempts) {
+                    console.log(`Attempting to reconnect in ${reconnectDelay/1000} seconds...`);
+                    setTimeout(() => connect_to_group_chat(), reconnectDelay);
+                } else {
+                    console.error("Max reconnection attempts reached. Please refresh the page.");
+                }
+            };
+        } catch (error) {
+            console.error("Failed to establish WebSocket connection:", error);
+            // Fallback to polling if WebSockets fail consistently
+            if (reconnectAttempts.current >= 3) {
+                console.log("WebSocket connection failed multiple times, falling back to polling.");
+                // Implement polling logic here if needed
+            }
+        }
+    }, [id, isGroupChat, token, wsConfig, fetchWebSocketConfig]);
 
     useEffect(() => {
         // Fetch the current user's username
