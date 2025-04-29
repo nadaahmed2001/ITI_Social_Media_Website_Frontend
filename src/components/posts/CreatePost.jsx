@@ -135,27 +135,37 @@ export default function CreatePost({ onPostCreated }) {
       </div>
 
       {/* Attachments preview */}
-      <div className="mt-3 space-y-2">
+      {/* Added flex container to allow wrapping */}
+      <div className="mt-3 flex flex-wrap gap-3"> {/* Use gap for spacing */}
         {attachmentUrls.map((url, index) => (
-          <div key={index} className="relative group">
-            {url.match(/\.(jpeg|jpg|gif|png)$/) ? (
-              
-              <img 
-                src={url} 
+          // Each item is now a flex item
+          <div key={index} className="relative group w-full sm:w-auto"> {/* Allow shrinking on small screens */}
+            {url.match(/\.(jpeg|jpg|gif|png|webp)$/i) ? ( // Added webp, case-insensitive
+              <img
+                src={url}
                 alt={`Attachment ${index}`}
-                className="max-w-full rounded-lg shadow-sm border border-[#7a2226]/10 transition-transform duration-300 group-hover:scale-[1.01]"
+                // Applied max-w-xs (adjust xs, sm, md as needed) and added max-h
+                className="max-w-xs max-h-34 w-auto rounded-lg shadow-sm border border-[#7a2226]/10 transition-transform duration-300 group-hover:scale-[1.01] object-contain" // Use object-contain
               />
-            ) : (
-              <video controls className="max-w-full rounded-lg shadow-sm border border-[#7a2226]/10 transition-transform duration-300 group-hover:scale-[1.01]">
-                <source src={url} type="video/mp4" />
+            ) : url.match(/\.(mp4|mov|webm|mkv|avi)$/i) ? ( // Added avi, case-insensitive
+              <video controls className="max-w-xs max-h-34 w-auto rounded-lg shadow-sm border border-[#7a2226]/10 transition-transform duration-300 group-hover:scale-[1.01]"> {/* Applied max-w-xs & max-h */}
+                <source src={url} /* Optionally add type based on extension */ />
+                Your browser does not support the video tag.
               </video>
+            ) : (
+              // Fallback for other types
+              <div className="w-32 h-32 border border-dashed border-gray-400 rounded-lg flex items-center justify-center text-center text-xs text-gray-500 p-2">
+                 Unsupported<br/>Attachment
+              </div>
             )}
+            {/* Close button - position relative to the preview item */}
             <button
               type="button"
               onClick={() => handleRemoveAttachment(index)}
-               className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105"
+              // Adjusted positioning and appearance
+              className="absolute top-1 right-1 bg-black/50 backdrop-blur-sm rounded-full p-0.5 shadow-md opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 hover:bg-red-600/80"
             >
-              <CloseIcon className="w-5 h-5 text-[#7a2226] hover:text-[#a53d3d] transition-colors" />
+              <CloseIcon className="w-4 h-4 text-white" /> {/* Smaller icon */}
             </button>
           </div>
         ))}
