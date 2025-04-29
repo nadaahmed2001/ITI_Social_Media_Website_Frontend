@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://itisocialmediawebsitebackend-production.up.railway.app/api/";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -154,7 +154,7 @@ export default api;
 
 // ======================================================================================================================================
 
-const API_BASE_URL =  'http://localhost:8000/'; 
+const API_BASE_URL =  'https://itisocialmediawebsitebackend-production.up.railway.app/api/'; 
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -209,20 +209,20 @@ export const deleteSkill = (skillId) => apiClient.delete(`/users/skills/${skillI
 
 // =========================================================== Projects =============================================================
 
-export const getAllProjects = () => apiClient.get('/api/projects/'); // Fetches ALL projects
-export const getMyProjects = (profileId) => apiClient.get(`/api/projects/?owner=${profileId}`);
-export const getProject = (projectId) => apiClient.get(`/api/projects/${projectId}/`);
-export const addProject = (projectData) => apiClient.post('/api/projects/', projectData);
-export const updateProject = (projectId, projectData) => apiClient.put(`/api/projects/${projectId}/`, projectData);
-export const deleteProject = (projectId) => apiClient.delete(`/api/projects/${projectId}/`);
-export const getAllTags = () => apiClient.get('/api/projects/tags/'); // For tag input suggestions
-export const addTagToProject = (projectId, tagId) => apiClient.post(`/api/projects/${projectId}/tags/`, { tag_id: tagId });
-export const removeTagFromProject = (projectId, tagId) => apiClient.delete(`/api/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
+export const getAllProjects = () => apiClient.get('/projects/'); // Fetches ALL projects
+export const getMyProjects = (profileId) => apiClient.get(`/projects/?owner=${profileId}`);
+export const getProject = (projectId) => apiClient.get(`/projects/${projectId}/`);
+export const addProject = (projectData) => apiClient.post('/projects/', projectData);
+export const updateProject = (projectId, projectData) => apiClient.put(`/projects/${projectId}/`, projectData);
+export const deleteProject = (projectId) => apiClient.delete(`/projects/${projectId}/`);
+export const getAllTags = () => apiClient.get('/projects/tags/'); // For tag input suggestions
+export const addTagToProject = (projectId, tagId) => apiClient.post(`/projects/${projectId}/tags/`, { tag_id: tagId });
+export const removeTagFromProject = (projectId, tagId) => apiClient.delete(`/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
 
 // ==================================================== Project Contributors =========================================================
-export const getContributors = (projectId) => apiClient.get(`/api/projects/${projectId}/contributors/`);
-export const addContributor = (projectId, username) => apiClient.post(`/api/projects/${projectId}/contributors/`, { username });
-export const removeContributor = (projectId, username) => apiClient.delete(`/api/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
-// export const getMyProjects = (profileId) => apiClient.get(`/api/projects/?owner=${profileId}`);
+export const getContributors = (projectId) => apiClient.get(`/projects/${projectId}/contributors/`);
+export const addContributor = (projectId, username) => apiClient.post(`/projects/${projectId}/contributors/`, { username });
+export const removeContributor = (projectId, username) => apiClient.delete(`/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
+// export const getMyProjects = (profileId) => apiClient.get(`/projects/?owner=${profileId}`);
 
 export const verifyOtp = (data) => { return apiClient.post('/users/verify-otp/', data);};

@@ -200,7 +200,7 @@ const UserProfilePage = () => {
   const renderActiveSection = () => {
     // Handle loading/error for sections needing main profile data
     if (isLoadingProfile && activeSection !== SECTIONS.SAVED && activeSection !== SECTIONS.MY_POSTS) {
-      return <div className="loading">Loading profile...</div>;
+      return <div className="loading mt-[50px]">Loading profile...</div>;
     }
     if (profileError && activeSection !== SECTIONS.SAVED && activeSection !== SECTIONS.MY_POSTS && !userData) {
         return <div className="mt-[100px] error-message main-error">{profileError}</div>;

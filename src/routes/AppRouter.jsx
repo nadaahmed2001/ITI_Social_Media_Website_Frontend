@@ -33,10 +33,12 @@ import StartChat from "../pages/startChat";
 import FollowerListPage from "../pages/FollowerListPage"; 
 import FollowingListPage from "../pages/FollowingListPage"; 
 import NotFoundPage from "../pages/NotFoundPage"; 
+import UserPostsPage from "../pages/UserPostsPage";
 import { ChatNotificationProvider } from "../contexts/ChatNotificationContext";
 
 
 const AppContent = () => {
+
   return (
     <>
       <Routes>
@@ -194,6 +196,14 @@ const AppContent = () => {
                 <FollowingListPage />
               </PrivateRoute>
             }
+          />
+          <Route 
+            path="/profiles/:profileId/posts" 
+            element={
+              <PrivateRoute> 
+                <UserPostsPage />              
+              </PrivateRoute>
+            } 
           />
           <Route path="/search" element={<SearchPage />} />
           {/* Follow button might be inside ProfilePageById and check auth there */}

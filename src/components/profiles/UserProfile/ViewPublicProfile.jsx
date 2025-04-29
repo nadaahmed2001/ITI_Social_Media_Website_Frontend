@@ -225,7 +225,7 @@ const ViewPublicProfile = ({ profileId }) => {
 
 
     if (isLoadingProfile) {
-        return <div className="loading-text section-container">Loading profile view...</div>;
+        return <div className="loading-text section-container mt-[100px]">Loading profile view...</div>;
     }
 
     if (error && !profileData) { // Show error only if profile loading failed critically

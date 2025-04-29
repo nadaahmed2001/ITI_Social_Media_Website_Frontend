@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Axios instance with base URL
-const API_BASE_URL= "http://127.0.0.1:8000/api/";
+const API_BASE_URL= "https://itisocialmediawebsitebackend-production.up.railway.app/api/";
 
 
 const api = axios.create({
@@ -15,7 +15,7 @@ const api = axios.create({
 
 
 const api2 = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
+  baseURL: "https://itisocialmediawebsitebackend-production.up.railway.app/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -248,6 +248,29 @@ export const getProfileById = async (profileId) => {
   } catch (error) {
       console.error(`Error fetching profile ${profileId}:`, error.response || error);
       throw error;
+  }
+};
+
+export const fetchUserPosts = async (userId, page = 1) => {
+  if (!userId) {
+      console.error("fetchUserPosts called without userId");
+      throw new Error("User ID is required to fetch posts.");
+  }
+  try {
+    // Construct the URL with the author and page query parameters.
+    // Ensure '/posts/' matches the actual endpoint for your PostListCreateView
+    const url = `/posts/?author=${userId}&page=${page}`;
+    console.log(`Calling API: GET ${url}`); // Debug log
+
+    const response = await api2.get(url);
+
+    console.log(`Fetched posts for user ${userId} (page ${page}):`, response.data);
+    // Return the data received from the backend (expected to be paginated)
+    return response.data;
+
+  } catch (error) {
+    console.error(`Error fetching posts for user ${userId} (page ${page}):`, error.response?.data || error.message || error);
+    throw error;
   }
 };
 
@@ -531,7 +554,7 @@ export const getPublicProfile = (profileId) => api2.get(`/users/profiles/${profi
 export const searchProfiles = async (query) => {
   try {
     // Adjust the endpoint '/search/profiles/' if needed
-    const response = await api.get(`/search/profiles/?q=${encodeURIComponent(query)}`);
+    const response = await api.get(`/users/search/profiles/?q=${encodeURIComponent(query)}`);
     // Assuming the backend returns data in response.data
     // If it returns an array directly: return response.data;
     // If it returns { results: [...] }: return response.data.results;
@@ -555,26 +578,26 @@ export const deleteSkill = (skillId) => api2.delete(`/users/skills/${skillId}/`)
 
 // =========================================================== Projects =============================================================
 
-export const getAllProjects = () => api2.get('/api/projects/'); // Fetches ALL projects
-export const getMyProjects = (profileId) => api2.get(`/api/projects/?owner=${profileId}`);
-export const getProject = (projectId) => api2.get(`/api/projects/${projectId}/`);
-export const addProject = (projectData) => api2.post('/api/projects/', projectData);
-export const updateProject = (projectId, projectData) => api2.put(`/api/projects/${projectId}/`, projectData);
-export const deleteProject = (projectId) => api2.delete(`/api/projects/${projectId}/`);
-export const getAllTags = () => api2.get('/api/projects/tags/'); // For tag input suggestions
-export const addTagToProject = (projectId, tagId) => api2.post(`/api/projects/${projectId}/tags/`, { tag_id: tagId });
-export const removeTagFromProject = (projectId, tagId) => api2.delete(`/api/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
+export const getAllProjects = () => api2.get('/projects/'); // Fetches ALL projects
+export const getMyProjects = (profileId) => api2.get(`/projects/?owner=${profileId}`);
+export const getProject = (projectId) => api2.get(`/projects/${projectId}/`);
+export const addProject = (projectData) => api2.post('/projects/', projectData);
+export const updateProject = (projectId, projectData) => api2.put(`/projects/${projectId}/`, projectData);
+export const deleteProject = (projectId) => api2.delete(`/projects/${projectId}/`);
+export const getAllTags = () => api2.get('/projects/tags/'); // For tag input suggestions
+export const addTagToProject = (projectId, tagId) => api2.post(`/projects/${projectId}/tags/`, { tag_id: tagId });
+export const removeTagFromProject = (projectId, tagId) => api2.delete(`/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
 
 // ==================================================== Project Contributors =========================================================
-export const getContributors = (projectId) => api2.get(`/api/projects/${projectId}/contributors/`);
-export const addContributor = (projectId, username) => api2.post(`/api/projects/${projectId}/contributors/`, { username });
-export const removeContributor = (projectId, username) => api2.delete(`/api/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
-// export const getMyProjects = (profileId) => api2.get(`/api/projects/?owner=${profileId}`);
+export const getContributors = (projectId) => api2.get(`/projects/${projectId}/contributors/`);
+export const addContributor = (projectId, username) => api2.post(`/projects/${projectId}/contributors/`, { username });
+export const removeContributor = (projectId, username) => api2.delete(`/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
+// export const getMyProjects = (profileId) => api2.get(`/projects/?owner=${profileId}`);
 
 // export const verifyOtp = (data) => { return api2.post('/users/verify-otp/', data);};
 
 export const verifyOtp = (data) => {
-  return axios.post('http://127.0.0.1:8000/users/verify-otp/', data, {
+  return axios.post('https://itisocialmediawebsitebackend-production.up.railway.app/api/users/verify-otp/', data, {
     headers: {
       'Content-Type': 'application/json',
     },
