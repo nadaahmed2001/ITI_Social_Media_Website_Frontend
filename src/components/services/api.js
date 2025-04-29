@@ -112,13 +112,13 @@ export const fetchMyPosts = async (page = 1) => {
     // Construct the URL with the page query parameter.
     // Ensure '/posts/mine/' matches the actual endpoint defined in your Django urls.py
     const url = `/posts/mine/?page=${page}`;
-    console.log(`Calling API: GET ${url}`); // Debug log
+    // console.log(`Calling API: GET ${url}`); // Debug log
 
     // Make the GET request using your authenticated axios instance
     const response = await api.get(url);
 
     // Log the successful response data for debugging
-    console.log(`Fetched my posts (page ${page}):`, response.data);
+    // console.log(`Fetched my posts (page ${page}):`, response.data);
 
     // Return the data received from the backend (expected to be paginated)
     // e.g., { count: ..., next: ..., previous: ..., results: [...] }
@@ -144,12 +144,12 @@ export const followUser = async (profileId) => {
   try {
     // Construct the endpoint URL
     const url = `/users/profiles/${profileId}/follow/`;
-    console.log(`Calling API: POST ${url}`); // Log the action
+    // console.log(`Calling API: POST ${url}`); // Log the action
 
     // Make the POST request (backend creates the Follow record)
     const response = await api2.post(url);
 
-    console.log(`Follow response for ${profileId}:`, response.data);
+    // console.log(`Follow response for ${profileId}:`, response.data);
     // Return the response data (e.g., { status: 'followed', message: '...' })
     return response.data;
 
@@ -178,12 +178,12 @@ export const unfollowUser = async (profileId) => {
   try {
     // Construct the endpoint URL
     const url = `/users/profiles/${profileId}/follow/`;
-    console.log(`Calling API: DELETE ${url}`); // Log the action
+    // console.log(`Calling API: DELETE ${url}`); // Log the action
 
     // Make the DELETE request (backend deletes the Follow record)
     const response = await api2.delete(url);
 
-    console.log(`Unfollow response for ${profileId}:`, response.data);
+    // console.log(`Unfollow response for ${profileId}:`, response.data);
      // Return the response data (e.g., { status: 'unfollowed', message: '...' })
     return response.data;
 
@@ -204,10 +204,10 @@ export const getFollowers = async (profileId, page = 1) => {
   try {
    // Construct URL with pagination parameter
    const url = `users/profiles/${profileId}/followers/?page=${page}`;
-   console.log(`Calling API: GET ${url}`);
+  //  console.log(`Calling API: GET ${url}`);
 
    const response = await api2.get(url);
-   console.log(`Followers list response for ${profileId} (page ${page}):`, response.data);
+  //  console.log(`Followers list response for ${profileId} (page ${page}):`, response.data);
 
    // Return the full paginated response data
    return response.data;
@@ -226,10 +226,10 @@ export const getFollowing = async (profileId, page = 1) => {
   try {
    // Construct URL with pagination parameter
    const url = `users/profiles/${profileId}/following/?page=${page}`;
-   console.log(`Calling API: GET ${url}`);
+  //  console.log(`Calling API: GET ${url}`);
 
    const response = await api2.get(url);
-   console.log(`Following list response for ${profileId} (page ${page}):`, response.data);
+  //  console.log(`Following list response for ${profileId} (page ${page}):`, response.data);
 
    // Return the full paginated response data
    return response.data;
@@ -278,10 +278,10 @@ export const fetchUserPosts = async (userId, page = 1) => {
 
 // Fetch comments for a post
 export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
-  console.log(`API: Fetching comments for post ${postId}, page ${page}`);
+  // console.log(`API: Fetching comments for post ${postId}, page ${page}`);
   if (typeof page !== 'number' || isNaN(page)) {
     console.error("API ERROR: fetchComments received invalid page number:", page);
-    console.log(page)
+    // console.log(page)
     // Return a rejected promise or throw an error to stop the process
     return Promise.reject(new Error(`Invalid page number: ${page}`)); 
   } 
@@ -427,7 +427,7 @@ export const createBatch = async (name, program_id, track_id) => {
       track_id
     });
 
-    console.log("Created Batch:", response.data); // Debugging
+    // console.log("Created Batch:", response.data); // Debugging
     return response.data;  // Return the newly created batch data
   } catch (error) {
     console.error('Failed to create batch:', error);
@@ -439,7 +439,7 @@ export const uploadBatchCSV = async (batchId, file) => {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("batch_id", batchId);
-  console.log("I'm inside uploadBatchCSV function and formData is", formData); // Debugging
+  // console.log("I'm inside uploadBatchCSV function and formData is", formData); // Debugging
 
   try {
       const response = await api.post(`supervisor/upload-national-id/`, formData, {
@@ -464,7 +464,39 @@ export const updateBatch = async (batchId, data) => {
   }
 };
 
+//New
+export const getTrack= async(trackId)=>{
+  try{
+    const response = await api.get(`supervisor/tracks/${trackId}/`);
+    console.log("Track Details:", response.data); // Debugging
+    return response.data;
+  }catch(error){
+    console.log("Couldn't fetch track details",error);
+    throw error;
+  }
+}
 
+export const getProgram= async(programId)=>{
+  try{
+    const response = await api.get(`supervisor/programs/${programId}/`);
+    // console.log("Program Details:", response.data); // Debugging
+    return response.data;
+  }catch(error){
+    console.log("Couldn't fetch program details",error);
+    throw error;
+  }
+}
+
+export const createTrack= async (trackData) => {
+  try {
+    const response = await api.post("supervisor/tracks/", trackData);
+    console.log("Created Track:", response.data); // Debugging
+    return response.data;  // Return the newly created track data
+  } catch (error) {
+    console.error('Failed to create track:', error);
+    throw error; // Make sure to propagate error for frontend handling
+  }
+};
 
 //------------------- Notifications API functions -------------------
 export const fetchNotifications = () => api.get("/notifications/");

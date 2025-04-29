@@ -2,10 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { fetchTracksForProgram } from '../services/api';
-import { Button } from '@mui/material';
-
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import TrackForm from '../../components/supervisor/TrackForm';
 
 const TrackList = ({ program, onSelectTrack }) => {
+
+
+  const [openTrackModal, setOpenTrackModal] = useState(false);
+
+
   const [tracks, setTracks] = useState([]);
   const programId = program.id;
 
@@ -94,27 +99,51 @@ const TrackList = ({ program, onSelectTrack }) => {
           </li>
         ))}
       </ul>
-  {/* Add New Track Button */ }
-  <div style={{ marginTop: '40px', textAlign: 'left' }}>
-    <Button
-      variant="contained"
-      sx={{
-        backgroundColor: '#9c3539',
-        color: '#ffffff',
-        padding: '10px 20px',
-        borderRadius: '8px',
-        textTransform: 'none',
-        fontWeight: 500,
-        fontSize: '1rem',
-        '&:hover': {
-          backgroundColor: '#7a2226',
-        },
-      }}
-      onClick={() => console.log('Add New Track clicked')}
-    >
-      Add New Track
-    </Button>
-  </div>
+
+
+      {/* Add New Track Button */}
+      <div style={{ marginTop: '40px', textAlign: 'left' }}>
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: '#9c3539',
+            color: '#ffffff',
+            padding: '10px 20px',
+            borderRadius: '8px',
+            textTransform: 'none',
+            fontWeight: 500,
+            fontSize: '1rem',
+            '&:hover': {
+              backgroundColor: '#7a2226',
+            },
+          }}
+          onClick={() => setOpenTrackModal(true)}    >
+          Add New Track
+        </Button>
+
+
+
+        <Dialog open={openTrackModal} onClose={() => setOpenTrackModal(false)}>
+          <DialogTitle>Add New Track</DialogTitle>
+          <DialogContent>
+            <TrackForm
+              programId={programId}
+              onSuccess={() => {
+                setOpenTrackModal(false);
+                // reload tracks here if needed
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenTrackModal(false)} sx={{ color: 'black' }}>
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+
+
+      </div>
 
     </div >
   );

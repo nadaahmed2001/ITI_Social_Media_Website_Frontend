@@ -1351,12 +1351,12 @@ export default function ShowPost({ postData, onDeletePost }) {
         fetchReactionsForPost(postData.id)
           .then((res) => {
             const fetchedReactions = Array.isArray(res) ? res : [];
-            console.log("Fetched ALL Post Reactions:", fetchedReactions);
+            // console.log("Fetched ALL Post Reactions:", fetchedReactions);
             setAllPostReactions(fetchedReactions);
             if (currentUserId) {
               const filteredUser = fetchedReactions.filter(r => String(r.user_id) === String(currentUserId));
               setUserReactions(filteredUser);
-              console.log("Set User Reactions:", filteredUser);
+              // console.log("Set User Reactions:", filteredUser);
             } else {
               setUserReactions([]);
             }
@@ -1524,7 +1524,7 @@ export default function ShowPost({ postData, onDeletePost }) {
 
   // Add/Update Comment Reaction (no changes needed from previous state)
   const handleCommentReact = async (commentId, reactionType) => {
-      console.log(`Reacting to comment ${commentId} with ${reactionType}`);
+      // console.log(`Reacting to comment ${commentId} with ${reactionType}`);
       const originalComments = [...comments]; // Store original state for potential rollback
     
       // --- Optimistic Update ---
@@ -1556,7 +1556,7 @@ export default function ShowPost({ postData, onDeletePost }) {
         // Example refetch (less ideal for performance):
         const response = await fetchComments(post.id, 1); // Reload first page? Or specific comment?
         setComments(response.data.results || []);
-        console.log(`Successfully reacted to comment ${commentId}`);
+        // console.log(`Successfully reacted to comment ${commentId}`);
     } catch (error) {
         console.error("Failed to react to comment:", error);
         // --- Rollback Optimistic Update ---
@@ -1566,7 +1566,7 @@ export default function ShowPost({ postData, onDeletePost }) {
     };
     
     const handleCommentUnreact = async (commentId) => {
-    console.log(`Un-reacting from comment ${commentId}`);
+    // console.log(`Un-reacting from comment ${commentId}`);
     const originalComments = [...comments]; // Store original state
     
     // --- Optimistic Update ---
@@ -1587,7 +1587,7 @@ export default function ShowPost({ postData, onDeletePost }) {
     
     try {
         await removeCommentReaction(commentId); // Pass only commentId if API expects that
-          console.log(`Successfully un-reacted from comment ${commentId}`);
+          // console.log(`Successfully un-reacted from comment ${commentId}`);
           // Optional: Refetch or trust optimistic update
     } catch (error) {
         console.error("Failed to un-react from comment:", error);
@@ -1609,12 +1609,12 @@ export default function ShowPost({ postData, onDeletePost }) {
                     // If currently saved, call unsave API
                     await unsavePost(post.id);
                     setIsPostSaved(false); // Update state on success
-                    console.log("Post unsaved");
+                    // console.log("Post unsaved");
                   } else {
                     // If not saved, call save API
                     await savePost(post.id);
                     setIsPostSaved(true); // Update state on success
-                    console.log("Post saved");
+                    // console.log("Post saved");
                   }
                 } catch (error) {
                   console.error("Failed to toggle save status:", error);
@@ -1676,7 +1676,7 @@ const handleAddReaction = async (reactionType) => {
     
   try {
     await likePost(post.id, reactionType); // Call API
-    console.log(`Successfully added/updated reaction: ${reactionType}`);
+    // console.log(`Successfully added/updated reaction: ${reactionType}`);
     // Optional: Refetch AFTER success to ensure data consistency (can cause flicker)
     // const updated = await fetchReactionsForPost(post.id);
     // const fetchedReactions = Array.isArray(updated) ? updated : [];
@@ -1721,7 +1721,7 @@ const handleRemoveReaction = async () => {
 
   try {
     await removePostReaction(post.id); // Call API
-    console.log("Successfully removed reaction");
+    // console.log("Successfully removed reaction");
     // Optional: Refetch AFTER success
     // const updated = await fetchReactionsForPost(post.id);
     // setAllPostReactions(Array.isArray(updated) ? updated : []);

@@ -14,11 +14,11 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // --- ADD LOGS HERE ---
-    console.log(`API Interceptor: Requesting ${config.method?.toUpperCase()} ${config.url}`); 
+    // console.log(`API Interceptor: Requesting ${config.method?.toUpperCase()} ${config.url}`); 
     const token = localStorage.getItem("access_token"); // Ensure 'access_token' is the correct key
     if (token) {
       config.headers.Authorization = `Bearer ${token}`; 
-      console.log("API Interceptor: Token FOUND and attached."); // Log success
+      // console.log("API Interceptor: Token FOUND and attached."); // Log success
     } else {
       console.warn("API Interceptor: Token NOT FOUND in localStorage."); // Log failure
     }

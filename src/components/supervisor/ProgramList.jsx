@@ -9,7 +9,7 @@ const ProgramList = ({ programs, onSelectProgram }) => {
     color: 'white',
     paddingTop: '24px',
     padding: '16px',
-    width: '70%',
+    width: '60%',
     // height: '50%',
     marginLeft: '100px',
     minHeight: '75vh',
