@@ -18,17 +18,6 @@ export default function Sidebar() { // Removed isDarkMode prop
 
   const navigate = useNavigate(); // Initialize navigate
 
-  // State for dropdowns if using controlled MUI Selects
-  const [branch, setBranch] = React.useState('all');
-  const [category, setCategory] = React.useState('all');
-
-  const handleBranchChange = (event) => {
-    setBranch(event.target.value);
-  };
-
-  const handleCategoryChange = (event) => {
-    setCategory(event.target.value);
-  };
 
 
 
