@@ -1,7 +1,7 @@
 /* src/pages/UserProfilePage.css */
 .user-profile-page-container {
 display: flex;
-background-color: #191919; /* Main dark background */
+background-color: #F9FBFC !important;
 color: white;
 min-height: 100vh; /* Ensure it takes full viewport height */
 padding: 20px; /* Add some padding around the page */
@@ -35,7 +35,7 @@ margin-top: 30px;
 
 /* Ensure specific section containers also have the base background if needed */
 .section-container {
-    background-color: #191919;
+    /* background-color: #191919; */
     padding: 25px; /* Add default padding to placeholder sections */
 }
 

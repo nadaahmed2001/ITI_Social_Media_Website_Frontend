@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://itisocialmediawebsitebackend-production.up.railway.app/api/";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -13,13 +13,20 @@ const api = axios.create({
 // Automatically set Authorization header before each request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token"); // Retrieve token from local storage
+    // --- ADD LOGS HERE ---
+    // console.log(`API Interceptor: Requesting ${config.method?.toUpperCase()} ${config.url}`); 
+    const token = localStorage.getItem("access_token"); // Ensure 'access_token' is the correct key
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Corrected syntax
+      config.headers.Authorization = `Bearer ${token}`; 
+      // console.log("API Interceptor: Token FOUND and attached."); // Log success
+    } else {
+      console.warn("API Interceptor: Token NOT FOUND in localStorage."); // Log failure
     }
+    // --- END LOGS ---
     return config;
   },
   (error) => {
+    console.error("API Interceptor: Request setup error", error); // Log errors during request setup
     return Promise.reject(error);
   }
 );
@@ -29,7 +36,15 @@ api.interceptors.request.use(
 // API functions
 // ============================================================="Rahma"=========================================================================
 // Fetch all posts
-export const fetchPosts = () => api.get("/posts/");
+export const fetchPosts = (page = 1, pageSize = 10) => {
+  return api.get('/posts/', {
+    params: {
+      page,
+      page_size: pageSize
+    }
+  });
+};
+
 // Create a new post
 export const createPost = (data) => api.post("/posts/", data, {
   headers: {
@@ -37,7 +52,17 @@ export const createPost = (data) => api.post("/posts/", data, {
   }
 });
 // Fetch comments for a post
-export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
+export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
+  console.log(`API: Fetching comments for post ${postId}, page ${page}`);
+  if (typeof page !== 'number' || isNaN(page)) {
+    console.error("API ERROR: fetchComments received invalid page number:", page);
+    // Return a rejected promise or throw an error to stop the process
+    return Promise.reject(new Error(`Invalid page number: ${page}`)); 
+  } 
+  // Append the page query parameter to the comments endpoint URL
+  return api.get(`/posts/${postId}/comments/?page=${page}`); 
+};
+
 // Add a comment to a post
 export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`, data);
 // Edit a post
@@ -129,7 +154,7 @@ export default api;
 
 // ======================================================================================================================================
 
-const API_BASE_URL =  'http://localhost:8000/'; 
+const API_BASE_URL =  'https://itisocialmediawebsitebackend-production.up.railway.app/api/'; 
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -184,20 +209,20 @@ export const deleteSkill = (skillId) => apiClient.delete(`/users/skills/${skillI
 
 // =========================================================== Projects =============================================================
 
-export const getAllProjects = () => apiClient.get('/api/projects/'); // Fetches ALL projects
-export const getMyProjects = (profileId) => apiClient.get(`/api/projects/?owner=${profileId}`);
-export const getProject = (projectId) => apiClient.get(`/api/projects/${projectId}/`);
-export const addProject = (projectData) => apiClient.post('/api/projects/', projectData);
-export const updateProject = (projectId, projectData) => apiClient.put(`/api/projects/${projectId}/`, projectData);
-export const deleteProject = (projectId) => apiClient.delete(`/api/projects/${projectId}/`);
-export const getAllTags = () => apiClient.get('/api/projects/tags/'); // For tag input suggestions
-export const addTagToProject = (projectId, tagId) => apiClient.post(`/api/projects/${projectId}/tags/`, { tag_id: tagId });
-export const removeTagFromProject = (projectId, tagId) => apiClient.delete(`/api/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
+export const getAllProjects = () => apiClient.get('/projects/'); // Fetches ALL projects
+export const getMyProjects = (profileId) => apiClient.get(`/projects/?owner=${profileId}`);
+export const getProject = (projectId) => apiClient.get(`/projects/${projectId}/`);
+export const addProject = (projectData) => apiClient.post('/projects/', projectData);
+export const updateProject = (projectId, projectData) => apiClient.put(`/projects/${projectId}/`, projectData);
+export const deleteProject = (projectId) => apiClient.delete(`/projects/${projectId}/`);
+export const getAllTags = () => apiClient.get('/projects/tags/'); // For tag input suggestions
+export const addTagToProject = (projectId, tagId) => apiClient.post(`/projects/${projectId}/tags/`, { tag_id: tagId });
+export const removeTagFromProject = (projectId, tagId) => apiClient.delete(`/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
 
 // ==================================================== Project Contributors =========================================================
-export const getContributors = (projectId) => apiClient.get(`/api/projects/${projectId}/contributors/`);
-export const addContributor = (projectId, username) => apiClient.post(`/api/projects/${projectId}/contributors/`, { username });
-export const removeContributor = (projectId, username) => apiClient.delete(`/api/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
-// export const getMyProjects = (profileId) => apiClient.get(`/api/projects/?owner=${profileId}`);
+export const getContributors = (projectId) => apiClient.get(`/projects/${projectId}/contributors/`);
+export const addContributor = (projectId, username) => apiClient.post(`/projects/${projectId}/contributors/`, { username });
+export const removeContributor = (projectId, username) => apiClient.delete(`/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
+// export const getMyProjects = (profileId) => apiClient.get(`/projects/?owner=${profileId}`);
 
 export const verifyOtp = (data) => { return apiClient.post('/users/verify-otp/', data);};

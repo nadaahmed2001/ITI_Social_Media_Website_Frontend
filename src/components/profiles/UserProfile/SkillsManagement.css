@@ -1,201 +1,218 @@
-/* src/components/UserProfile/SkillsManagement.css */
-/* Styles for displaying skills as tags, with add form */
-
 /* Main container - uses .form-section styles from parent/global CSS */
 .skills-management-container {
-    /* Inherits padding, background etc. from .form-section */
-    margin-bottom: 30px; /* Ensure space below */
-  }
-  
-  /* Section title */
-  .skills-management-container .skills-title { /* Target specifically if needed */
-    color: var(--accent-primary, #7a2226); /* Yellow accent or fallback */
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.15em;
-    border-bottom: 1px solid var(--border-color, #444);
-    padding-bottom: 12px;
-    background: none;
-  }
-  
-  /* Add Skill Form */
-  .add-skill-form {
-    /* background-color: #303030; */ /* Optional slightly different bg */
-    padding: 15px 0; /* Adjust padding */
-    margin-bottom: 25px;
-    border-bottom: 1px solid var(--border-color, #444); /* Separator */
-    background: none;
-  }
-  .add-form-inputs {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
-    background: none;
-  }
-  .add-skill-form input[type="text"] {
-    width: 100%;
-    padding: 10px 12px;
-    background-color: var(--background-input, #1f1f1f);
-    border: 1px solid var(--border-color-input, #444);
-    border-radius: 5px;
-    color: var(--text-primary, #e0e0e0);
-    font-size: 1em;
-    box-sizing: border-box;
-  }
-  .add-skill-form input:focus {
-    outline: none;
-    border-color: var(--accent-primary, #7a2226);
-  }
-  .add-skill-button { /* Uses .submit-button base styles */
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 10px; font-size: 0.95em;
-    justify-content: center;
-    /* Ensure button uses accent color from theme */
-    background-color: var(--accent-primary, #7a2226);
-    color: var(--text-on-accent, #191919);
-    border: none; border-radius: 4px; cursor: pointer; font-weight: bold;
-    transition: filter 0.2s ease;
-  }
-  .add-skill-button:hover:not(:disabled) { filter: brightness(90%); }
-  .add-skill-button:disabled { background-color: #555 !important; color: #888 !important; cursor: not-allowed; opacity: 0.7;}
-  .add-skill-button .MuiCircularProgress-root { width: 20px !important; height: 20px !important;} /* Style spinner */
-  
-  
-  /* Skills List Area */
-  .skills-list-section { margin-top: 20px; background: none; }
-  
-  /* List container for tags */
-  .skills-tag-list {
-    list-style: none;
-    padding: 10px 0 0 0; /* Add padding top */
-    margin: 0;
-    display: flex; /* Arrange tags horizontally */
-    flex-wrap: wrap; /* Allow wrapping */
-    gap: 12px; /* Space between tags */
-    background: none;
-  }
-  
-  /* Individual skill tag item */
-  .skill-tag-item {
-    display: inline-flex; /* Align text and remove button */
-    align-items: center;
-    background-color: var(--background-secondary, #454544); /* Tag background */
-    color: var(--text-primary, #e0e0e0); /* Tag text color */
-    padding: 6px 12px 6px 15px; /* Adjust padding (more left initially) */
-    border-radius: 20px; /* Oval/pill shape */
-    font-size: 0.95em;
-    font-weight: 500;
-    margin: 0; /* Remove default li margin */
-    transition: background-color 0.2s ease, opacity 0.3s ease;
-    position: relative; /* Needed if using absolute positioning on button */
-  }
-  .skill-tag-item.deleting {
-      opacity: 0.5;
-      pointer-events: none;
-  }
-  
-  .skill-tag-name {
-    margin-right: 8px; /* Space between name and remove button */
-    background: none;
-  }
-  
-  /* Remove button ('x') within the tag */
-  .remove-skill-button {
-    background: none;
-    border: none;
-    color: var(--text-secondary, #b12d2d); /* Default color (grey) */
-    cursor: pointer;
-    padding: 2px; /* Small padding */
-    margin-left: auto; /* Pushes button to the right if needed */
-    display: inline-flex; /* Keep using flex for centering icon */
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%; /* Make button circular */
-    transition: background-color 0.2s ease, color 0.2s ease;
-    line-height: 1; /* Prevent extra height */
-  }
-  /* Make 'x' red on hover */
-  .skill-tag-item:hover .remove-skill-button:not(:disabled) {
-    background-color: rgba(255, 102, 102, 0.2); /* Light red background */
-    color: var(--danger-color, #ff6666); /* Red icon */
-  }
-  .remove-skill-button:disabled {
-    color: #666;
-    cursor: not-allowed;
-  }
-  .remove-skill-button .MuiSvgIcon-root { /* Target MUI icon size */
-      font-size: 1rem !important; /* Make 'x' icon small */
-  }
-  .remove-skill-button .MuiCircularProgress-root { /* Target spinner size */
-      width: 14px !important;
-      height: 14px !important;
-      color: var(--danger-color, #ff6666); /* Spinner color */
-  }
-  
-  
-  .remove-icon-wrapper {
-    display: inline-flex; /* Allows centering the icon inside */
-    align-items: center;
-    justify-content: center;
-    background-color: #282929; /* Your desired background */
-    border-radius: 50%;     /* Make the background circular */
-    padding: 5px;           /* Add small padding so background is visible around icon */
-    line-height: 1;         /* Prevent extra vertical space */
-    vertical-align: middle; /* Align wrapper nicely with text if needed */
-    /* Optional: Set a fixed size for the background circle */
-    width: 20px; 
-    height: 20px;
-    box-sizing: border-box; 
-  }
-  
-  /* Style the SVG icon provided by react-icons inside the wrapper */
-  .remove-icon-wrapper svg {
-    /* Option 1: If color="red" was NOT set as a prop in JSX */
-    /* color: red; */
-  
-    /* Control the size of the icon itself */
-    font-size: 1rem; /* Adjust as needed (e.g., 1em, 16px) */
-    display: block; /* Prevents potential alignment issues */
-  }
-  
-  /* Optional: Style the button containing the wrapper */
-  .remove-skill-button {
-    background: none;
-    border: none;
-    padding: 0; /* Reset padding if only showing the icon */
-    margin: 0;
-    cursor: pointer;
-    /* Add hover effects for the wrapper */
-    transition: opacity 0.2s ease;
-  }
-  
-  .remove-skill-button:hover .remove-icon-wrapper {
-    opacity: 0.8; /* Example hover effect */
-  }
-  
-  .remove-skill-button:disabled .remove-icon-wrapper {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  margin-bottom: 30px; /* Ensure space below */
+  background-color: #f9f9f9; /* Light background */
+}
 
+/* Section title */
+.skills-management-container .skills-title {
+  color:#7a2226 ; /* Light blue accent */
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.15em;
+  border-bottom: 1px solid var(--border-color, #ddd); /* Light border */
+  padding-bottom: 12px;
+  background: none;
+}
 
+/* Add Skill Form */
+.add-skill-form {
+  padding: 15px 0;
+  margin-bottom: 25px;
+  border-bottom: 1px solid var(--border-color, #ddd);
+  background: none;
+}
 
+.add-form-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  background: none;
+}
 
-  /* Loading/No Data/Error styles (reuse from global or define here) */
-  .loading-text, .no-data-text {
-    color: var(--text-secondary, #aaa); padding: 15px 0; text-align: center; font-style: italic; background: none;
-  }
-  .loading-text.small, .no-data-text.small { font-size: 0.9em; padding: 10px 5px; text-align: left;}
-  .error-message {
-    color: var(--danger-color, #ff6666); background-color: var(--danger-background, rgba(255, 102, 102, 0.1));
-    border: 1px solid var(--danger-color, #ff6666); padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 0.95em;
-  }
-  
+.add-skill-form input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: var(--background-input, #fff); /* White input background */
+  border: 1px solid var(--border-color-input, #ccc); /* Light border */
+  border-radius: 5px;
+  color: var(--text-primary, #333); /* Dark text color */
+  font-size: 1em;
+  box-sizing: border-box;
+}
 
+.add-skill-form input:focus {
+  outline: none;
+  border-color: var(--accent-primary, #007bff); /* Highlight on focus */
+}
 
+.add-skill-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  font-size: 0.95em;
+  justify-content: center;
+  background-color: #7a2226; /* Light blue background */
+  color: white; /* White text */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: filter 0.2s ease;
+}
 
-  /* Spinner animation (ensure defined once globally or here) */
-  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-  .spinner.small { border: 2px solid #555; border-top: 2px solid #aaa; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; background: none;}
-  .spinner.small.red { border-color: rgba(255, 102, 102, 0.4); border-top-color: var(--danger-color, #ff6666); }
+.add-skill-button:hover {
+  background-color: #5d1115 !important  ;/* Darker blue on hover */
+}
+
+.add-skill-button:disabled {
+  background-color: #ddd;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.add-skill-button .MuiCircularProgress-root {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Skills List Area */
+.skills-list-section {
+  margin-top: 20px;
+  background: none;
+}
+
+/* List container for tags */
+.skills-tag-list {
+  list-style: none;
+  padding: 10px 0 0 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: none;
+}
+
+/* Individual skill tag item */
+.skill-tag-item {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--background-secondary, #e9ecef); /* Light gray background */
+  color: var(--text-primary, #333); /* Dark text */
+  padding: 6px 12px 6px 15px;
+  border-radius: 20px;
+  font-size: 0.95em;
+  font-weight: 500;
+  margin: 0;
+  transition: background-color 0.2s ease, opacity 0.3s ease;
+  position: relative;
+}
+
+.skill-tag-item.deleting {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.skill-tag-name {
+  margin-right: 8px;
+  background: none;
+}
+
+/* Remove button ('x') within the tag */
+.remove-skill-button {
+  background: none;
+  border: none;
+  color: var(--text-secondary, #ff6666); /* Red icon color */
+  cursor: pointer;
+  padding: 2px;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  line-height: 1;
+}
+
+.skill-tag-item:hover .remove-skill-button:not(:disabled) {
+  background-color: rgba(255, 102, 102, 0.2); /* Light red background on hover */
+  color: var(--danger-color, #ff6666); /* Red icon color */
+}
+
+.remove-skill-button:disabled {
+  color: #666;
+  cursor: not-allowed;
+}
+
+.remove-skill-button .MuiSvgIcon-root {
+  font-size: 1rem !important;
+}
+
+.remove-skill-button .MuiCircularProgress-root {
+  width: 14px !important;
+  height: 14px !important;
+  color: var(--danger-color, #ff6666);
+}
+
+.remove-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0; /* Light gray background for icon */
+  border-radius: 50%;
+  padding: 5px;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+}
+
+.remove-icon-wrapper svg {
+  font-size: 1rem;
+  display: block;
+}
+
+.remove-skill-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.remove-skill-button:hover .remove-icon-wrapper {
+  opacity: 0.8;
+}
+
+.remove-skill-button:disabled .remove-icon-wrapper {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Loading/No Data/Error styles */
+.loading-text, .no-data-text {
+  color: var(--text-secondary, #aaa);
+  padding: 15px 0;
+  text-align: center;
+  font-style: italic;
+  background: none;
+}
+
+.loading-text.small, .no-data-text.small {
+  font-size: 0.9em;
+  padding: 10px 5px;
+  text-align: left;
+}
+
+.error-message {
+  color: var(--danger-color, #ff6666);
+  background-color: var(--danger-background, rgba(255, 102, 102, 0.1));
+  border: 1px solid var(--danger-color, #ff6666);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 0.95em;
+}

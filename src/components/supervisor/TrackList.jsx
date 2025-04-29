@@ -1,58 +1,151 @@
+// TrackList.jsx
 import React, { useEffect, useState } from 'react';
-import { fetchTracksForProgram } from '../services/api';  // Your API call
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Box, Typography, List } from '@mui/material';
+import { fetchTracksForProgram } from '../services/api';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import TrackForm from '../../components/supervisor/TrackForm';
 
-const TrackList = ({ programId, onSelectTrack }) => {
+const TrackList = ({ program, onSelectTrack }) => {
+
+
+  const [openTrackModal, setOpenTrackModal] = useState(false);
+
+
   const [tracks, setTracks] = useState([]);
+  const programId = program.id;
 
   useEffect(() => {
     async function loadTracks() {
       try {
-        const trackData = await fetchTracksForProgram(programId);  // Fetch tracks for the selected program
+        const trackData = await fetchTracksForProgram(programId);
         setTracks(trackData);
       } catch (error) {
         console.error('Failed to fetch tracks', error);
       }
     }
+
     if (programId) {
       loadTracks();
     }
   }, [programId]);
 
+  const descriptionBoxStyle = {
+    marginBottom: '40px',
+    marginTop: '130px',
+    padding: '20px 30px',
+    background: '#ffffff',
+    borderRadius: '16px',
+    border: '1px solid #e8d9db',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+    color: '#333',
+    fontSize: '1.125rem',
+    lineHeight: '1.7',
+    fontWeight: '400',
+  };
+
+  const titleStyle = {
+    fontSize: '2.125rem',
+    fontWeight: '600',
+    marginBottom: '24px',
+    color: '#464646',
+    textAlign: 'center',
+  };
+
+  const listItemStyle = {
+    padding: '12px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    transition: 'all 0.5s ease',
+    background: '#fbfbfb',
+    color: '#464646',
+    fontSize: '1.5rem',
+    fontWeight: '500',
+    borderRadius: '13px',
+    border: '1px solid #e8d9db',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    marginBottom: '10px',
+  };
+
+  const hoverStyle = {
+    color: '#7a2226',
+    background: '#ffe5e5',
+  };
+
   return (
-    <Box className="track-list" sx={{ maxWidth: '600px' }}>
-      <Typography variant="h4" sx={{ mb: 4, fontWeight: 'bold', color: 'white' }}>
-        Select Track
-      </Typography>
-      <List sx={{ p: 0, width: '100%' }}>
-        {tracks.map(track => (
-          <Box
+    <div>
+      {/* Program Description Section */}
+      {program.description && (
+        <div style={descriptionBoxStyle}>
+          {program.description}
+        </div>
+      )}
+
+      {/* Track List Title */}
+      <h3 style={titleStyle}>Tracks in "{program.name}"</h3>
+
+      {/* List of Tracks */}
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {tracks.map((track) => (
+          <li
             key={track.id}
             onClick={() => onSelectTrack(track)}
-            sx={{
-              mb: 2,
-              bgcolor: 'rgba(40, 40, 40, 0.95)',
-              borderRadius: 1,
-              cursor: 'pointer',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              px: 3,
-              py: 2.5,
-              '&:hover': {
-                bgcolor: 'rgba(50, 50, 50, 0.95)'
-              }
-            }}
+            style={listItemStyle}
+            onMouseEnter={(e) => Object.assign(e.currentTarget.style, hoverStyle)}
+            onMouseLeave={(e) => Object.assign(e.currentTarget.style, listItemStyle)}
           >
-            <Typography sx={{ color: 'white', fontWeight: 'medium' }}>
-              {track.name}
-            </Typography>
-            <ArrowForwardIcon sx={{ color: 'white' }} />
-          </Box>
+            {track.name}
+            <ArrowForwardIcon sx={{ color: '#464646', marginLeft: '50px' }} />
+          </li>
         ))}
-      </List>
-    </Box>
+      </ul>
+
+
+      {/* Add New Track Button */}
+      <div style={{ marginTop: '40px', textAlign: 'left' }}>
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: '#9c3539',
+            color: '#ffffff',
+            padding: '10px 20px',
+            borderRadius: '8px',
+            textTransform: 'none',
+            fontWeight: 500,
+            fontSize: '1rem',
+            '&:hover': {
+              backgroundColor: '#7a2226',
+            },
+          }}
+          onClick={() => setOpenTrackModal(true)}    >
+          Add New Track
+        </Button>
+
+
+
+        <Dialog open={openTrackModal} onClose={() => setOpenTrackModal(false)}>
+          <DialogTitle>Add New Track</DialogTitle>
+          <DialogContent>
+            <TrackForm
+              programId={programId}
+              onSuccess={() => {
+                setOpenTrackModal(false);
+                // reload tracks here if needed
+              }}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenTrackModal(false)} sx={{ color: 'black' }}>
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+
+
+      </div>
+
+    </div >
   );
 };
 

@@ -8,15 +8,12 @@ import LanguageIcon from '@mui/icons-material/Language';
 import { FaGithub, FaLinkedin, FaGlobe, FaHackerrank } from 'react-icons/fa';
 import { SiLeetcode } from 'react-icons/si';
 import { Link } from 'react-router-dom'; // For internal links
-
+import { Box, Typography } from '@mui/material';
 import './ViewPublicProfile.css';
+
 
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp';
 const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
-
-const accentColor = '#7a2226';
-const primaryTextColor = '#e0e0e0';
-const parentTextColor = '#ffffff';
 
 const ViewPublicProfile = ({ profileId }) => {
     const [profileData, setProfileData] = useState(null);
@@ -109,15 +106,15 @@ const ViewPublicProfile = ({ profileId }) => {
         }
 
         return (
-            <div className="profile-section skills-section">
-                <h3>Skills</h3>
+            <div className="profile-section skills-section !bg-white">
+                <h3 className='!font-bold'>Skills</h3>
                 {profileData.main_skills?.length > 0 && (
 
                     <div className="skills-subsection">
-                        <ul className="other-skills-list">
+                        <ul className="other-skills-list !bg-white">
 
                             {profileData.main_skills.map(skill => (
-                                <li key={skill.id} className="other-skill-item">
+                                <li key={skill.id} className="other-skill-item ">
                                     <span className="main-skill-name">{skill.name}</span>
                                     {skill.description && <p className="main-skill-description">{skill.description}</p>}
                                 </li>
@@ -159,12 +156,12 @@ const ViewPublicProfile = ({ profileId }) => {
 
         // If projects exist, render the list
         return (
-            <div className="profile-section projects-section">
-                <h3>Projects</h3>
-                <ul className="projects-list">
+            <div className="profile-section projects-section !bg-white">
+                <h3 className='!font-bold'>Projects</h3>
+                <ul className="projects-list ">
                     {projectsData.map(project => (
                         // Use project ID for the list item key
-                        <li key={project.id} className="project-item-card">
+                        <li key={project.id} className="project-item-card !bg-[#ededed]">
 
                             {/* Project Image */}
                             <div className="project-image-container">
@@ -179,11 +176,11 @@ const ViewPublicProfile = ({ profileId }) => {
                             {/* Project Text Content */}
                             <div className="project-details-content">
                                 {/* Title */}
-                                <h4>{project.title || 'Untitled Project'}</h4>
+                                <h4 className='!text-gray-900'>{project.title || 'Untitled Project'}</h4>
 
                                 {/* Description */}
                                 {project.description && (
-                                    <p className="project-description">{project.description}</p>
+                                    <p className="project-description !text-gray-900">{project.description}</p>
                                 )}
 
                                 {/* Tags - Map directly over nested tag objects */}
@@ -209,7 +206,7 @@ const ViewPublicProfile = ({ profileId }) => {
                                 <div className="project-links">
                                     {project.demo_link && (
                                         <a href={project.demo_link} target="_blank" rel="noopener noreferrer" className="project-link-button demo">
-                                            <LanguageIcon fontSize="small" /> Demo
+                                            <LanguageIcon fontSize="small text-gray-200" /> <span className='text-gray-200'>Demo</span>
                                         </a>
                                     )}
                                     {project.source_link && (
@@ -228,11 +225,11 @@ const ViewPublicProfile = ({ profileId }) => {
 
 
     if (isLoadingProfile) {
-        return <div className="loading-text section-container">Loading profile view...</div>;
+        return <div className="loading-text section-container mt-[100px]">Loading profile view...</div>;
     }
 
     if (error && !profileData) { // Show error only if profile loading failed critically
-        return <div className="error-message main-error section-container">{error}</div>;
+        return <div className="error-message main-error section-container mt-[100px]">{error}</div>;
     }
 
     if (!profileData) {
@@ -244,36 +241,55 @@ const ViewPublicProfile = ({ profileId }) => {
     console.log(profileData.profile_picture)
 
     return (
-        <div className="view-public-profile-container section-container">
+        <div className="view-public-profile-container section-container !bg-[#ededed] rounded-xl shadow-md !mt-[70px] max-w-[80%]">
             <h2 >
                 <AccountCircleIcon className="icon" />
-                View Public Profile
+                <span className='text-gray-900'>View Public Profile</span>
             </h2>
             {error && <p className="error-message">{error}</p>}
 
             {/* --- Profile Header --- */}
-            <div className="profile-header">
+            <div className="profile-header !bg-[#ededed]">
                 <img
                     src={profileData.profile_picture || DEFAULT_AVATAR}
                     alt={`${fullName}'s profile`}
                     className="profile-avatar"
                 />
-                <div className="profile-info">
-                    <h3 className="profile-fullname">{fullName}</h3>
-                    <p className="profile-username">@{profileData.username}</p>
-                    {profileData.headline && <p className="profile-headline">{profileData.headline}</p>}
-                    {profileData.location && <p className="profile-location">{profileData.location}</p>}
+                <div className="profile-info !bg-[#ededed]">
+                    <h3 className="!text-gray-900">{fullName}</h3>
+                    <p className="!text-gray-900">@{profileData.username}</p>
+                    {profileData.headline && <p className="!text-gray-900">{profileData.headline}</p>}
+                    {profileData.location && <p className="!text-gray-900">{profileData.location}</p>}
+                    <Box display="flex" flexGrow={1} flexWrap="wrap" gap={{ xs: 2, sm: 3 }} mb={1}> 
+                        <Typography variant="body2" sx={{ color: 'grey.900', cursor: 'pointer', '&:hover': { color: 'white'} }}>
+                            <Link
+                                to={profileData.id ? `/profiles/${profileData.id}/followers` : '#'} // Link only if ID exists
+                                className="flex-1 no-underline text-center !text-gray-900"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <strong className="!text-[#7B2227]">{profileData.followers_count ?? 0}</strong> Followers
+                            </Link>         
+                        </Typography>
+
+                        <Typography variant="body2" sx={{ color: 'grey.900', cursor: 'pointer', '&:hover': { color: 'white'} }}>
+                            <Link
+                                to={profileData.id ? `/profiles/${profileData.id}/following` : '#'} // Link only if ID exists
+                                className="flex-1 no-underline text-center !text-gray-900"
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <strong className="!text-[#7B2227]">{profileData.following_count ?? 0}</strong> Following
+                            </Link>
+                        
+                        </Typography>
+                    </Box>
                 </div>
-                {/* Optional: Add Follow/Message buttons (disabled/hidden for own profile) */}
-                {/* <div className="profile-actions"> <button disabled>Follow</button> </div> */}
-            </div>
+                </div>
 
 
             {/* New section for ITI status / history */}
             {profileData.is_student && profileData.iti_history?.length > 0 && (
                 <div className="profile-section iti-history-section">
                     <h3>History/Status with ITI</h3>
-   
                         {profileData.iti_history.map((entry, index) => (
                             <div key={index} className="iti-history-box">
                                 <p><strong>Program:</strong> {entry.program}</p>
@@ -282,22 +298,21 @@ const ViewPublicProfile = ({ profileId }) => {
                                 <p><strong>Status:</strong> {entry.status}</p>
                             </div>
                         ))}
-                 
                 </div>
             )}
 
             {profileData.is_supervisor && (
-                <div className="profile-section supervisor-info-section">
-                    <h3>Supervisor Role</h3>
+                <div className="profile-section supervisor-info-section !bg-white">
+                    <h3  className='!font-bold'>Supervisor Role</h3>
                     {profileData.department && (
-                        <div className="supervisor-department">
-                            <span className="badge">Department: {profileData.department}</span>
+                        <div className="supervisor-department !bg-white">
+                            <span className="badge !bg-white !text-gray-900">Department: {profileData.department}</span>
                         </div>
                     )}
                     {profileData.supervised_tracks?.length > 0 && (
-                        <div className="supervised-tracks-box">
-                            <h4>Supervising Tracks</h4>
-                            <ul className="supervised-tracks-list">
+                        <div className="supervised-tracks-box !bg-white">
+                            <h4 className='!text-gray-900 font-bold'>Supervising Tracks</h4>
+                            <ul className="supervised-tracks-list !text-gray-900 font-bold">
                                 {profileData.supervised_tracks.map((track, idx) => (
                                     <li key={idx}>{track}</li>
                                 ))}
@@ -306,15 +321,11 @@ const ViewPublicProfile = ({ profileId }) => {
                     )}
                 </div>
             )}
-
-
-
-
             {/* --- Bio --- */}
             {profileData.bio && (
-                <div className="profile-section bio-section">
-                    <h3>Bio</h3>
-                    <p>{profileData.bio}</p>
+                <div className="profile-section bio-section !bg-white">
+                    <h3 className='!font-bold'>Bio</h3>
+                    <p className='!text-gray-900'>{profileData.bio}</p>
                 </div>
             )}
 

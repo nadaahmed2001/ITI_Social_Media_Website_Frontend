@@ -9,6 +9,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import SecurityIcon from '@mui/icons-material/Security';
 import './PrivacySecuritySettings.css';
+import { color } from 'framer-motion';
 
 const PrivacySecuritySettings = ({ userData, onUpdateUserData }) => {
     const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
@@ -57,7 +58,7 @@ const PrivacySecuritySettings = ({ userData, onUpdateUserData }) => {
 
     <>{/* Section Header */}
     <div className="privacy-header">
-        <SecurityIcon />
+        <SecurityIcon sx={{color:"#7a2226"}} />
         <h2 className="privacy-header-text-container"> 
             Account Security
         </h2>

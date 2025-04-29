@@ -6,8 +6,8 @@ export default function ChatContent({ isDarkMode }) {
     <div
       className={
         isDarkMode
-          ? "w-120 bg-gray-1000 text-white p-4 rounded-2xl"
-          : "w-120 bg-gray-300 text-gray-200 p-4 rounded-2xl"
+          ? "w-120 bg-gray-1000 text-white rounded-2xl"
+          : "w-120 bg-gray-300 text-gray-200 rounded-2xl"
       }
     >
       {/* Private Chat Section */}

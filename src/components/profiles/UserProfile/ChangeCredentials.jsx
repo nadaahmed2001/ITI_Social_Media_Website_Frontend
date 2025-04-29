@@ -166,13 +166,14 @@ const ChangeCredentials = () => {
         onChange={handler}
         required={required} 
         disabled={disabled}
+        
       />
     </div>
   );
 
   return (
     <div className="change-credentials-container section-container">
-      <h2><VpnKeyIcon /> Change Email / Password</h2>
+      <h2><VpnKeyIcon className='text-[#7a2226]' /> <span className='text-gray-900'>Change Email / Password</span></h2>
 
       {/* --- Change Email Form --- */}
       <form onSubmit={handleEmailSubmit} className="form-section">
@@ -184,7 +185,7 @@ const ChangeCredentials = () => {
         {renderInput('email', 'confirmEmail', 'Confirm New Email Address', 'email', handleEmailChange, emailData.confirmEmail, isEmailLoading)}
         {renderInput('email', 'currentPassword', 'Current Password', 'password', handleEmailChange, emailData.currentPassword, isEmailLoading)}
 
-        <button type="submit" className="submit-button" disabled={isEmailLoading}>
+        <button type="submit" className=" bg-red-900 hover:!bg-red-800 text-white font-semibold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled={isEmailLoading}>
           {isEmailLoading ? 'Updating Email...' : 'Update Email'}
         </button>
         
@@ -199,7 +200,7 @@ const ChangeCredentials = () => {
         {renderInput('password', 'newPassword', 'New Password', 'password', handlePasswordChange, passwordData.newPassword, isPasswordLoading)}
         {renderInput('password', 'confirmNewPassword', 'Confirm New Password', 'password', handlePasswordChange, passwordData.confirmNewPassword, isPasswordLoading)}
 
-        <button type="submit" className="submit-button" disabled={isPasswordLoading}>
+        <button type="submit" className="submit-button bg-red-900 hover:!bg-red-800 !text-white font-semibold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled={isPasswordLoading}>
           {isPasswordLoading ? 'Updating Password...' : 'Update Password'}
         </button>
       </form>

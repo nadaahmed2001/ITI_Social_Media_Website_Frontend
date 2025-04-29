@@ -1,7 +1,8 @@
 .view-public-profile-container {
+margin-top: 60px;
 padding: 25px;
 color: #e0e0e0;
-background-color: #191919;
+background-color: #f9f9f9;
 }
 
 .view-public-profile-container h2 {
@@ -16,7 +17,6 @@ padding-bottom: 15px;
 font-size: 2em;
 width: 80%;
 font-weight: 600;
-
 }
 
 
@@ -29,13 +29,7 @@ font-weight: 600;
     display: flex;
     align-items: center;
     gap: 25px;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
     background: inherit;
-}
-
-.icon{
-    background: #282828 ;
 }
 
 .profile-header {
@@ -47,7 +41,7 @@ padding-bottom: 20px;
 border-bottom: 1px solid #333; /* Separator */
 background: none;
 width: 80%;
-
+background-color: #f9f9f9;
 }
 
 .profile-avatar {
@@ -62,11 +56,11 @@ flex-shrink: 0; /* Prevent image shrinking */
 
 .profile-info {
 flex-grow: 1;
-background: none; 
+background: #f9f9f9; 
 }
 
 .profile-fullname {
-color: #fff;
+color: rgb(28, 27, 27);
 font-size: 1.5em;
 margin: 0 0 2px 0;
 background: none; 
@@ -91,20 +85,19 @@ font-style: italic;
 /* Profile Sections (Common Styling) */
 .profile-section {
     width: 80%;
-
-margin-bottom: 30px;
-padding: 20px;
-background-color: #282828;
-border-radius: 8px;
-border: 1px solid #333; /* Subtle border */
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #FEFFFE !important;
+    border-radius: 8px;
+    border: 1px solid #333; /* Subtle border */
 }
 .profile-section h3 {
-color: #7a2226; /* Section title accent */
-margin-top: 0;
-margin-bottom: 15px;
-font-size: 1.2em;
-border-bottom: 1px solid #444;
-padding-bottom: 10px;
+    color: #7a2226; /* Section title accent */
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
     background: none; 
 }
 .profile-section p {
@@ -125,6 +118,7 @@ padding-bottom: 10px;
     flex-wrap: wrap;
     gap: 15px;
 }
+
 .link-item a {
     display: inline-flex;
     align-items: center;
@@ -149,7 +143,7 @@ padding-bottom: 10px;
 }
 
 /* Skills Section */
-.skills-section h4 {
+/* .skills-section h4 {
     color: #ccc;
     margin-top: 15px;
     margin-bottom: 10px;
@@ -158,7 +152,7 @@ padding-bottom: 10px;
 }
 .skills-section .skills-subsection:first-child h4 {
     margin-top: 0; 
-}
+} */
 
 .main-skills-list {
     background: none; 
@@ -209,24 +203,22 @@ padding-bottom: 10px;
 }
 
 .project-item-card {
-    background-color: #303030; /* Card background */
+    background-color: #303030;
     padding: 15px;
     border-radius: 6px;
     border: 1px solid #444;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Space between elements inside card */
+    gap: 10px; 
     width: 300px;
 
 }
 .project-item-card h4 {
-    color: #eee;
     margin: 0 0 5px 0;
     font-size: 1.1em;
     background: none;
 }
 .project-description {
-    color: #ccc;
     font-size: 0.95em;
     flex-grow: 1; /* Allow description to take available space */
     margin-bottom: 10px; /* Space before tags/links */
@@ -271,7 +263,7 @@ padding-bottom: 10px;
     color: #191919;
 }
 .project-link-button.demo:hover {
-    background-color: #e6e400;
+    background-color: #932329 !important;
 }
 .project-link-button.source {
     background-color: #555;
@@ -551,9 +543,10 @@ padding-top: 10px; /* Space above links */
     width: 100%;
     margin-bottom: 20px;
     padding: 15px;
-    background-color: #2a2a2a;
+    background-color: #FEFFFE !important;
     border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    max-width: 80%;
 }
 
 .iti-history-box {
@@ -569,26 +562,27 @@ padding-top: 10px; /* Space above links */
 .iti-history-box:hover {
     transform: translateY(-2px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
-    background-color: #444;
+    background-color: #ECEDEC !important;
 }
 
 .iti-history-box p {
     margin: 8px 0;
-    color: #eee;
+    color: #282828 !important;
     font-size: 1.1em;
     background: transparent;
 }
 
 /* For labels like "Program:", "Track:", etc. */
 .iti-history-box strong {
-    color: #fff;
+    color: #9F0712 !important;
     font-weight: 600;
     margin-right: 8px;
     background: transparent;
 }
 
 .iti-history-section h3 {
-    color: #ffd700;
+    color: #9F0712 !important;
+    font-weight: 600;
     margin-top: 0;
     margin-bottom: 15px;
     font-size: 1.2em;
@@ -619,31 +613,31 @@ padding-top: 10px; /* Space above links */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.supervisor-department {
+/* .supervisor-department {
     margin-bottom: 10px;
-}
+} */
 
-.badge {
+/* .badge {
     display: inline-block;
     padding: 4px 8px;
     background-color: #444;
     color: #eee;
     border-radius: 3px;
     font-size: 1em;
-}
-
+} */
+/* 
 .supervised-tracks-box {
     padding: 10px;
     background-color: #333;
     border-radius: 4px;
-}
+} */
 
-.supervised-tracks-box h4 {
+/* .supervised-tracks-box h4 {
     margin-top: 0;
     margin-bottom: 10px;
     color: #eee;
     font-size: 1.1em;
-}
+} */
 
 .supervised-tracks-list {
     margin: 0;
@@ -655,3 +649,5 @@ padding-top: 10px; /* Space above links */
 .supervised-tracks-list li {
     margin-bottom: 5px;
 }
+
+

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import {Link} from 'react-router-dom';
 import {
     getMyProjects,
     addProject,    
@@ -34,7 +35,7 @@ const initialProjectFormState = {
 };
 
 // Define default paths (ADJUST THESE PATHS)
-const DEFAULT_AVATAR = '/images/profiles/user-default.png';
+const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
 const DEFAULT_PROJECT_IMAGE = '/images/projects/default.jpg';
 
 // --- CLOUDINARY CONFIG (Use Environment Variables!) ---
@@ -351,7 +352,7 @@ const ProjectsManagement = ({ profileId }) => {
     return (
         <div className="projects-management-container form-section">
             <h3>My Projects</h3>
-            <button className="submit-button add-button" style={{ marginBottom: '25px' }} onClick={openModalForAdd} disabled={isLoading || !!deletingProjectId || isSavingProject}>
+            <button className="submit-button add-button bg-red-900 hover:!bg-red-800 text-white font-semibold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors" style={{ marginBottom: '25px' }} onClick={openModalForAdd} disabled={isLoading || !!deletingProjectId || isSavingProject}>
                 Add Project
             </button>
             {error && projects.length > 0 && <p className="error-message">{error}</p>}
@@ -444,7 +445,10 @@ const ProjectsManagement = ({ profileId }) => {
                                         return (
                                             <li key={c.id || c.username} className={`contributor-modal-item ${isRemovingThis ? 'removing' : ''}`}>
                                                 <img src={c.profile_picture || DEFAULT_AVATAR} alt={c.username} className="contributor-avatar small" onError={(e) => { if(e.target.src !== DEFAULT_AVATAR) e.target.src = DEFAULT_AVATAR; }}/>
-                                                <span className='contributor-modal-username'>{c.username}</span>
+                                                <Link to={`/profiles/${c.id}`} className="contributor-modal-username hover:opacity-80 transition-opacity !no-underline">
+                                                    <span >{c.username}</span>
+                                                </Link>
+                                                
                                                 <button className='remove-contributor-button' onClick={() => handleRemoveContributor(c.username)} disabled={isRemovingThis || isAddingContributor || (isRemovingContributorUsername && !isRemovingThis)} title={`Remove ${c.username}`} >
                                                 {isRemovingThis ? <span className="spinner small red"></span> : <PersonRemoveIcon fontSize="small"/>}
                                                 </button>

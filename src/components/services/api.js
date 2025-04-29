@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Axios instance with base URL
-const API_BASE_URL= "http://127.0.0.1:8000/api/";
+const API_BASE_URL= "https://itisocialmediawebsitebackend-production.up.railway.app/api/";
 
 
 const api = axios.create({
@@ -15,7 +15,7 @@ const api = axios.create({
 
 
 const api2 = axios.create({
-  baseURL: "http://127.0.0.1:8000/",
+  baseURL: "https://itisocialmediawebsitebackend-production.up.railway.app/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -43,17 +43,268 @@ api2.interceptors.request.use((config) => {
 
 // ============================================================="Rahma"=========================================================================
 // Fetch all posts
-export const fetchPosts = () => api.get("/posts/");
+export const fetchPosts = (page = 1, pageSize = 10) => {
+  return api.get('/posts/', {
+    params: {
+      page,
+      page_size: pageSize
+    }
+  });
+};
+
 // Create a new post
-export const createPost = (data) => api.post("/posts/", data, {
-  headers: {
-    'Content-Type': 'multipart/form-data'
+export const createPost = (postData) => {
+  const formData = new FormData();
+  formData.append('body', postData.body);
+  
+  // Only append attachment_url if it exists
+  if (postData.attachment_url) {
+    formData.append('attachment_url', postData.attachment_url);
   }
-});
+  
+  return api.post('/posts/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+
+export const savePost = async (postId) => {
+  try {
+    // Use POST method for saving
+    const response = await api.post(`/posts/${postId}/save/`);
+    return response.data; // Should contain { status: 'saved' or 'already_saved', ... }
+  } catch (error) {
+    console.error(`Error saving post ${postId}:`, error.response || error);
+    throw error;
+  }
+};
+
+// Function to unsave a post
+export const unsavePost = async (postId) => {
+  try {
+    // Use DELETE method for unsaving
+    const response = await api.delete(`/posts/${postId}/save/`);
+    return response.data; // Should contain { status: 'unsaved' or 'not_found', ... }
+  } catch (error) {
+    console.error(`Error unsaving post ${postId}:`, error.response || error);
+    throw error;
+  }
+};
+
+
+export const fetchSavedPosts = async (page = 1) => { // Add page parameter for pagination
+  try {
+    // Call the new backend endpoint, include page query parameter
+    const response = await api.get(`/posts/saved/?page=${page}`);
+    // Assuming paginated response like { count, next, previous, results }
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching saved posts:", error.response || error);
+    throw error;
+  }
+};
+
+
+export const fetchMyPosts = async (page = 1) => {
+  try {
+    // Construct the URL with the page query parameter.
+    // Ensure '/posts/mine/' matches the actual endpoint defined in your Django urls.py
+    const url = `/posts/mine/?page=${page}`;
+    // console.log(`Calling API: GET ${url}`); // Debug log
+
+    // Make the GET request using your authenticated axios instance
+    const response = await api.get(url);
+
+    // Log the successful response data for debugging
+    // console.log(`Fetched my posts (page ${page}):`, response.data);
+
+    // Return the data received from the backend (expected to be paginated)
+    // e.g., { count: ..., next: ..., previous: ..., results: [...] }
+    return response.data;
+
+  } catch (error) {
+    // Log detailed error information
+    console.error(`Error fetching my posts (page ${page}):`, error.response?.data || error.message || error);
+
+
+    throw error;
+  }
+};
+
+
+export const followUser = async (profileId) => {
+  // Validate input
+  if (!profileId) {
+      console.error("followUser called without profileId");
+      throw new Error("Profile ID is required to follow.");
+  }
+
+  try {
+    // Construct the endpoint URL
+    const url = `/users/profiles/${profileId}/follow/`;
+    // console.log(`Calling API: POST ${url}`); // Log the action
+
+    // Make the POST request (backend creates the Follow record)
+    const response = await api2.post(url);
+
+    // console.log(`Follow response for ${profileId}:`, response.data);
+    // Return the response data (e.g., { status: 'followed', message: '...' })
+    return response.data;
+
+  } catch (error) {
+    // Log detailed error information
+    console.error(`Error following profile ${profileId}:`, error.response?.data || error.message || error);
+    // Re-throw the error for the calling component (FollowButton) to handle
+    throw error;
+  }
+};
+
+/**
+ * Unfollow a user by their profile ID.
+ * Sends a DELETE request to the follow/unfollow endpoint.
+ * @param {string} profileId - The UUID string of the profile to unfollow.
+ * @returns {Promise<object>} Promise resolving to the API response data.
+ * @throws Will throw an error if the API call fails or profileId is missing.
+ */
+export const unfollowUser = async (profileId) => {
+  // Validate input
+  if (!profileId) {
+    console.error("unfollowUser called without profileId");
+    throw new Error("Profile ID is required to unfollow.");
+  }
+
+  try {
+    // Construct the endpoint URL
+    const url = `/users/profiles/${profileId}/follow/`;
+    // console.log(`Calling API: DELETE ${url}`); // Log the action
+
+    // Make the DELETE request (backend deletes the Follow record)
+    const response = await api2.delete(url);
+
+    // console.log(`Unfollow response for ${profileId}:`, response.data);
+     // Return the response data (e.g., { status: 'unfollowed', message: '...' })
+    return response.data;
+
+  } catch (error) {
+     // Log detailed error information
+    console.error(`Error unfollowing profile ${profileId}:`, error.response?.data || error.message || error);
+    // Re-throw the error for the calling component (FollowButton) to handle
+    throw error;
+  }
+};
+
+
+export const getFollowers = async (profileId, page = 1) => {
+  if (!profileId) {
+       console.error("getFollowers called without profileId");
+       throw new Error("Profile ID is required to get followers.");
+  }
+  try {
+   // Construct URL with pagination parameter
+   const url = `users/profiles/${profileId}/followers/?page=${page}`;
+  //  console.log(`Calling API: GET ${url}`);
+
+   const response = await api2.get(url);
+  //  console.log(`Followers list response for ${profileId} (page ${page}):`, response.data);
+
+   // Return the full paginated response data
+   return response.data;
+
+ } catch (error) {
+   console.error(`Error getting followers for profile ${profileId}:`, error.response?.data || error.message || error);
+   throw error;
+ }
+};
+
+export const getFollowing = async (profileId, page = 1) => {
+  if (!profileId) {
+       console.error("getFollowing called without profileId");
+       throw new Error("Profile ID is required to get following list.");
+   }
+  try {
+   // Construct URL with pagination parameter
+   const url = `users/profiles/${profileId}/following/?page=${page}`;
+  //  console.log(`Calling API: GET ${url}`);
+
+   const response = await api2.get(url);
+  //  console.log(`Following list response for ${profileId} (page ${page}):`, response.data);
+
+   // Return the full paginated response data
+   return response.data;
+
+ } catch (error) {
+   console.error(`Error getting following list for profile ${profileId}:`, error.response?.data || error.message || error);
+   throw error;
+ }
+};
+
+export const getProfileById = async (profileId) => {
+  if (!profileId) throw new Error("Profile ID required");
+  try {
+      const response = await api2.get(`/users/profiles/${profileId}/`);
+      return response; // Return the whole response or just response.data
+  } catch (error) {
+      console.error(`Error fetching profile ${profileId}:`, error.response || error);
+      throw error;
+  }
+};
+
+export const fetchUserPosts = async (userId, page = 1) => {
+  if (!userId) {
+      console.error("fetchUserPosts called without userId");
+      throw new Error("User ID is required to fetch posts.");
+  }
+  try {
+    // Construct the URL with the author and page query parameters.
+    // Ensure '/posts/' matches the actual endpoint for your PostListCreateView
+    const url = `/posts/?author=${userId}&page=${page}`;
+    console.log(`Calling API: GET ${url}`); // Debug log
+
+    const response = await api2.get(url);
+
+    console.log(`Fetched posts for user ${userId} (page ${page}):`, response.data);
+    // Return the data received from the backend (expected to be paginated)
+    return response.data;
+
+  } catch (error) {
+    console.error(`Error fetching posts for user ${userId} (page ${page}):`, error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
+
+
 // Fetch comments for a post
-export const fetchComments = (postId) => api.get(`/posts/${postId}/comments/`);
+export const fetchComments = (postId, page = 1) => { // Accept page, default to 1
+  // console.log(`API: Fetching comments for post ${postId}, page ${page}`);
+  if (typeof page !== 'number' || isNaN(page)) {
+    console.error("API ERROR: fetchComments received invalid page number:", page);
+    // console.log(page)
+    // Return a rejected promise or throw an error to stop the process
+    return Promise.reject(new Error(`Invalid page number: ${page}`)); 
+  } 
+  // Append the page query parameter to the comments endpoint URL
+  return api.get(`/posts/${postId}/comments/?page=${page}`); 
+};
+
 // Add a comment to a post
-export const addComment = (postId, data) => api.post(`/posts/${postId}/comment/`, data);
+export const addComment = (postId, commentData) => {
+  const formData = new FormData();
+  formData.append('post', postId)
+  formData.append('comment', commentData.comment);
+  if (commentData.attachment_url) {
+    formData.append('attachment_url', commentData.attachment_url);
+  }
+  
+  return api.post(`/posts/${postId}/comment/`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 // Edit a post
 export const editPost = (postId, updatedContent) => 
   api.put(`/posts/${postId}/`, updatedContent);
@@ -176,7 +427,7 @@ export const createBatch = async (name, program_id, track_id) => {
       track_id
     });
 
-    console.log("Created Batch:", response.data); // Debugging
+    // console.log("Created Batch:", response.data); // Debugging
     return response.data;  // Return the newly created batch data
   } catch (error) {
     console.error('Failed to create batch:', error);
@@ -184,27 +435,68 @@ export const createBatch = async (name, program_id, track_id) => {
   }
 };
 
-
-// Upload CSV File for Batch
 export const uploadBatchCSV = async (batchId, file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("batch_id", batchId);
-    console.log("I'm inside uploadBatchCSV function and formData is", formData); // Debugging
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("batch_id", batchId);
+  // console.log("I'm inside uploadBatchCSV function and formData is", formData); // Debugging
 
-    try {
-        const response = await api.post(`supervisor/upload-national-id/`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error("Failed to upload CSV:", error);
-        throw error;
-    }
+  try {
+      const response = await api.post(`supervisor/upload-national-id/`, formData, {
+          headers: {
+              "Content-Type": "multipart/form-data",
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("Failed to upload CSV:", error);
+      throw error;
+  }
 };
 
+export const updateBatch = async (batchId, data) => {
+  try {
+    const response = await api.patch(`supervisor/batches/${batchId}/`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to update batch:", error);
+    throw error;
+  }
+};
+
+//New
+export const getTrack= async(trackId)=>{
+  try{
+    const response = await api.get(`supervisor/tracks/${trackId}/`);
+    console.log("Track Details:", response.data); // Debugging
+    return response.data;
+  }catch(error){
+    console.log("Couldn't fetch track details",error);
+    throw error;
+  }
+}
+
+export const getProgram= async(programId)=>{
+  try{
+    const response = await api.get(`supervisor/programs/${programId}/`);
+    // console.log("Program Details:", response.data); // Debugging
+    return response.data;
+  }catch(error){
+    console.log("Couldn't fetch program details",error);
+    throw error;
+  }
+}
+
+export const createTrack= async (trackData) => {
+  try {
+    const response = await api.post("supervisor/tracks/", trackData);
+    console.log("Created Track:", response.data); // Debugging
+    return response.data;  // Return the newly created track data
+  } catch (error) {
+    console.error('Failed to create track:', error);
+    throw error; // Make sure to propagate error for frontend handling
+  }
+};
 
 //------------------- Notifications API functions -------------------
 export const fetchNotifications = () => api.get("/notifications/");
@@ -291,6 +583,21 @@ export const updateAccount = (jsonData) => api2.put('/users/account/', jsonData)
 export const updateProfilePicture = (formData) => api2.put('/users/account/', formData); // Send FormData
 export const getPublicProfile = (profileId) => api2.get(`/users/profiles/${profileId}/`);
 
+export const searchProfiles = async (query) => {
+  try {
+    // Adjust the endpoint '/search/profiles/' if needed
+    const response = await api.get(`/users/search/profiles/?q=${encodeURIComponent(query)}`);
+    // Assuming the backend returns data in response.data
+    // If it returns an array directly: return response.data;
+    // If it returns { results: [...] }: return response.data.results;
+    return response.data; // Adjust based on your actual API response structure
+  } catch (error) {
+    console.error("Error searching profiles:", error.response || error);
+    // Re-throw or handle error appropriately
+    throw error;
+  }
+};
+
 // ======================================================= User Credentials ==========================================================
 export const changeEmail = (data) => api2.post('/users/change-email/', data);
 export const changePassword = (data) => api2.post('/users/change-password/', data);
@@ -303,26 +610,26 @@ export const deleteSkill = (skillId) => api2.delete(`/users/skills/${skillId}/`)
 
 // =========================================================== Projects =============================================================
 
-export const getAllProjects = () => api2.get('/api/projects/'); // Fetches ALL projects
-export const getMyProjects = (profileId) => api2.get(`/api/projects/?owner=${profileId}`);
-export const getProject = (projectId) => api2.get(`/api/projects/${projectId}/`);
-export const addProject = (projectData) => api2.post('/api/projects/', projectData);
-export const updateProject = (projectId, projectData) => api2.put(`/api/projects/${projectId}/`, projectData);
-export const deleteProject = (projectId) => api2.delete(`/api/projects/${projectId}/`);
-export const getAllTags = () => api2.get('/api/projects/tags/'); // For tag input suggestions
-export const addTagToProject = (projectId, tagId) => api2.post(`/api/projects/${projectId}/tags/`, { tag_id: tagId });
-export const removeTagFromProject = (projectId, tagId) => api2.delete(`/api/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
+export const getAllProjects = () => api2.get('/projects/'); // Fetches ALL projects
+export const getMyProjects = (profileId) => api2.get(`/projects/?owner=${profileId}`);
+export const getProject = (projectId) => api2.get(`/projects/${projectId}/`);
+export const addProject = (projectData) => api2.post('/projects/', projectData);
+export const updateProject = (projectId, projectData) => api2.put(`/projects/${projectId}/`, projectData);
+export const deleteProject = (projectId) => api2.delete(`/projects/${projectId}/`);
+export const getAllTags = () => api2.get('/projects/tags/'); // For tag input suggestions
+export const addTagToProject = (projectId, tagId) => api2.post(`/projects/${projectId}/tags/`, { tag_id: tagId });
+export const removeTagFromProject = (projectId, tagId) => api2.delete(`/projects/${projectId}/tags/`, { data: { tag_id: tagId } }); // DELETE request might need data in body
 
 // ==================================================== Project Contributors =========================================================
-export const getContributors = (projectId) => api2.get(`/api/projects/${projectId}/contributors/`);
-export const addContributor = (projectId, username) => api2.post(`/api/projects/${projectId}/contributors/`, { username });
-export const removeContributor = (projectId, username) => api2.delete(`/api/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
-// export const getMyProjects = (profileId) => api2.get(`/api/projects/?owner=${profileId}`);
+export const getContributors = (projectId) => api2.get(`/projects/${projectId}/contributors/`);
+export const addContributor = (projectId, username) => api2.post(`/projects/${projectId}/contributors/`, { username });
+export const removeContributor = (projectId, username) => api2.delete(`/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
+// export const getMyProjects = (profileId) => api2.get(`/projects/?owner=${profileId}`);
 
 // export const verifyOtp = (data) => { return api2.post('/users/verify-otp/', data);};
 
 export const verifyOtp = (data) => {
-  return axios.post('http://127.0.0.1:8000/users/verify-otp/', data, {
+  return axios.post('https://itisocialmediawebsitebackend-production.up.railway.app/api/users/verify-otp/', data, {
     headers: {
       'Content-Type': 'application/json',
     },

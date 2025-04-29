@@ -20,5 +20,6 @@ body[data-theme='dark'] { /* Or :root if dark is default, or .dark-theme class *
 }
 
 #root {
-    background-color: #191919;
+    background-color: #F9FAFD !important;
+    min-height: calc(100vh ) !important;
 }
