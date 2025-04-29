@@ -1,92 +1,125 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { fetchGroupMessages, fetchPrivateMessages, fetchUser, 
     sendGroupMessage, sendPrivateMessage, editMessage, deleteMessage,
-    clearGroupMessages, clearPrivateMessages ,editGroupChat } from "../../components/services/api";
+    clearGroupMessages, clearPrivateMessages, editGroupChat } from "../../components/services/api";
 import { useParams } from 'react-router-dom';
 import ChatSidebar from './ChatSidebar';
+import WebSocketManager from '../../utils/websocket';
 
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './MessagesList.css';
 import SendIcon from '@mui/icons-material/Send';
 import CircularProgress from '@mui/material/CircularProgress';
 
-
-
 const MessagesList = ({token, isGroupChat }) => {
-    // console.log( )
     const { id } = useParams(); // id is the group_id or user_id depending on the chat type
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [currentUser, setCurrentUser] = useState(null);
     const [isSending, setIsSending] = useState(false);
+    const [isConnecting, setIsConnecting] = useState(false);
+    const [connectionError, setConnectionError] = useState(null);
     const messagesEndRef = useRef(null);
-    const socketRef = useRef(null); // WebSocket reference
+    const wsManager = useRef(null); // WebSocket manager reference
     const nodeRefs = useRef({}); // Store refs for each message
+    
+    // Get auth token from localStorage
     token = localStorage.getItem("access_token"); 
-    // Temporary hardcoded token
-    //  token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQzOTY4NjU4LCJpYXQiOjE3NDM4ODIyNTgsImp0aSI6IjNmZDEzN2RhMTVkNTRjZGE5ZTM3MGY2YjAxMTRmNmE3IiwidXNlcl9pZCI6NH0.attP3etscne7JkqU2zPSv-4t5VVpXeFiZum69LM90BY";
     if (!token) {
         console.error("No token passed to MessagesList component!");
     }
-    // Memoize the WebSocket connection function
-    const connect_to_group_chat = useCallback(() => {
-        const socketUrl = isGroupChat
- 
-        ? `ws://127.0.0.1:8000/ws/chat/group/${id}/?token=${token}` // Group chat WebSocket URL
-        : `ws://127.0.0.1:8000/ws/chat/private/${id}/?token=${token}`; // Private chat WebSocket URL
 
-        socketRef.current = new WebSocket(socketUrl);
+    // Initialize the WebSocketManager once
+    useEffect(() => {
+        wsManager.current = new WebSocketManager();
 
-        // Log WebSocket events for debugging
-        socketRef.current.onopen = () => {
-            console.log("WebSocket connection established.");
-        };
-
-        socketRef.current.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                if (data.type === "chat_message") {
-                    const normalizedMessage = {
-                        id: data.message.id || Date.now(),
-                        content: isGroupChat ? data.message.content : data.message.message,
-                        timestamp: data.message.timestamp,
-                        sender: data.message.sender,
-                        receiver: isGroupChat ? undefined : data.message.receiver,
-                    };
-
-                    setMessages((prevMessages) => {
-                        const updatedMessages = [...prevMessages, normalizedMessage];
-                        return updatedMessages.sort(
-                            (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-                        );
-                    });
-                } else if (data.type === "edit_message") {
-                    // Handle real-time message editing
-                    setMessages((prevMessages) =>
-                        prevMessages.map((msg) =>
-                            msg.id === data.message.id
-                                ? { ...msg, content: data.message.content }
-                                : msg
-                        )
-                    );
-                }
-            } catch (error) {
-                console.error("Error parsing WebSocket message:", error);
+        // Clean up WebSocket connection
+        return () => {
+            if (wsManager.current) {
+                wsManager.current.disconnect();
             }
         };
+    }, []);
 
-        socketRef.current.onerror = (error) => {
-            console.error("WebSocket error:", error);
+    // Set up WebSocket event listeners and connect
+    useEffect(() => {
+        if (!wsManager.current || !token || !id) return;
+        
+        setIsConnecting(true);
+        setConnectionError(null);
+        
+        // Path format for WebSocket connection
+        const wsPath = isGroupChat 
+            ? `chat/group/${id}/` 
+            : `chat/private/${id}/`;
+        
+        // Set up message event listener
+        const handleMessage = (data) => {
+            console.log("WebSocket message received:", data);
+            
+            if (data.type === "chat_message") {
+                const normalizedMessage = {
+                    id: data.message.id || Date.now(),
+                    content: isGroupChat ? data.message.content : data.message.message,
+                    timestamp: data.message.timestamp,
+                    sender: data.message.sender,
+                    receiver: isGroupChat ? undefined : data.message.receiver,
+                };
+
+                setMessages((prevMessages) => {
+                    const updatedMessages = [...prevMessages, normalizedMessage];
+                    return updatedMessages.sort(
+                        (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+                    );
+                });
+            } else if (data.type === "edit_message") {
+                setMessages((prevMessages) =>
+                    prevMessages.map((msg) =>
+                        msg.id === data.message.id
+                            ? { ...msg, content: data.message.content }
+                            : msg
+                    )
+                );
+            }
         };
-
-        socketRef.current.onclose = () => {
-            console.log("WebSocket connection closed. Reconnecting...");
-            setTimeout(() => connect_to_group_chat(), 1000); // Reconnect after 1 second
+        
+        // Connection status handlers
+        const handleOpen = () => {
+            console.log("WebSocket connected successfully");
+            setIsConnecting(false);
+            setConnectionError(null);
+        };
+        
+        const handleError = (error) => {
+            console.error("WebSocket error:", error);
+            setConnectionError("Failed to connect to chat server");
+        };
+        
+        const handleReconnecting = (data) => {
+            setIsConnecting(true);
+            console.log(`Reconnecting to WebSocket (Attempt ${data.attempt}/${data.maxAttempts})`);
+        };
+        
+        // Register event listeners
+        wsManager.current.addEventListener('message', handleMessage);
+        wsManager.current.addEventListener('open', handleOpen);
+        wsManager.current.addEventListener('error', handleError);
+        wsManager.current.addEventListener('reconnecting', handleReconnecting);
+        
+        // Connect to WebSocket
+        wsManager.current.connect(wsPath, token);
+        
+        // Clean up event listeners when component unmounts or chat changes
+        return () => {
+            wsManager.current.removeEventListener('message', handleMessage);
+            wsManager.current.removeEventListener('open', handleOpen);
+            wsManager.current.removeEventListener('error', handleError);
+            wsManager.current.removeEventListener('reconnecting', handleReconnecting);
         };
     }, [id, isGroupChat, token]);
-
+    
+    // Fetch the current user's username
     useEffect(() => {
-        // Fetch the current user's username
         const fetchCurrentUser = async () => {
             try {
                 const response = await fetchUser();
@@ -99,13 +132,13 @@ const MessagesList = ({token, isGroupChat }) => {
         fetchCurrentUser();
     }, []);
 
+    // Fetch initial messages
     useEffect(() => {
-        // Fetch initial messages
         const fetchMessages = async () => {
             try {
                 const response = isGroupChat
-                    ? await fetchGroupMessages(id) // Fetch group messages
-                    : await fetchPrivateMessages(id); // Fetch private messages
+                    ? await fetchGroupMessages(id) 
+                    : await fetchPrivateMessages(id);
 
                 // Normalize the response data
                 const normalizedMessages = response.data.map((message) => {
@@ -132,121 +165,60 @@ const MessagesList = ({token, isGroupChat }) => {
                     (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
                 );
 
-                setMessages(sortedMessages); // Set sorted messages in state
+                setMessages(sortedMessages);
             } catch (error) {
                 console.error("Error fetching messages:", error);
             }
         };
 
         fetchMessages();
+    }, [id, isGroupChat]);
 
-        // Connect to WebSocket
-        connect_to_group_chat();
-
-        return () => {
-            // Clean up WebSocket connection
-            if (socketRef.current) {
-                socketRef.current.close();
-            }
-        };
-    }, [id, isGroupChat, connect_to_group_chat]);
-
-    useEffect(() => {
-        // Re-render every second to ensure new messages are displayed
-        const interval = setInterval(() => {
-            setMessages((prevMessages) => [...prevMessages]); // Trigger re-render
-        }, 1000);
-
-        return () => clearInterval(interval); // Cleanup interval on unmount
-    }, []);
-
-    // Alternatively, useEffect to update when a new message is added
+    // Scroll to bottom when new messages arrive
     useEffect(() => {
         if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' }); // Smooth scroll to the bottom
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [messages]);
 
-    useEffect(() => {
-        const fetchNewMessages = async () => {
-            try {
-                const response = isGroupChat
-                    ? await fetchGroupMessages(id) // Fetch group messages
-                    : await fetchPrivateMessages(id); // Fetch private messages
-
-                const normalizedMessages = response.data.map((message) => {
-                    if (isGroupChat) {
-                        return {
-                            id: message.id,
-                            content: message.content,
-                            timestamp: message.timestamp,
-                            sender: message.sender,
-                        };
-                    } else {
-                        return {
-                            id: message.id,
-                            content: message.message,
-                            timestamp: message.timestamp,
-                            sender: message.sender,
-                            receiver: message.receiver,
-                        };
-                    }
-                });
-
-                const sortedMessages = normalizedMessages.sort(
-                    (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-                );
-
-                setMessages(sortedMessages); // Update messages in state
-            } catch (error) {
-                console.error("Error fetching new messages:", error);
-            }
-        };
-
-        const interval = setInterval(() => {
-            fetchNewMessages(); // Fetch new messages periodically
-        }, 2000); // Fetch every 2 seconds
-
-        return () => clearInterval(interval); // Cleanup interval on unmount
-    }, [id, isGroupChat]);
-
+    // Send message handler
     const handleSendMessage = async (e) => {
         e.preventDefault();
 
-        // Check if the message is empty
         if (!newMessage.trim()) {
-            alert("The message is empty"); // Display an alert
-            return; // Prevent sending the message
+            alert("The message is empty");
+            return;
         }
 
-        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-            setIsSending(true); // Set sending state
+        if (!wsManager.current || !wsManager.current.isConnected) {
+            console.error("WebSocket is not connected");
+            return;
+        }
 
-            const messageData = {
-                content: newMessage,
-                sender: currentUser,
-                chatId: id,
-                timestamp: new Date().toISOString(),
-            };
+        setIsSending(true);
 
-            // Send the message via WebSocket
-            socketRef.current.send(JSON.stringify({
-                type: "chat_message",
-                message: messageData,
-            }));
+        const messageData = {
+            content: newMessage,
+            sender: currentUser,
+            chatId: id,
+            timestamp: new Date().toISOString(),
+        };
 
-            // Save the message to the database
-            try {
-                if (isGroupChat) {
-                    await sendGroupMessage(id, newMessage); // Save group message
-                } else {
-                    await sendPrivateMessage(id, newMessage); // Save private message
-                }
-            } catch (error) {
-                console.error("Error saving message:", error);
+        // Send message via WebSocket
+        wsManager.current.send({
+            type: "chat_message",
+            message: messageData,
+        });
+
+        // Save message to database
+        try {
+            if (isGroupChat) {
+                await sendGroupMessage(id, newMessage);
+            } else {
+                await sendPrivateMessage(id, newMessage);
             }
 
-            // Optimistically update the UI and sort messages
+            // Optimistically update UI
             setMessages((prevMessages) => {
                 const updatedMessages = [...prevMessages, messageData];
                 return updatedMessages.sort(
@@ -255,9 +227,10 @@ const MessagesList = ({token, isGroupChat }) => {
             });
 
             setNewMessage("");
-            setIsSending(false); // Reset sending state
-        } else {
-            console.error("WebSocket is not connected");
+        } catch (error) {
+            console.error("Error saving message:", error);
+        } finally {
+            setIsSending(false);
         }
     };
 
@@ -318,20 +291,33 @@ const MessagesList = ({token, isGroupChat }) => {
 
     return (
         <div className="flex h-screen">
-            <div className=" text-white mt-15">
+            <div className="text-white mt-15">
                 <ChatSidebar/>
             </div>
             <div className="flex-1 flex flex-col relative background-div mt-[80px]">
+                {/* Connection Status */}
+                {isConnecting && (
+                    <div className="bg-yellow-100 p-2 text-center text-yellow-800">
+                        Connecting to chat server...
+                    </div>
+                )}
+                {connectionError && (
+                    <div className="bg-red-100 p-2 text-center text-red-800">
+                        {connectionError}
+                    </div>
+                )}
+                
                 {/* Clear Messages Button */}
                 <button
                     onClick={handleClearMessages}
-                    className="absolute top-1 right-190 text-gray-900 px-3 py-1 hover:bg-gray-300 rounded-xl shadow-md transition-colors z-10 "
+                    className="absolute top-1 right-190 text-gray-900 px-3 py-1 hover:bg-gray-300 rounded-xl shadow-md transition-colors z-10"
                 >
                     Clear All Messages
                 </button>
+                
+                {/* Messages List */}
                 <div className="flex-1 overflow-y-auto p-4 background-div mt-[100px]">
-                    {/* Messages List */}
-                    <TransitionGroup className="flex flex-col gap-2 ">
+                    <TransitionGroup className="flex flex-col gap-2">
                         {messages.map((message, index) => {
                             if (!nodeRefs.current[index]) {
                                 nodeRefs.current[index] = React.createRef();
@@ -384,28 +370,28 @@ const MessagesList = ({token, isGroupChat }) => {
                     </TransitionGroup>
                     <div ref={messagesEndRef} /> 
                 </div>
+                
+                {/* Message Input Form */}
                 <form onSubmit={handleSendMessage} 
-                className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm sticky bottom-0 z-10">
+                      className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm sticky bottom-0 z-10">
                     <input
                         type="text"
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Type a message..."
                         className="flex-1 border-none outline-none px-4 py-2 rounded-lg text-gray-900 placeholder-gray-900 focus:ring-2 focus:ring-[#7a2226] transition-all duration-200 bg-white"
+                        disabled={!wsManager.current?.isConnected}
                     />
                     <button
                         type="submit"
                         className="flex items-center justify-center w-10 h-10 text-white bg-[#7a2226] rounded-lg transition-all duration-200 hover:bg-[#5a181b] disabled:opacity-50 disabled:cursor-not-allowed"
-                        disabled={isSending} // Disable the button while sending
+                        disabled={isSending || !wsManager.current?.isConnected}
                     >
-                          {isSending ? (
-      <CircularProgress 
-        size={20} 
-        sx={{ color: 'white' }} 
-      />
-    ) : (
-      <SendIcon className="transition-transform duration-200 hover:scale-110 send-msg-btn" />
-    )}
+                        {isSending ? (
+                            <CircularProgress size={20} sx={{ color: 'white' }} />
+                        ) : (
+                            <SendIcon className="transition-transform duration-200 hover:scale-110 send-msg-btn" />
+                        )}
                     </button>
                 </form>
             </div>
