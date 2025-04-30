@@ -54,11 +54,15 @@ export default function Sidebar({ activeSection, setActiveSection, onLogout }) {
   return (
     <>
       {/* Mobile Menu Button */}
-      <div className="md:hidden fixed top-4 left-4 z-50 bg-white p-2 rounded-full shadow">
-        <button onClick={() => setMobileOpen(true)}>
-          <MenuIcon />
-        </button>
-      </div>
+      <div className="md:hidden fixed top-4 left-4 z-50">
+  <button
+    onClick={() => setMobileOpen(true)}
+    className="p-2 bg-gray-100 rounded-md shadow hover:bg-gray-200 transition-colors"
+    aria-label="Open sidebar menu"
+  >
+    <MenuIcon className="text-gray-800" />
+  </button>
+</div>
 
       {/* Sidebar (Overlay on Mobile) */}
       <div
