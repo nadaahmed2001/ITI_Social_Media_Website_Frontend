@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const [isDarkMode, setIsDarkMode] = useState(true);
+
   const navigate = useNavigate('login')
 
   if (!localStorage.getItem("access_token")) {
@@ -23,8 +24,6 @@ export default function HomePage() {
         <div className="flex-1">
           <PostList />
         </div>
-
-        
         <ChatSidebar className="md:w-64 w-full max-w-full" />
       </div>
     </div>
