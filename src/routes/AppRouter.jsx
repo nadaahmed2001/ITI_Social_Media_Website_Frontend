@@ -69,14 +69,7 @@ const AppContent = () => {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/home"
-            element={
-              <PrivateRoute>
-                <HomePage />
-              </PrivateRoute>
-            }
-          />
+       
           <Route
             path="/"
             element={
@@ -216,7 +209,6 @@ const AppContent = () => {
             } 
             />
           
-
           <Route path="/search" element={<SearchPage />} />
           {/* Follow button might be inside ProfilePageById and check auth there */}
           <Route path="/profiles/followbutton" element={<FollowButton />} />
@@ -229,13 +221,14 @@ const AppContent = () => {
 // Main Router component
 const AppRouter = () => {
   return (
+    <Router>
+
     <AuthProvider>
       <ChatNotificationProvider>
-        <Router>
           <AppContent />
-        </Router>
       </ChatNotificationProvider>
     </AuthProvider>
+  </Router>
   );
 };
 
