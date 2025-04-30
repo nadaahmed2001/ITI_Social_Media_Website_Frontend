@@ -16,6 +16,7 @@ import AuthContext from "../../contexts/AuthContext";
 import defaultAvatar from "../../assets/images/user-default.webp";
 import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { useChatNotification } from "../../contexts/ChatNotificationContext";
+import './navbar.css'
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
   const { user, loading } = useContext(AuthContext);
@@ -49,7 +50,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 bg-red-900/80 backdrop-blur-md shadow-md px-4 py-3 flex items-center justify-around">
+      <nav className="fixed top-0 left-0 w-full z-50 bg-red-900/80 backdrop-blur-md shadow-md px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to="/Home">
             <img src={logo} alt="Logo" className="h-10 w-10 rounded-full" />
@@ -64,7 +65,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
           />
         </div>
         
-        <div className="hidden md:flex gap-6">
+        <div className="hidden md:flex gap-6 navbar-icons">
           {navItems.map(({ path, Icon, customActive }) => (
             <Link key={path} to={path} className="relative group">
               <Icon size={24} className={`transition ${customActive || activeTab === path ? "text-white" : "text-white/60 group-hover:text-white"}`} />
@@ -93,7 +94,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
           </div>
           {dropdownOpen && (
             <div className="absolute right-0 top-14 bg-white text-black rounded-lg shadow-lg w-48 z-50">
-              <ul className="py-1">
+              <ul className="py-1 ">
                 <li className="hover:bg-gray-100">
                   <Link style={{ textDecoration: 'none' }} to="/profile" onClick={() => setDropdownOpen(false)} className="flex items-center gap-2 px-4 py-2 no-underline">
                     <User className="text-[#7B2326]" size={18}  /> <span className="text-gray-900">Profile</span>
