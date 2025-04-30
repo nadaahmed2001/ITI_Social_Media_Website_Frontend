@@ -611,6 +611,21 @@ export const deleteSkill = (skillId) => api2.delete(`/users/skills/${skillId}/`)
 // =========================================================== Projects =============================================================
 
 export const getAllProjects = () => api2.get('/projects/'); // Fetches ALL projects
+
+export const fetchProjectFeed = async (ordering = '-created', page = 1) => {
+  try {
+    const params = { ordering, page };
+    const url = `/projects/feed/`;
+    console.log(`Calling API: GET ${url} with params:`, params);
+    const response = await api.get(url, { params });
+    console.log(`Project feed response (ordering: ${ordering}, page: ${page}):`, response.data);
+    return response.data; // Expects { count, next, previous, results: [...] }
+  } catch (error) {
+    console.error(`Error fetching project feed:`, error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
 export const getMyProjects = (profileId) => api2.get(`/projects/?owner=${profileId}`);
 export const getProject = (projectId) => api2.get(`/projects/${projectId}/`);
 export const addProject = (projectData) => api2.post('/projects/', projectData);
