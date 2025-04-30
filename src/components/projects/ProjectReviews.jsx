@@ -149,12 +149,12 @@ function ProjectReviews({ projectId, projectOwnerId }) {
 
     return (
         <Box>
-            <Typography variant="h6" sx={{ color: '#ccc', mb: 2 }}>Reviews & Feedback</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#191918', mb: 2 }}>Reviews & Feedback</Typography>
 
             {/* --- Review Submission Form --- */}
             {canShowForm && (
-                <Paper elevation={1} sx={{ p: 2, mb: 4, backgroundColor: '#3a3a3a', borderRadius: '8px' }}>
-                    <Typography variant="subtitle1" sx={{ color: 'white', mb: 1.5 }}>
+                <Paper elevation={1} sx={{ p: 2, mb: 4, backgroundColor: 'white', borderRadius: '8px' }}>
+                    <Typography variant="subtitle1" sx={{ color: '#191918', mb: 1.5 }}>
                         {editingReview ? `Editing Your Review` : `Leave a Review`}
                     </Typography>
                     <Box component="form" onSubmit={handleReviewSubmit}>
@@ -166,7 +166,7 @@ function ProjectReviews({ projectId, projectOwnerId }) {
                             variant="filled"
                             sx={{
                                 mb: 1.5,
-                                textarea: { color: 'white' },
+                                textarea: { color: '#191918' },
                                 '.MuiFilledInput-root': { backgroundColor: 'rgba(255,255,255,0.09)' },
                             }}
                         />

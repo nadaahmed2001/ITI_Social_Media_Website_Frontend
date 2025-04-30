@@ -111,12 +111,13 @@ function ProjectPage() {
     }
 
     return (
-        <Box sx={{ maxWidth: '1000px', margin: 'auto', marginTop: '70px' , p: 2, pt: { xs: 12, md: 6 } }}>
-            <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, backgroundColor: '#ECEDEC', color: '#191918', borderRadius: '12px' }}>
+        <Box sx={{ maxWidth: '400px',   margin: '30px', p: 2, pt: { xs: 12, md: 6 }  }}>
+             <div className="">
+            <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, backgroundColor: '#e0e0e0', color: '#191918', borderRadius: '12px' }}>
 
                 {/* Project Header */}
                 <Box mb={4}>
-                    <Typography variant="h3" component="h1" sx={{ fontWeight: 'bold', color: '#191918', mb: 1 }}>
+                    <Typography variant="h6" component="h6" sx={{ fontWeight: 'bold', color: '#191918', mb: 1 }}>
                         {project.title}
                     </Typography>
                     {/* Author Info */}
@@ -162,21 +163,21 @@ function ProjectPage() {
                 {/* Description & Links */}
                 <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={4} mb={4}>
                     <Box flexGrow={1}>
-                        <Typography variant="h6" sx={{ color: '#7a2226', mb: 1 }}>Description</Typography>
-                        <Typography variant="body2" sx={{ color: 'grey.300', whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
+                        <Typography variant="h6" sx={{  fontWeight: 'bold', color: '#7a2226', mb: 1 }}>Description</Typography>
+                        <Typography variant="body2" sx={{ color: 'grey.900', whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
                             {project.description || 'No description provided.'}
                         </Typography>
                     </Box>
                     <Box flexShrink={0} width={{ xs: '100%', md: '250px' }}>
-                        <Typography variant="h6" sx={{ color: '#7a2226', mb: 2 }}>Links</Typography>
+                        <Typography variant="h6" sx={{   fontWeight: 'bold', color: '#7a2226', mb: 2 }}>Links</Typography>
                         <Box display="flex" flexDirection="column" gap={1.5}>
                             {project.demo_link && (
-                                <Button variant="outlined" size="small" href={project.demo_link} target="_blank" startIcon={<LanguageIcon />} sx={{ justifyContent: 'flex-start', color: '#ccc', borderColor: '#555' }}>
+                                <Button variant="outlined" size="small" href={project.demo_link} target="_blank" startIcon={<LanguageIcon />} sx={{ maxWidth:'150px', justifyContent: 'flex-start', color: '#191918', borderColor: '#555' }}>
                                     Live Demo
                                 </Button>
                             )}
                             {project.source_link && (
-                                <Button variant="outlined" size="small" href={project.source_link} target="_blank" startIcon={<GitHubIcon />} sx={{ justifyContent: 'flex-start', color: '#ccc', borderColor: '#555' }}>
+                                <Button variant="outlined" size="small" href={project.source_link} target="_blank" startIcon={<GitHubIcon />} sx={{  maxWidth:'150px', justifyContent: 'flex-start', color: '#191918', borderColor: '#555' }}>
                                     Source Code
                                 </Button>
                             )}
@@ -194,11 +195,13 @@ function ProjectPage() {
                                 sx={{
                                     justifyContent: 'flex-start',
                                     borderColor: isLiked ? undefined : '#555', // Only show border if not liked
-                                    color: isLiked ? 'white' : '#ccc',
-                                    backgroundColor: isLiked ? '#dc3545' : undefined, // Red background when liked
+                                    color: isLiked ? 'white' : '#191918',
+                                    backgroundColor: isLiked ? '#191918' : undefined, // Red background when liked
+                                    maxWidth:'150px',
                                     '&:hover': {
                                         backgroundColor: isLiked ? '#c82333' : 'rgba(255, 255, 255, 0.08)',
                                         borderColor: isLiked ? undefined : '#777',
+                                       
                                     }
                                 }}
                             >
@@ -215,6 +218,7 @@ function ProjectPage() {
                 <ProjectReviews projectId={project.id} projectOwnerId={project.owner?.id} />
 
             </Paper>
+            </div>
         </Box>
     );
 }

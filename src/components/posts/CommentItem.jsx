@@ -316,6 +316,7 @@ function CommentItem({
                         onClick={openReactionsModal} // Use the correct handler
                         title={totalReactions > 0 ? "See who reacted" : "No reactions yet"}
                     >
+                        
                         {/* Map over top reactions */}
                         {sortedTopReactions.map(([reactionName, count]) => {
                             const IconComponent = getReactionIconComponent(reactionName);
@@ -346,6 +347,7 @@ function CommentItem({
 
                     {/* 2. Reaction Button & Popup (No changes needed here) */}
                     {/* ... (button with its dynamic icon/text, popup div) ... */}
+                    <hr className="my-2 border-gray-300" />
                     <div
                         className="relative "
                         onMouseEnter={handleMouseEnterTrigger}
