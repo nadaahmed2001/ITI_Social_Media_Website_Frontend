@@ -56,10 +56,10 @@ const getReactionColorClass = (reactionType) => {
         case "Support":
             return 'text-blue-500';
         case "Insightful":
-            return 'text-yellow-200';
-        default:
-            // Fallback color for unknown reaction types
-            return 'text-gray-400';
+            return 'text-teal-400';
+        // default:
+        //     // Fallback color for unknown reaction types
+        //     return 'text-gray-400';
     }
 };
 

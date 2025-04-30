@@ -64,8 +64,8 @@ const getReactionColorClass = (reactionType) => {
     switch (reactionType) {
         case "Like": return 'text-blue-500';
         case "Love": return 'text-red-500';
-        case "Celebrate": return 'text-yellow-400';
-        case "funny": return 'text-yellow-500'; // Consider slightly different yellow/orange
+        case "Celebrate": return 'text-green-500';
+        case "funny": return 'text-violet-400'; // Consider slightly different yellow/orange
         case "Support": return 'text-purple-500';
         case "Insightful": return 'text-teal-400';
         default: return 'text-gray-400'; // Fallback
