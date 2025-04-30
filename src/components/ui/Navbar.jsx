@@ -17,6 +17,9 @@ import defaultAvatar from "../../assets/images/user-default.webp";
 import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { useChatNotification } from "../../contexts/ChatNotificationContext";
 import './navbar.css'
+import ExploreIcon from '@mui/icons-material/Explore'; // Example Icon
+
+
 
 export default function Navbar({ isDarkMode, toggleTheme }) {
   const { user, loading } = useContext(AuthContext);
@@ -44,7 +47,8 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
     { path: "/Home", label: "Dashboard", Icon: Home },
     { path: "/chat", label: "Chat", Icon: MessageCircle, customActive: location.pathname.startsWith("/chat") },
     { path: "/profile", label: "Profile", Icon: User },
-    
+    { path: "/projects/feed",label: "Explore",  Icon: ExploreIcon },
+
     ...(user?.is_supervisor ? [{ path: "/supervisor/dashboard", label: "Supervisor", Icon: ChartBarDecreasing }] : [])
   ];
 

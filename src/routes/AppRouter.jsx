@@ -36,6 +36,8 @@ import NotFoundPage from "../pages/NotFoundPage";
 import UserPostsPage from "../pages/UserPostsPage";
 import { ChatNotificationProvider } from "../contexts/ChatNotificationContext";
 import ProjectPage from '../pages/ProjectPage'; // Import the new page
+import ProjectFeedPage from '../pages/ProjectFeedPage'; // Import
+
 
 
 
@@ -209,6 +211,16 @@ const AppContent = () => {
             } 
             />
           
+          <Route 
+            path="/projects/feed" 
+            element={
+            <PrivateRoute> 
+              <ProjectFeedPage />
+            </PrivateRoute>
+            } 
+            /> 
+
+
           <Route path="/search" element={<SearchPage />} />
           {/* Follow button might be inside ProfilePageById and check auth there */}
           <Route path="/profiles/followbutton" element={<FollowButton />} />
