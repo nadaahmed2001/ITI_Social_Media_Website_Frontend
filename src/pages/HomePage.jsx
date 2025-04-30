@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Sidebar from "../components/ui/Sidebar";
 import PostList from "../components/posts/PostList";
 import ChatSidebar from "../components/chat/ChatSidebar";
+import ChatSidebarHome from "../components/chat/ChatSidebarHome";
 
 import { useNavigate } from "react-router-dom";
 
@@ -25,7 +26,7 @@ export default function HomePage() {
         </div>
 
         
-        <ChatSidebar className="md:w-64 w-full max-w-full" />
+        <ChatSidebarHome className="md:w-64 w-full max-w-full" />
       </div>
     </div>
     </>
