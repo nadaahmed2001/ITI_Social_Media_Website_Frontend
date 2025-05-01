@@ -80,7 +80,7 @@ export default function Aichat() {
             const token = localStorage.getItem("access_token"); 
 
             const response = await api.post(
-                "http://127.0.0.1:8000/api/api/chat/chatbot/",
+                "http://127.0.0.1:8000/api/chat/chatbot/",
                 { message: userMessage },
                 {
                     headers: {
