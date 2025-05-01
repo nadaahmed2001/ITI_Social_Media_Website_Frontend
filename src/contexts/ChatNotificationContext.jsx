@@ -15,7 +15,7 @@ export const ChatNotificationProvider = ({ children }) => {
 const fetchUnreadNotifications = async () => {
     try {
     const res = await axiosInstance.
-    get("http://127.0.0.1:8000/api/notifications/chat/unread/");
+    get("https://itisocialmediawebsitebackend-production.up.railway.app/api/notifications/chat/unread/");
     setUnreadCount(res.data.length);
     } catch (err) {
     console.error("Error fetching unread messages", err);

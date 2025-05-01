@@ -59,7 +59,7 @@ const ChatSidebar = () => {
   useEffect(() => {
     const fetchUnreadNotifications = async () => {
       try {
-        const response = await axiosInstance.get('http://127.0.0.1:8000/api/notifications/chat/unread/');
+        const response = await axiosInstance.get('https://itisocialmediawebsitebackend-production.up.railway.app/api/notifications/chat/unread/');
         setUnreadChatNotifications(response.data);
       } catch (error) {
         console.error("Error fetching unread chat notifications:", error);
@@ -130,7 +130,7 @@ const ChatSidebar = () => {
         try {
             await Promise.all(
             relatedNotifications.map((n) =>
-                axiosInstance.patch(`http://127.0.0.1:8000/api/notifications/${n.id}/mark-as-read/`)
+                axiosInstance.patch(`https://itisocialmediawebsitebackend-production.up.railway.app/api/notifications/${n.id}/mark-as-read/`)
             )
             );
         

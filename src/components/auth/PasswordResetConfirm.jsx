@@ -34,7 +34,7 @@ const PasswordResetConfirm = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/users/password-reset-confirm/", {
+      const response = await fetch("https://itisocialmediawebsitebackend-production.up.railway.app/api/users/password-reset-confirm/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reset_code: resetCode, new_password: newPassword }),
