@@ -271,11 +271,14 @@ function ProjectReviews({ projectId, projectOwnerId }) {
                                                         <ThumbUpAltIcon fontSize="inherit" sx={{ color: '#7a2226', mr: 0.5 }} /> :
                                                         <ThumbDownAltIcon fontSize="inherit" sx={{ color: 'error.light', mr: 0.5 }} />
                                                     }
-                                                    <Typography variant="caption" sx={{ fontWeight: 'medium', color:'#7a2226' }}>
+                                                    {/* <Typography variant="caption" sx={{ fontWeight: 'medium', color: review.vote === 'up' ? 'success.light' : 'error.light' }}>
+                                                        {review.vote === 'up' ? 'Recommends' : 'Doesn\'t Recommend'}
+                                                    </Typography> */}
+                                                     <Typography variant="caption" sx={{ fontWeight: 'medium', color:'#7a2226' }}>
                                                         {review.vote === 'up' ? 'Recommends' : 'Doesn\'t Recommend'}
                                                     </Typography>
                                                 </Box>
-                                            )}   
+                                            )}  
                                             {/* Display Body */}
                                             <Typography component="p" variant="body2" sx={{ color: 'grey.800', whiteSpace: 'pre-wrap' }}>
                                                 {review.body}
