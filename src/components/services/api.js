@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Axios instance with base URL
-const API_BASE_URL= "http://127.0.0.1:8000/api/";
+const API_BASE_URL= "https://itisocialmediawebsitebackend-production.up.railway.app/api/";
 
 
 const api = axios.create({
@@ -15,7 +15,7 @@ const api = axios.create({
 
 
 const api2 = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: "https://itisocialmediawebsitebackend-production.up.railway.app/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -747,7 +747,7 @@ export const deleteProjectReview = async (projectPk, reviewId) => {
 // export const verifyOtp = (data) => { return api2.post('/users/verify-otp/', data);};
 
 export const verifyOtp = (data) => {
-  return axios.post('http://127.0.0.1:8000/api/users/verify-otp/', data, {
+  return axios.post('https://itisocialmediawebsitebackend-production.up.railway.app/api/users/verify-otp/', data, {
     headers: {
       'Content-Type': 'application/json',
     },

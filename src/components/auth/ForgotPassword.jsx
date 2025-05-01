@@ -22,7 +22,7 @@ const ForgotPassword = () => {
       setMessage("");
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/users/password-reset/", {
+        const response = await fetch("https://itisocialmediawebsitebackend-production.up.railway.app/api/users/password-reset/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
