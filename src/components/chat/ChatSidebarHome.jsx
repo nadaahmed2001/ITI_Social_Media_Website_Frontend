@@ -145,7 +145,7 @@ const ChatSidebarHome = () => {
         };
 
     return (
-        <div className="flex !bg-[#F8FAFD]">
+      
         <div className="flex flex-col">
 
         <button
@@ -165,7 +165,7 @@ const ChatSidebarHome = () => {
             )}
         </button>
         {/* Sidebar Content - Added higher z-index */}
-        <div className={`w-78 text-[#7a2226] h-[calc(100vh-150px)] p-4 fixed md:relative transform  rounded-lg 
+        <div className={`w-78 text-[#7a2226] h-fit p-4 fixed md:relative transform  rounded-lg 
     ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
             md:translate-x-0 transition-transform duration-300 border-2 border-[#7a2226]/20 
             bg-white/90 backdrop-blur-lg overflow-hidden shadow-xl`}>
@@ -410,7 +410,7 @@ const ChatSidebarHome = () => {
 
                 </div>
             </div>
-        </div>
+       
         {showWelcome && <Chatwellcommsg />}
         </div>
     );
