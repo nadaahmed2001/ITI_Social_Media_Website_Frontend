@@ -29,8 +29,8 @@ const ChatSidebar = () => {
     //     navigate('/aiChat'); // Update URL
     // };
 
-    const defaultGroupAvatar = '../../../src/assets/images/group-chat-avatar.webp'
-    const DEFAULT_USER_AVATAR = '../../../src/assets/images/user-default.webp'
+    const defaultGroupAvatar = '../../src/assets/images/group-chat-avatar.webp'
+    const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp'
 
     const location = useLocation();
     
