@@ -4,33 +4,41 @@ import axios from "axios";
 const ChatNotificationContext = createContext();
 
 export const ChatNotificationProvider = ({ children }) => {
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadChatNotifications, setUnreadChatNotifications] = useState([]);
+
   const token = localStorage.getItem("access_token");
   const axiosInstance = axios.create({
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "", 
-      },
-    });
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  });
 
-const fetchUnreadNotifications = async () => {
+  const fetchUnreadNotifications = async () => {
     try {
-    const res = await axiosInstance.
-    get("https://itisocialmediawebsitebackend-production.up.railway.app/api/notifications/chat/unread/");
-    setUnreadCount(res.data.length);
+      if (token) {
+        const res = await axiosInstance.get(
+          "https://itisocialmediawebsitebackend-production.up.railway.app/api/notifications/chat/unread/"
+        );
+        if (res.data) {
+          setUnreadChatNotifications(res.data);
+        }
+      }
     } catch (err) {
-    console.error("Error fetching unread messages", err);
+      console.error("Error fetching unread messages", err);
     }
-};
+  };
 
   useEffect(() => {
     fetchUnreadNotifications();
 
     const interval = setInterval(fetchUnreadNotifications, 15000);
     return () => clearInterval(interval);
-  }, []);
+  }, [token]);
 
   return (
-    <ChatNotificationContext.Provider value={{ unreadCount, fetchUnreadNotifications }}>
+    <ChatNotificationContext.Provider
+      value={{ unreadChatNotifications, fetchUnreadNotifications }}
+    >
       {children}
     </ChatNotificationContext.Provider>
   );

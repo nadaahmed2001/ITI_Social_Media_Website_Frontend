@@ -1,14 +1,21 @@
 import { React, useEffect, useState, useRef } from "react";
-import { BellIcon, Mail, Bell, Users, Heart, MessageCircle } from "lucide-react";
-import { 
-  fetchNotifications, 
-  markNotificationAsRead, 
-  clearNotification, 
-  markAllNotificationsAsRead, 
-  clearAllNotifications 
-} from "../components/services/api"; 
+import {
+  BellIcon,
+  Mail,
+  Bell,
+  Users,
+  Heart,
+  MessageCircle,
+} from "lucide-react";
+import {
+  fetchNotifications,
+  markNotificationAsRead,
+  clearNotification,
+  markAllNotificationsAsRead,
+  clearAllNotifications,
+} from "../components/services/api";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 const NotificationsDropdown = () => {
   const [notifications, setNotifications] = useState([]);
@@ -26,7 +33,7 @@ const NotificationsDropdown = () => {
   //     Authorization: token ? `Bearer ${token}` : "", // Add token to Authorization header if it exists
   //   },
   // });
- 
+
   // useEffect(() => {
   //   if (isOpen) {
   //     fetchNotificationsData();
@@ -35,14 +42,14 @@ const NotificationsDropdown = () => {
 
   useEffect(() => {
     fetchNotificationsData(); // once on mount
-  
+
     const interval = setInterval(() => {
       fetchNotificationsData(); // every 2s
     }, 15000);
-  
+
     return () => clearInterval(interval);
   }, []);
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -59,8 +66,8 @@ const NotificationsDropdown = () => {
     try {
       const response = await fetchNotifications(); // Make the API call
       // Access the 'data' property of the response object
-      const data = response.data; 
-      
+      const data = response.data;
+
       // Ensure data is an array
       if (Array.isArray(data)) {
         setNotifications(data);
@@ -136,29 +143,29 @@ const NotificationsDropdown = () => {
 
   //   const commentMatch = link.match(/\/posts\/(\d+)\/comment\/(\d+)/);
   //   const reactionMatch = link.match(/\/posts\/(\d+)\/reactions/);
-  
+
   //   const privateChatMatch = link.match(/\/dashboard\/chat\/private\/(\d+)/);  // Match private chat
   //   const groupChatMatch = link.match(/\/dashboard\/chat\/groups\/(\d+)/);  // Match group chat
-    
+
   //   if (commentMatch) {
   //     const postId = commentMatch[1];
   //     const commentId = commentMatch[2];
   //     navigate(`/posts/${postId}?highlightComment=${commentId}`);
   //     return;
   //   }
-  
+
   //   if (reactionMatch) {
   //     const postId = reactionMatch[1];
   //     navigate(`/posts/${postId}?highlightReactionId=${highlightedReactionId}`);
   //     return;
   //   }
-  
+
   //   if (privateChatMatch) {
   //     const chatId = privateChatMatch[1];  // Extract chat ID from the link
   //     navigate(`/dashboard/chat/private/${chatId}`);  // Navigate to the private chat
   //     return;
   //   }
-  
+
   //   if (groupChatMatch) {
   //     const chatId = groupChatMatch[1];  // Extract chat ID from the link
   //     navigate(`/dashboard/chat/groups/${chatId}`);  // Navigate to the group chat
@@ -167,9 +174,29 @@ const NotificationsDropdown = () => {
   //   navigate(link);
   // };
 
+  const pages = ["profiles", "batches", "messagesList", "dashboard"];
+
+  const handleNavigate = async (e, notif) => {
+    e.stopPropagation(); // Prevent other clicks from propagating
+    await handleMarkAsRead(notif.id);
+
+    // find if notif.notification_link contains one of pages, then split it
+    const page = pages.find((p) => notif.notification_link.includes(p));
+    if (page) {
+      console.log("notification link", notif.notification_link);
+      console.log("page", page);
+      const path = notif.notification_link.split(page)[1];
+      console.log("path", path);
+      navigate(`/${page}${path}`);
+    }
+  };
+
   return (
     <div className="relative">
-      <button onClick={() => setIsOpen(!isOpen)} className="relative focus:outline-none">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative focus:outline-none"
+      >
         <BellIcon className="w-6 h-6 text-gray-800 dark:text-white" />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1.5 py-0.5 shadow-sm">
@@ -185,28 +212,30 @@ const NotificationsDropdown = () => {
         >
           <div className="p-4 max-h-96 overflow-y-auto custom-scrollbar space-y-2">
             {loading ? (
-              <div className="text-center text-gray-500 dark:text-gray-400">Loading...</div>
+              <div className="text-center text-gray-500 dark:text-gray-400">
+                Loading...
+              </div>
             ) : notifications.length === 0 ? (
-              <p className="text-center text-gray-500 dark:text-gray-400">No notifications</p>
+              <p className="text-center text-gray-500 dark:text-gray-400">
+                No notifications
+              </p>
             ) : (
               notifications.map((notif) => (
                 <div
                   key={notif.id}
-                  onClick={async (e) => {
-                    e.stopPropagation(); // Prevent other clicks from propagating
-                    await handleMarkAsRead(notif.id);
-                    if (notif.notification_link) {
-                      window.location.assign(notif.notification_link); // Use assign for redirection
-                    }
-                  }}
+                  onClick={(e) => handleNavigate(e, notif)}
                   className={`group p-3 rounded-md text-sm cursor-pointer transition-all duration-300 flex items-start gap-3 ${
                     notif.status === "unread"
                       ? "bg-blue-50 dark:bg-blue-950 font-semibold"
                       : "bg-gray-50 dark:bg-gray-800"
                   } hover:bg-blue-100 dark:hover:bg-blue-800`}
                 >
-                  <div className="mt-0.5" >{getIcon(notif.notification_type)}</div>
-                  <div className="flex-1 text-gray-800 dark:text-gray-100">{notif.notification_text}</div>
+                  <div className="mt-0.5">
+                    {getIcon(notif.notification_type)}
+                  </div>
+                  <div className="flex-1 text-gray-800 dark:text-gray-100">
+                    {notif.notification_text}
+                  </div>
                   <button
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent redirect
