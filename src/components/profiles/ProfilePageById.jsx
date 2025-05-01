@@ -14,8 +14,8 @@ import './ProfilePageById.css';
 
 
 // Default avatar
-const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp'; 
-const DEFAULT_PROJECT_IMAGE = '../src/assets/images/user-default.webp';
+const DEFAULT_USER_AVATAR = '../../../src/assets/images/user-default.webp'; 
+const DEFAULT_PROJECT_IMAGE = '../../../src/assets/images/user-default.webp';
 
 
 function ProfilePageById() {
@@ -80,6 +80,7 @@ function ProfilePageById() {
                 try {
                     // Use getMyProjects (which takes owner ID) with the profileId from URL params
                     const response = await getMyProjects(profileId);
+                    console.log(response)
                     setProjectsData(response.data || []);
                 } catch (err) {
                     console.error(`Failed to fetch projects for profile ID ${profileId}:`, err);
