@@ -68,11 +68,20 @@ const LinkButton = styled(Button)(({ theme }) => ({
 
 const LikeButton = styled(Button)(({ theme, isLiked }) => ({
     justifyContent: 'flex-start',
-    color: isLiked ? theme.palette.error.light : theme.palette.grey[400],
-    backgroundColor: isLiked ? theme.palette.error.dark : 'transparent',
+    color: isLiked ? theme.palette.grey[900] : theme.palette.grey[400], // Text color
+    backgroundColor: isLiked ? theme.palette.grey[400] : 'transparent', // Background color
     borderColor: isLiked ? 'transparent' : theme.palette.grey[400],
-  
-}));
+    '&:hover': {
+      backgroundColor: isLiked ? theme.palette.grey[300] : theme.palette.grey[300], // Lighter gray on hover
+      color: theme.palette.common.white,
+      borderColor: 'transparent',
+    },
+    '&:disabled': {
+      color: theme.palette.grey[500],
+      backgroundColor: theme.palette.grey[200],
+      borderColor: theme.palette.grey[300],
+    },
+  }));
 
 
 //
@@ -246,7 +255,7 @@ function ProjectPage() {
                                 disabled={!loggedInUser || isLikeLoading}
                                 onClick={handleLikeToggle}
                                 startIcon={
-                                    isLikeLoading ? <CircularProgress size={16} color="inherit"/> :
+                                    isLikeLoading ? <CircularProgress size={16} color="black"/> :
                                     (isLiked ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" className='text-[#7a2226]'/>)
                                 }
                             >
@@ -254,7 +263,7 @@ function ProjectPage() {
                             </LikeButton>
                         </Box>
                     </Box>
-
+                    <hr></hr>
                     {/* Divider */}
                     <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)', my: 4 }} />
 

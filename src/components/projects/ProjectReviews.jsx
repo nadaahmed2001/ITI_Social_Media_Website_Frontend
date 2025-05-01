@@ -268,13 +268,13 @@ function ProjectReviews({ projectId, projectOwnerId }) {
                                             {review.vote && ( 
                                                 <Box display="flex" alignItems="center" my={0.5}>    
                                                     {review.vote === 'up' ?
-                                                        <ThumbUpAltIcon fontSize="inherit" sx={{ color: '#7a2226', mr: 0.5 }} /> :
+                                                        <ThumbUpAltIcon fontSize="inherit" sx={{ color: 'blue', mr: 0.5 }} /> :
                                                         <ThumbDownAltIcon fontSize="inherit" sx={{ color: 'error.light', mr: 0.5 }} />
                                                     }
                                                     {/* <Typography variant="caption" sx={{ fontWeight: 'medium', color: review.vote === 'up' ? 'success.light' : 'error.light' }}>
                                                         {review.vote === 'up' ? 'Recommends' : 'Doesn\'t Recommend'}
                                                     </Typography> */}
-                                                     <Typography variant="caption" sx={{ fontWeight: 'medium', color:'#7a2226' }}>
+                                                     <Typography variant="caption" sx={{ fontWeight: 'medium', color:'gray.900' }}>
                                                         {review.vote === 'up' ? 'Recommends' : 'Doesn\'t Recommend'}
                                                     </Typography>
                                                 </Box>
