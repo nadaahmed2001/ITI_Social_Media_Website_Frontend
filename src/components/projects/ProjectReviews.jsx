@@ -241,7 +241,7 @@ function ProjectReviews({ projectId, projectOwnerId }) {
                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                             <Box>
                                                 <Link to={`/profiles/${review.reviewer?.profile_id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                                    <Typography component="span" variant="body2" sx={{ fontWeight: 'medium', color: 'white' }}>
+                                                    <Typography component="span" variant="body2" sx={{ fontWeight: 'medium', color: '#1f2937' }}>
                                                         {review.reviewer?.username || 'Unknown User'}
                                                     </Typography>
                                                 </Link>
@@ -265,19 +265,19 @@ function ProjectReviews({ projectId, projectOwnerId }) {
                                     secondary={
                                         <>
                                             {/* Display Vote */}
-                                            {review.vote && (
-                                                <Box display="flex" alignItems="center" my={0.5}>
+                                            {review.vote && ( 
+                                                <Box display="flex" alignItems="center" my={0.5}>    
                                                     {review.vote === 'up' ?
-                                                        <ThumbUpAltIcon fontSize="inherit" sx={{ color: 'success.light', mr: 0.5 }} /> :
+                                                        <ThumbUpAltIcon fontSize="inherit" sx={{ color: '#7a2226', mr: 0.5 }} /> :
                                                         <ThumbDownAltIcon fontSize="inherit" sx={{ color: 'error.light', mr: 0.5 }} />
                                                     }
-                                                    <Typography variant="caption" sx={{ fontWeight: 'medium', color: review.vote === 'up' ? 'success.light' : 'error.light' }}>
+                                                    <Typography variant="caption" sx={{ fontWeight: 'medium', color:'#7a2226' }}>
                                                         {review.vote === 'up' ? 'Recommends' : 'Doesn\'t Recommend'}
                                                     </Typography>
                                                 </Box>
-                                            )}
+                                            )}   
                                             {/* Display Body */}
-                                            <Typography component="p" variant="body2" sx={{ color: 'grey.300', whiteSpace: 'pre-wrap' }}>
+                                            <Typography component="p" variant="body2" sx={{ color: 'grey.800', whiteSpace: 'pre-wrap' }}>
                                                 {review.body}
                                             </Typography>
                                         </>
@@ -298,7 +298,7 @@ function ProjectReviews({ projectId, projectOwnerId }) {
                         page={pagination.currentPage}
                         onChange={handlePageChange}
                         color="secondary"
-                        sx={{ '& .MuiPaginationItem-root': { color: 'white' } }}
+                        sx={{ '& .MuiPaginationItem-root': { color: '#1f2937' } }}
                     />
                 </Box>
             )}
