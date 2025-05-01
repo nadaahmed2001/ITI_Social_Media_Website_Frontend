@@ -22,7 +22,7 @@ export default function Aichat() {
             const token = localStorage.getItem("access_token");
             
             const response = await api.get(
-                "https://itisocialmediawebsitebackend-production.up.railway.app/api/chat/chatbot/messages/",
+                "http://127.0.0.1:8000/api/chat/chatbot/messages/",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -80,7 +80,7 @@ export default function Aichat() {
             const token = localStorage.getItem("access_token"); 
 
             const response = await api.post(
-                "https://itisocialmediawebsitebackend-production.up.railway.app/api/api/chat/chatbot/",
+                "http://127.0.0.1:8000/api/chat/chatbot/",
                 { message: userMessage },
                 {
                     headers: {
@@ -105,7 +105,7 @@ export default function Aichat() {
 
     return (
         <div className="flex h-screen">
-            <div className="text-white mt-15">
+            <div className="text-white">
                 <ChatSidebar />
             </div>
             <div className="flex-1 flex flex-col relative background-div mt-18">
