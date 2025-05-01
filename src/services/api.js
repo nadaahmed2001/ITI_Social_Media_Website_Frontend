@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://itisocialmediawebsitebackend-production.up.railway.app/api/";
+const API_URL = "http://127.0.0.1:8000/api/";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -154,7 +154,7 @@ export default api;
 
 // ======================================================================================================================================
 
-const API_BASE_URL =  'https://itisocialmediawebsitebackend-production.up.railway.app/api/'; 
+const API_BASE_URL =  'http://127.0.0.1:8000/api/'; 
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

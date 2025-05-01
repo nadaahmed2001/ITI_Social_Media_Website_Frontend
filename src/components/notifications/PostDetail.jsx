@@ -201,7 +201,7 @@ function SampleNextArrow(props) {
   
     // Fetch post
     axios
-      .get(`https://itisocialmediawebsitebackend-production.up.railway.app/api/posts/${postId}/`, {
+      .get(`http://127.0.0.1:8000/api/posts/${postId}/`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
         },
@@ -218,7 +218,7 @@ function SampleNextArrow(props) {
   
     // Fetch comments separately
     axios
-      .get(`https://itisocialmediawebsitebackend-production.up.railway.app/api/posts/${postId}/comments/`, {
+      .get(`http://127.0.0.1:8000/api/posts/${postId}/comments/`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
         },

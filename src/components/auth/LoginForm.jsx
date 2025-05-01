@@ -40,7 +40,7 @@ const LoginForm = () => {
 
       try {
         // Using fetch directly (consider moving to api.js service)
-        const response = await fetch("https://itisocialmediawebsitebackend-production.up.railway.app/api/users/login/", { // Ensure URL is correct
+        const response = await fetch("http://127.0.0.1:8000/api/users/login/", { // Ensure URL is correct
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),

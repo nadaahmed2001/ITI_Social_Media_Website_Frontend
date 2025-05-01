@@ -28,7 +28,7 @@ class WebSocketManager {
    */
   async fetchConfig() {
     try {
-      const response = await fetch('https://itisocialmediawebsitebackend-production.up.railway.app/api/websocket-config/');
+      const response = await fetch('http://127.0.0.1:8000/api/websocket-config/');
       if (!response.ok) {
         throw new Error(`Config fetch failed: ${response.status}`);
       }
@@ -330,7 +330,7 @@ class WebSocketManager {
     
     try {
       // Use a known valid API endpoint instead of the root URL
-      const httpUrl = 'https://itisocialmediawebsitebackend-production.up.railway.app/api/websocket-config/';
+      const httpUrl = 'http://127.0.0.1:8000/api/websocket-config/';
       
       console.log(`Testing HTTP connectivity to ${httpUrl}`);
       
