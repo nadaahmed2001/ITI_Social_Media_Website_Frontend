@@ -7,7 +7,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import AuthContext from '../../contexts/AuthContext'; // Adjust path
 
-const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/project-default.jpg'; // Adjust path
+const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp'; // Adjust path
 const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp'; // Adjust path
 
 // Receive like toggle handler as prop

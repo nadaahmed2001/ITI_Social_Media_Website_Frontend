@@ -112,7 +112,7 @@ function ProjectFeedPage() {
 
     // --- Render ---
     return (
-        <Box sx={{ maxWidth: '1200px', margin: 'auto', p: 2, pt: { xs: 12, md: 6 } }}>
+        <Box sx={{ maxWidth: '1200px', margin: 'auto', mt: 6,  p: 2, pt: { xs: 12, md: 6 } }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={4} flexWrap="wrap" gap={2}>
                 <Typography variant="h4" component="h1" sx={{ color: 'white' }}>
                     Project Feed

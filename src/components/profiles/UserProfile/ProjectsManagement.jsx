@@ -43,7 +43,6 @@ const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dsa
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "ITIHub_profile_pics"; 
 // --- End Cloudinary Config ---
 
-
 const ProjectsManagement = ({ profileId }) => {
     // --- State ---
     const [projects, setProjects] = useState([]);
