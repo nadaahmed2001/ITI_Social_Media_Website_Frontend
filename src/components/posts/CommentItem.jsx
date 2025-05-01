@@ -22,7 +22,7 @@ import {
     ImageSharp as ImageSharpIcon, // Keep for attachment icon
 } from "@mui/icons-material";
 
-const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
+const DEFAULT_USER_AVATAR = '../../../src/assets/images/user-default.webp';
 
 // Define reactions array consistently (can be moved to a shared constants file)
 const AVAILABLE_REACTIONS = [
@@ -56,10 +56,10 @@ const getReactionColorClass = (reactionType) => {
         case "Support":
             return 'text-blue-500';
         case "Insightful":
-            return 'text-yellow-200';
-        default:
-            // Fallback color for unknown reaction types
-            return 'text-gray-400';
+            return 'text-teal-400';
+        // default:
+        //     // Fallback color for unknown reaction types
+        //     return 'text-gray-400';
     }
 };
 
@@ -316,6 +316,7 @@ function CommentItem({
                         onClick={openReactionsModal} // Use the correct handler
                         title={totalReactions > 0 ? "See who reacted" : "No reactions yet"}
                     >
+                        
                         {/* Map over top reactions */}
                         {sortedTopReactions.map(([reactionName, count]) => {
                             const IconComponent = getReactionIconComponent(reactionName);
@@ -346,6 +347,7 @@ function CommentItem({
 
                     {/* 2. Reaction Button & Popup (No changes needed here) */}
                     {/* ... (button with its dynamic icon/text, popup div) ... */}
+                    <hr className="my-2 border-gray-300" />
                     <div
                         className="relative "
                         onMouseEnter={handleMouseEnterTrigger}

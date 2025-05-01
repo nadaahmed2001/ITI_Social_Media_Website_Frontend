@@ -176,8 +176,10 @@ const ViewPublicProfile = ({ profileId }) => {
                             {/* Project Text Content */}
                             <div className="project-details-content">
                                 {/* Title */}
-                                <h4 className='!text-gray-900'>{project.title || 'Untitled Project'}</h4>
-
+                                <Link to={`/projects/${project.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <h4 className='!text-gray-900'>{project.title || 'Untitled Project'}</h4>
+                                </Link>
+                                
                                 {/* Description */}
                                 {project.description && (
                                     <p className="project-description !text-gray-900">{project.description}</p>

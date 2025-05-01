@@ -611,6 +611,21 @@ export const deleteSkill = (skillId) => api2.delete(`/users/skills/${skillId}/`)
 // =========================================================== Projects =============================================================
 
 export const getAllProjects = () => api2.get('/projects/'); // Fetches ALL projects
+
+export const fetchProjectFeed = async (ordering = '-created', page = 1) => {
+  try {
+    const params = { ordering, page };
+    const url = `/projects/feed/`;
+    console.log(`Calling API: GET ${url} with params:`, params);
+    const response = await api.get(url, { params });
+    console.log(`Project feed response (ordering: ${ordering}, page: ${page}):`, response.data);
+    return response.data; // Expects { count, next, previous, results: [...] }
+  } catch (error) {
+    console.error(`Error fetching project feed:`, error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
 export const getMyProjects = (profileId) => api2.get(`/projects/?owner=${profileId}`);
 export const getProject = (projectId) => api2.get(`/projects/${projectId}/`);
 export const addProject = (projectData) => api2.post('/projects/', projectData);
@@ -624,6 +639,109 @@ export const removeTagFromProject = (projectId, tagId) => api2.delete(`/projects
 export const getContributors = (projectId) => api2.get(`/projects/${projectId}/contributors/`);
 export const addContributor = (projectId, username) => api2.post(`/projects/${projectId}/contributors/`, { username });
 export const removeContributor = (projectId, username) => api2.delete(`/projects/${projectId}/contributors/`, { data: { username } }); // DELETE request might need data in body
+
+// ========================================================= project reviews =========================================================
+export const likeProject = async (projectPk) => {
+  if (!projectPk) throw new Error("Project ID is required to like.");
+  try {
+    const url = `/projects/${projectPk}/like/`;
+    console.log(`Calling API: POST ${url}`);
+    const response = await api.post(url);
+    console.log(`Like project response for ${projectPk}:`, response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error liking project ${projectPk}:`, error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
+
+export const unlikeProject = async (projectPk) => {
+  if (!projectPk) throw new Error("Project ID is required to unlike.");
+  try {
+    const url = `/projects/${projectPk}/like/`;
+    console.log(`Calling API: DELETE ${url}`);
+    const response = await api.delete(url);
+    console.log(`Unlike project response for ${projectPk}:`, response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Error unliking project ${projectPk}:`, error.response?.data || error.message || error);
+    throw error;
+  }
+};
+
+
+export const getProjectReviews = async (projectPk, page = 1) => {
+    if (!projectPk) throw new Error("Project ID is required to fetch reviews.");
+    try {
+        const url = `/projects/${projectPk}/reviews/?page=${page}`;
+        console.log(`Calling API: GET ${url}`);
+        const response = await api.get(url);
+        console.log(`Reviews response for ${projectPk} (page ${page}):`, response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching reviews for project ${projectPk}:`, error.response?.data || error.message || error);
+        throw error;
+    }
+};
+
+export const addProjectReview = async (projectPk, reviewData) => {
+    if (!projectPk) throw new Error("Project ID is required to add a review.");
+    if (!reviewData || (!reviewData.body?.trim() && !reviewData.vote)) {
+        throw new Error("Review must contain a body or a vote.");
+    }
+    try {
+        const url = `/projects/${projectPk}/reviews/`;
+        console.log(`Calling API: POST ${url} with data:`, reviewData);
+        const response = await api.post(url, reviewData);
+        console.log(`Add review response for ${projectPk}:`, response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error adding review for project ${projectPk}:`, error.response?.data || error.message || error);
+        throw error; // Re-throw specific DRF validation errors if possible
+    }
+};
+
+
+export const updateProjectReview = async (projectPk, reviewId, reviewData) => {
+    if (!projectPk || !reviewId) throw new Error("Project ID and Review ID are required to update.");
+     if (!reviewData || (!reviewData.body?.trim() && !reviewData.vote)) {
+        // Allow sending empty body/vote if that's intended, otherwise validate
+        // throw new Error("Updated review must contain a body or a vote.");
+    }
+    try {
+        // Using PUT - requires all fields usually, PATCH for partial updates
+        const url = `/projects/${projectPk}/reviews/${reviewId}/`;
+        console.log(`Calling API: PUT ${url} with data:`, reviewData);
+        const response = await api.put(url, reviewData); // Or .patch for partial
+        console.log(`Update review response for ${reviewId}:`, response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error updating review ${reviewId}:`, error.response?.data || error.message || error);
+        throw error;
+    }
+};
+
+
+export const deleteProjectReview = async (projectPk, reviewId) => {
+    if (!projectPk || !reviewId) throw new Error("Project ID and Review ID are required to delete.");
+    try {
+        const url = `/projects/${projectPk}/reviews/${reviewId}/`;
+        console.log(`Calling API: DELETE ${url}`);
+        const response = await api.delete(url);
+        console.log(`Delete review response for ${reviewId}:`, response.data);
+        // DELETE often returns 204 No Content, response.data might be empty
+        return response.data || { success: true };
+    } catch (error) {
+        console.error(`Error deleting review ${reviewId}:`, error.response?.data || error.message || error);
+        throw error;
+    }
+};
+
+//  =================================================== end of project reviews =======================================================
+
+
+
 // export const getMyProjects = (profileId) => api2.get(`/projects/?owner=${profileId}`);
 
 // export const verifyOtp = (data) => { return api2.post('/users/verify-otp/', data);};

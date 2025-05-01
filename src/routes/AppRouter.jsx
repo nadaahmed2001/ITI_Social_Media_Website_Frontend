@@ -35,6 +35,10 @@ import FollowingListPage from "../pages/FollowingListPage";
 import NotFoundPage from "../pages/NotFoundPage"; 
 import UserPostsPage from "../pages/UserPostsPage";
 import { ChatNotificationProvider } from "../contexts/ChatNotificationContext";
+import ProjectPage from '../pages/ProjectPage'; // Import the new page
+import ProjectFeedPage from '../pages/ProjectFeedPage'; // Import
+
+
 
 
 const AppContent = () => {
@@ -67,14 +71,7 @@ const AppContent = () => {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/home"
-            element={
-              <PrivateRoute>
-                <HomePage />
-              </PrivateRoute>
-            }
-          />
+       
           <Route
             path="/"
             element={
@@ -205,6 +202,25 @@ const AppContent = () => {
               </PrivateRoute>
             } 
           />
+          <Route 
+            path="/projects/:projectId" 
+            element={
+            <PrivateRoute> 
+              <ProjectPage />
+            </PrivateRoute>
+            } 
+            />
+          
+          <Route 
+            path="/projects/feed" 
+            element={
+            <PrivateRoute> 
+              <ProjectFeedPage />
+            </PrivateRoute>
+            } 
+            /> 
+
+
           <Route path="/search" element={<SearchPage />} />
           {/* Follow button might be inside ProfilePageById and check auth there */}
           <Route path="/profiles/followbutton" element={<FollowButton />} />
@@ -217,13 +233,14 @@ const AppContent = () => {
 // Main Router component
 const AppRouter = () => {
   return (
+    <Router>
+
     <AuthProvider>
       <ChatNotificationProvider>
-        <Router>
           <AppContent />
-        </Router>
       </ChatNotificationProvider>
     </AuthProvider>
+  </Router>
   );
 };
 

@@ -15,7 +15,7 @@ const axiosInstance = axios.create({
   },
 });
 
-const ChatSidebar = () => {
+const ChatSidebarHome = () => {
     const [groupChats, setGroupChats] = useState([]);
     const [privateChats, setPrivateChats] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -149,8 +149,8 @@ const ChatSidebar = () => {
         <div className="flex flex-col">
 
         <button
-            className={`md:hidden fixed z-50 p-2 bg-[#7a2226] text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110${
-                isSidebarOpen ? "left-[17rem] top-4" : "left-4 top-4"  // Moves button when sidebar opens
+            className={`hidden md:hidden fixed z-50 p-2 bg-[#7a2226] text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110${
+                isSidebarOpen ? "left-[17rem] top-4" : "left-4 top-4"
             }`}
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
@@ -259,6 +259,40 @@ const ChatSidebar = () => {
                 {/* <div className="space-y-4 overflow-y-auto h-[calc(100vh-220px)] pr-2"> */}
                 <div className="space-y-4 overflow-y-auto h-100vh pr-2 mt-4">
 
+                    {/* Private Chats
+                    {(activeFilter === 'all' || activeFilter === 'private') && privateChats.map(chat => (
+                        <div key={chat.id} className="flex justify-between items-center p-2 
+                            hover:bg-gray-300 rounded cursor-pointer"
+                            onClick={() => navigate(`/messagesList/private/${chat.id}`)}>
+                            <div>
+                            <Typography className=" !text-[#7a2226] !font-medium">
+                                <img
+                                    src={ chat.authorAvatar || DEFAULT_USER_AVATAR }
+                                    alt="Avatar" // Use chat name or "Group Avatar" for better alt text
+                                    // Apply Tailwind classes here instead of 'user-avatar'
+                                    className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
+                                    onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
+                                />
+                                {chat.username}
+                                </Typography>
+                                <Typography variant="caption" className=" !text-[#585858]">
+                                    {chat.lastMessage || "No messages yet"}
+                                </Typography>
+                            </div>
+                            <Typography variant="caption" className=" !text-[#585858] ">
+                                {chat.lastActive || "4:43 PM"}
+                            </Typography>
+                            <div className="text-white text-sm">
+                                {getUnreadCountForChat(chat.id) > 0 && (
+                                    <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
+                                        {getUnreadCountForChat(chat.id)}
+                                    </span>
+                                )}
+                            </div>
+                            <hr></hr>
+                        </div>
+                    ))} */}
+
                     {/* Private Chats */}
                     {(activeFilter === 'all' || activeFilter === 'private') && privateChats.map(chat => (
                     <div
@@ -301,6 +335,38 @@ const ChatSidebar = () => {
                     ))}
 
 
+                    {/* Group Chats
+                    {(activeFilter === 'all' || activeFilter === 'groups') && groupChats.map(chat => (
+                        <div key={chat.id} className="flex justify-between items-center p-2 
+                            hover:bg-gray-300 rounded cursor-pointer"
+                            onClick={() => navigate(`/messagesList/group/${chat.id}`)}>
+                            <div>
+                                <Typography className="!font-medium flex items-center"> 
+                                    <img
+                                        src={ chat.authorAvatar || defaultGroupAvatar }
+                                        alt="Avatar"
+                                        className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
+                                        onError={(e) => { if (e.target.src !== defaultGroupAvatar) e.target.src = defaultGroupAvatar; }}
+                                    />
+                                    {chat.name}
+                                </Typography>
+                                <Typography  className=" !text-[#585858]" variant="caption">
+                                    {chat.lastMessage || "No messages yet"}
+                                </Typography>
+                            </div>
+                            <Typography  className=" !text-[#585858]" variant="caption" >
+                                {chat.lastActive || "9:10 AM"}
+                            </Typography>
+                            <div className="text-white text-sm">
+                                {getUnreadCountForGroup(chat.id) > 0 && (
+                                    <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
+                                        {getUnreadCountForGroup(chat.id)}
+                                    </span>
+                                )}
+                            </div>
+                            <hr></hr>
+                        </div>
+                    ))} */}
                     {/* Group Chats */}
                     {(activeFilter === 'all' || activeFilter === 'groups') && groupChats.map(chat => (
                     <div
@@ -349,4 +415,4 @@ const ChatSidebar = () => {
         </div>
     );
 };
-export default ChatSidebar;
+export default ChatSidebarHome;
