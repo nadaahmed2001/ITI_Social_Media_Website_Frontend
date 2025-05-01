@@ -30,9 +30,15 @@ const MessagesList = ({token, isGroupChat }) => {
 
     // Robust WebSocket connection with reconnection logic
     const connect_to_group_chat = useCallback(() => {
+        // Move WS_BASE_URL inside the callback to avoid dependency issues
+        const WS_BASE_URL = window.location.protocol === 'https:' 
+            ? `wss://${window.location.hostname}` 
+            : `ws://${window.location.hostname}:8000`;
+            
+        // Create appropriate WebSocket URL based on chat type
         const socketUrl = isGroupChat
-            ? `ws://${window.location.hostname}:8000/ws/chat/group/${id}/?token=${token}`
-            : `ws://${window.location.hostname}:8000/ws/chat/private/${id}/?token=${token}`;
+            ? `${WS_BASE_URL}/ws/chat/group/${id}/?token=${token}`
+            : `${WS_BASE_URL}/ws/chat/private/${id}/?token=${token}`;
 
         console.log(`Connecting to WebSocket: ${socketUrl}`);
 
