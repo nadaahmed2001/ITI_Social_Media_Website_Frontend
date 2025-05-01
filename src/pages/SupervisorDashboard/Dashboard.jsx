@@ -14,34 +14,30 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
+  
   useEffect(() => {
-    async function loadPrograms() {
+    async function loadData() {
       try {
-        const programsData = await fetchPrograms();
-        setPrograms(programsData);
-      } catch (error) {
-        console.error('Failed to fetch programs', error);
-      }
-    }
-
-    async function loadDepartment() {
-      try {
-        const accountRes = await getAccount(); // Gets logged-in user's account
+        const accountRes = await getAccount();
         const profileId = accountRes.data?.id;
+  
         if (profileId) {
           const profileRes = await getPublicProfile(profileId);
           const dept = profileRes.data?.department;
-          setDepartment(dept || ''); // Fallback if department is missing
+          setDepartment(dept || '');
+  
+          // Now that department is loaded, fetch programs
+          const programsData = await fetchPrograms();
+          setPrograms(programsData);
         }
       } catch (error) {
-        console.error('Failed to fetch department info:', error);
+        console.error('Failed to load dashboard data:', error);
       }
     }
-
-    loadPrograms();
-    loadDepartment();
+    //load depatment then programs
+    loadData();
   }, []);
-
+  
   const handleProgramSelect = (program) => {
     setSelectedProgram(program);
   };

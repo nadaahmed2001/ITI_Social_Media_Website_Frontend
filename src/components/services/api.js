@@ -427,7 +427,7 @@ export const createBatch = async (name, program_id, track_id) => {
       track_id
     });
 
-    // console.log("Created Batch:", response.data); // Debugging
+    console.log("Created Batch:", response.data); // Debugging
     return response.data;  // Return the newly created batch data
   } catch (error) {
     console.error('Failed to create batch:', error);
