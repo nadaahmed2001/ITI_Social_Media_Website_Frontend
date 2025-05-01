@@ -14,6 +14,8 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'; // Like out
 import FavoriteIcon from '@mui/icons-material/Favorite'; // Like filled
 import TimeAgo from '../components/TimeAgo'; 
 import { Divider } from '@mui/material';
+
+
 const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp'; // Verify path
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/project-default.jpg'; // Verify path (or use a placeholder service)
 
