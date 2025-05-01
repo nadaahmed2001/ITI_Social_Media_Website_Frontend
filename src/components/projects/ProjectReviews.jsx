@@ -150,7 +150,7 @@ function ProjectReviews({ projectId, projectOwnerId }) {
 
     return (
         <Box>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#191918', mb: 2 }}>Reviews & Feedback</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#7a2226', mb: 2 }}>Reviews & Feedback</Typography>
 
             {/* --- Review Submission Form --- */}
             {canShowForm && (
@@ -211,7 +211,7 @@ function ProjectReviews({ projectId, projectOwnerId }) {
                  <Alert severity="info" sx={{ mb: 3 }}>Please <Link to="/login" style={{color: 'lightblue'}}>log in</Link> to leave a review.</Alert>
             )}
             {loggedInUser && userHasReviewed && !editingReview && (
-                 <Typography variant="body2" sx={{ color: 'grey.400', fontStyle: 'italic', mb: 3 }}>You have already reviewed this project.</Typography>
+                 <Typography variant="body2" sx={{ color: 'grey.800', fontStyle: 'italic', mb: 3 }}>You have already reviewed this project.</Typography>
             )}
 
 

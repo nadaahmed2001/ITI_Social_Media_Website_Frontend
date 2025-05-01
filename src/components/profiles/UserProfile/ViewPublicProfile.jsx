@@ -15,7 +15,7 @@ import './ViewPublicProfile.css';
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/user-default.webp';
 const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
 
-const ViewPublicProfile = ({ profileId }) => {
+const ViewPublicProfile = ({ profileId  }) => {
     const [profileData, setProfileData] = useState(null);
     const [projectsData, setProjectsData] = useState([]); // Stores the *filtered* projects
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
@@ -51,7 +51,7 @@ const ViewPublicProfile = ({ profileId }) => {
             // --- Call the filtered API endpoint ---
             const response = await getMyProjects(profileId);
             // --- No client-side filter needed ---
-            setProjectsData(response.data || []); // Directly set the response data
+            setProjectsData(Array.isArray(response?.data) ? response.data : []); // Directly set the response data
         } catch (err) {
             console.error("Failed to fetch projects:", err); setError('Could not load your projects.'); setProjectsData([]);
         } finally { setIsLoadingProjects(false); }
@@ -134,7 +134,7 @@ const ViewPublicProfile = ({ profileId }) => {
     // --- Render Projects ---
     const renderProjects = () => {
         // Use loading state specific to projects
-        if (isLoadingProjects && projectsData.length === 0) {
+        if (isLoadingProjects) {
             return (
                 <div className="profile-section projects-section">
                     <h3>Projects</h3>

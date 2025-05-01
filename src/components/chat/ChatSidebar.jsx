@@ -145,7 +145,7 @@ const ChatSidebar = () => {
         };
 
     return (
-       
+        <div className="flex !bg-[#F8FAFD] ">
         <div className="flex flex-col ">
 
         <button
@@ -344,7 +344,7 @@ const ChatSidebar = () => {
 
                 </div>
             </div>
-      
+        </div>
         {showWelcome && <Chatwellcommsg />}
         </div>
     );

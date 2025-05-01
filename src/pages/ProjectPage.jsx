@@ -5,7 +5,7 @@ import { getProject, likeProject, unlikeProject } from '../components/services/a
 import AuthContext from '../contexts/AuthContext'; // Adjust path
 import ProjectReviews from '../components/projects/ProjectReviews'; // We'll create this next
 import {
-    Typography, CircularProgress, Alert, Avatar, Box, Paper, Button, Chip, IconButton
+    Typography, CircularProgress, Alert, Avatar, Box, Paper, Button, Chip, IconButton , styled
 } from '@mui/material';
 import { FaGithub, FaLinkedin, FaGlobe } from 'react-icons/fa'; // Example social icons
 import LanguageIcon from '@mui/icons-material/Language';
@@ -19,7 +19,63 @@ import { Divider } from '@mui/material';
 const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp'; // Verify path
 const DEFAULT_PROJECT_IMAGE = '../../src/assets/images/project-default.jpg'; // Verify path (or use a placeholder service)
 
+//
 
+const HeroSection = styled(Box)(({ theme, imageUrl }) => ({
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '300px',
+    marginBottom: theme.spacing(4),
+    borderRadius: theme.shape.borderRadius,
+    overflow: 'hidden',
+    backgroundImage: imageUrl ? `url(${imageUrl})` : `url(${DEFAULT_PROJECT_IMAGE})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dark overlay for better text contrast
+    },
+}));
+
+const GlassPaper = styled(Paper)(({ theme }) => ({
+    padding: theme.spacing(4),
+    backgroundColor: 'rgba(255, 255, 255, 0.1)', // Frosted glass effect
+    backdropFilter: 'blur(10px)',
+    border: `1px solid rgba(255, 255, 255, 0.2)`,
+    borderRadius: theme.shape.borderRadius * 2,
+    color: '#f5f5f5', // Light text for dark background
+}));
+
+const AccentTypography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.secondary.main, // Use a vibrant secondary color
+    fontWeight: 'bold',
+    marginBottom: theme.spacing(1),
+}));
+
+const LinkButton = styled(Button)(({ theme }) => ({
+    justifyContent: 'flex-start',
+    color: theme.palette.info.light,
+    borderColor: theme.palette.info.dark,
+ 
+}));
+
+const LikeButton = styled(Button)(({ theme, isLiked }) => ({
+    justifyContent: 'flex-start',
+    color: isLiked ? theme.palette.error.light : theme.palette.grey[400],
+    backgroundColor: isLiked ? theme.palette.error.dark : 'transparent',
+    borderColor: isLiked ? 'transparent' : theme.palette.grey[400],
+  
+}));
+
+
+//
 function ProjectPage() {
     const { projectId } = useParams(); // Get project ID (UUID) from URL
     const { user: loggedInUser } = useContext(AuthContext);
@@ -113,114 +169,101 @@ function ProjectPage() {
     }
 
     return (
-        <Box sx={{ maxWidth: '400px',   margin: '30px', p: 2, pt: { xs: 12, md: 6 }  }}>
-             <div className="">
-            <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, backgroundColor: '#e0e0e0', color: '#191918', borderRadius: '12px' }}>
+        <Box sx={{ mt: { xs: 8, md: 12 }, px: 2, display: 'flex', justifyContent: 'center' }}>
+            <Box maxWidth="700px" width="100%">
+                {/* Hero Section */}
+                {project.featured_image && (
+                    <HeroSection imageUrl={project.featured_image}>
+                        <Typography variant="h4" component="h1" align="center" sx={{ color: 'white', fontWeight: 'bold', position: 'relative', zIndex: 1 }}>
+                            {project.title}
+                        </Typography>
+                    </HeroSection>
+                )}
 
-                {/* Project Header */}
-                <Box mb={4}>
-                    <Typography variant="h6" component="h6" sx={{ fontWeight: 'bold', color: '#191918', mb: 1 }}>
-                        {project.title}
-                    </Typography>
+                {/* Main Content */}
+                <GlassPaper elevation={12}>
                     {/* Author Info */}
-                    <Box display="flex" alignItems="center" gap={1.5} mb={0}>
-                         <Link to={`/profiles/${project.owner?.id}`} style={{ textDecoration: 'none' }}>
-                            <Avatar
-                                src={project.owner?.profile_picture || DEFAULT_USER_AVATAR}
-                                alt={project.owner?.username}
-                                sx={{ width: 28, height: 28 }}
-                            />
-                         </Link>
-                         <Typography variant="body2" sx={{ color: 'grey.900' }}>
-                            By <Link to={`/profiles/${project.owner?.id}`} style={{ color: '#7a2226', textDecoration: 'none', fontWeight: 'medium' }}>
-                                { (project.owner?.first_name && project.owner?.last_name) ? `${project.owner.first_name} ${project.owner.last_name}` : project.owner?.username || 'Unknown User'}
+                    <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
+                        <Box display="flex" alignItems="center" gap={2}>
+                            <Link to={`/profiles/${project.owner?.id}`} style={{ textDecoration: 'none' }}>
+                                <Avatar
+                                    src={project.owner?.profile_picture || DEFAULT_USER_AVATAR}
+                                    alt={project.owner?.username}
+                                    sx={{ width: 40, height: 40 }}
+                                />
+                            </Link>
+                            <Typography variant="subtitle1" sx={{ color: 'gray' }}>
+                                By <Link to={`/profiles/${project.owner?.id}`} style={{ color: 'gray', textDecoration: 'none', fontWeight: 'bold' }}>
+                                    { (project.owner?.first_name && project.owner?.last_name) ? `${project.owner.first_name} ${project.owner.last_name}` : project.owner?.username || 'Unknown User'}
                                 </Link>
-                        </Typography>
+                            </Typography>
                         </Box>
-                        <Typography variant="body2" sx={{ color: 'grey.900', mb:2, ml:5 }}>
-                            Posted <TimeAgo timestamp={project.created} />
+                        <Typography variant="caption" sx={{ color: 'grey.900' }}>
+                            Posted <TimeAgo timestamp={project.created}/>
                         </Typography>
+                    </Box>
+
                     {/* Tags */}
                     {project.tags && project.tags.length > 0 && (
-                        <Box display="flex" flexWrap="wrap" gap={1} mb={2} ml={2}>
+                        <Box display="flex" flexWrap="wrap" gap={1} mb={3}>
                             {project.tags.map(tag => (
-                                <Chip key={tag.id} label={tag.name} size="small" sx={{ backgroundColor: '#444', color: '#ccc', fontSize: '0.75rem' }} />
+                                <Chip key={tag.id} label={tag.name} size="small" sx={{ backgroundColor: '#333', color: '#eee', fontSize: '0.8rem' }} />
                             ))}
                         </Box>
                     )}
-                </Box>
 
-                {/* Featured Image */}
-                {project.featured_image && (
-                    <Box mb={4} sx={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid #444' }}>
-                        <img
-                            src={project.featured_image}
-                            alt={`${project.title} preview`}
-                            style={{ display: 'block', width: '100%', maxHeight: '500px', objectFit: 'contain', backgroundColor: '#1f1f1f' }}
-                            onError={(e) => { if(e.target.src !== DEFAULT_PROJECT_IMAGE) e.target.src = DEFAULT_PROJECT_IMAGE; }}
-                        />
-                    </Box>
-                )}
-
-                {/* Description & Links */}
-                <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} gap={4} mb={4}>
-                    <Box flexGrow={1}>
-                        <Typography variant="h6" sx={{  fontWeight: 'bold', color: '#7a2226', mb: 1 }}>Description</Typography>
-                        <Typography variant="body2" sx={{ color: 'grey.900', whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
+                    {/* Description */}
+                    <Box mb={4}>
+                        <AccentTypography variant="h6" component="h2" sx={{ color: '#7a2226' }} >Description</AccentTypography>
+                        <Typography variant="body1" sx={{ color: 'grey.800', whiteSpace: 'pre-wrap', lineHeight: 1.8 }}>
                             {project.description || 'No description provided.'}
                         </Typography>
                     </Box>
-                    <Box flexShrink={0} width={{ xs: '100%', md: '250px' }}>
-                        <Typography variant="h6" sx={{   fontWeight: 'bold', color: '#7a2226', mb: 2 }}>Links</Typography>
-                        <Box display="flex" flexDirection="column" gap={1.5}>
-                            {project.demo_link && (
-                                <Button variant="outlined" size="small" href={project.demo_link} target="_blank" startIcon={<LanguageIcon />} sx={{ maxWidth:'150px', justifyContent: 'flex-start', color: '#191918', borderColor: '#555' }}>
-                                    Live Demo
-                                </Button>
-                            )}
-                            {project.source_link && (
-                                <Button variant="outlined" size="small" href={project.source_link} target="_blank" startIcon={<GitHubIcon />} sx={{  maxWidth:'150px', justifyContent: 'flex-start', color: '#191918', borderColor: '#555' }}>
-                                    Source Code
-                                </Button>
-                            )}
-                            {/* Like Button */}
-                            <Button
-                                variant={isLiked ? "contained" : "outlined"}
+
+                    {/* Links & Actions */}
+                    <Box display="flex" flexDirection={{  xs: 'column', md: 'row' }} gap={2} alignItems="flex-start" mb={4}>
+                        <Box>
+                            <AccentTypography variant="h6" component="h3"  sx={{ color: '#7a2226' }} >Links</AccentTypography>
+                            <Box display="flex" flexDirection="column" gap={1.5}>
+                                {project.demo_link && (
+                                    <LinkButton size="small" href={project.demo_link} target="_blank" startIcon={<LanguageIcon className='text-[#7a2226]' />} fullWidth sx={{ maxWidth: '200px',  color: '#1f2937' }}>
+                                        Live Demo
+                                    </LinkButton>
+                                )}
+                                {project.source_link && (
+                                    <LinkButton size="small" href={project.source_link} target="_blank" startIcon={<GitHubIcon className='text-[#7a2226]'/>} fullWidth sx={{ maxWidth: '200px',  color: '#1f2937' }}>
+                                        Source Code
+                                    </LinkButton>
+                                )}
+                            </Box>
+                        </Box>
+
+                        {/* Like Button */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', mt: { xs: 2, md: 0 } }}>
+                            <LikeButton
+                                isLiked={isLiked}
                                 size="small"
-                                color={isLiked ? "error" : "inherit"} // Use error color when liked
-                                disabled={!loggedInUser || isLikeLoading} // Disable if not logged in or loading
+                                disabled={!loggedInUser || isLikeLoading}
                                 onClick={handleLikeToggle}
                                 startIcon={
                                     isLikeLoading ? <CircularProgress size={16} color="inherit"/> :
-                                    (isLiked ? <FavoriteIcon fontSize="small"/> : <FavoriteBorderIcon fontSize="small"/>)
+                                    (isLiked ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" className='text-[#7a2226]'/>)
                                 }
-                                sx={{
-                                    justifyContent: 'flex-start',
-                                    borderColor: isLiked ? undefined : '#555', // Only show border if not liked
-                                    color: isLiked ? 'white' : '#191918',
-                                    backgroundColor: isLiked ? '#191918' : undefined, // Red background when liked
-                                    maxWidth:'150px',
-                                    '&:hover': {
-                                        backgroundColor: isLiked ? '#c82333' : 'rgba(255, 255, 255, 0.08)',
-                                        borderColor: isLiked ? undefined : '#777',
-                                       
-                                    }
-                                }}
                             >
                                 {isLiked ? 'Liked' : 'Like'} ({likeCount})
-                            </Button>
+                            </LikeButton>
                         </Box>
                     </Box>
-                </Box>
 
-                {/* Divider */}
-                <Divider sx={{ borderColor: '#444', my: 4 }} />
+                    {/* Divider */}
+                    <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)', my: 4 }} />
 
-                {/* Reviews Section */}
-                <ProjectReviews projectId={project.id} projectOwnerId={project.owner?.id} />
+                    {/* Reviews Section */}
+                    <AccentTypography variant="h6" component="h2" sx={{color:'#7a2226'}}>Reviews</AccentTypography>
+                    <ProjectReviews projectId={project.id} projectOwnerId={project.owner?.id} />
 
-            </Paper>
-            </div>
+                </GlassPaper>
+            </Box>
         </Box>
     );
 }
