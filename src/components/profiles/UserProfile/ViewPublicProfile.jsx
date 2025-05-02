@@ -56,7 +56,13 @@ const ViewPublicProfile = ({ profileId }) => {
       // --- Call the filtered API endpoint ---
       const response = await getMyProjects(profileId);
       // --- No client-side filter needed ---
-      setProjectsData(Array.isArray(response?.data) ? response.data : []); // Directly set the response data
+      if (response.data && Array.isArray(response.data)) {
+        // Case 1: The API returns the array directly
+        setProjectsData(response.data);
+    } else if (response.data && typeof response.data === 'object' && Array.isArray(response.data.results)) {
+        // Case 2: The API returns an object, with the array nested under 'results' (common for paginated data)
+        setProjectsData(response.data.results);
+    }
     } catch (err) {
       console.error("Failed to fetch projects:", err);
       setError("Could not load your projects.");
@@ -225,11 +231,11 @@ const ViewPublicProfile = ({ profileId }) => {
                   </Link>
 
                   {/* Description */}
-                  {project.description && (
+                  {/* {project.description && (
                     <p className="project-description !text-gray-900">
                       {project.description}
                     </p>
-                  )}
+                  )} */}
 
                   {/* Tags - Map directly over nested tag objects */}
                   {Array.isArray(project.tags) && project.tags.length > 0 && (

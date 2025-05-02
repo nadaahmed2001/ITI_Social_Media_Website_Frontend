@@ -83,12 +83,39 @@ const ProjectsManagement = ({ profileId }) => {
         setIsLoading(true); setError('');
         try {
             const response = await getMyProjects(profileId);
-            const userProjects = response.data || [];
+            let userProjects = []; // Declare it mutable
+    
+            // --- Check the structure of the response.data ---
+            if (response.data && Array.isArray(response.data)) {
+                // Case 1: The API returns the array directly
+                userProjects = response.data;
+            } else if (response.data && typeof response.data === 'object' && Array.isArray(response.data.results)) {
+                // Case 2: The API returns an object, with the array nested under 'results' (common for paginated data)
+                userProjects = response.data.results;
+            } else {
+                 // Case 3: Unexpected data structure, log warning and use empty array
+                console.warn("API response data for projects is not in expected format:", response.data);
+                 userProjects = []; // Ensure it's an array
+                 // Optionally set an error state visible to the user if this is a critical issue
+                setError('Received unexpected data format for projects.');
+            }
+            // --- End Check ---
+    
+            // Now sort is safe because userProjects is guaranteed to be an array
             userProjects.sort((a, b) => new Date(b.created) - new Date(a.created));
             setProjects(userProjects);
-        } catch (err) { console.error("Failed to fetch projects:", err); setError('Could not load your projects.'); setProjects([]); }
-        finally { setIsLoading(false); }
-    }, [profileId]);
+    
+        } catch (err) {
+            console.error("Failed to fetch projects:", err);
+            // Check for specific error messages from backend if available
+            const errorMessage = err.response?.data?.detail || err.message || 'Could not load your projects.';
+            setError(errorMessage);
+            setProjects([]); // Ensure projects state is an empty array on error
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }, [profileId]); // profileId is a dependency
 
     // --- Fetch Tags ---
     const fetchTags = useCallback(async () => {
@@ -398,7 +425,7 @@ const ProjectsManagement = ({ profileId }) => {
                                     </div>
                                 </div>
                                  {/* Indicate if change is pending */}
-                                {projectImageChanged && <p className="selected-file-info">{projectImageUrl ? "New image selected" : "Image marked for removal"}</p>}
+                                {/* {projectImageChanged && <p className="selected-file-info">{projectImageUrl ? "New image selected" : "Image marked for removal"}</p>} */}
                             </div>
                             {/* Modal Actions */}
                             <div className="modal-actions">
