@@ -64,7 +64,7 @@ const ChatSidebar = () => {
   //     const fetchUnreadNotifications = async () => {
   //       try {
   //         const response = await axiosInstance.get(
-  //           "https://itisocialmediawebsitebackend-production.up.railway.app/api/notifications/chat/unread/"
+  //           "http://127.0.0.1:8000/api/notifications/chat/unread/"
   //         );
   //         setUnreadChatNotifications(response.data);
   //       } catch (error) {
@@ -138,7 +138,7 @@ const ChatSidebar = () => {
       await Promise.all(
         relatedNotifications.map((n) =>
           axiosInstance.patch(
-            `https://itisocialmediawebsitebackend-production.up.railway.app/api/notifications/${n.id}/mark-as-read/`
+            `http://127.0.0.1:8000/api/notifications/${n.id}/mark-as-read/`
           )
         )
       );
