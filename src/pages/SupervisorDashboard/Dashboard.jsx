@@ -1,6 +1,5 @@
-//Dashboard.jsx
 import React, { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { fetchPrograms, getAccount, getPublicProfile } from '../../components/services/api';
 import ProgramList from '../../components/supervisor/ProgramList';
@@ -11,33 +10,37 @@ const Dashboard = () => {
   const [programs, setPrograms] = useState([]);
   const [selectedProgram, setSelectedProgram] = useState(null);
   const [department, setDepartment] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
-  
   useEffect(() => {
     async function loadData() {
+      setLoading(true);
       try {
         const accountRes = await getAccount();
         const profileId = accountRes.data?.id;
-  
+
         if (profileId) {
           const profileRes = await getPublicProfile(profileId);
           const dept = profileRes.data?.department;
           setDepartment(dept || '');
-  
-          // Now that department is loaded, fetch programs
+
           const programsData = await fetchPrograms();
-          setPrograms(programsData);
+          setPrograms(programsData || []);
         }
-      } catch (error) {
-        console.error('Failed to load dashboard data:', error);
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
+        setError('Unable to load dashboard data. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     }
-    //load depatment then programs
+
     loadData();
   }, []);
-  
+
   const handleProgramSelect = (program) => {
     setSelectedProgram(program);
   };
@@ -68,20 +71,36 @@ const Dashboard = () => {
     <>
       {/* <Navbar /> */}
       <Box sx={{ display: 'flex', height: '100vh', bgcolor: '#f8fafc', color: 'black' }}>
-        {/* Sidebar and department box */}
         <Box>
-          {department && (
-            <div style={departmentBoxStyle}>
-              Department of {department}
-            </div>
+          {department ? (
+            <div style={departmentBoxStyle}>Department of {department}</div>
+          ) : (
+            !loading && (
+              <Typography sx={{ ml: 10, mt: 10, color: 'gray' }}>
+                No department found for this user.
+              </Typography>
+            )
+          )}
+
+          {!loading && programs.length === 0 && (
+            <Typography sx={{ ml: 10, mt: 2, color: 'gray' }}>
+              No programs available to display.
+            </Typography>
           )}
 
           <ProgramList programs={programs} onSelectProgram={handleProgramSelect} />
         </Box>
 
-        {/* Main Content */}
         <Box sx={{ flex: 1, p: 3, overflowY: 'auto' }}>
-          {selectedProgram ? (
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+              <CircularProgress />
+            </Box>
+          ) : error ? (
+            <Typography color="error" align="center" sx={{ mt: 10 }}>
+              {error}
+            </Typography>
+          ) : selectedProgram ? (
             <>
               <Typography variant="h5" sx={{ mb: 3 }}>
                 Tracks in {selectedProgram.name}
@@ -97,29 +116,18 @@ const Dashboard = () => {
                 justifyContent: 'center',
                 textAlign: 'center',
                 flexDirection: 'column',
-                
-                marginTop: '50px',
+                mt: 10,
               }}
             >
               <Typography
                 variant="h4"
-                sx={{
-                  fontWeight: 600,
-                  color: '#7a2226',
-                  mb: 2,
-                  animation: 'fadeIn 1s ease-in-out',
-                }}
+                sx={{ fontWeight: 600, color: '#7a2226', mb: 2 }}
               >
                 👋 Welcome!
               </Typography>
               <Typography
                 variant="h6"
-                sx={{
-                  color: '#555',
-                  fontWeight: 400,
-                  maxWidth: '600px',
-                  animation: 'fadeIn 1.2s ease-in-out',
-                }}
+                sx={{ color: '#555', fontWeight: 400, maxWidth: '600px' }}
               >
                 Select a program from the left panel to view its tracks and details.
               </Typography>
@@ -127,8 +135,6 @@ const Dashboard = () => {
           )}
         </Box>
       </Box>
-
-
     </>
   );
 };

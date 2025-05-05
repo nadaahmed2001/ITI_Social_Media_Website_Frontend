@@ -17,7 +17,7 @@ export const ChatNotificationProvider = ({ children }) => {
     try {
       if (token) {
         const res = await axiosInstance.get(
-          "http://127.0.0.1:8000/api/notifications/chat/unread/"
+          "https://itisocialmediawebsitebackend-production.up.railway.app/api/notifications/chat/unread/"
         );
         if (res.data) {
           setUnreadChatNotifications(res.data);
