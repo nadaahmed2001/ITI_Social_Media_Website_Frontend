@@ -10,6 +10,7 @@ import Chatwellcommsg from "./Chatwellcommsg";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useChatNotification } from "../../contexts/ChatNotificationContext";
+import dayjs from "dayjs";
 
 const token = localStorage.getItem("access_token");
 
@@ -332,7 +333,7 @@ const ChatSidebar = () => {
                         {chat.username}
                       </Typography>
                       <Typography variant="caption" className="!text-[#585858]">
-                        {chat.lastMessage || "No messages yet"}
+                        {chat.last_message?.content || "No messages yet"}
                       </Typography>
                     </div>
                   </div>
@@ -340,7 +341,9 @@ const ChatSidebar = () => {
                   {/* Right Side: Time and Unread Count */}
                   <div className="flex flex-col items-end gap-1">
                     <Typography variant="caption" className="!text-[#585858]">
-                      {chat.lastActive || "4:43 PM"}
+                      {chat.last_message?.timestamp
+                      ? dayjs(chat.last_message.timestamp).format("hh:mm A")
+                      : ""}
                     </Typography>
                     {getUnreadCountForChat(chat.id) > 0 && (
                       <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
@@ -378,7 +381,7 @@ const ChatSidebar = () => {
                         {chat.name}
                       </Typography>
                       <Typography className="!text-[#585858]" variant="caption">
-                        {chat.lastMessage || "No messages yet"}
+                        {chat.last_message?.content || "No messages yet"}
                       </Typography>
                     </div>
                   </div>
@@ -386,7 +389,9 @@ const ChatSidebar = () => {
                   {/* Right Side: Time and Unread Count */}
                   <div className="flex flex-col items-end gap-1">
                     <Typography className="!text-[#585858]" variant="caption">
-                      {chat.lastActive || "9:10 AM"}
+                      {chat.last_message?.timestamp
+                      ? dayjs(chat.last_message.timestamp).format("hh:mm A")
+                      : ""}
                     </Typography>
                     {getUnreadCountForGroup(chat.id) > 0 && (
                       <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
