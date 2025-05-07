@@ -62,6 +62,8 @@ const NotificationsDropdown = () => {
   }, []);
 
   const fetchNotificationsData = async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) return; // Skip fetching if no token
     setLoading(true);
     try {
       const response = await fetchNotifications(); // Make the API call

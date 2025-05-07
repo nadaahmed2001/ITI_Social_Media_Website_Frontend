@@ -25,7 +25,7 @@ const ChatSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
   const navigate = useNavigate();
-  const { unreadChatNotifications } = useChatNotification();
+  const { unreadChatNotifications,markChatNotificationsAsRead  } = useChatNotification();
 
   // const handleAIChatClick = () => {
   //     setShowAIChat(true);
@@ -124,35 +124,35 @@ const ChatSidebar = () => {
   );
   // ----------------------------------------to mark as read for chat notification------------------------------------------------------------
 
-  const markChatNotificationsAsRead = async (chatId, type = "chat") => {
-    const path =
-      type === "chat"
-        ? `/messagesList/private/${chatId}`
-        : `/messagesList/group/${chatId}`;
+  // const markChatNotificationsAsRead = async (chatId, type = "chat") => {
+  //   const path =
+  //     type === "chat"
+  //       ? `/messagesList/private/${chatId}`
+  //       : `/messagesList/group/${chatId}`;
 
-    const relatedNotifications = unreadChatNotifications.filter(
-      (n) => n.notification_type === type && n.notification_link.includes(path)
-    );
+  //   const relatedNotifications = unreadChatNotifications.filter(
+  //     (n) => n.notification_type === type && n.notification_link.includes(path)
+  //   );
 
-    try {
-      await Promise.all(
-        relatedNotifications.map((n) =>
-          axiosInstance.patch(
-            `http://127.0.0.1:8000/api/notifications/${n.id}/mark-as-read/`
-          )
-        )
-      );
+  //   try {
+  //     await Promise.all(
+  //       relatedNotifications.map((n) =>
+  //         axiosInstance.patch(
+  //           `http://127.0.0.1:8000/api/notifications/${n.id}/mark-as-read/`
+  //         )
+  //       )
+  //     );
 
-      setUnreadChatNotifications((prevNotifications) =>
-        prevNotifications.filter(
-          (n) =>
-            !relatedNotifications.some((r) => String(r.id) === String(n.id))
-        )
-      );
-    } catch (error) {
-      console.error("Error marking notifications as read:", error);
-    }
-  };
+  //     setUnreadChatNotifications((prevNotifications) =>
+  //       prevNotifications.filter(
+  //         (n) =>
+  //           !relatedNotifications.some((r) => String(r.id) === String(n.id))
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.error("Error marking notifications as read:", error);
+  //   }
+  // };
 
   return (
     <div className="flex !bg-[#F8FAFD] ">
@@ -311,7 +311,10 @@ const ChatSidebar = () => {
                 <div
                   key={chat.id}
                   className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
-                  onClick={() => navigate(`/messagesList/private/${chat.id}`)}
+                  onClick={async () => {
+                    await markChatNotificationsAsRead(chat.id, "chat");
+                    navigate(`/messagesList/private/${chat.id}`);
+                }}
                 >
                   {/* Left Side: Avatar and Chat Info */}
                   <div className="flex items-center gap-2">
@@ -354,7 +357,10 @@ const ChatSidebar = () => {
                 <div
                   key={chat.id}
                   className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
-                  onClick={() => navigate(`/messagesList/group/${chat.id}`)}
+                  onClick={async () => {
+                    await markChatNotificationsAsRead(chat.id, "group_chat");
+                    navigate(`/messagesList/group/${chat.id}`);
+                }}
                 >
                   {/* Left Side: Avatar and Chat Info */}
                   <div className="flex items-center gap-2">

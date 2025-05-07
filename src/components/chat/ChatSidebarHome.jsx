@@ -25,7 +25,7 @@ const ChatSidebarHome = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
   const navigate = useNavigate();
-  const { unreadChatNotifications } = useChatNotification();
+  const { unreadChatNotifications, markChatNotificationsAsRead } = useChatNotification();
 
   // const [unreadChatNotifications, setUnreadChatNotifications] = useState([]);
 
@@ -338,7 +338,10 @@ const ChatSidebarHome = () => {
               <div
                 key={chat.id}
                 className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
-                onClick={() => navigate(`/messagesList/private/${chat.id}`)}
+                onClick={async () => {
+                  await markChatNotificationsAsRead(chat.id, "chat");
+                  navigate(`/messagesList/private/${chat.id}`);
+              }}
               >
                 {/* Left Side: Avatar and Chat Info */}
                 <div className="flex items-center gap-2">
@@ -413,8 +416,10 @@ const ChatSidebarHome = () => {
               <div
                 key={chat.id}
                 className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
-                onClick={() => navigate(`/messagesList/group/${chat.id}`)}
-              >
+                onClick={async () => {
+                  await markChatNotificationsAsRead(chat.id, "group_chat");
+                  navigate(`/messagesList/group/${chat.id}`);
+              }}s              >
                 {/* Left Side: Avatar and Chat Info */}
                 <div className="flex items-center gap-2">
                   <img

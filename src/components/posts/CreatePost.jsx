@@ -73,6 +73,17 @@ export default function CreatePost({ onPostCreated }) {
     setIsExpanded(!isExpanded);
   };
 
+//  // Function to parse mentions and format them in a user-friendly way
+//   const parseMentions = (text) => {
+//     const mentionRegex = /@([a-zA-Z0-9_]+)/g;
+//     const mentions = [];
+//     text.replace(mentionRegex, (match, username) => {
+//       mentions.push(username); 
+//     });
+//     return mentions;
+//   };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!postText.trim() && attachmentUrls.length === 0) {
@@ -82,10 +93,16 @@ export default function CreatePost({ onPostCreated }) {
 
     try {
       const formData = new FormData();
-      formData.append('body', postText);
+      formData.append('body', postText)
+      // formData.append('body_with_mentions',  JSON.stringify(parseMentions(postText)));  // Send parsed mentions separately if needed
       attachmentUrls.forEach(url => formData.append('attachment_urls', url));
+      //  // Debugging: Log the formData keys and values
+      // for (let [key, value] of formData.entries()) {
+      //   console.log(`${key}: ${value}`);
+      // }
 
       const response = await createPost(formData);
+      // console.log("Post created:", response.data); // Debugging: Log the response data
       if (response.status === 201) {
         setPostText('');
         setAttachmentUrls([]);
