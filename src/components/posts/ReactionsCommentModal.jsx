@@ -12,8 +12,8 @@ import {
     HelpOutline as DefaultIcon // Example default
 } from "@mui/icons-material";
 
-const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
-
+const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp';
+const currentUserAvatar = user?.profile_picture || DEFAULT_AVATAR;
 const getReactionStyle = (reactionType) => {
     switch (reactionType) {
         case "Like":
@@ -81,11 +81,11 @@ function ReactionsCommentModal({ reactions = [], isLoading, onClose }) {
                                     <li key={reaction.id || reaction.user_id} className="flex items-center justify-between my-2">
                                         <div className="flex items-center space-x-3 group">
                                             <img
-                                                src={reaction.user_profile_picture || DEFAULT_USER_AVATAR}
+                                                src={ currentUserAvatar  || DEFAULT_AVATAR}
                                                 alt={reaction.user_username || 'User'}
                                                 title={reaction.user_username}
                                                 className="w-12 h-12 rounded-full object-cover border border-gray-300"
-                                                onError={(e) => { e.target.src = DEFAULT_USER_AVATAR; }}
+                                                onError={(e) => { e.target.src = DEFAULT_AVATAR; }}
                                             />
                                             <span className="text-2xl font-semibold text-gray-700 group-hover:text-primary-600">
                                                 {reaction.user_username || 'User'}

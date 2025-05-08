@@ -25,7 +25,7 @@ const reactionIconMap = {
 };
 
 const DEFAULT_AVATAR = '../../src/assets/images/user-default.webp'; // Ensure path correct relative to /public
-
+const currentUserAvatar = user?.profile_picture || DEFAULT_AVATAR;
 export default function ReactionsModal({ reactions = [], isLoading, onClose }) {
 
     return (
@@ -70,7 +70,7 @@ export default function ReactionsModal({ reactions = [], isLoading, onClose }) {
                                         className="flex items-center space-x-2 group"
                                         onClick={onClose} // Close modal when clicking link
                                     >
-                                        <img src={reaction.user_profile_picture || DEFAULT_AVATAR} alt={reaction.user_username} title={reaction.user_username} className="w-12 h-12 rounded-full"/>
+                                        <img src={ currentUserAvatar  || DEFAULT_AVATAR} alt={reaction.user_username} title={reaction.user_username} className="w-12 h-12 rounded-full"/>
                                     </Link>
                                     <Link 
                                         to={`/profiles/${reaction.user_id}`} // Link using the correct user ID
