@@ -498,6 +498,8 @@ export const createTrack= async (trackData) => {
   }
 };
 
+
+
 //------------------- Notifications API functions -------------------
 export const fetchNotifications = () => api.get("/notifications/");
 export const markNotificationAsRead = (notificationId) =>
@@ -582,6 +584,20 @@ export const updateAccount = (jsonData) => api2.put('/users/account/', jsonData)
 // export const updateAccount = (profileData) => api2.put('/users/account/', profileData);
 export const updateProfilePicture = (formData) => api2.put('/users/account/', formData); // Send FormData
 export const getPublicProfile = (profileId) => api2.get(`/users/profiles/${profileId}/`);
+
+//By Nada
+export const  listAllProfiles = async() => {
+  try{
+    const response = await api.get("users/profiles/");
+    console.log("All Profiles:", response.data); // Debugging
+    return response.data;
+  }
+  catch(error){
+    console.error("Couldn't fetch all profiles",error);
+    throw error;
+  }
+};
+
 
 export const searchProfiles = async (query) => {
   try {
