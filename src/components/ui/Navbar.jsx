@@ -8,6 +8,7 @@ import {
   Menu,
   ChartBarDecreasing,
   Search, // Import Search icon (optional, if you add a button)
+  Users,
 } from "lucide-react";
 import NotificationsDropdown from "../../pages/NotificationsDropdown";
 import logo from "../../assets/images/logo.png";
@@ -42,6 +43,7 @@ export default function Navbar({ isDarkMode, toggleTheme }) {
 
   const navItems = [
     { path: "/Home", label: "Dashboard", Icon: Home },
+    { path: "/users", label: "Groups", Icon: Users }, //Show page of users
     {
       path: "/chat",
       label: "Chat",

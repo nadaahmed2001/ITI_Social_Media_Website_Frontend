@@ -37,6 +37,7 @@ import UserPostsPage from "../pages/UserPostsPage";
 import { ChatNotificationProvider } from "../contexts/ChatNotificationContext";
 import ProjectPage from '../pages/ProjectPage'; // Import the new page
 import ProjectFeedPage from '../pages/ProjectFeedPage'; // Import
+import UsersList from "../pages/UsersList";//New
 
 
 
@@ -149,6 +150,16 @@ const AppContent = () => {
             element={
               <PrivateRoute>
                 <PostDetail />
+              </PrivateRoute>
+            }
+          />
+
+          {/* Route to show all users */}
+          <Route
+            path="/users"
+            element={
+              <PrivateRoute>
+                <UsersList/>
               </PrivateRoute>
             }
           />
