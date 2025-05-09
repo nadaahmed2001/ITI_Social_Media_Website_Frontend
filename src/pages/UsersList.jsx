@@ -33,8 +33,13 @@ export default function UsersList() {
                     fetchPrograms()
                 ]);
                 
-                setUsers(profilesData);
-                setFilteredUsers(profilesData);
+                // Filter out users who are neither students nor supervisors
+                const validUsers = profilesData.filter(user => 
+                    user.is_student || user.is_supervisor
+                );
+                console.log(validUsers);
+                setUsers(validUsers);
+                setFilteredUsers(validUsers);
                 setPrograms(programsData);
                 setLoading(false);
             } catch (err) {
@@ -193,10 +198,11 @@ export default function UsersList() {
             {/* Users Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredUsers.map((user) => (
-                    <div key={user.id} 
-                    className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-                    onClick={() => navigate(`/profiles/${user.id}`)}
-                >
+                    <div 
+                        key={user.id} 
+                        className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                        onClick={() => navigate(`/profiles/${user.id}`)}
+                    >
                         <div className="p-6">
                             <div className="flex items-center space-x-4 mb-4">
                                 <img 
@@ -223,12 +229,12 @@ export default function UsersList() {
                                         <Briefcase size={16} />
                                         <span className="text-sm font-medium">Supervisor</span>
                                     </div>
-                                ) : (
+                                ) : user.is_student ? (
                                     <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1 rounded-full w-fit">
                                         <GraduationCap size={16} />
                                         <span className="text-sm font-medium">Student</span>
                                     </div>
-                                )}
+                                ) : null}
                             </div>
 
                             {user.is_supervisor && user.department && (
