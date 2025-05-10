@@ -18,7 +18,7 @@ export default function HomePage() {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50 text-gray-900">
-      <div className="flex flex-col md:flex-row min-h-[calc(100vh-64px)] pt-28 w-[90%] mx-auto gap-6">
+      <div className="flex flex-col md:flex-row min-h-[calc(100vh-64px)] pt-18 w-[90%] mx-auto gap-6">
         <Sidebar className="md:w-64 w-full" />
 
         <div className="flex-1">

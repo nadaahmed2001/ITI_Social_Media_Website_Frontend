@@ -8,32 +8,30 @@ import Aichat from "./Aichat";
 import { TextField, Button, Typography } from "@mui/material";
 import Chatwellcommsg from "./Chatwellcommsg";
 import { useLocation } from "react-router-dom";
-// import axios from "axios";
 import { useChatNotification } from "../../contexts/ChatNotificationContext";
 import dayjs from "dayjs";
 
-// const token = localStorage.getItem("access_token");
 
-// const axiosInstance = axios.create({
-//   headers: {
-//     Authorization: token ? `Bearer ${token}` : "",
-//   },
-// });
 
 const ChatSidebarHome = () => {
   const [groupChats, setGroupChats] = useState([]);
   const [privateChats, setPrivateChats] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+
   const navigate = useNavigate();
   const { unreadChatNotifications, markChatNotificationsAsRead } = useChatNotification();
 
-  // const [unreadChatNotifications, setUnreadChatNotifications] = useState([]);
+  const filteredPrivateChats = privateChats.filter((chat) =>
+  chat.username.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
-  // const handleAIChatClick = () => {
-  //     setShowAIChat(true);
-  //     navigate('/aiChat'); // Update URL
-  // };
+const filteredGroupChats = groupChats.filter((chat) =>
+  chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+
 
   const defaultGroupAvatar = "../../src/assets/images/group-chat-avatar.webp";
   const DEFAULT_USER_AVATAR = "../../src/assets/images/user-default.webp";
@@ -63,24 +61,7 @@ const ChatSidebarHome = () => {
     ).length;
   };
 
-  //   useEffect(() => {
-  //     const fetchUnreadNotifications = async () => {
-  //       try {
-  //         const response = await axiosInstance.get('http://127.0.0.1:8000/api/notifications/chat/unread/');
-  //         setUnreadChatNotifications(response.data);
-  //       } catch (error) {
-  //         console.error("Error fetching unread chat notifications:", error);
-  //       }
-  //     };
-
-  //     fetchUnreadNotifications();
-  //     const intervalId = setInterval(() => {
-  //         fetchUnreadNotifications();
-  //     }, 1500);
-
-  //     return () => clearInterval(intervalId);
-  //   }, []);
-
+  
   useEffect(() => {
     const fetchChatData = async () => {
       try {
@@ -123,31 +104,7 @@ const ChatSidebarHome = () => {
       {label}
     </Button>
   );
-  // ----------------------------------------to mark as read for chat notification------------------------------------------------------------
 
-  // const markChatNotificationsAsRead = async (chatId, type = "chat") => {
-  //     const path = type === "chat" ? `/messagesList/private/${chatId}` : `/messagesList/group/${chatId}`;
-
-  //     const relatedNotifications = unreadChatNotifications.filter(
-  //         (n) => n.notification_type === type && n.notification_link.includes(path)
-  //     );
-
-  //     try {
-  //         await Promise.all(
-  //         relatedNotifications.map((n) =>
-  //             axiosInstance.patch(`http://127.0.0.1:8000/api/notifications/${n.id}/mark-as-read/`)
-  //         )
-  //         );
-
-  //         setUnreadChatNotifications((prevNotifications) =>
-  //         prevNotifications.filter(
-  //             (n) => !relatedNotifications.some((r) => String(r.id) === String(n.id))
-  //         )
-  //     );
-  //     } catch (error) {
-  //         console.error("Error marking notifications as read:", error);
-  //         }
-  //     };
 
   return (
     <div className="flex flex-col">
@@ -189,160 +146,122 @@ const ChatSidebarHome = () => {
           </svg>
         )}
       </button>
-      {/* Sidebar Content - Added higher z-index */}
-           {/* <div
-        className={`w-78 text-[#7a2226] h-fit p-4 fixed md:relative transform  rounded-lg 
-    ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
-            md:translate-x-0 transition-transform duration-300 border-2 border-[#7a2226]/20 
-            bg-white/90 backdrop-blur-lg overflow-hidden shadow-xl`}
-      > */}
-
 <div
-  className={`w-78 text-[#7a2226] h-screen p-4 fixed md:relative transform rounded-lg 
+  className={`w-80 text-[#7a2226] max-h-[75vh] p-4 fixed md:relative transform rounded-lg 
     ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
     md:translate-x-0 transition-transform duration-300 border-2 border-[#7a2226]/20 
-    bg-white/90 backdrop-blur-lg overflow-y-auto shadow-xl`}
+    bg-white/90 backdrop-blur-lg shadow-xl`}
 >
-        {/* Header */}
-        <Typography
-          variant="h6"
-          className="!font-bold !mb-4 !text-[#7a2226] !text-xl"
+  {/* Sticky Header + Controls */}
+  <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-lg">
+    <Typography
+      variant="h6"
+      className="!font-bold !mb-4 !text-[#7a2226] !text-xl"
+    >
+      Messages
+    </Typography>
+
+    <TextField
+      fullWidth
+      placeholder="Search Messages"
+      variant="outlined"
+      size="small"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      sx={{
+        "& .MuiInputBase-root": {
+          color: "#7a2226",
+          borderRadius: "12px",
+          border: "1px solid #7a2226/20",
+          background: "rgba(122, 34, 38, 0.05)",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            borderColor: "#7a2226/40",
+          },
+          "&.Mui-focused": {
+            borderColor: "#7a2226",
+            boxShadow: "0 0 0 2px rgba(122, 34, 38, 0.2)",
+          },
+        },
+        marginBottom: "1.5rem",
+      }}
+    />
+
+
+    <div className="flex gap-2 mb-6">
+      <FilterButton label="All" value="all" />
+      <FilterButton label="Private" value="private" />
+      <FilterButton label="Groups" value="groups" />
+    </div>
+
+    <Button
+      fullWidth
+      variant="contained"
+      sx={{
+        background: "linear-gradient(135deg, #7a2226 0%, #a53d3d 100%)",
+        backgroundSize: "200% 200%",
+        color: "white",
+        borderRadius: "12px",
+        py: 1.5,
+        fontSize: "1rem",
+        fontWeight: 600,
+        textTransform: "none",
+        transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        position: "relative",
+        overflow: "hidden",
+        transform: "translateZ(0)",
+        "&:hover": {
+          transform: "translateY(-2px) scale(1.02)",
+          boxShadow: "0 8px 25px rgba(122, 34, 38, 0.3)",
+          backgroundPosition: "100% 50%",
+          "&::before": {
+            transform: "translateX(100%)",
+          },
+        },
+        "&:active": {
+          transform: "translateY(1px) scale(0.98)",
+          transition: "all 0.1s ease-out",
+        },
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background:
+            "linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 50%, transparent 75%)",
+          transform: "translateX(-100%)",
+          transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+        },
+      }}
+      onClick={() => navigate("/chat/aiChat")}
+      startIcon={
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5 text-white"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
         >
-          Messages
-        </Typography>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          />
+        </svg>
+      }
+    >
+      AI Chat
+    </Button>
+  </div>
 
-        {/* Search Bar */}
-        <TextField
-          fullWidth
-          placeholder="Search Messages"
-          variant="outlined"
-          size="small"
-          sx={{
-            "& .MuiInputBase-root": {
-              color: "#7a2226",
-              borderRadius: "12px",
-              border: "1px solid #7a2226/20",
-              background: "rgba(122, 34, 38, 0.05)",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                borderColor: "#7a2226/40",
-              },
-              "&.Mui-focused": {
-                borderColor: "#7a2226",
-                boxShadow: "0 0 0 2px rgba(122, 34, 38, 0.2)",
-              },
-            },
-            marginBottom: "1.5rem",
-          }}
-        />
-
-        {/* Filter Buttons */}
-        <div className="flex gap-2 mb-6">
-          <FilterButton label="All" value="all" />
-          <FilterButton label="Private" value="private" />
-          <FilterButton label="Groups" value="groups" />
-        </div>
-        <Button
-          fullWidth
-          variant="contained"
-          sx={{
-            background: "linear-gradient(135deg, #7a2226 0%, #a53d3d 100%)",
-            backgroundSize: "200% 200%",
-            color: "white",
-            borderRadius: "12px",
-            py: 1.5,
-            fontSize: "1rem",
-            fontWeight: 600,
-            textTransform: "none",
-            transition: "all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-            position: "relative",
-            overflow: "hidden",
-            transform: "translateZ(0)",
-            "&:hover": {
-              transform: "translateY(-2px) scale(1.02)",
-              boxShadow: "0 8px 25px rgba(122, 34, 38, 0.3)",
-              backgroundPosition: "100% 50%",
-              "&::before": {
-                transform: "translateX(100%)",
-              },
-            },
-            "&:active": {
-              transform: "translateY(1px) scale(0.98)",
-              transition: "all 0.1s ease-out",
-            },
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              background:
-                "linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 50%, transparent 75%)",
-              transform: "translateX(-100%)",
-              transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
-            },
-          }}
-          onClick={() => navigate("/chat/aiChat")} // Use onClick instead of Link
-          startIcon={
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-          }
-        >
-          AI Chat
-        </Button>
-        {/* Chat List */}
-        {/* <div className="space-y-4 overflow-y-auto h-[calc(100vh-220px)] pr-2"> */}
-        <div className="space-y-4 overflow-y-auto h-100vh pr-2 mt-4">
-          {/* Private Chats
-                    {(activeFilter === 'all' || activeFilter === 'private') && privateChats.map(chat => (
-                        <div key={chat.id} className="flex justify-between items-center p-2 
-                            hover:bg-gray-300 rounded cursor-pointer"
-                            onClick={() => navigate(`/messagesList/private/${chat.id}`)}>
-                            <div>
-                            <Typography className=" !text-[#7a2226] !font-medium">
-                                <img
-                                    src={ chat.authorAvatar || DEFAULT_USER_AVATAR }
-                                    alt="Avatar" // Use chat name or "Group Avatar" for better alt text
-                                    // Apply Tailwind classes here instead of 'user-avatar'
-                                    className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
-                                    onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
-                                />
-                                {chat.username}
-                                </Typography>
-                                <Typography variant="caption" className=" !text-[#585858]">
-                                    {chat.lastMessage || "No messages yet"}
-                                </Typography>
-                            </div>
-                            <Typography variant="caption" className=" !text-[#585858] ">
-                                {chat.lastActive || "4:43 PM"}
-                            </Typography>
-                            <div className="text-white text-sm">
-                                {getUnreadCountForChat(chat.id) > 0 && (
-                                    <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
-                                        {getUnreadCountForChat(chat.id)}
-                                    </span>
-                                )}
-                            </div>
-                            <hr></hr>
-                        </div>
-                    ))} */}
-
+  {/* Scrollable Chat List */}
+  <div className="space-y-4 overflow-y-auto mt-4 pr-2" style={{ maxHeight: '65%' }}>
           {/* Private Chats */}
           {(activeFilter === "all" || activeFilter === "private") &&
-            privateChats.map((chat) => (
+            filteredPrivateChats.map((chat) => (
               <div
                 key={chat.id}
                 className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
@@ -388,41 +307,10 @@ const ChatSidebarHome = () => {
               </div>
             ))}
 
-          {/* Group Chats
-                    {(activeFilter === 'all' || activeFilter === 'groups') && groupChats.map(chat => (
-                        <div key={chat.id} className="flex justify-between items-center p-2 
-                            hover:bg-gray-300 rounded cursor-pointer"
-                            onClick={() => navigate(`/messagesList/group/${chat.id}`)}>
-                            <div>
-                                <Typography className="!font-medium flex items-center"> 
-                                    <img
-                                        src={ chat.authorAvatar || defaultGroupAvatar }
-                                        alt="Avatar"
-                                        className="w-8 h-8 rounded-full object-cover mr-2 flex-shrink-0 border border-gray-600 bg-white" // Example style
-                                        onError={(e) => { if (e.target.src !== defaultGroupAvatar) e.target.src = defaultGroupAvatar; }}
-                                    />
-                                    {chat.name}
-                                </Typography>
-                                <Typography  className=" !text-[#585858]" variant="caption">
-                                    {chat.lastMessage || "No messages yet"}
-                                </Typography>
-                            </div>
-                            <Typography  className=" !text-[#585858]" variant="caption" >
-                                {chat.lastActive || "9:10 AM"}
-                            </Typography>
-                            <div className="text-white text-sm">
-                                {getUnreadCountForGroup(chat.id) > 0 && (
-                                    <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
-                                        {getUnreadCountForGroup(chat.id)}
-                                    </span>
-                                )}
-                            </div>
-                            <hr></hr>
-                        </div>
-                    ))} */}
+          
           {/* Group Chats */}
           {(activeFilter === "all" || activeFilter === "groups") &&
-            groupChats.map((chat) => (
+            filteredGroupChats.map((chat) => (
               <div
                 key={chat.id}
                 className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
