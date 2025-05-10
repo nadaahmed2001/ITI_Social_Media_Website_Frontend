@@ -76,7 +76,7 @@ const filteredGroupChats = groupChats.filter((chat) =>
   //     const fetchUnreadNotifications = async () => {
   //       try {
   //         const response = await axiosInstance.get(
-  //           "http://127.0.0.1:8000/api/notifications/chat/unread/"
+  //           "http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/chat/unread/"
   //         );
   //         setUnreadChatNotifications(response.data);
   //       } catch (error) {
@@ -150,7 +150,7 @@ const filteredGroupChats = groupChats.filter((chat) =>
   //     await Promise.all(
   //       relatedNotifications.map((n) =>
   //         axiosInstance.patch(
-  //           `http://127.0.0.1:8000/api/notifications/${n.id}/mark-as-read/`
+  //           `http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/${n.id}/mark-as-read/`
   //         )
   //       )
   //     );

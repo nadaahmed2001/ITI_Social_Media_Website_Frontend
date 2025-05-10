@@ -17,7 +17,7 @@
 //   // Fetch notifications when component mounts
 //   useEffect(() => {
 //     axiosInstance
-//       .get("http://127.0.0.1:8000/api/notifications/")
+//       .get("http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/")
 //       .then((res) => {
 //         console.log("API Response:", res); // Debugging log
 //         if (res && res.data && Array.isArray(res.data)) {
@@ -39,7 +39,7 @@
 //   // Handle marking a notification as read
 //   const handleMarkAsRead = (id) => {
 //     axiosInstance
-//       .patch(`http://127.0.0.1:8000/api/notifications/${id}/mark-as-read/`)
+//       .patch(`http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/${id}/mark-as-read/`)
 //       .then((res) => {
 //         console.log("Notification marked as read:", res);
 //         setNotifications((prevNotifications) =>
@@ -59,11 +59,11 @@
 //   // Handle marking all notifications as read
 //   const handleMarkAllAsRead = () => {
 //     axiosInstance
-//       .patch("http://127.0.0.1:8000/api/notifications/mark-all-as-read/")
+//       .patch("http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/mark-all-as-read/")
 //       .then((res) => {
 //         console.log("All notifications marked as read:", res);
 //         axiosInstance
-//           .get("http://127.0.0.1:8000/api/notifications/")
+//           .get("http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/")
 //           .then((res) => {
 //             if (res && res.data && Array.isArray(res.data)) {
 //               setNotifications(res.data);

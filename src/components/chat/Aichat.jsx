@@ -22,7 +22,7 @@ export default function Aichat() {
             const token = localStorage.getItem("access_token");
             
             const response = await api.get(
-                "http://127.0.0.1:8000/api/chat/chatbot/messages/",
+                "http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/chat/chatbot/messages/",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -80,7 +80,7 @@ export default function Aichat() {
             const token = localStorage.getItem("access_token"); 
 
             const response = await api.post(
-                "http://127.0.0.1:8000/api/chat/chatbot/",
+                "http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/chat/chatbot/",
                 { message: userMessage },
                 {
                     headers: {
