@@ -28,10 +28,21 @@ const ChatSidebar = () => {
   const navigate = useNavigate();
   const { unreadChatNotifications,markChatNotificationsAsRead  } = useChatNotification();
 
+    const [searchTerm, setSearchTerm] = useState("");
+  
+
   // const handleAIChatClick = () => {
   //     setShowAIChat(true);
   //     navigate('/aiChat'); // Update URL
   // };
+
+   const filteredPrivateChats = privateChats.filter((chat) =>
+  chat.username.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+const filteredGroupChats = groupChats.filter((chat) =>
+  chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   const defaultGroupAvatar = "../../src/assets/images/group-chat-avatar.webp";
   const DEFAULT_USER_AVATAR = "../../src/assets/images/user-default.webp";
@@ -219,28 +230,30 @@ const ChatSidebar = () => {
 
           {/* Search Bar */}
           <TextField
-            fullWidth
-            placeholder="Search Messages"
-            variant="outlined"
-            size="small"
-            sx={{
-              "& .MuiInputBase-root": {
-                color: "#7a2226",
-                borderRadius: "12px",
-                border: "1px solid #7a2226/20",
-                background: "rgba(122, 34, 38, 0.05)",
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  borderColor: "#7a2226/40",
-                },
-                "&.Mui-focused": {
-                  borderColor: "#7a2226",
-                  boxShadow: "0 0 0 2px rgba(122, 34, 38, 0.2)",
-                },
-              },
-              marginBottom: "1.5rem",
-            }}
-          />
+                fullWidth
+                placeholder="Search Messages"
+                variant="outlined"
+                size="small"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{
+                  "& .MuiInputBase-root": {
+                    color: "#7a2226",
+                    borderRadius: "12px",
+                    border: "1px solid #7a2226/20",
+                    background: "rgba(122, 34, 38, 0.05)",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      borderColor: "#7a2226/40",
+                    },
+                    "&.Mui-focused": {
+                      borderColor: "#7a2226",
+                      boxShadow: "0 0 0 2px rgba(122, 34, 38, 0.2)",
+                    },
+                  },
+                  marginBottom: "1.5rem",
+                }}
+              />
 
           {/* Filter Buttons */}
           <div className="flex gap-2 mb-6">
@@ -314,7 +327,7 @@ const ChatSidebar = () => {
           <div className="space-y-4 overflow-y-auto h-100vh pr-2 mt-4">
             {/* Private Chats */}
             {(activeFilter === "all" || activeFilter === "private") &&
-              privateChats.map((chat) => (
+              filteredPrivateChats.map((chat) => (
                 <div
                   key={chat.id}
                   className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
@@ -362,7 +375,7 @@ const ChatSidebar = () => {
 
             {/* Group Chats */}
             {(activeFilter === "all" || activeFilter === "groups") &&
-              groupChats.map((chat) => (
+              filteredGroupChats.map((chat) => (
                 <div
                   key={chat.id}
                   className="flex justify-between items-center p-2 hover:bg-gray-300 rounded cursor-pointer"
