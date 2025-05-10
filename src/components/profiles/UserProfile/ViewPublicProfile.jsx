@@ -461,7 +461,7 @@ const ViewPublicProfile = ({ profileId }) => {
           )}
           {profileData.supervised_tracks?.length > 0 && (
             <div className="supervised-tracks-box !bg-white">
-              <h4 className="!text-gray-900 font-bold">Supervising Tracks</h4>
+              <h4 className="!text-[#7A2226] !font-bold">Supervising Tracks</h4>
               <ul className="supervised-tracks-list !text-gray-900 font-bold">
                 {profileData.supervised_tracks.map((track, idx) => (
                   <li key={idx}>{track}</li>

@@ -4,7 +4,6 @@ display: flex;
 background-color: #F9FBFC !important;
 color: white;
 min-height: 100vh; /* Ensure it takes full viewport height */
-padding: 20px; /* Add some padding around the page */
 gap: 20px; /* Space between sidebar and content */
 }
 

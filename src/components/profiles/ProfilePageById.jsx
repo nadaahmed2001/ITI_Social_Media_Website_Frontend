@@ -628,6 +628,29 @@ function ProfilePageById() {
           </Box>
         </Box>
 
+        {profileData.is_supervisor && (
+        <div className="profile-section supervisor-info-section !bg-white">
+          <h3 className="!font-bold">Supervisor Role</h3>
+          {profileData.department && (
+            <div className="supervisor-department !bg-white">
+              <span className="badge !bg-white !text-gray-900">
+                Department: {profileData.department}
+              </span>
+            </div>
+          )}
+          {profileData.supervised_tracks?.length > 0 && (
+            <div className="supervised-tracks-box !bg-white">
+              <h4 className="!text-[#7A2226] !font-bold">Supervising Tracks</h4>
+              <ul className="supervised-tracks-list !text-gray-900 font-bold">
+                {profileData.supervised_tracks.map((track, idx) => (
+                  <li key={idx}>{track}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
         {/* --- Bio --- */}
         {profileData.bio && (
           <div className="profile-section bio-section">
