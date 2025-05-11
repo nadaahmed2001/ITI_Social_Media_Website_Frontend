@@ -17,7 +17,7 @@ export const ChatNotificationProvider = ({ children }) => {
   //   try {
   //     if (token) {
   //       const res = await axiosInstance.get(
-  //         "${import.meta.env.VITE_API_BASE_URL}notifications/chat/unread/"
+  //         "http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/chat/unread/"
   //       );
   //       if (res.data) {
   //         setUnreadChatNotifications(res.data);
@@ -30,7 +30,7 @@ export const ChatNotificationProvider = ({ children }) => {
   const fetchUnreadNotifications = async () => {
     try {
       if (token) {
-        const res = await axiosInstance.get(`${import.meta.env.VITE_API_BASE_URL}notifications/`);
+        const res = await axiosInstance.get("http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/");
         if (res.data) {
           const chatNotifications = res.data.filter(
             (n) => n.notification_type === "chat" || n.notification_type === "group_chat"
@@ -69,7 +69,7 @@ export const ChatNotificationProvider = ({ children }) => {
       await Promise.all(
         relatedNotifications.map((n) =>
           axiosInstance.patch(
-            `${import.meta.env.VITE_API_BASE_URL}notifications/${n.id}/mark-as-read/`
+            `http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/${n.id}/mark-as-read/`
           )
         )
       );

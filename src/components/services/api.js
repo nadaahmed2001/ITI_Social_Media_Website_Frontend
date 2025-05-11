@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // Axios instance with base URL
-const API_BASE_URL= `${import.meta.env.VITE_API_BASE_URL}`;
+const API_BASE_URL= "http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/";
 
 
 const api = axios.create({
@@ -15,7 +15,7 @@ const api = axios.create({
 
 
 const api2 = axios.create({
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}`,
+  baseURL: "http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -763,7 +763,7 @@ export const deleteProjectReview = async (projectPk, reviewId) => {
 // export const verifyOtp = (data) => { return api2.post('/users/verify-otp/', data);};
 
 export const verifyOtp = (data) => {
-  return axios.post(`${import.meta.env.VITE_API_BASE_URL}users/verify-otp/`, data, {
+  return axios.post('http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/users/verify-otp/', data, {
     headers: {
       'Content-Type': 'application/json',
     },
