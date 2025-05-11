@@ -38,7 +38,7 @@ const SignUpForm = () => {
       setErrorMessage("");
 
       try {
-        const response = await fetch("http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/users/register/", {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}users/register/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),

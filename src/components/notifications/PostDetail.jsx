@@ -201,7 +201,7 @@ function SampleNextArrow(props) {
   
     // Fetch post
     axios
-      .get(`http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/posts/${postId}/`, {
+      .get(`${import.meta.env.VITE_API_BASE_URL}posts/${postId}/`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
         },
@@ -218,7 +218,7 @@ function SampleNextArrow(props) {
   
     // Fetch comments separately
     axios
-      .get(`http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/posts/${postId}/comments/`, {
+      .get(`${import.meta.env.VITE_API_BASE_URL}posts/${postId}/comments/`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
         },
