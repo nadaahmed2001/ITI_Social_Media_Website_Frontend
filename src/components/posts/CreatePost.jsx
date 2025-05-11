@@ -4,7 +4,7 @@ import { ImageSharp as ImageSharpIcon, Close as CloseIcon } from '@mui/icons-mat
 import AuthContext from '../../contexts/AuthContext'; 
 import {Link} from "react-router-dom"
 
-const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
+const DEFAULT_USER_AVATAR = '../../../src/assets/images/user-default.webp';
 const CLOUDINARY_CLOUD_NAME = "dsaznefnt";
 const CLOUDINARY_UPLOAD_PRESET = "ITIHub_profile_pics";
 const MAX_POST_LENGTH = 3000;
