@@ -95,7 +95,7 @@ const PostDetail = (postData) => {
 
   const [isPostSaved, setIsPostSaved] = useState(postData?.is_saved || false); // <-- STATE FOR SAVED STATUS
   const [isSavingToggleLoading, setIsSavingToggleLoading] = useState(false); // <-- Loading state for save action
-  
+  const commentInputRef = useRef(null);
 
   useEffect(() => {
     setIsPostSaved(postData?.is_saved || false);
@@ -942,7 +942,7 @@ const handleAddReaction = async (reactionType) => {
       {/* End Like Button + Popover Wrapper */}
 
       {/* Placeholder Comment Button */}
-      <button className="!bg-[#7a2226] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
+      <button onClick={() => commentInputRef.current?.focus()} className="!bg-[#7a2226] mx-2 flex-1 flex justify-center items-center gap-1.5 py-2 rounded text-sm font-medium text-gray-400 hover:bg-gray-700 hover:text-gray-100 transition-all ease-in-out duration-700 hover:scale-105"> 
           <CommentIcon className="!bg-[#7a2226] w-5 h-5"/> Comment 
       </button>
 
@@ -1060,6 +1060,7 @@ const handleAddReaction = async (reactionType) => {
               {/* --- Input Wrapper with Relative Positioning --- */}
               <div className="relative w-full "> 
                 <input
+                  ref={commentInputRef}
                   type="text"
                   placeholder="Write your comment..."
                   value={commentText}

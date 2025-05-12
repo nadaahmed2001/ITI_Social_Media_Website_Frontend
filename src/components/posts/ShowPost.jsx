@@ -10,6 +10,7 @@ import EditComment from "./EditComment"; // Ensure path is correct
 import DeleteComment from "./Deletecomment"; // Ensure path is correct
 import ReactionsModal from "./ReactionsModal"; // Ensure path is correct
 // import ReactionsCommentModal from "./ReactionsCommentModal"; // Rendered inside CommentItem
+import Snackbar from '@mui/material/Snackbar';
 
 // API Functions
 import {
@@ -154,7 +155,8 @@ export default function ShowPost({ postData, onDeletePost }) {
   const [isPostSaved, setIsPostSaved] = useState(postData?.is_saved || false);
   const [isSavingToggleLoading, setIsSavingToggleLoading] = useState(false);
   const [error, setError] = useState(null); // General error state
-
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const commentInputRef = useRef(null); 
   // Refs
   const widgetRef = useRef(null);
   const hidePopoverTimer = useRef(null);
@@ -594,6 +596,14 @@ const handleRemoveReaction = async () => {
       return <div className="text-center p-10 text-gray-500">Post data not available.</div>;
   }
 
+  const handleShare = () => {
+    const postUrl = `${window.location.origin}/dashboard/posts/${post.id}`;
+    navigator.clipboard.writeText(postUrl)
+      .then(() => setOpenSnackbar(true))
+      .catch((err) => console.error("Failed to copy:", err));
+  };
+  
+  
   return (
 
     <div key={post.id} className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-6 mb-6 border border-gray-200/80 transition-all duration-300 hover:shadow-xl"> {/* Adjusted styles */}
@@ -761,14 +771,21 @@ const handleRemoveReaction = async () => {
               )}
           </div>
           {/* Comment Button */}
-          <button className="mx-1 flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-md text-sm font-medium text-gray-600 hover:bg-[#7a2226]/10 hover:text-[#7a2226] transition-colors duration-200">
+          <button  onClick={() => commentInputRef.current?.focus()}  className="mx-1 flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-md text-sm font-medium text-gray-600 hover:bg-[#7a2226]/10 hover:text-[#7a2226] transition-colors duration-200">
               <CommentIcon style={{ fontSize: '20px' }}/> Comment
           </button>
           {/* Share Button */}
-          <button className="mx-1 flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-md text-sm font-medium text-gray-600 hover:bg-[#7a2226]/10 hover:text-[#7a2226] transition-colors duration-200">
+          <button onClick={handleShare} className="mx-1 flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-md text-sm font-medium text-gray-600 hover:bg-[#7a2226]/10 hover:text-[#7a2226] transition-colors duration-200">
               <ShareIcon style={{ fontSize: '20px' }}/> Share
           </button>
-      </div>
+          <Snackbar
+          open={openSnackbar}
+          autoHideDuration={2000}
+          onClose={() => setOpenSnackbar(false)}
+          message="✅ Post link copied!"
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        />
+          </div>
 
       {/* Comments Section */}
       <div className="mt-4">
@@ -812,7 +829,7 @@ const handleRemoveReaction = async () => {
           <div className="flex-grow">
               {/* Input Wrapper */}
               <div className="relative w-full">
-                  <input type="text" placeholder="Write your comment..." value={commentText} onChange={(e) => setCommentText(e.target.value)}
+                  <input ref={commentInputRef} type="text" placeholder="Write your comment..." value={commentText} onChange={(e) => setCommentText(e.target.value)}
                       className={`placeholder:text-gray-400 text-black w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#7a2226] focus:border-[#7a2226] resize-none bg-white text-sm transition-colors ${isCommentInputOverLimit ? 'border-red-500 ring-red-500' : ''}`}
                       aria-describedby="comment-char-count" />
                   {/* Attachment Button */}
