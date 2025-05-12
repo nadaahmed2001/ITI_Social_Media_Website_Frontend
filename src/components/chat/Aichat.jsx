@@ -105,10 +105,10 @@ export default function Aichat() {
 
     return (
         <div className="flex h-screen">
-            <div className="text-white mt-15">
+            <div className="text-white">
                 <ChatSidebar />
             </div>
-            <div className="flex-1 flex flex-col relative background-div mt-18">
+            <div className="flex-1 flex flex-col relative background-div">
                 {/* <h2 className="text-xl font-bold mb-4 text-center">AI Chat</h2> */}
                
                 <div className="flex-1 overflow-y-auto p-4 pb-16 background-div">
@@ -141,7 +141,7 @@ export default function Aichat() {
                         ))
                     )}
                 </div>
-                <form onSubmit={handleSendMessage}  className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm ">
+                <form onSubmit={handleSendMessage}  className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm sticky bottom-0 z-10 ">
                     <input
                         type="text"
                         value={newMessage}
