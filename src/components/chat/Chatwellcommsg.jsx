@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function Chatwellcommsg() {
   return (
-    <div className="h-full w-full flex items-center justify-center relative overflow-hidden mt-20">
+    <div className="w-full flex items-center justify-center relative overflow-hidden">
       {/* Starburst background effect */}
       <motion.div
         initial={{ opacity: 0, rotate: 0, scale: 0 }}

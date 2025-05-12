@@ -311,7 +311,7 @@ const MessagesList = ({token, isGroupChat }) => {
             <div className=" text-white ">
                 <ChatSidebar/>
             </div>
-            <div className="flex-1 flex flex-col relative background-div mt-18">
+            <div className="flex-1 flex flex-col relative background-div">
                 {/* Connection status removed */}
                 
                 {/* Clear Messages Button */}
@@ -376,7 +376,7 @@ const MessagesList = ({token, isGroupChat }) => {
                     <div ref={messagesEndRef} /> 
                 </div>
                 <form onSubmit={handleSendMessage} 
-                className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm sticky bottom-0 z-10">
+                className="p-4 border-t flex items-center justify-center gap-2 backdrop-blur-sm sticky bottom-0 z-10 ">
                     <input
                         type="text"
                         value={newMessage}
