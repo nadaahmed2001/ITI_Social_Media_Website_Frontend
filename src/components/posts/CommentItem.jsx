@@ -22,7 +22,7 @@ import {
     ImageSharp as ImageSharpIcon, // Keep for attachment icon
 } from "@mui/icons-material";
 
-const DEFAULT_USER_AVATAR = '../../assets/images/user-default.webp';
+const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
 
 // Define reactions array consistently (can be moved to a shared constants file)
 const AVAILABLE_REACTIONS = [
