@@ -15,7 +15,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import './EditPhoto.css';
 
 // Define default avatar path (ADJUST THIS PATH)
-const DEFAULT_PROFILE_PIC = '../../../../src/assets/images/user-default.webp'; // Adjust path to your default image
+const DEFAULT_PROFILE_PIC = '../../../assets/images/user-default.webp'; // Adjust this path to your default image location
 
 // --- CLOUDINARY CONFIG (Use Environment Variables!) ---
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dsaznefnt"; // Replace with yours

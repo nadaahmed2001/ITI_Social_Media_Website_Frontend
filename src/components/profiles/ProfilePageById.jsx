@@ -21,8 +21,8 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import "./ProfilePageById.css";
 
 // Default avatar
-const DEFAULT_USER_AVATAR = "../../../src/assets/images/user-default.webp";
-const DEFAULT_PROJECT_IMAGE = "../../../src/assets/images/user-default.webp";
+const DEFAULT_USER_AVATAR = "../../assets/images/user-default.webp";
+const DEFAULT_PROJECT_IMAGE =  "../../assets/images/user-default.webp";
 
 function ProfilePageById() {
   const { profileId } = useParams();
