@@ -14,8 +14,13 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 // Import the CSS file (ensure path is correct)
 import './EditPhoto.css';
 
-// Define default avatar path (ADJUST THIS PATH)
-const DEFAULT_PROFILE_PIC = '../../../src/assets/images/user-default.webp'; // Adjust this path to your default image location
+// Define default avatar path
+// const DEFAULT_USER_AVATAR = '../../../src/assets/images/user-default.webp'; // Adjust this path to your default image location
+import defaultPic from '@/assets/images/user-default.webp';
+const DEFAULT_USER_AVATAR = defaultPic;
+
+
+
 
 // --- CLOUDINARY CONFIG (Use Environment Variables!) ---
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dsaznefnt"; // Replace with yours
@@ -82,7 +87,7 @@ const EditPhoto = ({ currentImageUrl, onUpdateSuccess }) => {
 
   // Handles marking the image for removal
   const handleClearImage = () => {
-    if (!imageUrl || imageUrl === DEFAULT_PROFILE_PIC) return;
+    if (!imageUrl || imageUrl === DEFAULT_USER_AVATAR) return;
     if (window.confirm("Are you sure you want to remove your profile picture? Click 'Save Changes' to confirm.")) {
       setImageUrl(null); // Clear local state
       setImageChanged(true); // Mark change
@@ -138,8 +143,8 @@ const EditPhoto = ({ currentImageUrl, onUpdateSuccess }) => {
   };
 
   // Determine image source for preview
-  const imageToDisplay = imageUrl || DEFAULT_PROFILE_PIC; // Show default if imageUrl is null
-  const hasCustomImage = imageUrl && imageUrl !== DEFAULT_PROFILE_PIC;
+  const imageToDisplay = imageUrl || DEFAULT_USER_AVATAR; // Show default if imageUrl is null
+  const hasCustomImage = imageUrl && imageUrl !== DEFAULT_USER_AVATAR;
 
   return (
     // Assuming parent provides necessary margin/padding
@@ -164,7 +169,7 @@ const EditPhoto = ({ currentImageUrl, onUpdateSuccess }) => {
                     src={imageToDisplay}
                     alt="Profile Preview"
                     className="profile-image-preview-light w-full h-full object-cover" // Ensure image covers area
-                    onError={(e) => { if (e.target.src !== DEFAULT_PROFILE_PIC) e.target.src = DEFAULT_PROFILE_PIC; }}
+                    onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }}
                 />
             </div>
             {/* Remove Button */}
@@ -191,7 +196,7 @@ const EditPhoto = ({ currentImageUrl, onUpdateSuccess }) => {
                 title="Choose or upload an image"
             >
                 <span className="file-name-display-light text-sm text-gray-600 truncate pr-2">
-                     {imageChanged ? (imageUrl ? "New image selected" : "Image marked for removal") : (imageUrl && imageUrl !== DEFAULT_PROFILE_PIC ? "Current image shown" : "No image selected")}
+                     {imageChanged ? (imageUrl ? "New image selected" : "Image marked for removal") : (imageUrl && imageUrl !== DEFAULT_USER_AVATAR ? "Current image shown" : "No image selected")}
                 </span>
                 <button
                     type="button"
