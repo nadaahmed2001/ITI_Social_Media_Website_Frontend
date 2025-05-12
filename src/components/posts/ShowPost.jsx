@@ -162,6 +162,7 @@ export default function ShowPost({ postData, onDeletePost }) {
   // Refs
   const widgetRef = useRef(null);
   const hidePopoverTimer = useRef(null);
+  const commentInputRef = useRef(null); 
 
   // Context
   const { user, loading: authLoading } = useContext(AuthContext);
@@ -765,7 +766,7 @@ const handleRemoveReaction = async () => {
               )}
           </div>
           {/* Comment Button */}
-          <button className="mx-1 flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-md text-sm font-medium text-gray-600 hover:bg-[#7a2226]/10 hover:text-[#7a2226] transition-colors duration-200">
+          <button onClick={() => commentInputRef.current?.focus()} className="mx-1 flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-md text-sm font-medium text-gray-600 hover:bg-[#7a2226]/10 hover:text-[#7a2226] transition-colors duration-200">
               <CommentIcon style={{ fontSize: '20px' }}/> Comment
           </button>
           {/* Share Button */}
@@ -816,7 +817,7 @@ const handleRemoveReaction = async () => {
           <div className="flex-grow">
               {/* Input Wrapper */}
               <div className="relative w-full">
-                  <input type="text" placeholder="Write your comment..." value={commentText} onChange={(e) => setCommentText(e.target.value)}
+                  <input ref={commentInputRef} type="text" placeholder="Write your comment..." value={commentText} onChange={(e) => setCommentText(e.target.value)}
                       className={`placeholder:text-gray-400 text-black w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#7a2226] focus:border-[#7a2226] resize-none bg-white text-sm transition-colors ${isCommentInputOverLimit ? 'border-red-500 ring-red-500' : ''}`}
                       aria-describedby="comment-char-count" />
                   {/* Attachment Button */}
