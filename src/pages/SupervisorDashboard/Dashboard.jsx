@@ -55,7 +55,7 @@ const Dashboard = () => {
 
   const departmentBoxStyle = {
     marginLeft: '100px',
-    marginTop: '100px',
+    marginTop: '50px',
     padding: '16px 24px',
     background: 'linear-gradient(to right, #7a2226, #9e363a)',
     color: '#fff',
@@ -102,8 +102,17 @@ const Dashboard = () => {
             </Typography>
           ) : selectedProgram ? (
             <>
-              <Typography variant="h5" sx={{ mb: 3 }}>
-                Tracks in {selectedProgram.name}
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 'bold',
+                  color: '#333',
+                  mb: 3,
+                  textAlign: 'center',
+                  marginTop: '130px',
+                }}
+              >
+                {selectedProgram.name} Program
               </Typography>
               <TrackList program={selectedProgram} onSelectTrack={handleTrackSelect} />
             </>
