@@ -11,6 +11,8 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useChatNotification } from "../../contexts/ChatNotificationContext";
 import dayjs from "dayjs";
+import defaultPic from '@/assets/images/user-default.webp';
+import defaultGroupPic from '@/assets/images/group-chat-avatar.webp';
 
 const token = localStorage.getItem("access_token");
 
@@ -44,8 +46,12 @@ const filteredGroupChats = groupChats.filter((chat) =>
   chat.name.toLowerCase().includes(searchTerm.toLowerCase())
 );
 
-  const defaultGroupAvatar = "../../src/assets/images/group-chat-avatar.webp";
-  const DEFAULT_USER_AVATAR = "../../src/assets/images/user-default.webp";
+// const defaultGroupAvatar = "../../src/assets/images/group-chat-avatar.webp";
+const defaultGroupAvatar = defaultGroupPic;
+
+// const DEFAULT_USER_AVATAR = "../../src/assets/images/user-default.webp";
+const DEFAULT_USER_AVATAR = defaultPic;
+
 
   const location = useLocation();
 

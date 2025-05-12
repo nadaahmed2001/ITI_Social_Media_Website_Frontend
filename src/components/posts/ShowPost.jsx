@@ -37,7 +37,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 // --- Constants ---
-const DEFAULT_USER_AVATAR   = '../../src/assets/images/user-default.webp'; // Verify path
+// const DEFAULT_USER_AVATAR   = '../../src/assets/images/user-default.webp'; // Verify path
+import defaultPic from '@/assets/images/user-default.webp';
+const DEFAULT_USER_AVATAR = defaultPic;
+
+
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dsaznefnt";
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "ITIHub_profile_pics";
 const MAX_COMMENT_INPUT_LENGTH = 2000;

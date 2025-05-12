@@ -6,7 +6,10 @@ import AuthContext from '../../contexts/AuthContext'; // *** IMPORT AuthContext 
 import { motion } from 'framer-motion';
 
 // Default avatar if needed
-const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
+// const DEFAULT_USER_AVATAR = '../../src/assets/images/user-default.webp';
+import defaultPic from '@/assets/images/user-default.webp';
+const DEFAULT_USER_AVATAR = defaultPic;
+
 
 export default function Sidebar() { // Removed isDarkMode prop
 

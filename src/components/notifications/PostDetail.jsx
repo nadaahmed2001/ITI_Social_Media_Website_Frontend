@@ -54,7 +54,10 @@ import {
 
 
   
-const DEFAULT_USER_AVATAR   = '../../src/assets/images/user-default.webp'
+// const DEFAULT_USER_AVATAR   = '../../src/assets/images/user-default.webp'
+import defaultPic from '@/assets/images/user-default.webp';
+const DEFAULT_USER_AVATAR = defaultPic;
+
 const CLOUDINARY_CLOUD_NAME =  "dsaznefnt";
 const CLOUDINARY_UPLOAD_PRESET = "ITIHub_profile_pics";
 
