@@ -229,6 +229,27 @@ const MessagesList = ({token, isGroupChat }) => {
         }
     }, [messages]);
 
+    // const handleSendMessage = async (e) => {
+    //     e.preventDefault();
+    //     if (!newMessage.trim()) {
+    //         alert("The message is empty");
+    //         return;
+    //     }
+    //     setIsSending(true);
+    //     wsSendMessage(newMessage);
+    //     try {
+    //         if (isGroupChat) {
+    //             await sendGroupMessage(id, newMessage);
+    //         } else {
+    //             await sendPrivateMessage(id, newMessage);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error saving message:", error);
+    //     }
+    //     setNewMessage("");
+    //     setIsSending(false);
+    // };
+
     const handleSendMessage = async (e) => {
         e.preventDefault();
         if (!newMessage.trim()) {
@@ -236,7 +257,19 @@ const MessagesList = ({token, isGroupChat }) => {
             return;
         }
         setIsSending(true);
+
+        const tempMessage = {
+            id: Date.now(), // temporary ID
+            content: newMessage,
+            timestamp: new Date().toISOString(),
+            sender: currentUser,
+            receiver: isGroupChat ? undefined : id
+        };
+
+        setMessages((prevMessages) => [...prevMessages, tempMessage]);
+
         wsSendMessage(newMessage);
+
         try {
             if (isGroupChat) {
                 await sendGroupMessage(id, newMessage);
@@ -245,7 +278,9 @@ const MessagesList = ({token, isGroupChat }) => {
             }
         } catch (error) {
             console.error("Error saving message:", error);
+            alert("Message not saved. Please try again.");
         }
+
         setNewMessage("");
         setIsSending(false);
     };
@@ -359,15 +394,15 @@ const MessagesList = ({token, isGroupChat }) => {
                                             }
                                         }}
                                     >
-                                      <div className="font-semibold text-sm bg-transparent">
-                                        {isMine ? "Me" : message.sender}
-                                      </div>
-                                      <div className="break-words text-sm mt-1 bg-transparent">
-                                        {message.content}
-                                      </div>
-                                      <div className="text-xs text-black mt-2 text-right bg-transparent">
-                                        {new Date(message.timestamp).toLocaleString()}
-                                      </div>
+                                        <div className="font-semibold text-sm bg-transparent">
+                                            {isMine ? "Me" : message.sender}
+                                        </div>
+                                        <div className="break-words text-sm mt-1 bg-transparent">
+                                            {message.content}
+                                        </div>
+                                        <div className="text-xs text-black mt-2 text-right bg-transparent">
+                                            {new Date(message.timestamp).toLocaleString()}
+                                        </div>
                                     </div>
                                 </CSSTransition>
                             );
