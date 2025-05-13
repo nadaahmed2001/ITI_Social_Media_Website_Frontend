@@ -114,7 +114,7 @@ const DEFAULT_USER_AVATAR = defaultPic;
   return (
     <div className="flex flex-col">
       <button
-        className={`hidden md:hidden fixed z-50 p-2 bg-[#7a2226] text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110${
+        className={`hidden md:hidden z-50 p-2 bg-[#7a2226] text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110${
           isSidebarOpen ? "left-[17rem] top-4" : "left-4 top-4"
         }`}
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -152,13 +152,13 @@ const DEFAULT_USER_AVATAR = defaultPic;
         )}
       </button>
 <div
-  className={`w-80 text-[#7a2226] max-h-[75vh] p-4 fixed md:relative transform rounded-lg 
+  className={`w-80 text-[#7a2226] max-h-[75vh] p-4  md:relative transform rounded-lg 
     ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
     md:translate-x-0 transition-transform duration-300 border-2 border-[#7a2226]/20 
     bg-white/90 backdrop-blur-lg shadow-xl`}
 >
   {/* Sticky Header + Controls */}
-  <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-lg">
+  <div className=" top-0 z-10 bg-white/90 backdrop-blur-lg">
     <Typography
       variant="h6"
       className="!font-bold !mb-4 !text-[#7a2226] !text-xl"
