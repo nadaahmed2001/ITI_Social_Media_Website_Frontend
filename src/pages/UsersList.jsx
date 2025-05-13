@@ -214,7 +214,7 @@ export default function UsersList() {
                                     }}
                                 />
                                 <div>
-                                    <h2 className="text-xl font-semibold text-gray-800">
+                                    <h2 className="text-xl font-semibold !text-gray-700">
                                         {user.first_name || user.last_name 
                                             ? `${user.first_name} ${user.last_name}` 
                                             : user.username}
