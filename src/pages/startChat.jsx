@@ -9,7 +9,7 @@ export default function StartChat() {
     null;
 
     return (
-        <div className=" text-white mt-20 h-[calc(100vh-80px)]" >
+        <div className=" text-white h-[calc(100vh-80px)]" >
             <ChatSidebar token={userToken} />
         </div>
     );
