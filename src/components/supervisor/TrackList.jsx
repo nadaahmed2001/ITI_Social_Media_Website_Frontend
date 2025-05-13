@@ -31,7 +31,7 @@ const TrackList = ({ program, onSelectTrack }) => {
 
   const descriptionBoxStyle = {
     marginBottom: '40px',
-    marginTop: '130px',
+    marginTop: '20px',
     padding: '20px 30px',
     background: '#ffffff',
     borderRadius: '16px',
@@ -82,7 +82,7 @@ const TrackList = ({ program, onSelectTrack }) => {
       )}
 
       {/* Track List Title */}
-      <h3 style={titleStyle}>Tracks in "{program.name}"</h3>
+      <h3 style={titleStyle}>Tracks</h3>
 
       {/* List of Tracks */}
       <ul style={{ listStyle: 'none', padding: 0 }}>
