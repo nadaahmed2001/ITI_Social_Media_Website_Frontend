@@ -33,7 +33,7 @@ const MessagesList = ({token, isGroupChat }) => {
         // Move WS_BASE_URL inside the callback to avoid dependency issues
         const WS_BASE_URL = window.location.protocol === 'https:' 
             ? `wss://${window.location.hostname}` 
-            : `ws://${window.location.hostname}`;
+            : `ws://${window.location.hostname}:8000`;
             
         // Create appropriate WebSocket URL based on chat type
         const socketUrl = isGroupChat
