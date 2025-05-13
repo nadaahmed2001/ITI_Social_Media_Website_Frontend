@@ -395,7 +395,19 @@ export const fetchPrograms = async () => {
   }
 };
 
-// Fetch Tracks for the Selected Program
+// Fetch ALL Programs across all departments 
+export const fetchAllPrograms = async () => {
+  try {
+    const response = await api.get("supervisor/all-programs/");  // Make sure baseURL includes /api/
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch all programs:", error);
+    throw error;
+  }
+};
+
+
+// Fetch Tracks for the Selected Program (logged in supervisor)
 export const fetchTracksForProgram = async (programId) => {
   try {
     const response = await api.get("supervisor/tracks/", { params: { program_id: programId } });  // Use 'api' instance and updated URL
@@ -406,6 +418,18 @@ export const fetchTracksForProgram = async (programId) => {
     throw error;
   }
 };
+
+// Used in UsersList.jsx for open track filter (not restricted by supervisor)
+export const publicFetchTracksForProgram = async (programId) => {
+  try {
+    const response = await api.get(`supervisor/all-tracks/?program_id=${programId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch tracks for program:", error);
+    throw error;
+  }
+};
+
 
 // Fetch Batches for the Selected Track
 export const fetchBatches = async (trackId) => {

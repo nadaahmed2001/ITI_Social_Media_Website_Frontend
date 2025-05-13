@@ -50,7 +50,7 @@ function ProfilePageById() {
     console.log(`Fetching profile for ID: ${profileId}`);
     try {
       const response = await getProfileById(profileId);
-      console.log("Profile data received:", response.data);
+      console.log("----->Profile data received:", response.data);
       setProfileData(response.data);
     } catch (err) {
       setError(
@@ -628,7 +628,30 @@ function ProfilePageById() {
           </Box>
         </Box>
 
-        {profileData.is_supervisor && (
+      {/* New section for ITI status / history */}
+      {profileData.is_student && profileData.iti_history?.length > 0 && (
+        <div className="profile-section iti-history-section">
+          <h3>History/Status with ITI</h3>
+          {profileData.iti_history.map((entry, index) => (
+            <div key={index} className="iti-history-box">
+              <p>
+                <strong>Program:</strong> {entry.program}
+              </p>
+              <p>
+                <strong>Track:</strong> {entry.track || "N/A"}
+              </p>
+              <p>
+                <strong>Start Date:</strong> {entry.start_date}
+              </p>
+              <p>
+                <strong>Status:</strong> {entry.status}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {profileData.is_supervisor && (
         <div className="profile-section supervisor-info-section !bg-white">
           <h3 className="!font-bold">Supervisor Role</h3>
           {profileData.department && (
@@ -650,7 +673,6 @@ function ProfilePageById() {
           )}
         </div>
       )}
-
         {/* --- Bio --- */}
         {profileData.bio && (
           <div className="profile-section bio-section">
