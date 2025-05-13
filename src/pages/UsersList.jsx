@@ -109,8 +109,8 @@ export default function UsersList() {
     return (
         <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-                <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                    <Users size={28} className="text-red-600" /> All Users
+                <h1 className="text-3xl font-bold flex items-center gap-2">
+                    <Users size={28} className="text-red-900" /> <span  className="text-gray-800 m-3" > All Users</span>
                 </h1>
                 
                 <div className="flex items-center gap-4">
@@ -120,7 +120,7 @@ export default function UsersList() {
                     
                     <button 
                         onClick={() => setShowFilters(!showFilters)}
-                        className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition-colors"
+                        className="text-gray-800 flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition-colors"
                     >
                         <Filter size={18} />
                         {showFilters ? 'Hide Filters' : 'Show Filters'}
@@ -132,10 +132,10 @@ export default function UsersList() {
             {showFilters && (
                 <div className="bg-white p-6 rounded-xl shadow-md mb-8">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-semibold">Filter Users</h2>
+                        <h2 className="!text-gray-800 text-lg font-semibold">Filter Users</h2>
                         <button 
                             onClick={resetFilters}
-                            className="flex items-center gap-1 text-sm text-red-600 hover:text-red-800"
+                            className="flex items-center gap-1 text-sm text-red-700 hover:text-red-900"
                         >
                             <X size={16} />
                             Reset Filters
@@ -145,25 +145,25 @@ export default function UsersList() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Role Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                            <label className="block font-semibold text-sm font-medium text-gray-800 mb-1">Role</label>
                             <select
                                 value={roleFilter}
                                 onChange={(e) => setRoleFilter(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
+                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500 disabled:opacity-50 text-gray-800"
                             >
-                                <option value="all">All Roles</option>
-                                <option value="supervisor">Supervisors</option>
-                                <option value="student">Students</option>
+                                <option className="block text-sm font-medium text-gray-800" value="all">All Roles</option>
+                                <option className="block text-sm font-medium text-gray-800" value="supervisor">Supervisors</option>
+                                <option className="block text-sm font-medium text-gray-800" value="student">Students</option>
                             </select>
                         </div>
                         
                         {/* Program Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Program</label>
+                            <label className="block  font-semibold  text-sm font-medium text-gray-700 mb-1">Program</label>
                             <select
                                 value={programFilter}
                                 onChange={handleProgramChange}
-                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500"
+                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500 disabled:opacity-50 text-gray-800"
                             >
                                 <option value="all">All Programs</option>
                                 {programs.map(program => (
@@ -176,16 +176,16 @@ export default function UsersList() {
                         
                         {/* Track Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Track</label>
+                            <label className="block text-sm  font-semibold font-medium text-gray-700 mb-1">Track</label>
                             <select
                                 value={trackFilter}
                                 onChange={(e) => setTrackFilter(e.target.value)}
                                 disabled={!programFilter || programFilter === 'all'}
-                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500 disabled:opacity-50"
+                               className="w-full p-2 border border-gray-300 rounded-md focus:ring-red-500 focus:border-red-500 disabled:opacity-50 text-gray-800"
                             >
-                                <option value="all">All Tracks</option>
+                                <option value="all" className='text-gray-800'>All Tracks</option>
                                 {tracks.map(track => (
-                                    <option key={track.id} value={track.id}>
+                                    <option key={track.id} value={track.id} className='text-gray-800'>
                                         {track.name}
                                     </option>
                                 ))}
@@ -248,7 +248,7 @@ export default function UsersList() {
                                 <div className="space-y-2">
                                     <div>
                                         <p className="text-sm text-gray-500">Program</p>
-                                        <p className="font-medium">{user.iti_history[0].program_name}</p>
+                                        <p className="font-medium ">{user.iti_history[0].program_name}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-500">Track</p>
