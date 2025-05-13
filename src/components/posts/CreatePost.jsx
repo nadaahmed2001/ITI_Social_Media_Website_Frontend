@@ -24,7 +24,7 @@ export default function CreatePost({ onPostCreated }) {
 
   const { user, loading: authLoading } = useContext(AuthContext); // Destructure 'user'
   const avatarSrc = user?.profile_picture || DEFAULT_USER_AVATAR;
-  console.log("avatarSrc from CreatePost: ", avatarSrc);
+  // console.log("avatarSrc from CreatePost: ", avatarSrc);
   
   // Initialize Cloudinary widget
   useEffect(() => {
