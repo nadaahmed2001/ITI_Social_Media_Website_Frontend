@@ -812,7 +812,23 @@ const handleRemoveReaction = async () => {
       {/* Add Comment Section */}
       <div className="mt-5 flex items-start space-x-3 border-t border-gray-200/80 pt-4">
           <Link to={`/profiles/${user?.id}`} className="flex-shrink-0 block hover:opacity-90 transition-opacity group">
-              <img src={ currentUserAvatar } alt={ user?.username || "You" } title={ user?.username || "You" } className="w-10 h-10 rounded-full object-cover border border-gray-300 group-hover:border-[#7a2226]/50 transition-all shadow-sm" onError={(e) => { if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR; }} />
+            <img
+              src={currentUserAvatar}
+              alt={
+                user?.first_name && user?.last_name
+                  ? `${user.first_name} ${user.last_name}`
+                  : user?.username || "You"
+              }
+              title={
+                user?.first_name && user?.last_name
+                  ? `${user.first_name} ${user.last_name}`
+                  : user?.username || "You"
+              }
+              className="w-10 h-10 rounded-full object-cover border border-gray-300 group-hover:border-[#7a2226]/50 transition-all shadow-sm"
+              onError={(e) => {
+                if (e.target.src !== DEFAULT_USER_AVATAR) e.target.src = DEFAULT_USER_AVATAR;
+              }}
+            />
           </Link>
           <div className="flex-grow">
               {/* Input Wrapper */}
