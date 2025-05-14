@@ -226,6 +226,7 @@ function CommentItem({
                             <TimeAgo timestamp={comment.created_on} />
                         </p>
                     </div>
+                    
                 </div>
                 {/* Edit/Delete Menu */}
                 {isCommentAuthor && (

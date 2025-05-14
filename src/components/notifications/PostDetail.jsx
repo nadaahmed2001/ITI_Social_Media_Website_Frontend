@@ -15,6 +15,7 @@ import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material"; // Impor
 import TimeAgo from "../TimeAgo";
 import CustomCircularProgress from "../posts/CustomCircularProgress";
 import Slider from "react-slick";
+import { GraduationCap } from "lucide-react";
 
 import {
   fetchComments,
@@ -145,10 +146,10 @@ function SampleNextArrow(props) {
                     ${isDisabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
                     ${className}` 
                   }
-          style={{ ...style }} 
-          onClick={onClick} 
+          style={{ ...style }}
+          onClick={onClick}
           aria-label="Next attachment"
-          disabled={isDisabled} 
+          disabled={isDisabled}
         >
           {/* INCREASED ICON SIZE to large */}
           <ArrowForwardIos fontSize="large" /> 
