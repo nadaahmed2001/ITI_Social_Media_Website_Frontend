@@ -688,63 +688,78 @@ const handleAddReaction = async (reactionType) => {
           </div>
         </div>
         
-<div className="relative">
 
-  <button 
-    onClick={() => setShowOptions(!showOptions)}
-    className="text-[#7a2226] hover:text-[#5a181b] transition-colors"
-  >
-    <MoreVertIcon className="w-6 h-6" />
-  </button>
-  
-  {showOptions && ( 
-    <div  className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-20 border border-[#7a2226]/20"> 
-      {/* Save/Unsave Button */}
-      <button
-        onClick={handleToggleSavePost}
-        disabled={isSavingToggleLoading} // Disable while action is in progress
-        className="flex items-center w-full px-4 py-2 text-sm text-[#7a2226] hover:bg-[#7a2226]/10 transition-colors"
-        >
-        {isPostSaved ? (
-            <BookmarkIcon className="w-4 h-4 mr-2 text-blue-400" /> // Icon when saved
-        ) : (
-            <BookmarkBorderIcon className="w-4 h-4 mr-2 text-gray-400" /> // Icon when not saved
-        )}
-        {isPostSaved ? 'Unsave Post' : 'Save Post'}
-      </button>
+        {/* Right side: Track name and options */}
+        <div className="flex items-center space-x-3">
+          {/* <p className="text-m text-gray-700 whitespace-nowrap">Track test</p> */}
+          <div className="text-m text-gray-700 whitespace-nowrap">
+            {user.is_supervisor ? (
+              <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full w-fit">
+                <Briefcase size={16} />
+                <span className="text-sm font-medium">Supervisor</span>
+              </div>
+            ) : user.is_student ? (
+              <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1 rounded-full w-fit">
+                <GraduationCap size={16} />
+                <span className="text-sm font-medium">Student</span>
+              </div>
+            ) : null}
+          </div>
 
+          {user && (
+            <div className="relative">
+              <button
+                onClick={() => setShowOptions(!showOptions)}
+                className="text-gray-500 hover:text-[#7a2226] transition-colors p-1 rounded-full hover:bg-gray-100"
+              >
+                <MoreVertIcon className="w-5 h-5" />
+              </button>
+              {showOptions && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-1 z-20 border border-gray-200">
+                  <button
+                    onClick={handleToggleSavePost}
+                    disabled={isSavingToggleLoading}
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#7a2226] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isPostSaved ? (
+                      <BookmarkIcon className="w-4 h-4 mr-2 text-[#7a2226]" />
+                    ) : (
+                      <BookmarkBorderIcon className="w-4 h-4 mr-2 text-gray-500" />
+                    )}
+                    {isSavingToggleLoading ? '...' : (isPostSaved ? 'Unsave Post' : 'Save Post')}
+                  </button>
+                  {isPostAuthor && <hr className="border-t border-gray-200 my-1" />}
+                  {isPostAuthor && (
+                    <button
+                      onClick={() => {
+                        setIsEditModalOpen(true);
+                        setShowOptions(false);
+                      }}
+                      className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left"
+                    >
+                      <EditIcon className="w-4 h-4 mr-2 text-blue-400" />
+                      <span className="text-gray-900">Edit</span>
+                    </button>
+                  )}
+                  {isPostAuthor && (
+                    <button
+                      onClick={() => {
+                        setIsDeleteModalOpen(true);
+                        setShowOptions(false);
+                      }}
+                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <DeleteIcon className="w-4 h-4 mr-2" />
+                      Delete
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
 
-      {/* Separator if author */}
-      {isPostAuthor && <hr className="border-t border-gray-600 my-1 mx-2" />}
-
-      
-      {isPostAuthor && (
-        <>
-          <button 
-            onClick={() => { setIsEditModalOpen(true); setShowOptions(false); }} 
-            className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-600 w-full text-left"
-          > 
-            <EditIcon className="w-4 h-4 mr-2 text-blue-400" /> Edit 
-          </button> 
-          <button 
-            onClick={() => { setIsDeleteModalOpen(true); setShowOptions(false); }} 
-            className="flex items-center px-4 py-2 text-sm text-red-400 hover:bg-gray-600 w-full text-left"
-          > 
-            <DeleteIcon className="w-4 h-4 mr-2" /> Delete 
-          </button>
-        </>
-      )}
-      
-      <button 
-        onClick={() => { /* Handle share logic */ setShowOptions(false); }}
-        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-      >
-        <ShareIcon className="w-4 h-4 mr-2" /> Share
-      </button>
-    </div> 
-  )}
-  </div>
-</div>
  {/* Post Content */}
  <div className="mb-">
         {/* Post body */}
