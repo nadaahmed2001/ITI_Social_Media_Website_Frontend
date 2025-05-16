@@ -175,6 +175,7 @@ function ProjectFeedPage() {
                             <ProjectCard
                                 project={project}
                                 onLikeToggle={handleLikeToggle}
+        
                             />
                         </Grid>
                     ))}

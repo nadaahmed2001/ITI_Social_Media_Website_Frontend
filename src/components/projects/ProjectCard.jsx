@@ -46,7 +46,7 @@ function ProjectCard({ project, onLikeToggle }) {
     <Paper
         elevation={2}
         sx={{
-            backgroundColor: '#2f2f2f', // Dark card background
+            backgroundColor: '#eeeeee',
             color: 'white',
             borderRadius: '10px',
             overflow: 'hidden', // Clip image corners
@@ -72,8 +72,8 @@ function ProjectCard({ project, onLikeToggle }) {
       </Link>
       <Box p={2} flexGrow={1} display="flex" flexDirection="column"> {/* Content padding & grow */}
         {/* Title */}
-        <Link to={`/projects/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Typography variant="h6" component="h3" sx={{ fontWeight: 'medium', color: 'white', mb: 1, '&:hover': { color: '#7a2226' } }}>
+        <Link to={`/projects/${id}`} style={{ textDecoration: 'none', color: ' #212121'}}>
+            <Typography variant="h6" component="h3" sx={{ fontWeight: 'medium', color: '#212121', mb: 1, '&:hover': { color: '#7a2226' } }}>
             {title}
             </Typography>
         </Link>
@@ -84,14 +84,14 @@ function ProjectCard({ project, onLikeToggle }) {
                 <Avatar src={owner?.profile_picture || DEFAULT_USER_AVATAR} sx={{ width: 24, height: 24 }} />
            </Link>
            <Link to={`/profiles/${owner?.id}`} style={{ textDecoration: 'none' }}>
-                <Typography variant="caption" sx={{ color: 'grey.400', '&:hover': { color: '#7a2226' } }}>
+                <Typography variant="caption" sx={{ color: 'grey.800', '&:hover': { color: '#7a2226' } }}>
                     {owner?.username || 'Unknown'}
                 </Typography>
            </Link>
         </Box>
 
         {/* Description Snippet */}
-        <Typography variant="body2" sx={{ color: 'grey.300', mb: 2, flexGrow: 1, // Allow description to take space
+        <Typography variant="body2" sx={{ color: 'grey.800', mb: 2, flexGrow: 1, // Allow description to take space
             display: '-webkit-box', WebkitLineClamp: '3', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {description || "No description."}
         </Typography>
