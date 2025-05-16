@@ -102,17 +102,17 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       if (authTokens) {
-        console.log("AuthContext: Token found, fetching user details...");
+        // console.log("AuthContext: Token found, fetching user details...");
         // Ensure the token is set in the instance header *before* the request
         api.defaults.headers['Authorization'] = `Bearer ${authTokens}`;
         try {
           const response = await getAccount(); // Call API
           setUser(response.data); // Set user state with API data
-          console.log("AuthContext: User details fetched successfully:", response.data);
+          // console.log("AuthContext: User details fetched successfully:", response.data);
           // Only navigate if we just logged in (user was previously null)
           // This prevents redirecting on every token refresh if user was already set
           if (user === null) {
-             console.log("AuthContext: Navigating to /Home after initial fetch.");
+            //  console.log("AuthContext: Navigating to /Home after initial fetch.");
              navigate('/Home'); // Navigate after user data is successfully fetched
           }
         } catch (error) {

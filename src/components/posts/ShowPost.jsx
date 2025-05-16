@@ -9,14 +9,13 @@ import DeletePost from "./DeletePost"; // Ensure path is correct
 import EditComment from "./EditComment"; // Ensure path is correct
 import DeleteComment from "./Deletecomment"; // Ensure path is correct
 import ReactionsModal from "./ReactionsModal"; // Ensure path is correct
-import { Briefcase } from "lucide-react"; // Ensure path is correct
 // import ReactionsCommentModal from "./ReactionsCommentModal"; // Rendered inside CommentItem
 
 // API Functions
 import {
   fetchComments, addComment, editPost, deletePost, deleteComment, editComment,
   likePost, likeComment, fetchReactionsForPost, removePostReaction, removeCommentReaction,
-  savePost, unsavePost
+  savePost, unsavePost, getPublicProfile
 } from "../../components/services/api"; // Adjust path if needed
 
 // Icons
@@ -32,7 +31,8 @@ import {
   ArrowBackIosNew, ArrowForwardIos // For slider
 } from "@mui/icons-material";
 import { GraduationCap } from "lucide-react";
-
+import { Briefcase } from "lucide-react";
+import { useCallback } from "react";
 
 // Slider CSS
 import Slider from "react-slick";
@@ -162,6 +162,12 @@ export default function ShowPost({ postData, onDeletePost }) {
   const [isSavingToggleLoading, setIsSavingToggleLoading] = useState(false);
   const [error, setError] = useState(null); // General error state
 
+  /////////////////////////Nada///////////////////////////////
+  const [authorProfile, setAuthorProfile] = useState(null);
+  const [loadingAuthorProfile, setLoadingAuthorProfile] = useState(false);
+  /////////////////////////////////////////////////////////////
+
+
   // Refs
   const widgetRef = useRef(null);
   const hidePopoverTimer = useRef(null);
@@ -188,7 +194,32 @@ export default function ShowPost({ postData, onDeletePost }) {
   const currentUserReactionType = userReactions[0]?.reaction_type || null;
 
 
+  //////////////////////Nada/////////////////////////////////
+
+  const fetchAuthorProfile = useCallback(async (authorId) => {
+    if (!authorId) return;
+
+    setLoadingAuthorProfile(true);
+    try {
+      const response = await getPublicProfile(authorId);
+      setAuthorProfile(response.data);
+    } catch (error) {
+      console.error("Failed to fetch author profile:", error);
+    } finally {
+      setLoadingAuthorProfile(false);
+    }
+  }, []);
+  ///////////////////////////////////////////////////////
+
   // --- Effects ---
+
+  /////////////////Nada///////////////////
+  useEffect(() => {
+    if (post?.author_id) {
+      fetchAuthorProfile(post.author_id);
+    }
+  }, [post?.author_id, fetchAuthorProfile]);
+  /////////////////////////////////////////
 
   // Initialize saved state and post state when postData prop changes
   // Also fetches initial reactions for the post
@@ -216,7 +247,7 @@ export default function ShowPost({ postData, onDeletePost }) {
     } else {
       setAllPostReactions([]); setUserReactions([]); setReactionsLoading(false);
     }
-  }, [postData, currentUserId]);
+  }, [postData, currentUserId, fetchAuthorProfile]);
 
   // Fetch Initial Comments
   useEffect(() => {
@@ -633,21 +664,21 @@ export default function ShowPost({ postData, onDeletePost }) {
         </div>
 
         {/* Right side: Track name and options */}
-        <div className="flex items-center space-x-3">
-          {/* <p className="text-m text-gray-700 whitespace-nowrap">Track test</p> */}
-          <div className="text-m text-gray-700 whitespace-nowrap">
-            {user.is_supervisor ? (
-              <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full w-fit">
-                <Briefcase size={16} />
-                <span className="text-sm font-medium">Supervisor</span>
-              </div>
-            ) : user.is_student ? (
-              <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1 rounded-full w-fit">
-                <GraduationCap size={16} />
-                <span className="text-sm font-medium">Student</span>
-              </div>
-            ) : null}
-          </div>
+        <div className="text-m text-gray-700 whitespace-nowrap">
+          {loadingAuthorProfile ? (
+            <div className="w-20 h-6 bg-gray-200 rounded-full animate-pulse"></div>
+          ) : authorProfile?.is_supervisor ? (
+            <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full w-fit">
+              <Briefcase size={16} />
+              <span className="text-sm font-medium">Supervisor</span>
+            </div>
+          ) : authorProfile?.is_student ? (
+            <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1 rounded-full w-fit">
+              <GraduationCap size={16} />
+              <span className="text-sm font-medium">Student</span>
+            </div>
+          ) : null}
+
 
           {user && (
             <div className="relative">

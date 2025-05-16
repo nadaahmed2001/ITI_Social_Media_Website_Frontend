@@ -19,6 +19,7 @@ export default function PostList() {
       const response = await fetchPosts(pageNum);
       const newPosts = response.data?.results || response.data;
       setPosts(prev => pageNum === 1 ? newPosts : [...prev, ...newPosts]);
+      console.log("Fetched posts:", newPosts);
       setHasMore(newPosts?.length > 0);
     } catch (error) {
       console.error("Error loading posts:", error);

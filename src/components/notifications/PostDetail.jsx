@@ -16,6 +16,7 @@ import TimeAgo from "../TimeAgo";
 import CustomCircularProgress from "../posts/CustomCircularProgress";
 import Slider from "react-slick";
 import { GraduationCap } from "lucide-react";
+import { Briefcase } from "lucide-react";
 
 import {
   fetchComments,
@@ -214,7 +215,7 @@ function SampleNextArrow(props) {
         setPost(res.data);
       })
       .catch((err) => {
-        console.error("Error fetching post:", err);
+        // console.error("Error fetching post:", err);
         if (err.response && err.response.status === 403) {
           alert("You don't have permission to view this post.");
         }
@@ -265,7 +266,7 @@ function SampleNextArrow(props) {
     if (post && post.id) { // Ensure post and post.id are available
         fetchReactionsForPost(post.id).then((res) => {
             const fetchedReactions = Array.isArray(res) ? res : [];
-            console.log("Fetched ALL Reactions:", fetchedReactions); 
+            // console.log("Fetched ALL Reactions:", fetchedReactions); 
             setAllPostReactions(fetchedReactions); // Store all reactions
             
             // Filter for the current user's reaction for the button state
@@ -395,7 +396,7 @@ const handleAddReaction = async (reactionType) => {
     try {
       setCommentPagination(prev => ({...prev, isLoading: true, error: null}));
       const nextPage = commentPagination.page + 1;
-      console.log(`ShowPost: Calling fetchComments for next page: ${nextPage}`); // Add log
+      // console.log(`ShowPost: Calling fetchComments for next page: ${nextPage}`); // Add log
       
       // --- CORRECTED CALL ---
       const response = await fetchComments(post.id, nextPage); // Pass the number nextPage
@@ -422,7 +423,7 @@ const handleAddReaction = async (reactionType) => {
   };
 
  const handleCommentReact = async (commentId, reactionType) => {
-   console.log(`Reacting to comment ${commentId} with ${reactionType}`);
+  //  console.log(`Reacting to comment ${commentId} with ${reactionType}`);
    const originalComments = [...comments]; // Store original state for potential rollback
  
    // --- Optimistic Update ---
@@ -454,7 +455,7 @@ const handleAddReaction = async (reactionType) => {
      // Example refetch (less ideal for performance):
      // const response = await fetchComments(post.id, 1); // Reload first page? Or specific comment?
      // setComments(response.data.results || []);
-     console.log(`Successfully reacted to comment ${commentId}`);
+    //  console.log(`Successfully reacted to comment ${commentId}`);
  } catch (error) {
      console.error("Failed to react to comment:", error);
      // --- Rollback Optimistic Update ---
@@ -464,7 +465,7 @@ const handleAddReaction = async (reactionType) => {
  };
  
  const handleCommentUnreact = async (commentId) => {
- console.log(`Un-reacting from comment ${commentId}`);
+//  console.log(`Un-reacting from comment ${commentId}`);
  const originalComments = [...comments]; // Store original state
  
  // --- Optimistic Update ---
@@ -485,7 +486,7 @@ const handleAddReaction = async (reactionType) => {
  
  try {
      await removeCommentReaction(commentId); // Pass only commentId if API expects that
-      console.log(`Successfully un-reacted from comment ${commentId}`);
+      // console.log(`Successfully un-reacted from comment ${commentId}`);
      // Optional: Refetch or trust optimistic update
  } catch (error) {
      console.error("Failed to un-react from comment:", error);
@@ -692,19 +693,7 @@ const handleAddReaction = async (reactionType) => {
         {/* Right side: Track name and options */}
         <div className="flex items-center space-x-3">
           {/* <p className="text-m text-gray-700 whitespace-nowrap">Track test</p> */}
-          <div className="text-m text-gray-700 whitespace-nowrap">
-            {user.is_supervisor ? (
-              <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1 rounded-full w-fit">
-                <Briefcase size={16} />
-                <span className="text-sm font-medium">Supervisor</span>
-              </div>
-            ) : user.is_student ? (
-              <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1 rounded-full w-fit">
-                <GraduationCap size={16} />
-                <span className="text-sm font-medium">Student</span>
-              </div>
-            ) : null}
-          </div>
+
 
           {user && (
             <div className="relative">
@@ -758,6 +747,9 @@ const handleAddReaction = async (reactionType) => {
             </div>
           )}
         </div>
+
+
+
       </div>
 
  {/* Post Content */}

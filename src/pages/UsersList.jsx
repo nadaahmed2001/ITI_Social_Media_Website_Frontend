@@ -32,15 +32,15 @@ export default function UsersList() {
                     listAllProfiles(),
                     fetchAllPrograms()
                 ]);
-                console.log("From usersList.jsx");
-                console.log("Fetched Profiles: ", profilesData);
-                console.log("Fetched Programs: ", programsData);
+                // console.log("From usersList.jsx");
+                // console.log("Fetched Profiles: ", profilesData);
+                // console.log("Fetched Programs: ", programsData);
 
                 // Filter out users who are neither students nor supervisors
                 const validUsers = profilesData.filter(user =>
                     user.is_student || user.is_supervisor
                 );
-                console.log(validUsers);
+                // console.log(validUsers);
                 setUsers(validUsers);
                 setFilteredUsers(validUsers);
                 setPrograms(programsData);
