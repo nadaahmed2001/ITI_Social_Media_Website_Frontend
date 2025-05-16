@@ -9,6 +9,7 @@ import DeletePost from "./DeletePost"; // Ensure path is correct
 import EditComment from "./EditComment"; // Ensure path is correct
 import DeleteComment from "./Deletecomment"; // Ensure path is correct
 import ReactionsModal from "./ReactionsModal"; // Ensure path is correct
+import { Briefcase } from "lucide-react"; // Ensure path is correct
 // import ReactionsCommentModal from "./ReactionsCommentModal"; // Rendered inside CommentItem
 
 // API Functions
