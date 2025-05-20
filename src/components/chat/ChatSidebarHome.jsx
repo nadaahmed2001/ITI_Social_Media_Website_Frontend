@@ -152,7 +152,7 @@ const DEFAULT_USER_AVATAR = defaultPic;
         )}
       </button>
 <div
-  className={`w-80 text-[#7a2226] max-h-[75vh] p-4  md:relative transform rounded-lg 
+  className={`w-80 text-[#7a2226] max-h-[100vh] p-4  md:relative transform rounded-lg 
     ${isSidebarOpen ? "translate-x-0 z-40" : "-translate-x-full z-30"} 
     md:translate-x-0 transition-transform duration-300 border-2 border-[#7a2226]/20 
     bg-white/90 backdrop-blur-lg shadow-xl`}
