@@ -129,7 +129,8 @@ const MessagesList = ({token, isGroupChat }) => {
         }
         const payload = {
             action: "send",
-            message: messageContent
+            message: messageContent,
+            timestamp: new Date().toISOString(),
         };
         socketRef.current.send(JSON.stringify(payload));
     };
