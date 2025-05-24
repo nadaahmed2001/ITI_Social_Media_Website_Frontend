@@ -82,7 +82,7 @@ const DEFAULT_USER_AVATAR = defaultPic;
   //     const fetchUnreadNotifications = async () => {
   //       try {
   //         const response = await axiosInstance.get(
-  //           "http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/chat/unread/"
+  //           "http://itihub-backend-ikxqcw-ed0c9f-161-156-161-124.traefik.me/api/notifications/chat/unread/"
   //         );
   //         setUnreadChatNotifications(response.data);
   //       } catch (error) {
@@ -156,7 +156,7 @@ const DEFAULT_USER_AVATAR = defaultPic;
   //     await Promise.all(
   //       relatedNotifications.map((n) =>
   //         axiosInstance.patch(
-  //           `http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/notifications/${n.id}/mark-as-read/`
+  //           `http://itihub-backend-ikxqcw-ed0c9f-161-156-161-124.traefik.me/api/notifications/${n.id}/mark-as-read/`
   //         )
   //       )
   //     );

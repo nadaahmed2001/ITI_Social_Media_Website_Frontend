@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/";
+const API_URL = "http://itihub-backend-ikxqcw-ed0c9f-161-156-161-124.traefik.me/api/";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -154,7 +154,7 @@ export default api;
 
 // ======================================================================================================================================
 
-const API_BASE_URL =  'http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/'; 
+const API_BASE_URL =  'http://itihub-backend-ikxqcw-ed0c9f-161-156-161-124.traefik.me/api/'; 
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

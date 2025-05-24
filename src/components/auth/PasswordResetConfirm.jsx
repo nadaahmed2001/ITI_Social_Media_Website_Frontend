@@ -34,7 +34,7 @@ const PasswordResetConfirm = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/users/password-reset-confirm/", {
+      const response = await fetch("http://itihub-backend-ikxqcw-ed0c9f-161-156-161-124.traefik.me/api/users/password-reset-confirm/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reset_code: resetCode, new_password: newPassword }),

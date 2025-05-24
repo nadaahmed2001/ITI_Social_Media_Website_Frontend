@@ -206,7 +206,7 @@ function SampleNextArrow(props) {
   
     // Fetch post
     axios
-      .get(`http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/posts/${postId}/`, {
+      .get(`http://itihub-backend-ikxqcw-ed0c9f-161-156-161-124.traefik.me/api/posts/${postId}/`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
         },
@@ -223,7 +223,7 @@ function SampleNextArrow(props) {
   
     // Fetch comments separately
     axios
-      .get(`http://itihub-backend-ncohav-026f24-129-159-8-224.traefik.me/api/posts/${postId}/comments/`, {
+      .get(`http://itihub-backend-ikxqcw-ed0c9f-161-156-161-124.traefik.me/api/posts/${postId}/comments/`, {
         headers: {
           Authorization: token ? `Bearer ${token}` : "",
         },
