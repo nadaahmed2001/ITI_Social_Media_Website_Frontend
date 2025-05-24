@@ -32,8 +32,8 @@ const MessagesList = ({token, isGroupChat }) => {
     const connect_to_group_chat = useCallback(() => {
         // Move WS_BASE_URL inside the callback to avoid dependency issues
         const WS_BASE_URL = window.location.protocol === 'https:' 
-            ? `wss://${window.location.hostname}` 
-            : `ws://${window.location.hostname}:8000`;
+            ? `wss://itihub-backend-ikxqcw-ed0c9f-161-156-161-124.traefik.me` 
+            : `ws://itihub-backend-ikxqcw-ed0c9f-161-156-161-124.traefik.me`;
             
         // Create appropriate WebSocket URL based on chat type
         const socketUrl = isGroupChat
