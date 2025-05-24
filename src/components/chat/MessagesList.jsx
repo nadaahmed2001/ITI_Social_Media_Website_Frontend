@@ -286,42 +286,32 @@ const MessagesList = ({token, isGroupChat }) => {
     // };
 
     const handleSendMessage = async (e) => {
-        e.preventDefault();
-        if (!newMessage.trim()) {
-            alert("The message is empty");
-            return;
-        }
-        setIsSending(true);
+    e.preventDefault();
+    if (!newMessage.trim()) {
+        alert("The message is empty");
+        return;
+    }
+    setIsSending(true);
 
-        // --- REMOVE THE OPTIMISTIC UPDATE HERE ---
-        // You were adding tempMessage directly to the state, causing the duplicate.
-        // setMessages((prevMessages) => [...prevMessages, tempMessage]);
+    // Send message via WebSocket only
+    wsSendMessage(newMessage);
 
-        // Send message via WebSocket
-        wsSendMessage(newMessage);
+    // Remove the REST API call below to avoid duplicate messages
+    // try {
+    //     if (isGroupChat) {
+    //         await sendGroupMessage(id, newMessage);
+    //     } else {
+    //         await sendPrivateMessage(id, newMessage);
+    //     }
+    // } catch (error) {
+    //     console.error("Error saving message:", error);
+    //     alert("Message not saved. Please try again.");
+    // }
 
-        // Optionally, make the API call for persistence.
-        // If your WebSocket handling in Django Channels also persists the message,
-        // you might not even need these separate API calls for sending.
-        // However, it's generally good practice to have a REST API fallback/alternative
-        // for persistence if websockets are primarily for real-time delivery.
-        try {
-            if (isGroupChat) {
-                await sendGroupMessage(id, newMessage);
-            } else {
-                await sendPrivateMessage(id, newMessage);
-            }
-        } catch (error) {
-            console.error("Error saving message:", error);
-            alert("Message not saved. Please try again.");
-            // If the WebSocket doesn't receive confirmation, you might need to handle
-            // removing the message or showing an error indicator.
-        }
+    setNewMessage("");
+    setIsSending(false);
+};
 
-        setNewMessage("");
-        setIsSending(false);
-    };
-    
     const handleEditMessage = async (messageId, oldContent) => {
         const newContent = prompt("Edit your message:", oldContent);
         if (newContent && newContent.trim() !== "") {
